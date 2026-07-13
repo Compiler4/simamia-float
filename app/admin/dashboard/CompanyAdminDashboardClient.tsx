@@ -81,9 +81,71 @@ type Props = {
   };
 };
 
+type BrokerCustomerStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
+
+type BrokerCustomerItem = {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  businessName: string | null;
+  phone: string;
+  alternatePhone: string | null;
+  email: string | null;
+  location: string;
+  region: string | null;
+  district: string | null;
+  ward: string | null;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  status: BrokerCustomerStatus;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type BrokerCustomerForm = {
+  id: string;
+  code: string;
+  name: string;
+  businessName: string;
+  phone: string;
+  alternatePhone: string;
+  email: string;
+  location: string;
+  region: string;
+  district: string;
+  ward: string;
+  address: string;
+  latitude: string;
+  longitude: string;
+  status: BrokerCustomerStatus;
+  notes: string;
+};
+
+type CustomerServiceSummaryRow = {
+  customerKey: string;
+  customerName: string;
+  phone: string;
+  email: string;
+  region: string;
+  staffNames: string[];
+  serviceTypes: string[];
+  dayCount: number;
+  weekCount: number;
+  monthCount: number;
+  yearCount: number;
+  selectedCount: number;
+  totalCount: number;
+  selectedValue: number;
+  lastServedAt: string;
+};
+
 type PageName =
   | "Dashboard"
   | "Manage Users"
+  | "Manage Brokers"
   | "Manage Branches"
   | "Expenses"
   | "Bank Verification"
@@ -114,6 +176,8 @@ type DashboardData = {
   financialDays: any[];
   customers: any[];
   serviceActivities: any[];
+  brokers: BrokerCustomerItem[];
+  brokerLoadError?: string;
 };
 
 type IconType = ComponentType<{
@@ -146,6 +210,25 @@ const emptyBranchForm = {
   status: "ACTIVE",
 };
 
+const emptyBrokerForm: BrokerCustomerForm = {
+  id: "",
+  code: "",
+  name: "",
+  businessName: "",
+  phone: "",
+  alternatePhone: "",
+  email: "",
+  location: "",
+  region: "",
+  district: "",
+  ward: "",
+  address: "",
+  latitude: "",
+  longitude: "",
+  status: "ACTIVE",
+  notes: "",
+};
+
 const defaultSettings = {
   sms: true,
   email: true,
@@ -167,6 +250,7 @@ const navigation: Array<{
 }> = [
   { page: "Dashboard", icon: LayoutDashboard, section: "Workspace" },
   { page: "Manage Users", icon: Users, section: "Management" },
+  { page: "Manage Brokers", icon: UserCheck, section: "Management" },
   { page: "Manage Branches", icon: Building2, section: "Management" },
   { page: "Expenses", icon: ReceiptText, section: "Finance" },
   { page: "Bank Verification", icon: Landmark, section: "Finance" },
@@ -208,7 +292,14 @@ async function requestJson<T = any>(
   }
 
   if (!response.ok || result.success === false) {
-    throw new Error(result.message || result.error || "Request failed.");
+    const message =
+      safeText(result.message) ||
+      `Request failed (${response.status}) for ${url}.`;
+    const detail = safeText(result.error);
+
+    throw new Error(
+      detail && detail !== message ? `${message} ${detail}` : message,
+    );
   }
 
   return result as T;
@@ -305,6 +396,33 @@ function normalizeBranchForm(item: any) {
   };
 }
 
+function normalizeBrokerForm(item: BrokerCustomerItem): BrokerCustomerForm {
+  return {
+    id: safeText(item.id),
+    code: safeText(item.code),
+    name: safeText(item.name),
+    businessName: safeText(item.businessName),
+    phone: safeText(item.phone),
+    alternatePhone: safeText(item.alternatePhone),
+    email: safeText(item.email),
+    location: safeText(item.location),
+    region: safeText(item.region),
+    district: safeText(item.district),
+    ward: safeText(item.ward),
+    address: safeText(item.address),
+    latitude:
+      item.latitude === null || item.latitude === undefined
+        ? ""
+        : String(item.latitude),
+    longitude:
+      item.longitude === null || item.longitude === undefined
+        ? ""
+        : String(item.longitude),
+    status: item.status || "ACTIVE",
+    notes: safeText(item.notes),
+  };
+}
+
 export default function CompanyAdminDashboardClient({ user }: Props) {
   const router = useRouter();
   const [activePage, setActivePage] = useState<PageName>("Dashboard");
@@ -344,10 +462,45 @@ export default function CompanyAdminDashboardClient({ user }: Props) {
     setErrorMessage("");
 
     try {
-      const result = await requestJson<DashboardData>(
-        "/api/company-admin/dashboard",
-      );
-      setData(result);
+      const dashboardResult = await requestJson<
+        Omit<DashboardData, "brokers" | "brokerLoadError">
+      >("/api/company-admin/dashboard");
+
+      let brokers: BrokerCustomerItem[] = [];
+      let brokerLoadError = "";
+
+      try {
+        const brokerResult = await requestJson<{
+          success: true;
+          brokers: BrokerCustomerItem[];
+          setupRequired?: boolean;
+          warning?: string;
+        }>("/api/company-admin/brokers");
+
+        brokers = safeArray<BrokerCustomerItem>(brokerResult.brokers);
+        brokerLoadError = safeText(brokerResult.warning);
+      } catch (brokerError) {
+        brokerLoadError =
+          brokerError instanceof Error
+            ? brokerError.message
+            : "Could not load broker customers.";
+
+        // The broker directory is optional during dashboard startup.
+        // Do not use console.error here because Next.js development mode
+        // displays caught console errors as a Turbopack error overlay.
+      }
+
+      setData({
+        ...dashboardResult,
+        brokers,
+        brokerLoadError,
+      });
+
+      if (brokerLoadError) {
+        setToast(
+          "Dashboard loaded, but the broker directory needs database setup.",
+        );
+      }
     } catch (error) {
       setData(null);
       setErrorMessage(
@@ -737,6 +890,7 @@ function DashboardContent({
   };
 
   if (page === "Manage Users") return <UsersPage {...common} />;
+  if (page === "Manage Brokers") return <BrokersPage {...common} />;
   if (page === "Manage Branches") return <BranchesPage {...common} />;
   if (page === "Expenses") return <ExpensesPage {...common} />;
   if (page === "Bank Verification") return <BankVerificationPage {...common} />;
@@ -829,6 +983,7 @@ function HomeDashboard({
           <section className={styles.quickActionPanel}>
             {[
               ["Users", Users, "Manage Users"],
+              ["Brokers", UserCheck, "Manage Brokers"],
               ["Expense", ReceiptText, "Expenses"],
               ["Bank Review", Landmark, "Bank Verification"],
               ["Attendance", CalendarCheck2, "Attendance"],
@@ -874,9 +1029,11 @@ function HomeDashboard({
               />
               <ProgressRow
                 label="Verified bank records"
-                value={safeArray<any>(data.bankVerifications).filter(
-                  (item) => item.status === "VERIFIED",
-                ).length}
+                value={
+                  safeArray<any>(data.bankVerifications).filter(
+                    (item) => item.status === "VERIFIED",
+                  ).length
+                }
                 total={Math.max(1, data.bankVerifications.length)}
               />
               <ProgressRow
@@ -992,18 +1149,20 @@ function HomeDashboard({
               subtitle="System audit trail"
             />
             <div className={styles.activityList}>
-              {safeArray<any>(data.activities).slice(0, 7).map((item) => (
-                <div key={item.id}>
-                  <span>
-                    <Activity size={15} />
-                  </span>
-                  <div>
-                    <strong>{item.action}</strong>
-                    <p>{item.details || item.module}</p>
-                    <small>{formatDate(item.createdAt, true)}</small>
+              {safeArray<any>(data.activities)
+                .slice(0, 7)
+                .map((item) => (
+                  <div key={item.id}>
+                    <span>
+                      <Activity size={15} />
+                    </span>
+                    <div>
+                      <strong>{item.action}</strong>
+                      <p>{item.details || item.module}</p>
+                      <small>{formatDate(item.createdAt, true)}</small>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
               {!safeArray<any>(data.activities).length && (
                 <EmptyInline text="No audit activity yet." />
               )}
@@ -1015,13 +1174,7 @@ function HomeDashboard({
   );
 }
 
-function UsersPage({
-  data,
-  busy,
-  setBusy,
-  reload,
-  notify,
-}: CommonPageProps) {
+function UsersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
   const [form, setForm] = useState(emptyUserForm);
   const users = safeArray<any>(data.users);
 
@@ -1092,7 +1245,7 @@ function UsersPage({
     <PageShell
       icon={Users}
       title="Manage Users"
-      subtitle="Create, update, reactivate, deactivate and remove users belonging to your company."
+      subtitle="Create authenticated company users. Brokers are managed separately as customer records and do not receive login accounts."
     >
       <div className={styles.twoColumn}>
         <form className={styles.formCard} onSubmit={saveUser}>
@@ -1150,7 +1303,6 @@ function UsersPage({
                 <option value="COMPANY_ADMIN">Company Admin</option>
                 <option value="ACCOUNTANT">Accountant</option>
                 <option value="STAFF">Staff</option>
-                <option value="BROKER">Broker</option>
                 <option value="GPS_MANAGER">GPS Manager</option>
               </select>
             </Field>
@@ -1281,7 +1433,609 @@ function UsersPage({
                   </td>
                 </tr>
               ))}
-              {!users.length && <EmptyTable colSpan={8} text="No users found." />}
+              {!users.length && (
+                <EmptyTable colSpan={8} text="No users found." />
+              )}
+            </tbody>
+          </DataTable>
+        </TableCard>
+      </div>
+    </PageShell>
+  );
+}
+
+function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
+  const brokers = safeArray<BrokerCustomerItem>(data.brokers);
+  const [form, setForm] = useState<BrokerCustomerForm>(emptyBrokerForm);
+  const [search, setSearch] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+
+  const locations = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          brokers
+            .map((broker) => safeText(broker.location).trim())
+            .filter(Boolean),
+        ),
+      ).sort((a, b) => a.localeCompare(b)),
+    [brokers],
+  );
+
+  const filteredBrokers = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return brokers.filter((broker) => {
+      const searchMatches =
+        !query ||
+        [
+          broker.code,
+          broker.name,
+          broker.businessName,
+          broker.phone,
+          broker.alternatePhone,
+          broker.email,
+          broker.location,
+          broker.region,
+          broker.district,
+          broker.ward,
+          broker.address,
+        ].some((value) => safeText(value).toLowerCase().includes(query));
+
+      const locationMatches =
+        !locationFilter ||
+        safeText(broker.location).toLowerCase() ===
+          locationFilter.toLowerCase();
+
+      const statusMatches =
+        !statusFilter || safeText(broker.status).toUpperCase() === statusFilter;
+
+      return searchMatches && locationMatches && statusMatches;
+    });
+  }, [brokers, search, locationFilter, statusFilter]);
+
+  const activeCount = brokers.filter(
+    (broker) => broker.status === "ACTIVE",
+  ).length;
+
+  const inactiveCount = brokers.filter(
+    (broker) => broker.status !== "ACTIVE",
+  ).length;
+
+  async function saveBroker(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!form.name.trim() || !form.phone.trim() || !form.location.trim()) {
+      notify("Broker name, phone and location are required.");
+      return;
+    }
+
+    setBusy(true);
+
+    try {
+      const editing = Boolean(form.id);
+
+      await requestJson(
+        editing
+          ? `/api/company-admin/brokers/${form.id}`
+          : "/api/company-admin/brokers",
+        {
+          method: editing ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...form,
+            latitude:
+              form.latitude.trim() === "" ? null : Number(form.latitude),
+            longitude:
+              form.longitude.trim() === "" ? null : Number(form.longitude),
+          }),
+        },
+      );
+
+      setForm(emptyBrokerForm);
+      notify(
+        editing
+          ? "Broker customer updated successfully."
+          : "Broker customer registered successfully.",
+      );
+      await reload();
+    } catch (error) {
+      notify(
+        error instanceof Error
+          ? error.message
+          : "Could not save broker customer.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function changeBrokerStatus(id: string, status: BrokerCustomerStatus) {
+    setBusy(true);
+
+    try {
+      await requestJson(`/api/company-admin/brokers/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      notify(
+        status === "ACTIVE"
+          ? "Broker customer activated."
+          : "Broker customer deactivated.",
+      );
+      await reload();
+    } catch (error) {
+      notify(
+        error instanceof Error
+          ? error.message
+          : "Could not update broker status.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function removeBroker(id: string) {
+    if (
+      !window.confirm(
+        "Remove this broker customer? This does not delete any user because brokers are not login users.",
+      )
+    ) {
+      return;
+    }
+
+    setBusy(true);
+
+    try {
+      await requestJson(`/api/company-admin/brokers/${id}`, {
+        method: "DELETE",
+      });
+
+      if (form.id === id) {
+        setForm(emptyBrokerForm);
+      }
+
+      notify("Broker customer removed.");
+      await reload();
+    } catch (error) {
+      notify(
+        error instanceof Error
+          ? error.message
+          : "Could not remove broker customer.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <PageShell
+      icon={UserCheck}
+      title="Manage Broker Customers"
+      subtitle="Register brokers as customer records with their real service locations. They do not receive usernames, passwords or login access."
+    >
+      {data.brokerLoadError && (
+        <section className={styles.brokerSetupError}>
+          <div>
+            <ShieldCheck size={22} />
+          </div>
+          <section>
+            <strong>Broker database setup is incomplete</strong>
+            <p>{data.brokerLoadError}</p>
+            <small>
+              Run Prisma migration and generation commands, clear .next, then
+              restart the development server.
+            </small>
+          </section>
+        </section>
+      )}
+
+      <section className={styles.brokerMetricGrid}>
+        <ColorMetric
+          icon={UserCheck}
+          label="All brokers"
+          value={String(brokers.length)}
+          theme="purple"
+        />
+        <ColorMetric
+          icon={CheckCircle2}
+          label="Active brokers"
+          value={String(activeCount)}
+          theme="green"
+        />
+        <ColorMetric
+          icon={PowerOff}
+          label="Inactive / suspended"
+          value={String(inactiveCount)}
+          theme="red"
+        />
+        <ColorMetric
+          icon={MapPin}
+          label="Registered locations"
+          value={String(locations.length)}
+          theme="orange"
+        />
+      </section>
+
+      <div className={styles.twoColumn}>
+        <form className={styles.formCard} onSubmit={saveBroker}>
+          <SectionHeading
+            icon={form.id ? Pencil : Plus}
+            title={
+              form.id ? "Edit broker customer" : "Register broker customer"
+            }
+            text="This form stores a broker as a company business/customer record. It does not create a record in the users table."
+          />
+
+          <div className={styles.brokerNotice}>
+            <ShieldCheck size={19} />
+            <div>
+              <strong>No login account is created</strong>
+              <p>
+                Staff from the same company can view and select this broker when
+                providing services.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.formGrid}>
+            <Field label="Broker code">
+              <input
+                value={form.code}
+                onChange={(event) =>
+                  setForm({ ...form, code: event.target.value.toUpperCase() })
+                }
+                placeholder="Auto-generated when blank"
+              />
+            </Field>
+
+            <Field label="Broker full name">
+              <input
+                value={form.name}
+                onChange={(event) =>
+                  setForm({ ...form, name: event.target.value })
+                }
+                placeholder="Example: John Mushi"
+                required
+              />
+            </Field>
+
+            <Field label="Business / shop name">
+              <input
+                value={form.businessName}
+                onChange={(event) =>
+                  setForm({ ...form, businessName: event.target.value })
+                }
+                placeholder="Example: Mushi Mobile Money"
+              />
+            </Field>
+
+            <Field label="Primary phone">
+              <input
+                value={form.phone}
+                onChange={(event) =>
+                  setForm({ ...form, phone: event.target.value })
+                }
+                placeholder="+255..."
+                required
+              />
+            </Field>
+
+            <Field label="Alternative phone">
+              <input
+                value={form.alternatePhone}
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    alternatePhone: event.target.value,
+                  })
+                }
+                placeholder="+255..."
+              />
+            </Field>
+
+            <Field label="Email address">
+              <input
+                type="email"
+                value={form.email}
+                onChange={(event) =>
+                  setForm({ ...form, email: event.target.value })
+                }
+                placeholder="broker@example.com"
+              />
+            </Field>
+
+            <Field label="Main location">
+              <input
+                value={form.location}
+                onChange={(event) =>
+                  setForm({ ...form, location: event.target.value })
+                }
+                placeholder="Example: Kariakoo"
+                required
+              />
+            </Field>
+
+            <Field label="Region">
+              <input
+                value={form.region}
+                onChange={(event) =>
+                  setForm({ ...form, region: event.target.value })
+                }
+                placeholder="Example: Dar es Salaam"
+              />
+            </Field>
+
+            <Field label="District">
+              <input
+                value={form.district}
+                onChange={(event) =>
+                  setForm({ ...form, district: event.target.value })
+                }
+                placeholder="Example: Ilala"
+              />
+            </Field>
+
+            <Field label="Ward">
+              <input
+                value={form.ward}
+                onChange={(event) =>
+                  setForm({ ...form, ward: event.target.value })
+                }
+                placeholder="Example: Kariakoo"
+              />
+            </Field>
+
+            <Field label="Physical address">
+              <input
+                value={form.address}
+                onChange={(event) =>
+                  setForm({ ...form, address: event.target.value })
+                }
+                placeholder="Street, building or landmark"
+              />
+            </Field>
+
+            <Field label="Status">
+              <select
+                value={form.status}
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    status: event.target.value as BrokerCustomerStatus,
+                  })
+                }
+              >
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+                <option value="SUSPENDED">Suspended</option>
+              </select>
+            </Field>
+
+            <Field label="Latitude">
+              <input
+                type="number"
+                step="any"
+                value={form.latitude}
+                onChange={(event) =>
+                  setForm({ ...form, latitude: event.target.value })
+                }
+                placeholder="-6.7924"
+              />
+            </Field>
+
+            <Field label="Longitude">
+              <input
+                type="number"
+                step="any"
+                value={form.longitude}
+                onChange={(event) =>
+                  setForm({ ...form, longitude: event.target.value })
+                }
+                placeholder="39.2083"
+              />
+            </Field>
+
+            <Field label="Notes">
+              <textarea
+                rows={4}
+                value={form.notes}
+                onChange={(event) =>
+                  setForm({ ...form, notes: event.target.value })
+                }
+                placeholder="Services, opening hours or special instructions..."
+              />
+            </Field>
+          </div>
+
+          <div className={styles.formActions}>
+            <button type="submit" disabled={busy}>
+              <Save size={17} />
+              {busy
+                ? "Saving..."
+                : form.id
+                  ? "Update broker"
+                  : "Register broker"}
+            </button>
+
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => setForm(emptyBrokerForm)}
+              disabled={busy}
+            >
+              <X size={17} /> Clear
+            </button>
+          </div>
+        </form>
+
+        <TableCard
+          title="Registered broker customers"
+          subtitle={`${filteredBrokers.length} of ${brokers.length} broker records`}
+        >
+          <section className={styles.brokerFilterBar}>
+            <label>
+              <Search size={17} />
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search name, phone, code or address..."
+              />
+            </label>
+
+            <label>
+              <MapPin size={17} />
+              <select
+                value={locationFilter}
+                onChange={(event) => setLocationFilter(event.target.value)}
+              >
+                <option value="">All locations</option>
+                {locations.map((location) => (
+                  <option value={location} key={location}>
+                    {location}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              <Filter size={17} />
+              <select
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value)}
+              >
+                <option value="">All statuses</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+                <option value="SUSPENDED">Suspended</option>
+              </select>
+            </label>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setLocationFilter("");
+                setStatusFilter("");
+              }}
+            >
+              <RefreshCw size={16} /> Reset filters
+            </button>
+          </section>
+
+          <DataTable minWidth={1350}>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Broker</th>
+                <th>Code</th>
+                <th>Business</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Region / District</th>
+                <th>Address</th>
+                <th>Coordinates</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredBrokers.map((broker, index) => (
+                <tr key={broker.id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <Entity
+                      name={broker.name}
+                      sub={broker.email || "Broker customer"}
+                    />
+                  </td>
+                  <td>{broker.code}</td>
+                  <td>{broker.businessName || "N/A"}</td>
+                  <td>
+                    <div className={styles.brokerContactCell}>
+                      <strong>{broker.phone}</strong>
+                      <small>{broker.alternatePhone || ""}</small>
+                    </div>
+                  </td>
+                  <td>
+                    <span className={styles.locationBadge}>
+                      <MapPin size={13} /> {broker.location}
+                    </span>
+                  </td>
+                  <td>
+                    {[broker.region, broker.district, broker.ward]
+                      .filter(Boolean)
+                      .join(" / ") || "N/A"}
+                  </td>
+                  <td>{broker.address || "N/A"}</td>
+                  <td>
+                    {broker.latitude !== null && broker.longitude !== null
+                      ? `${broker.latitude.toFixed(5)}, ${broker.longitude.toFixed(5)}`
+                      : "Not set"}
+                  </td>
+                  <td>
+                    <StatusBadge status={broker.status} />
+                  </td>
+                  <td>
+                    <div className={styles.tableActions}>
+                      <button
+                        type="button"
+                        title="Edit broker"
+                        onClick={() => setForm(normalizeBrokerForm(broker))}
+                      >
+                        <Pencil size={15} />
+                      </button>
+
+                      {broker.status === "ACTIVE" ? (
+                        <button
+                          type="button"
+                          className={styles.warningAction}
+                          title="Deactivate broker"
+                          onClick={() =>
+                            changeBrokerStatus(broker.id, "INACTIVE")
+                          }
+                          disabled={busy}
+                        >
+                          <PowerOff size={15} />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className={styles.successAction}
+                          title="Activate broker"
+                          onClick={() =>
+                            changeBrokerStatus(broker.id, "ACTIVE")
+                          }
+                          disabled={busy}
+                        >
+                          <Power size={15} />
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        className={styles.dangerAction}
+                        title="Remove broker"
+                        onClick={() => removeBroker(broker.id)}
+                        disabled={busy}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {!filteredBrokers.length && (
+                <EmptyTable
+                  colSpan={11}
+                  text="No broker customers match the selected location or search filters."
+                />
+              )}
             </tbody>
           </DataTable>
         </TableCard>
@@ -1334,7 +2088,9 @@ function BranchesPage({
       notify("Branch removed.");
       await reload();
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Could not remove branch.");
+      notify(
+        error instanceof Error ? error.message : "Could not remove branch.",
+      );
     } finally {
       setBusy(false);
     }
@@ -1514,7 +2270,9 @@ function ExpensesPage({
       notify("Expense saved and workflow notification created.");
       await reload();
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Could not save expense.");
+      notify(
+        error instanceof Error ? error.message : "Could not save expense.",
+      );
     } finally {
       setBusy(false);
     }
@@ -1888,10 +2646,7 @@ function BankVerificationPage({
                 <tr key={item.id}>
                   <td>{index + 1}</td>
                   <td>
-                    <Entity
-                      name={item.uploadedByName}
-                      sub={item.bankAccount}
-                    />
+                    <Entity name={item.uploadedByName} sub={item.bankAccount} />
                   </td>
                   <td>{formatRole(item.uploadedByRole)}</td>
                   <td>{item.referenceNumber}</td>
@@ -2135,9 +2890,7 @@ function AttendancePage({
       await reload();
     } catch (error) {
       notify(
-        error instanceof Error
-          ? error.message
-          : "Could not save attendance.",
+        error instanceof Error ? error.message : "Could not save attendance.",
       );
     } finally {
       setBusy(false);
@@ -2252,9 +3005,7 @@ function AttendancePage({
         <Field label="Mark">
           <select
             value={form.mark}
-            onChange={(event) =>
-              setForm({ ...form, mark: event.target.value })
-            }
+            onChange={(event) => setForm({ ...form, mark: event.target.value })}
           >
             <option value="PRESENT">Present ✓</option>
             <option value="LATE">Late ⏱</option>
@@ -2267,9 +3018,7 @@ function AttendancePage({
         <Field label="Note">
           <input
             value={form.note}
-            onChange={(event) =>
-              setForm({ ...form, note: event.target.value })
-            }
+            onChange={(event) => setForm({ ...form, note: event.target.value })}
             placeholder="Optional"
           />
         </Field>
@@ -2409,15 +3158,9 @@ function AttendancePage({
           />
 
           <div className={styles.reviewStats}>
-            <ReviewStat
-              label="Present"
-              value={String(periodSummary.present)}
-            />
+            <ReviewStat label="Present" value={String(periodSummary.present)} />
             <ReviewStat label="Late" value={String(periodSummary.late)} />
-            <ReviewStat
-              label="Absent"
-              value={String(periodSummary.absent)}
-            />
+            <ReviewStat label="Absent" value={String(periodSummary.absent)} />
             <ReviewStat
               label="Attendance rate"
               value={`${periodSummary.rate}%`}
@@ -2517,13 +3260,7 @@ function PerformancePage({ data }: { data: DashboardData }) {
   );
 }
 
-function GpsPage({
-  data,
-  busy,
-  setBusy,
-  reload,
-  notify,
-}: CommonPageProps) {
+function GpsPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
   const devices = safeArray<any>(data.gpsDevices);
   const [selectedId, setSelectedId] = useState(devices[0]?.id || "");
   const [form, setForm] = useState({
@@ -2554,7 +3291,9 @@ function GpsPage({
       notify("GPS device created. Copy the token now.");
       await reload();
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Device creation failed.");
+      notify(
+        error instanceof Error ? error.message : "Device creation failed.",
+      );
     } finally {
       setBusy(false);
     }
@@ -2809,9 +3548,7 @@ function GpsPage({
                     <button
                       type="button"
                       className={styles.dangerTextButton}
-                      onClick={() =>
-                        changeDeviceStatus(device.id, "INACTIVE")
-                      }
+                      onClick={() => changeDeviceStatus(device.id, "INACTIVE")}
                     >
                       <PowerOff size={15} /> Disable
                     </button>
@@ -2881,7 +3618,11 @@ function AccountingPage({ data }: { data: DashboardData }) {
         {[
           ["Cash Book", "Verified deposits and approved expenses", BookOpen],
           ["Profit & Loss", `Current net: ${formatMoney(profit)}`, TrendingUp],
-          ["Bank Reconciliation", `${data.stats.bankMismatches || 0} mismatches`, Landmark],
+          [
+            "Bank Reconciliation",
+            `${data.stats.bankMismatches || 0} mismatches`,
+            Landmark,
+          ],
           ["General Ledger", "Audit-backed transaction activity", FileText],
           ["Trial Balance", "Debit and credit readiness", BadgeDollarSign],
           ["Cash Flow Statement", "Seven-day database trend", Activity],
@@ -2937,11 +3678,7 @@ function AccountingPage({ data }: { data: DashboardData }) {
   );
 }
 
-function NotificationsPage({
-  data,
-  reload,
-  notify,
-}: CommonPageProps) {
+function NotificationsPage({ data, reload, notify }: CommonPageProps) {
   const notifications = safeArray<any>(data.notifications);
 
   async function readOne(id: string) {
@@ -3037,22 +3774,14 @@ function ReportsPage({ data }: { data: DashboardData }) {
 
   const range = useMemo(
     () =>
-      getReportPeriodRange(
-        filter.period,
-        filter.from,
-        filter.to,
-        todayInput(),
-      ),
+      getReportPeriodRange(filter.period, filter.from, filter.to, todayInput()),
     [filter.period, filter.from, filter.to],
   );
 
   const userMap = useMemo(
     () =>
       new Map(
-        safeArray<any>(data.users).map((item) => [
-          safeText(item.id),
-          item,
-        ]),
+        safeArray<any>(data.users).map((item) => [safeText(item.id), item]),
       ),
     [data.users],
   );
@@ -3065,15 +3794,10 @@ function ReportsPage({ data }: { data: DashboardData }) {
       const staff = item.staff || userMap.get(safeText(item.staffId));
       const customer = item.customer;
 
-      const dateMatches = dateIsInsideRange(
-        servedAt,
-        range.start,
-        range.end,
-      );
+      const dateMatches = dateIsInsideRange(servedAt, range.start, range.end);
       const branchMatches =
         !filter.branch || safeText(staff?.branchId) === filter.branch;
-      const roleMatches =
-        !filter.role || safeText(staff?.role) === filter.role;
+      const roleMatches = !filter.role || safeText(staff?.role) === filter.role;
       const statusMatches =
         !filter.status || safeText(item.status) === filter.status;
       const customerMatches =
@@ -3106,23 +3830,12 @@ function ReportsPage({ data }: { data: DashboardData }) {
         const user = userMap.get(safeText(item.userId));
 
         return (
-          dateIsInsideRange(
-            item.attendanceDate,
-            range.start,
-            range.end,
-          ) &&
-          (!filter.branch ||
-            safeText(user?.branchId) === filter.branch) &&
+          dateIsInsideRange(item.attendanceDate, range.start, range.end) &&
+          (!filter.branch || safeText(user?.branchId) === filter.branch) &&
           (!filter.role || safeText(item.userRole) === filter.role)
         );
       }),
-    [
-      data.attendance,
-      userMap,
-      filter.branch,
-      filter.role,
-      range,
-    ],
+    [data.attendance, userMap, filter.branch, filter.role, range],
   );
 
   const customerServiceRows = useMemo(
@@ -3158,12 +3871,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
         };
       })
       .sort((a, b) => b.rate - a.rate);
-  }, [
-    data.users,
-    filteredAttendance,
-    filter.branch,
-    filter.role,
-  ]);
+  }, [data.users, filteredAttendance, filter.branch, filter.role]);
 
   const serviceRevenue = filteredServices.reduce(
     (sum, item) => sum + Number(item.amount || 0),
@@ -3184,17 +3892,11 @@ function ReportsPage({ data }: { data: DashboardData }) {
 
   const attendanceTotals = summarizeAttendanceRange(filteredAttendance);
 
-  function downloadCsv(
-    name: string,
-    rows: Array<Array<string | number>>,
-  ) {
+  function downloadCsv(name: string, rows: Array<Array<string | number>>) {
     const content = rows
       .map((row) =>
         row
-          .map(
-            (cell) =>
-              `"${safeText(cell).replaceAll('"', '""')}"`,
-          )
+          .map((cell) => `"${safeText(cell).replaceAll('"', '""')}"`)
           .join(","),
       )
       .join("\n");
@@ -3221,9 +3923,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
     new Map<string, number>(),
   );
 
-  const roleCounts: Array<[string, number]> = Array.from(
-    roleMap.entries(),
-  );
+  const roleCounts: Array<[string, number]> = Array.from(roleMap.entries());
 
   return (
     <PageShell
@@ -3263,12 +3963,8 @@ function ReportsPage({ data }: { data: DashboardData }) {
           ).map(([value, label]) => (
             <button
               type="button"
-              className={
-                filter.period === value ? styles.activePeriod : ""
-              }
-              onClick={() =>
-                setFilter({ ...filter, period: value })
-              }
+              className={filter.period === value ? styles.activePeriod : ""}
+              onClick={() => setFilter({ ...filter, period: value })}
               key={value}
             >
               {label}
@@ -3297,9 +3993,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
           <input
             type="date"
             value={
-              filter.period === "CUSTOM"
-                ? filter.to
-                : localDateKey(range.end)
+              filter.period === "CUSTOM" ? filter.to : localDateKey(range.end)
             }
             disabled={filter.period !== "CUSTOM"}
             onChange={(event) =>
@@ -3454,7 +4148,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
                 item.serviceType,
                 item.staff?.name || item.staffName || "Unknown",
                 item.staff?.role || item.staffRole || "",
-                item.broker?.name || "",
+                item.brokerCustomer?.name || item.broker?.name || "",
                 item.amount || 0,
                 item.status,
                 item.servedAt,
@@ -3518,14 +4212,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
           description="References, documents, status and uploader records."
           onExport={() =>
             downloadCsv("bank-verification-report", [
-              [
-                "Uploader",
-                "Role",
-                "Reference",
-                "Amount",
-                "Status",
-                "Date",
-              ],
+              ["Uploader", "Role", "Reference", "Amount", "Status", "Date"],
               ...safeArray<any>(data.bankVerifications).map((item) => [
                 item.uploadedByName,
                 item.uploadedByRole,
@@ -3603,7 +4290,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
                 <td>{item.phone || "N/A"}</td>
                 <td>
                   <div className={styles.staffServiceList}>
-                    {item.staffNames.map((staffName) => (
+                    {item.staffNames.map((staffName: string) => (
                       <span key={staffName}>
                         <UserCheck size={13} /> {staffName}
                       </span>
@@ -3624,10 +4311,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
                   <ServiceCountBadge value={item.yearCount} />
                 </td>
                 <td>
-                  <ServiceCountBadge
-                    value={item.selectedCount}
-                    highlighted
-                  />
+                  <ServiceCountBadge value={item.selectedCount} highlighted />
                 </td>
                 <td>{item.totalCount}</td>
                 <td>{formatMoney(item.selectedValue)}</td>
@@ -3689,20 +4373,18 @@ function ReportsPage({ data }: { data: DashboardData }) {
                 <td>{item.serviceType || "Service"}</td>
                 <td>
                   <Entity
-                    name={
-                      item.staff?.name ||
-                      item.staffName ||
-                      "Unknown staff"
-                    }
+                    name={item.staff?.name || item.staffName || "Unknown staff"}
                     sub={item.staff?.email || ""}
                   />
                 </td>
                 <td>
-                  {formatRole(
-                    item.staff?.role || item.staffRole || "STAFF",
-                  )}
+                  {formatRole(item.staff?.role || item.staffRole || "STAFF")}
                 </td>
-                <td>{item.broker?.name || "No broker"}</td>
+                <td>
+                  {item.brokerCustomer?.name ||
+                    item.broker?.name ||
+                    "No broker"}
+                </td>
                 <td>{formatDate(item.servedAt, true)}</td>
                 <td>{formatMoney(item.amount)}</td>
                 <td>
@@ -3764,10 +4446,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
               <tr key={item.user.id}>
                 <td>{index + 1}</td>
                 <td>
-                  <Entity
-                    name={item.user.name}
-                    sub={item.user.email}
-                  />
+                  <Entity name={item.user.name} sub={item.user.email} />
                 </td>
                 <td>{formatRole(item.user.role)}</td>
                 <td>{item.user.branchName || "No branch"}</td>
@@ -4032,14 +4711,54 @@ function SettingsPage({
   }
 
   const toggles = [
-    ["sms", "SMS notifications", "Send selected financial alerts by SMS.", Smartphone],
-    ["email", "Email notifications", "Email reports and workflow alerts.", MessageSquareText],
-    ["inApp", "In-app notifications", "Show live alerts inside the portal.", Bell],
-    ["gpsAlerts", "GPS alerts", "Notify on offline, overspeed and geofence events.", MapPinned],
-    ["dayClosingLock", "Day closing lock", "Prevent closing when mismatches are unresolved.", ShieldCheck],
-    ["attendanceApproval", "Attendance approval", "Require approval for manual attendance changes.", CalendarCheck2],
-    ["bankMismatchHold", "Bank mismatch hold", "Apply controlled financial hold after mismatch.", Landmark],
-    ["lowCashAlert", "Low cash alert", "Notify management when cash falls below threshold.", CircleDollarSign],
+    [
+      "sms",
+      "SMS notifications",
+      "Send selected financial alerts by SMS.",
+      Smartphone,
+    ],
+    [
+      "email",
+      "Email notifications",
+      "Email reports and workflow alerts.",
+      MessageSquareText,
+    ],
+    [
+      "inApp",
+      "In-app notifications",
+      "Show live alerts inside the portal.",
+      Bell,
+    ],
+    [
+      "gpsAlerts",
+      "GPS alerts",
+      "Notify on offline, overspeed and geofence events.",
+      MapPinned,
+    ],
+    [
+      "dayClosingLock",
+      "Day closing lock",
+      "Prevent closing when mismatches are unresolved.",
+      ShieldCheck,
+    ],
+    [
+      "attendanceApproval",
+      "Attendance approval",
+      "Require approval for manual attendance changes.",
+      CalendarCheck2,
+    ],
+    [
+      "bankMismatchHold",
+      "Bank mismatch hold",
+      "Apply controlled financial hold after mismatch.",
+      Landmark,
+    ],
+    [
+      "lowCashAlert",
+      "Low cash alert",
+      "Notify management when cash falls below threshold.",
+      CircleDollarSign,
+    ],
   ] as const;
 
   return (
@@ -4081,16 +4800,12 @@ function SettingsPage({
           </Field>
           <Field label="Timezone">
             <select
-              value={
-                safeText(settings.timezone) || "Africa/Dar_es_Salaam"
-              }
+              value={safeText(settings.timezone) || "Africa/Dar_es_Salaam"}
               onChange={(event) =>
                 setSettings({ ...settings, timezone: event.target.value })
               }
             >
-              <option value="Africa/Dar_es_Salaam">
-                Africa/Dar es Salaam
-              </option>
+              <option value="Africa/Dar_es_Salaam">Africa/Dar es Salaam</option>
               <option value="UTC">UTC</option>
             </select>
           </Field>
@@ -4131,9 +4846,7 @@ function SettingsPage({
               <button
                 type="button"
                 className={enabled ? styles.toggleOn : ""}
-                onClick={() =>
-                  setSettings({ ...settings, [key]: !enabled })
-                }
+                onClick={() => setSettings({ ...settings, [key]: !enabled })}
                 aria-label={`Toggle ${title}`}
               >
                 <i></i>
@@ -4230,13 +4943,7 @@ function SectionHeading({
   );
 }
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className={styles.field}>
       <span>{label}</span>
@@ -4298,26 +5005,31 @@ function Entity({ name, sub }: { name: string; sub: string }) {
 
 function StatusBadge({ status }: { status: string }) {
   const value = safeText(status).toUpperCase();
-  const className =
-    ["ACTIVE", "APPROVED", "VERIFIED", "PRESENT", "EXCELLENT", "READ", "ONLINE"].includes(
-      value,
-    )
-      ? styles.statusSuccess
-      : ["PENDING", "LATE", "FAIR", "WARNING"].includes(value)
-        ? styles.statusWarning
-        : [
-              "SUSPENDED",
-              "REJECTED",
-              "ABSENT",
-              "AMOUNT_MISMATCH",
-              "MISSING_RECEIPT",
-              "DUPLICATE_DEPOSIT",
-              "MISSING_BANK_RECORD",
-              "OFFLINE",
-              "INACTIVE",
-            ].includes(value)
-          ? styles.statusDanger
-          : styles.statusNeutral;
+  const className = [
+    "ACTIVE",
+    "APPROVED",
+    "VERIFIED",
+    "PRESENT",
+    "EXCELLENT",
+    "READ",
+    "ONLINE",
+  ].includes(value)
+    ? styles.statusSuccess
+    : ["PENDING", "LATE", "FAIR", "WARNING"].includes(value)
+      ? styles.statusWarning
+      : [
+            "SUSPENDED",
+            "REJECTED",
+            "ABSENT",
+            "AMOUNT_MISMATCH",
+            "MISSING_RECEIPT",
+            "DUPLICATE_DEPOSIT",
+            "MISSING_BANK_RECORD",
+            "OFFLINE",
+            "INACTIVE",
+          ].includes(value)
+        ? styles.statusDanger
+        : styles.statusNeutral;
 
   return (
     <span className={`${styles.statusBadge} ${className}`}>
@@ -4711,12 +5423,7 @@ function createOsmEmbedUrl(latitude: number, longitude: number) {
 }
 
 type AttendanceFilterPeriod = "DAY" | "WEEK" | "MONTH" | "YEAR";
-type ReportPeriod =
-  | "DAY"
-  | "WEEK"
-  | "MONTH"
-  | "YEAR"
-  | "CUSTOM";
+type ReportPeriod = "DAY" | "WEEK" | "MONTH" | "YEAR" | "CUSTOM";
 
 type AttendanceColumn = {
   key: string;
@@ -4799,11 +5506,7 @@ function endOfLocalYear(value: unknown): Date {
   return date;
 }
 
-function dateIsInsideRange(
-  value: unknown,
-  start: Date,
-  end: Date,
-): boolean {
+function dateIsInsideRange(value: unknown, start: Date, end: Date): boolean {
   const date = new Date(String(value));
 
   if (Number.isNaN(date.getTime())) return false;
@@ -4966,9 +5669,7 @@ function summarizeAttendanceRange(records: any[]) {
   const present = records.filter(
     (item) => safeText(item.mark) === "PRESENT",
   ).length;
-  const late = records.filter(
-    (item) => safeText(item.mark) === "LATE",
-  ).length;
+  const late = records.filter((item) => safeText(item.mark) === "LATE").length;
   const absent = records.filter(
     (item) => safeText(item.mark) === "ABSENT",
   ).length;
@@ -5009,9 +5710,7 @@ function AttendanceMetric({
   theme: "green" | "orange" | "red" | "purple";
 }) {
   return (
-    <article
-      className={`${styles.attendanceMetric} ${styles[theme]}`}
-    >
+    <article className={`${styles.attendanceMetric} ${styles[theme]}`}>
       <span>
         <Icon size={20} />
       </span>
@@ -5061,24 +5760,16 @@ function AttendanceRate({
   );
 }
 
-function serviceCountInRange(
-  services: any[],
-  start: Date,
-  end: Date,
-): number {
+function serviceCountInRange(services: any[], start: Date, end: Date): number {
   return services.filter((item) =>
-    dateIsInsideRange(
-      item.servedAt || item.createdAt,
-      start,
-      end,
-    ),
+    dateIsInsideRange(item.servedAt || item.createdAt, start, end),
   ).length;
 }
 
 function buildCustomerServiceSummary(
   allServices: any[],
   selectedServices: any[],
-) {
+): CustomerServiceSummaryRow[] {
   const selectedIds = new Set(
     selectedServices.map((item) => safeText(item.id)),
   );
@@ -5114,7 +5805,7 @@ function buildCustomerServiceSummary(
   });
 
   return Array.from(grouped.entries())
-    .map(([customerKey, services]) => {
+    .map(([customerKey, services]): CustomerServiceSummaryRow | null => {
       const selected = services.filter((item) =>
         selectedIds.has(safeText(item.id)),
       );
@@ -5129,39 +5820,33 @@ function buildCustomerServiceSummary(
           new Date(a.servedAt || a.createdAt).getTime(),
       )[0];
 
+      const staffNames = Array.from(
+        new Set<string>(
+          services
+            .map((item) =>
+              safeText(item.staff?.name || item.staffName || "Unknown staff"),
+            )
+            .filter((value): value is string => Boolean(value)),
+        ),
+      );
+
+      const serviceTypes = Array.from(
+        new Set<string>(
+          services
+            .map((item) => safeText(item.serviceType))
+            .filter((value): value is string => Boolean(value)),
+        ),
+      );
+
       return {
         customerKey,
-        customerName:
-          customer.name ||
-          first.customerName ||
-          "Walk-in Customer",
+        customerName: customer.name || first.customerName || "Walk-in Customer",
         phone: customer.phone || "",
         email: customer.email || "",
         region: customer.region || "",
-        staffNames: Array.from(
-          new Set(
-            services
-              .map(
-                (item) =>
-                  item.staff?.name ||
-                  item.staffName ||
-                  "Unknown staff",
-              )
-              .filter(Boolean),
-          ),
-        ),
-        serviceTypes: Array.from(
-          new Set(
-            services
-              .map((item) => safeText(item.serviceType))
-              .filter(Boolean),
-          ),
-        ),
-        dayCount: serviceCountInRange(
-          services,
-          dayRange.start,
-          dayRange.end,
-        ),
+        staffNames,
+        serviceTypes,
+        dayCount: serviceCountInRange(services, dayRange.start, dayRange.end),
         weekCount: serviceCountInRange(
           services,
           weekRange.start,
@@ -5180,19 +5865,17 @@ function buildCustomerServiceSummary(
         selectedCount: selected.length,
         totalCount: services.length,
         selectedValue: selected.reduce(
-          (sum, item) => sum + Number(item.amount || 0),
+          (sum: number, item: any) => sum + Number(item.amount || 0),
           0,
         ),
-        lastServedAt:
-          lastService?.servedAt || lastService?.createdAt || "",
+        lastServedAt: lastService?.servedAt || lastService?.createdAt || "",
       };
     })
-    .filter(Boolean)
+    .filter((item): item is CustomerServiceSummaryRow => item !== null)
     .sort(
-      (a: any, b: any) =>
-        b.selectedCount - a.selectedCount ||
-        b.totalCount - a.totalCount,
-    ) as any[];
+      (a, b) =>
+        b.selectedCount - a.selectedCount || b.totalCount - a.totalCount,
+    );
 }
 
 function ServiceCountBadge({

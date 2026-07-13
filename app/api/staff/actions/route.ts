@@ -1,3 +1,4 @@
+import { compare, hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
@@ -18,6 +19,35 @@ function required(value: unknown, name: string): string {
   const result = text(value);
   if (!result) throw new Error(`REQUIRED:${name}`);
   return result;
+}
+
+
+function normalizedUsername(value: unknown): string {
+  const username = required(value, "username").toLowerCase();
+
+  if (!/^[a-z0-9._-]{3,40}$/.test(username)) {
+    throw new Error("INVALID_USERNAME");
+  }
+
+  return username;
+}
+
+function strongPassword(value: unknown): string {
+  const password = required(value, "newPassword");
+
+  if (password.length < 8 || password.length > 128) {
+    throw new Error("WEAK_PASSWORD");
+  }
+
+  if (
+    !/[A-Z]/.test(password) ||
+    !/[a-z]/.test(password) ||
+    !/[0-9]/.test(password)
+  ) {
+    throw new Error("WEAK_PASSWORD");
+  }
+
+  return password;
 }
 
 function positiveAmount(value: unknown): number {
@@ -129,6 +159,12 @@ function apiError(error: unknown) {
     DUPLICATE_REFERENCE: [409, "This transaction reference already exists."],
     INVALID_EXPENSE_CATEGORY: [400, "Choose a valid expense category."],
     FILE_NOT_OWNED: [403, "Use a file uploaded from your own staff account."],
+    INVALID_USERNAME: [400, "Username must be 3–40 characters and use only letters, numbers, dot, underscore, or hyphen."],
+    USERNAME_TAKEN: [409, "That username is already used by another account."],
+    CURRENT_PASSWORD_INCORRECT: [403, "The current password is incorrect."],
+    WEAK_PASSWORD: [400, "The new password must contain at least 8 characters, uppercase, lowercase, and a number."],
+    PASSWORD_CONFIRMATION_MISMATCH: [400, "The new password confirmation does not match."],
+    PASSWORD_REUSE: [400, "Choose a new password that is different from the current password."],
   };
   if (message.startsWith("REQUIRED:")) {
     return NextResponse.json({ success: false, message: `${message.split(":")[1]} is required.` }, { status: 400 });
@@ -447,13 +483,174 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, message: "All notifications marked as read." });
       }
 
-      case "UPDATE_PROFILE": {
+      case "UPDATE_PROFILE":
+      case "UPDATE_PROFILE_IMAGE": {
         const profileImageUrl = await requireOwnedFileUrl(
-          companyId, session.id, required(body.profileImageUrl, "profileImageUrl"), ["PROFILE"],
+          companyId,
+          session.id,
+          required(body.profileImageUrl, "profileImageUrl"),
+          ["PROFILE"],
         );
-        await (db as any).user.update({ where: { id: session.id }, data: { profileImageUrl } });
-        await audit(companyId, session.id, "UPDATE_PROFILE_IMAGE", "Updated staff profile image");
-        return NextResponse.json({ success: true, message: "Profile image updated." });
+
+        const updated = await (db as any).user.update({
+          where: { id: session.id },
+          data: { profileImageUrl },
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+            profileImageUrl: true,
+            updatedAt: true,
+          },
+        });
+
+        await audit(
+          companyId,
+          session.id,
+          "UPDATE_PROFILE_IMAGE",
+          "Updated compressed staff profile image",
+        );
+
+        return NextResponse.json({
+          success: true,
+          message: "Compressed profile image saved to your account.",
+          user: updated,
+        });
+      }
+
+      case "UPDATE_USERNAME": {
+        const username = normalizedUsername(body.username);
+        const currentPassword = required(
+          body.currentPassword,
+          "currentPassword",
+        );
+
+        const currentUser = await (db as any).user.findFirst({
+          where: {
+            id: session.id,
+            companyId,
+            role: "STAFF",
+          },
+          select: {
+            id: true,
+            username: true,
+            passwordHash: true,
+          },
+        });
+
+        if (!currentUser) throw new Error("RECORD_NOT_FOUND");
+
+        const passwordCorrect = await compare(
+          currentPassword,
+          currentUser.passwordHash,
+        );
+
+        if (!passwordCorrect) {
+          throw new Error("CURRENT_PASSWORD_INCORRECT");
+        }
+
+        const duplicate = await (db as any).user.findFirst({
+          where: {
+            username,
+            id: { not: session.id },
+          },
+          select: { id: true },
+        });
+
+        if (duplicate) throw new Error("USERNAME_TAKEN");
+
+        const previousUsername = currentUser.username;
+        const updated = await (db as any).user.update({
+          where: { id: session.id },
+          data: {
+            username,
+            usernameChangedAt: new Date(),
+          },
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+            profileImageUrl: true,
+            usernameChangedAt: true,
+          },
+        });
+
+        await audit(
+          companyId,
+          session.id,
+          "UPDATE_STAFF_USERNAME",
+          `Changed username from ${previousUsername} to ${username}`,
+        );
+
+        return NextResponse.json({
+          success: true,
+          message: "Username updated successfully.",
+          user: updated,
+        });
+      }
+
+      case "CHANGE_PASSWORD": {
+        const currentPassword = required(
+          body.currentPassword,
+          "currentPassword",
+        );
+        const newPassword = strongPassword(body.newPassword);
+        const confirmPassword = required(
+          body.confirmPassword,
+          "confirmPassword",
+        );
+
+        if (newPassword !== confirmPassword) {
+          throw new Error("PASSWORD_CONFIRMATION_MISMATCH");
+        }
+
+        const currentUser = await (db as any).user.findFirst({
+          where: {
+            id: session.id,
+            companyId,
+            role: "STAFF",
+          },
+          select: { id: true, passwordHash: true },
+        });
+
+        if (!currentUser) throw new Error("RECORD_NOT_FOUND");
+
+        const passwordCorrect = await compare(
+          currentPassword,
+          currentUser.passwordHash,
+        );
+
+        if (!passwordCorrect) {
+          throw new Error("CURRENT_PASSWORD_INCORRECT");
+        }
+
+        if (await compare(newPassword, currentUser.passwordHash)) {
+          throw new Error("PASSWORD_REUSE");
+        }
+
+        const passwordHash = await hash(newPassword, 12);
+
+        await (db as any).user.update({
+          where: { id: session.id },
+          data: {
+            passwordHash,
+            passwordChangedAt: new Date(),
+          },
+        });
+
+        await audit(
+          companyId,
+          session.id,
+          "CHANGE_STAFF_PASSWORD",
+          "Changed staff account password",
+        );
+
+        return NextResponse.json({
+          success: true,
+          message: "Password changed successfully. Use the new password on your next sign-in.",
+        });
       }
 
       default:

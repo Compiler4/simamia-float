@@ -28,8 +28,7 @@ type Props = {
 
 type PageKey =
   | "Dashboard"
-  | "Receive Float"
-  | "Confirm Float Received"
+  | "Receive & Confirm Float"
   | "Issue Float to Brokers"
   | "Receive Collections"
   | "Return Money"
@@ -75,12 +74,17 @@ type DashboardData = {
   brokerStats: any[];
   customerStats: any[];
   assignedTransactions: any[];
+  dailyTransactions: any[];
+  dailyDeposits: any[];
+  dailyFlowSeries: any[];
   reportSummary: Record<string, any>;
   reportRows: any[];
   flowSeries: any[];
   financialHold: any | null;
   stats: Record<string, number>;
 };
+
+type UploadClientKind = "receipt" | "profile" | "proof" | "expense" | "bank" | "other";
 
 type IconName =
   | "grid" | "wallet" | "receive" | "confirm" | "send" | "collection" | "return"
@@ -91,8 +95,7 @@ type IconName =
 
 const nav: Array<{ page: PageKey; group: string; icon: IconName }> = [
   { page: "Dashboard", group: "Overview", icon: "grid" },
-  { page: "Receive Float", group: "Morning Float", icon: "receive" },
-  { page: "Confirm Float Received", group: "Morning Float", icon: "confirm" },
+  { page: "Receive & Confirm Float", group: "Morning Float", icon: "confirm" },
   { page: "Issue Float to Brokers", group: "Float Operations", icon: "send" },
   { page: "Receive Collections", group: "Float Operations", icon: "collection" },
   { page: "Return Money", group: "Float Operations", icon: "return" },
@@ -174,6 +177,47 @@ function date(value: unknown, time = false) {
 function today() { return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Africa/Dar_es_Salaam" }).format(new Date()); }
 function label(value: unknown) { return String(value || "").replaceAll("_", " ").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()); }
 
+async function compressImageInBrowser(
+  file: File,
+  kind: UploadClientKind,
+): Promise<File> {
+  if (!file.type.startsWith("image/") || file.size < 900_000) {
+    return file;
+  }
+
+  const bitmap = await createImageBitmap(file);
+  const maxSide = kind === "profile" ? 720 : 1800;
+  const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    bitmap.close();
+    return file;
+  }
+
+  context.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close();
+
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, "image/webp", kind === "profile" ? 0.78 : 0.82),
+  );
+
+  if (!blob || blob.size >= file.size) {
+    return file;
+  }
+
+  const baseName = file.name.replace(/\.[^.]+$/, "") || "upload";
+  return new File([blob], `${baseName}.webp`, {
+    type: "image/webp",
+    lastModified: Date.now(),
+  });
+}
+
 async function requestJson<T = any>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, { credentials: "include", cache: "no-store", ...options });
   const text = await response.text();
@@ -233,9 +277,26 @@ export default function StaffDashboardClient({ user }: Props) {
     finally { setBusy(false); }
   }
 
-  async function upload(file: File, kind: "receipt" | "profile" = "receipt") {
-    const form = new FormData(); form.append("file", file); form.append("kind", kind);
-    return (await requestJson<{ success: true; url: string }>("/api/staff/upload", { method: "POST", body: form })).url;
+  async function upload(
+    file: File,
+    kind: UploadClientKind = "receipt",
+  ) {
+    const prepared = await compressImageInBrowser(file, kind);
+    const form = new FormData();
+    form.append("file", prepared);
+    form.append("kind", kind);
+
+    const result = await requestJson<{
+      success: true;
+      url: string;
+      message?: string;
+    }>("/api/staff/upload", {
+      method: "POST",
+      body: form,
+    });
+
+    if (result.message) setToast(result.message);
+    return result.url;
   }
 
   function open(next: PageKey) { setPage(next); setMobileOpen(false); setNoticeOpen(false); }
@@ -287,13 +348,13 @@ export default function StaffDashboardClient({ user }: Props) {
 function PageContent(props: {
   page: PageKey; data: DashboardData; busy: boolean;
   action: (name: string, payload?: Record<string, unknown>) => Promise<boolean>;
-  upload: (file: File, kind?: "receipt" | "profile") => Promise<string>;
+  upload: (file: File, kind?: UploadClientKind) => Promise<string>;
   open: (page: PageKey) => void; notify: (text: string) => void;
   period: string; setPeriod: (value: string) => void; anchor: string; setAnchor: (value: string) => void; reload: () => Promise<void>;
 }) {
   const common = { data: props.data, busy: props.busy, action: props.action, upload: props.upload, notify: props.notify };
   switch (props.page) {
-    case "Receive Float": case "Confirm Float Received": return <ReceiveFloatPage {...common}/>;
+    case "Receive & Confirm Float": return <ReceiveFloatPage {...common}/>;
     case "Issue Float to Brokers": return <IssueFloatPage {...common}/>;
     case "Receive Collections": return <CollectionsPage {...common}/>;
     case "Return Money": case "Deposit to Accountant": return <ReturnMoneyPage {...common}/>;
@@ -317,8 +378,8 @@ function PageContent(props: {
 }
 
 function DashboardHome({ data, open }: { data: DashboardData; open: (page: PageKey) => void }) {
-  const depositTotal = arr<any>(data.deposits).length;
-  const verified = arr<any>(data.deposits).filter((item) => item.status === "VERIFIED").length;
+  const depositTotal = arr<any>(data.dailyDeposits).length;
+  const verified = arr<any>(data.dailyDeposits).filter((item) => item.status === "VERIFIED").length;
   const verifiedPct = depositTotal ? (verified / depositTotal) * 100 : 100;
   return <section className={styles.stack}>
     {data.financialHold && <div className={styles.holdBanner}><Icon name="alert" size={25}/><div><strong>Financial Hold</strong><span>{data.financialHold.mismatchReason || "A bank deposit mismatch must be resolved before another deposit is submitted."}</span></div><button onClick={() => open("Bank Verification")}>Review hold</button></div>}
@@ -330,32 +391,32 @@ function DashboardHome({ data, open }: { data: DashboardData; open: (page: PageK
       <Metric title="Daily Float Return" value={money(data.stats.todayReturned + data.stats.todayBanked)} change={`${data.stats.pendingApprovals || 0} pending controls`} icon="return" tone="blue"/>
     </div>
     <div className={styles.analyticsGrid}>
-      <Card title="Float Flow Analysis" subtitle="Daily received, issued, collections and return movement" action={<button className={styles.smallButton} onClick={() => open("Reports")}>View report</button>}><LineChart rows={data.flowSeries}/></Card>
-      <Card title="Deposit Accuracy" subtitle="Bank verification and mismatch control"><Donut percent={verifiedPct} value={money(arr<any>(data.deposits).reduce((s, r) => s + Number(r.amount || 0), 0))}/><div className={styles.legend}><span><i className={styles.greenDot}/>Verified {verified}</span><span><i className={styles.redDot}/>Mismatch {depositTotal - verified}</span></div></Card>
+      <Card title="Float Flow Analysis" subtitle="Daily received, issued, collections and return movement" action={<button className={styles.smallButton} onClick={() => open("Reports")}>View report</button>}><LineChart rows={data.dailyFlowSeries}/> </Card>
+      <Card title="Deposit Accuracy" subtitle="Bank verification and mismatch control"><Donut percent={verifiedPct} value={money(arr<any>(data.dailyDeposits).reduce((s, r) => s + Number(r.amount || 0), 0))}/><div className={styles.legend}><span><i className={styles.greenDot}/>Verified {verified}</span><span><i className={styles.redDot}/>Mismatch {depositTotal - verified}</span></div></Card>
     </div>
     <div className={styles.secondaryGrid}>
       <Card title="Current Float Position" subtitle="Available, outstanding and pending"><div className={styles.bigBalance}>{money(data.stats.availableBalance)}</div><Progress label="Performance score" value={data.stats.performanceScore || 0}/><Progress label="Attendance" value={data.stats.attendanceRate || 0}/><Progress label="GPS compliance" value={data.stats.gpsCompliance || 0}/></Card>
-      <Card title="Quick Operations" subtitle="Common staff actions"><div className={styles.quickGrid}><Quick icon="confirm" text="Confirm float" onClick={() => open("Confirm Float Received")}/><Quick icon="send" text="Issue to broker" onClick={() => open("Issue Float to Brokers")}/><Quick icon="bank" text="Bank deposit" onClick={() => open("Deposit to Bank")}/><Quick icon="location" text="Start live GPS" onClick={() => open("Live Locations")}/><Quick icon="expense" text="Submit expense" onClick={() => open("Expense Management")}/><Quick icon="report" text="View reports" onClick={() => open("Reports")}/></div></Card>
-      <Card title="Recent Transactions" subtitle="Database records with user details"><MiniTransactions rows={data.assignedTransactions.slice(0, 6)}/></Card>
+      <Card title="Quick Operations" subtitle="Common staff actions"><div className={styles.quickGrid}><Quick icon="confirm" text="Confirm float" onClick={() => open("Receive & Confirm Float")}/><Quick icon="send" text="Issue to broker" onClick={() => open("Issue Float to Brokers")}/><Quick icon="bank" text="Bank deposit" onClick={() => open("Deposit to Bank")}/><Quick icon="location" text="Start live GPS" onClick={() => open("Live Locations")}/><Quick icon="expense" text="Submit expense" onClick={() => open("Expense Management")}/><Quick icon="report" text="View reports" onClick={() => open("Reports")}/></div></Card>
+      <Card title="Recent Transactions" subtitle="Database records with user details"><MiniTransactions rows={data.dailyTransactions.slice(0, 6)}/></Card>
     </div>
   </section>;
 }
 
 function ReceiveFloatPage({ data, busy, action }: CommonProps) {
   const rows = data.floats.filter((item) => item.transactionType === "ACCOUNTANT_TO_STAFF");
-  return <Section title="Receive and Confirm Float" subtitle="Confirm only float physically or electronically received from the accountant." icon="confirm">
+  return <Section title="Receive & Confirm Morning Float" subtitle="Confirm only float physically or electronically received from the accountant." icon="confirm">
     <Card title="Assigned morning float" subtitle="Confirmation creates your operational check-in">
       <div className={styles.receiptList}>{rows.map((item) => <article key={item.id}><Avatar person={item.fromUser}/><div><strong>{item.fromUser?.name || "Accountant"}</strong><span>{item.referenceNo || "Float assignment"} • {date(item.createdAt, true)}</span></div><b>{money(item.amount)}</b><Status value={item.status}/>{item.status === "ISSUED" ? <button disabled={busy} onClick={() => action("CONFIRM_FLOAT_RECEIVED", { transactionId: item.id })}><Icon name="check"/> Confirm received</button> : <small>Transaction is locked after confirmation or approval.</small>}</article>)}{!rows.length && <Empty text="No float has been assigned to you yet."/>}</div>
     </Card>
   </Section>;
 }
 
-type CommonProps = { data: DashboardData; busy: boolean; action: (name: string, payload?: Record<string, unknown>) => Promise<boolean>; upload: (file: File, kind?: "receipt" | "profile") => Promise<string>; notify: (text: string) => void };
+type CommonProps = { data: DashboardData; busy: boolean; action: (name: string, payload?: Record<string, unknown>) => Promise<boolean>; upload: (file: File, kind?: UploadClientKind) => Promise<string>; notify: (text: string) => void };
 
 function IssueFloatPage({ data, busy, action, upload, notify }: CommonProps) {
   const [form, setForm] = useState({ brokerId: "", amount: "", purpose: "Morning float supply", referenceNo: "", notes: "", receiptUrl: "" });
   const [up, setUp] = useState(false);
-  async function file(e: ChangeEvent<HTMLInputElement>) { const f = e.target.files?.[0]; if (!f) return; setUp(true); try { setForm({ ...form, receiptUrl: await upload(f) }); notify("Proof uploaded."); } catch (x) { notify(x instanceof Error ? x.message : "Upload failed."); } finally { setUp(false); } }
+  async function file(e: ChangeEvent<HTMLInputElement>) { const f = e.target.files?.[0]; if (!f) return; setUp(true); try { setForm({ ...form, receiptUrl: await upload(f,"proof") }); notify("Proof uploaded."); } catch (x) { notify(x instanceof Error ? x.message : "Upload failed."); } finally { setUp(false); } }
   async function submit(e: FormEvent) { e.preventDefault(); if (await action("ISSUE_FLOAT", form)) setForm({ brokerId: "", amount: "", purpose: "Morning float supply", referenceNo: "", notes: "", receiptUrl: "" }); }
   return <Section title="Issue Float to Brokers" subtitle={`Available balance: ${money(data.stats.availableBalance)}. Approved records cannot be edited.`} icon="send"><div className={styles.split}>
     <FormCard title="New broker float" onSubmit={submit}><Field label="Broker"><select required value={form.brokerId} onChange={(e) => setForm({ ...form, brokerId: e.target.value })}><option value="">Select broker</option>{data.brokers.map((b) => <option key={b.id} value={b.id}>{b.name} — {b.username}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })}/></Field><Field label="Reference"><input value={form.referenceNo} onChange={(e) => setForm({ ...form, referenceNo: e.target.value })} placeholder="Automatic when blank"/></Field></div><Field label="Purpose"><input required value={form.purpose} onChange={(e) => setForm({ ...form, purpose: e.target.value })}/></Field><Field label="Notes"><textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy || up} text="Issue float" icon="send"/></FormCard>
@@ -365,26 +426,26 @@ function IssueFloatPage({ data, busy, action, upload, notify }: CommonProps) {
 
 function CollectionsPage({ data, busy, action, upload, notify }: CommonProps) {
   const [form, setForm] = useState({ brokerId: "", amount: "", referenceNo: "", collectionDate: today(), description: "", receiptUrl: "" }); const [up, setUp] = useState(false);
-  async function file(e: ChangeEvent<HTMLInputElement>) { const f=e.target.files?.[0]; if(!f)return; setUp(true); try{setForm({...form,receiptUrl:await upload(f)});notify("Collection receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);} }
+  async function file(e: ChangeEvent<HTMLInputElement>) { const f=e.target.files?.[0]; if(!f)return; setUp(true); try{setForm({...form,receiptUrl:await upload(f,"receipt")});notify("Collection receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);} }
   async function submit(e:FormEvent){e.preventDefault();if(await action("RECORD_COLLECTION",form))setForm({brokerId:"",amount:"",referenceNo:"",collectionDate:today(),description:"",receiptUrl:""});}
   return <Section title="Receive Collections" subtitle="Record money returned by brokers, exact time, proof and reference." icon="collection"><div className={styles.split}><FormCard title="New broker collection" onSubmit={submit}><Field label="Broker"><select required value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">Select broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{b.name} — {b.email}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Collection date"><input type="date" required value={form.collectionDate} onChange={(e)=>setForm({...form,collectionDate:e.target.value})}/></Field></div><Field label="Reference"><input value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field><Field label="Description"><textarea value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Record collection" icon="collection"/></FormCard><Card title="Recent collections" subtitle="Verification status from accounting"><MiniTransactions rows={data.collections.map((r)=>({id:r.id,description:r.description||"Broker collection",amount:r.amount,status:r.status,date:r.collectionDate,person:r.broker,reference:r.referenceNo})).slice(0,15)}/></Card></div></Section>;
 }
 
 function ReturnMoneyPage({ data, busy, action, upload, notify }: CommonProps) {
   const [form,setForm]=useState({accountantId:"",amount:"",referenceNo:"",purpose:"Afternoon float and collection return",notes:"",receiptUrl:""}); const [up,setUp]=useState(false);
-  async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f)});notify("Proof of payment uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}
+  async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"proof")});notify("Proof of payment uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}
   async function submit(e:FormEvent){e.preventDefault();if(await action("RETURN_MONEY",form))setForm({accountantId:"",amount:"",referenceNo:"",purpose:"Afternoon float and collection return",notes:"",receiptUrl:""});}
   const rows=data.floats.filter((r)=>r.transactionType==="STAFF_RETURN_TO_ACCOUNTANT");
   return <Section title="Return Money to Accountant" subtitle="Afternoon settlement requires proof of payment and becomes locked after approval." icon="return"><div className={styles.split}><FormCard title="Return float and collections" onSubmit={submit}><Field label="Accountant"><select required value={form.accountantId} onChange={(e)=>setForm({...form,accountantId:e.target.value})}><option value="">Select accountant</option>{data.accountants.map((a)=><option key={a.id} value={a.id}>{a.name} — {a.email}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Reference"><input value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field></div><Field label="Purpose"><input required value={form.purpose} onChange={(e)=>setForm({...form,purpose:e.target.value})}/></Field><Field label="Notes"><textarea value={form.notes} onChange={(e)=>setForm({...form,notes:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up}/><Submit busy={busy||up} text="Return money" icon="return"/></FormCard><Card title="Daily return history" subtitle="Recorded creation and verification times"><MiniTransactions rows={rows.map((r)=>({id:r.id,description:r.purpose,amount:r.returnedAmount||r.amount,status:r.status,date:r.returnedAt||r.createdAt,person:r.toUser,reference:r.referenceNo})).slice(0,20)}/></Card></div></Section>;
 }
 
-function BankDepositPage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f)});notify("Bank receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("DEPOSIT_TO_BANK",form))setForm({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});}return <Section title="Deposit Money to Bank" subtitle="The system compares amount, reference, date and bank account with the bank record." icon="bank">{data.financialHold&&<div className={styles.inlineWarning}><Icon name="alert"/><span>Another deposit is blocked until the existing mismatch is resolved.</span></div>}<div className={styles.split}><FormCard title="New bank deposit" onSubmit={submit}><div className={styles.formRow}><Field label="Amount"><input disabled={!!data.financialHold} type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Deposit date"><input disabled={!!data.financialHold} type="date" required value={form.depositDate} onChange={(e)=>setForm({...form,depositDate:e.target.value})}/></Field></div><Field label="Bank account"><input disabled={!!data.financialHold} required value={form.bankAccount} onChange={(e)=>setForm({...form,bankAccount:e.target.value})} placeholder="Bank and account number"/></Field><Field label="Bank reference"><input disabled={!!data.financialHold} required value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up}/><Submit busy={busy||up||!!data.financialHold} text="Submit bank deposit" icon="bank"/></FormCard><Card title="Automatic verification statuses" subtitle="Verified, amount mismatch, missing receipt, duplicate or missing bank record"><BankCards rows={data.deposits}/></Card></div></Section>}
+function BankDepositPage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"bank")});notify("Bank receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("DEPOSIT_TO_BANK",form))setForm({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});}return <Section title="Deposit Money to Bank" subtitle="The system compares amount, reference, date and bank account with the bank record." icon="bank">{data.financialHold&&<div className={styles.inlineWarning}><Icon name="alert"/><span>Another deposit is blocked until the existing mismatch is resolved.</span></div>}<div className={styles.split}><FormCard title="New bank deposit" onSubmit={submit}><div className={styles.formRow}><Field label="Amount"><input disabled={!!data.financialHold} type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Deposit date"><input disabled={!!data.financialHold} type="date" required value={form.depositDate} onChange={(e)=>setForm({...form,depositDate:e.target.value})}/></Field></div><Field label="Bank account"><input disabled={!!data.financialHold} required value={form.bankAccount} onChange={(e)=>setForm({...form,bankAccount:e.target.value})} placeholder="Bank and account number"/></Field><Field label="Bank reference"><input disabled={!!data.financialHold} required value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up}/><Submit busy={busy||up||!!data.financialHold} text="Submit bank deposit" icon="bank"/></FormCard><Card title="Automatic verification statuses" subtitle="Verified, amount mismatch, missing receipt, duplicate or missing bank record"><BankCards rows={data.deposits}/></Card></div></Section>}
 
-function ProofPage({data,busy,action,upload,notify}:CommonProps){const editable=data.deposits.filter((r)=>r.status!=="VERIFIED");async function file(id:string,f?:File){if(!f)return;try{const url=await upload(f);await action("UPLOAD_PROOF_OF_PAYMENT",{depositId:id,receiptUrl:url});}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}}return <Section title="Upload Proof of Payment" subtitle="Verified deposits are immutable. Pending or mismatched deposits can receive new proof." icon="upload"><Card title="Receipt controls" subtitle="Images and PDF up to 8 MB"><div className={styles.proofGrid}>{editable.map((r)=><article key={r.id}><Icon name="document" size={25}/><div><strong>{r.referenceNo}</strong><span>{r.bankAccount} • {date(r.depositDate)}</span></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.bankReceiptUrl&&<a href={r.bankReceiptUrl} target="_blank">View current receipt</a>}<label><Icon name="upload"/>Upload replacement<input type="file" accept="image/*,application/pdf" disabled={busy} onChange={(e)=>void file(r.id,e.target.files?.[0])}/></label></article>)}{!editable.length&&<Empty text="All bank deposits are verified and locked."/>}</div></Card></Section>}
+function ProofPage({data,busy,action,upload,notify}:CommonProps){const editable=data.deposits.filter((r)=>r.status!=="VERIFIED");async function file(id:string,f?:File){if(!f)return;try{const url=await upload(f,"bank");await action("UPLOAD_PROOF_OF_PAYMENT",{depositId:id,receiptUrl:url});}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}}return <Section title="Upload Proof of Payment" subtitle="Verified deposits are immutable. Pending or mismatched deposits can receive new proof." icon="upload"><Card title="Receipt controls" subtitle="Large images and PDFs are compressed before private storage"><div className={styles.proofGrid}>{editable.map((r)=><article key={r.id}><Icon name="document" size={25}/><div><strong>{r.referenceNo}</strong><span>{r.bankAccount} • {date(r.depositDate)}</span></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.bankReceiptUrl&&<a href={r.bankReceiptUrl} target="_blank">View current receipt</a>}<label><Icon name="upload"/>Upload replacement<input type="file" accept="image/*,application/pdf" disabled={busy} onChange={(e)=>void file(r.id,e.target.files?.[0])}/></label></article>)}{!editable.length&&<Empty text="All bank deposits are verified and locked."/>}</div></Card></Section>}
 
 function BankStatusPage({data}:{data:DashboardData}){return <Section title="Bank Deposit Verification" subtitle="Read-only comparison results for your submitted deposits." icon="verify"><div className={styles.metricGrid}><Metric title="Verified" value={String(data.deposits.filter((r)=>r.status==="VERIFIED").length)} change="Matched bank records" icon="check" tone="green"/><Metric title="Financial Holds" value={String(data.deposits.filter((r)=>r.holdActive).length)} change="Blocks another deposit" icon="alert" tone="red"/><Metric title="Pending" value={String(data.deposits.filter((r)=>r.status==="PENDING").length)} change="Awaiting bank record" icon="history" tone="gold"/><Metric title="Total Deposited" value={money(data.deposits.reduce((s,r)=>s+Number(r.amount||0),0))} change="All submitted deposits" icon="bank" tone="blue"/></div><Card title="Receipt-to-bank comparison" subtitle="Amount, reference number, deposit date and bank account"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Reference</th><th>Entered Amount</th><th>Statement Amount</th><th>Bank Account</th><th>Checks</th><th>Status</th></tr></thead><tbody>{data.deposits.map((r)=><tr key={r.id}><td>{date(r.depositDate,true)}</td><td>{r.referenceNo}</td><td>{money(r.amount)}</td><td>{r.statementAmount==null?"Awaiting bank":money(r.statementAmount)}</td><td>{r.bankAccount}</td><td><Comparison value={r.comparison}/></td><td><Status value={r.status}/>{r.mismatchReason&&<small>{r.mismatchReason}</small>}</td></tr>)}</tbody></table></div></Card></Section>}
 
-function ExpensePage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f)});notify("Expense receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("SUBMIT_EXPENSE",form))setForm({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});}return <Section title="Expense Management" subtitle="Every employee may submit an expense request. Approved or rejected requests cannot be edited." icon="expense"><div className={styles.expenseLayout}><FormCard title="New expense request" onSubmit={submit}><Field label="Category"><select value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}>{["FUEL","TRANSPORT","AIRTIME","ACCOMMODATION","REPAIRS","STATIONERY","MEALS","OFFICE_EXPENSES","EMERGENCY_EXPENSES"].map((v)=><option key={v}>{label(v)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Expense date"><input type="date" required value={form.expenseDate} onChange={(e)=>setForm({...form,expenseDate:e.target.value})}/></Field></div><Field label="Description"><textarea required value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Submit expense" icon="expense"/></FormCard><Card title="My expense requests" subtitle="Approval workflow and review notes"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th></tr></thead><tbody>{data.expenses.map((r)=><tr key={r.id}><td>{date(r.expenseDate)}</td><td>{label(r.category)}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/>{r.reviewNote&&<small>{r.reviewNote}</small>}</td><td>{r.reviewedBy?.name||"Awaiting review"}</td></tr>)}</tbody></table></div></Card></div></Section>}
+function ExpensePage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"expense")});notify("Expense receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("SUBMIT_EXPENSE",form))setForm({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});}return <Section title="Expense Management" subtitle="Every employee may submit an expense request. Approved or rejected requests cannot be edited." icon="expense"><div className={styles.expenseLayout}><FormCard title="New expense request" onSubmit={submit}><Field label="Category"><select value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}>{["FUEL","TRANSPORT","AIRTIME","ACCOMMODATION","REPAIRS","STATIONERY","MEALS","OFFICE_EXPENSES","EMERGENCY_EXPENSES"].map((v)=><option key={v}>{label(v)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Expense date"><input type="date" required value={form.expenseDate} onChange={(e)=>setForm({...form,expenseDate:e.target.value})}/></Field></div><Field label="Description"><textarea required value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Submit expense" icon="expense"/></FormCard><Card title="My expense requests" subtitle="Approval workflow and review notes"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th></tr></thead><tbody>{data.expenses.map((r)=><tr key={r.id}><td>{date(r.expenseDate)}</td><td>{label(r.category)}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/>{r.reviewNote&&<small>{r.reviewNote}</small>}</td><td>{r.reviewedBy?.name||"Awaiting review"}</td></tr>)}</tbody></table></div></Card></div></Section>}
 
 function ServiceVisitPage({data,busy,action}:CommonProps){const latest=data.devices?.[0];const[form,setForm]=useState({brokerId:"",customerId:"",serviceType:"Float supply visit",amount:"",notes:"",latitude:latest?.lastLatitude||"",longitude:latest?.lastLongitude||"",locationName:data.staff?.assignedRegion||""});async function submit(e:FormEvent){e.preventDefault();if(await action("RECORD_SERVICE_VISIT",form))setForm({...form,brokerId:"",customerId:"",amount:"",notes:""});}return <Section title="Broker and Customer Visits" subtitle="Record who was served, the location and how many times service was provided." icon="visit"><div className={styles.split}><FormCard title="Record service visit" onSubmit={submit}><Field label="Broker (optional)"><select value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">No broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{b.name}</option>)}</select></Field><Field label="Customer (optional)"><select value={form.customerId} onChange={(e)=>setForm({...form,customerId:e.target.value})}><option value="">No customer</option>{data.customers.map((c)=><option key={c.id} value={c.id}>{c.name} — {c.region||"No region"}</option>)}</select></Field><Field label="Service type"><input required value={form.serviceType} onChange={(e)=>setForm({...form,serviceType:e.target.value})}/></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="0" value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Location name"><input value={form.locationName} onChange={(e)=>setForm({...form,locationName:e.target.value})}/></Field></div><div className={styles.formRow}><Field label="Latitude"><input value={form.latitude} onChange={(e)=>setForm({...form,latitude:e.target.value})}/></Field><Field label="Longitude"><input value={form.longitude} onChange={(e)=>setForm({...form,longitude:e.target.value})}/></Field></div><Field label="Notes"><textarea value={form.notes} onChange={(e)=>setForm({...form,notes:e.target.value})}/></Field><Submit busy={busy} text="Record visit" icon="visit"/></FormCard><Card title="Customers and brokers served" subtitle="Period totals and latest locations"><div className={styles.visits}><h4>Brokers</h4><BrokerTable rows={data.brokerStats}/><h4>Customers</h4>{data.customerStats.map((r)=><article key={r.customer.id}><div><strong>{r.customer.name}</strong><span>{r.customer.region||r.customer.address||"No location"}</span></div><b>{r.visits} visits</b><em>{money(r.amount)}</em></article>)}</div></Card></div></Section>}
 
@@ -404,14 +465,143 @@ function GpsAlertsPage({data}:{data:DashboardData}){return <Section title="GPS A
 
 function NotificationsPage({data,action}:{data:DashboardData;action:(n:string,p?:Record<string,unknown>)=>Promise<boolean>}){return <Section title="Notifications" subtitle="In-app, email and SMS events are queued from operational workflows." icon="bell"><div className={styles.notificationActions}><button onClick={()=>action("MARK_ALL_NOTIFICATIONS_READ")}><Icon name="check"/>Mark all read</button></div><div className={styles.noticeList}>{data.notifications.map((r)=><button key={r.id} className={r.isRead?styles.readNotice:""} onClick={()=>!r.isRead&&action("MARK_NOTIFICATION_READ",{notificationId:r.id})}><span><Icon name={r.type==="WARNING"||r.type==="ERROR"?"alert":"bell"}/></span><div><strong>{r.title}</strong><p>{r.message}</p><small>{date(r.createdAt,true)}</small></div><Status value={r.type}/></button>)}</div></Section>}
 
-function ProfilePage({data,busy,action,upload,notify}:CommonProps){const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{const url=await upload(f,"profile");await action("UPDATE_PROFILE",{profileImageUrl:url});}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}return <Section title="Staff Profile" subtitle="Profile image appears in transactions, notifications and reports." icon="user"><Card title="Account information" subtitle="Authenticated staff user"><div className={styles.profilePage}><Avatar person={data.staff} large/><div><h3>{data.staff.name}</h3><p>@{data.staff.username} • {data.staff.email}</p><span>{data.staff.branch?.name||"No branch"} • {data.staff.assignedRegion||"No assigned region"}</span><label><Icon name="upload"/>{up?"Uploading...":"Upload profile image"}<input disabled={busy||up} type="file" accept="image/*" onChange={file}/></label></div></div></Card></Section>}
+function ProfilePage({data,busy,action,upload,notify}:CommonProps){
+  const [uploading,setUploading]=useState(false);
+  const [usernameForm,setUsernameForm]=useState({
+    username:String(data.staff?.username||""),
+    currentPassword:"",
+  });
+  const [passwordForm,setPasswordForm]=useState({
+    currentPassword:"",
+    newPassword:"",
+    confirmPassword:"",
+  });
+
+  useEffect(()=>{
+    setUsernameForm((current)=>({
+      ...current,
+      username:String(data.staff?.username||""),
+    }));
+  },[data.staff?.username]);
+
+  async function profileFile(event:ChangeEvent<HTMLInputElement>){
+    const file=event.target.files?.[0];
+    if(!file)return;
+    setUploading(true);
+    try{
+      const url=await upload(file,"profile");
+      await action("UPDATE_PROFILE_IMAGE",{profileImageUrl:url});
+    }catch(error){
+      notify(error instanceof Error?error.message:"Profile upload failed.");
+    }finally{
+      setUploading(false);
+      event.target.value="";
+    }
+  }
+
+  async function updateUsername(event:FormEvent){
+    event.preventDefault();
+    const ok=await action("UPDATE_USERNAME",usernameForm);
+    if(ok){
+      setUsernameForm((current)=>({...current,currentPassword:""}));
+    }
+  }
+
+  async function changePassword(event:FormEvent){
+    event.preventDefault();
+    const ok=await action("CHANGE_PASSWORD",passwordForm);
+    if(ok){
+      setPasswordForm({currentPassword:"",newPassword:"",confirmPassword:""});
+    }
+  }
+
+  return <Section title="Staff Profile & Security" subtitle="Compressed profile image, username and password changes are validated and recorded in the database." icon="user">
+    <div className={styles.profileSecurityGrid}>
+      <Card title="Profile image" subtitle="Images are resized, converted to WEBP and stored privately.">
+        <div className={styles.profileHero}>
+          <Avatar person={data.staff} large/>
+          <div>
+            <h3>{data.staff.name}</h3>
+            <p>@{data.staff.username}</p>
+            <span>{data.staff.email}</span>
+            <small>{data.staff.branch?.name||"No branch"} • {data.staff.assignedRegion||"No assigned region"}</small>
+          </div>
+        </div>
+        <label className={styles.profileUploadButton}>
+          <Icon name="upload"/>
+          <span>{uploading?"Compressing and uploading...":"Choose profile image"}</span>
+          <input disabled={busy||uploading} type="file" accept="image/jpeg,image/png,image/webp" onChange={profileFile}/>
+        </label>
+        <div className={styles.securityNote}>Maximum original size: 25 MB. Stored profile output is limited to 2 MB.</div>
+      </Card>
+
+      <FormCard title="Change username" onSubmit={updateUsername}>
+        <Field label="New username">
+          <input
+            value={usernameForm.username}
+            onChange={(event)=>setUsernameForm({...usernameForm,username:event.target.value})}
+            minLength={3}
+            maxLength={40}
+            autoComplete="username"
+            required
+          />
+        </Field>
+        <Field label="Current password">
+          <input
+            type="password"
+            value={usernameForm.currentPassword}
+            onChange={(event)=>setUsernameForm({...usernameForm,currentPassword:event.target.value})}
+            autoComplete="current-password"
+            required
+          />
+        </Field>
+        <Submit busy={busy} text="Save username" icon="check"/>
+        <div className={styles.securityNote}>Your current password is required. Usernames must be unique.</div>
+      </FormCard>
+
+      <FormCard title="Change password" onSubmit={changePassword}>
+        <Field label="Current password">
+          <input
+            type="password"
+            value={passwordForm.currentPassword}
+            onChange={(event)=>setPasswordForm({...passwordForm,currentPassword:event.target.value})}
+            autoComplete="current-password"
+            required
+          />
+        </Field>
+        <Field label="New password">
+          <input
+            type="password"
+            value={passwordForm.newPassword}
+            onChange={(event)=>setPasswordForm({...passwordForm,newPassword:event.target.value})}
+            autoComplete="new-password"
+            minLength={8}
+            required
+          />
+        </Field>
+        <Field label="Confirm new password">
+          <input
+            type="password"
+            value={passwordForm.confirmPassword}
+            onChange={(event)=>setPasswordForm({...passwordForm,confirmPassword:event.target.value})}
+            autoComplete="new-password"
+            minLength={8}
+            required
+          />
+        </Field>
+        <Submit busy={busy} text="Change password" icon="check"/>
+        <div className={styles.securityNote}>Use at least 8 characters with uppercase, lowercase and a number.</div>
+      </FormCard>
+    </div>
+  </Section>;
+}
 
 function Section({title,subtitle,icon,children}:{title:string;subtitle:string;icon:IconName;children:ReactNode}){return <section className={styles.stack}><header className={styles.sectionHeader}><span><Icon name={icon} size={25}/></span><div><small>STAFF FLOAT OFFICER</small><h2>{title}</h2><p>{subtitle}</p></div></header>{children}</section>}
 function Card({title,subtitle,action,children}:{title:string;subtitle?:string;action?:ReactNode;children:ReactNode}){return <article className={styles.card}><header><div><h3>{title}</h3>{subtitle&&<p>{subtitle}</p>}</div>{action}</header>{children}</article>}
 function FormCard({title,onSubmit,children}:{title:string;onSubmit:(e:FormEvent)=>void;children:ReactNode}){return <form className={styles.formCard} onSubmit={onSubmit}><h3>{title}</h3>{children}</form>}
 function Field({label:txt,children}:{label:string;children:ReactNode}){return <label className={styles.field}><span>{txt}</span>{children}</label>}
 function Submit({busy,text,icon}:{busy:boolean;text:string;icon:IconName}){return <button className={styles.primary} disabled={busy}><Icon name={icon}/>{busy?"Processing...":text}</button>}
-function Upload({url,onChange,uploading,optional=false}:{url:string;onChange:(e:ChangeEvent<HTMLInputElement>)=>void;uploading:boolean;optional?:boolean}){return <label className={styles.upload}><Icon name="upload"/><div><strong>{uploading?"Uploading...":url?"File uploaded":"Choose proof or receipt"}</strong><span>{optional?"Optional JPG, PNG, WEBP or PDF":"Required JPG, PNG, WEBP or PDF"}</span></div><input type="file" accept="image/*,application/pdf" onChange={onChange}/>{url&&<b>✓</b>}</label>}
+function Upload({url,onChange,uploading,optional=false}:{url:string;onChange:(e:ChangeEvent<HTMLInputElement>)=>void;uploading:boolean;optional?:boolean}){return <label className={styles.upload}><Icon name="upload"/><div><strong>{uploading?"Uploading...":url?"File uploaded":"Choose proof or receipt"}</strong><span>{optional?"Optional JPG, PNG, WEBP or PDF • large files are compressed":"Required JPG, PNG, WEBP or PDF • large files are compressed"}</span></div><input type="file" accept="image/*,application/pdf" onChange={onChange}/>{url&&<b>✓</b>}</label>}
 function Metric({title,value,change,icon,tone}:{title:string;value:string;change?:string;icon:IconName;tone:string}){return <article className={`${styles.metric} ${styles[tone]}`}><div><span>{title}</span><strong>{value}</strong><small>{change}</small></div><i><Icon name={icon} size={22}/></i></article>}
 function Quick({icon,text,onClick}:{icon:IconName;text:string;onClick:()=>void}){return <button onClick={onClick}><i><Icon name={icon}/></i><span>{text}</span><Icon name="arrow" size={15}/></button>}
 function Progress({label:txt,value}:{label:string;value:number}){const safe=Math.max(0,Math.min(100,Number(value||0)));return <div className={styles.progress}><div><span>{txt}</span><b>{Math.round(safe)}%</b></div><i><em style={{width:`${safe}%`}}/></i></div>}

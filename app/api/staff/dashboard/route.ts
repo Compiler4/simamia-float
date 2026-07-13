@@ -148,6 +148,59 @@ function buildDailySeries(input: {
   return rows;
 }
 
+function buildTodayHourlySeries(input: {
+  floats: any[];
+  collections: any[];
+  deposits: any[];
+  userId: string;
+  inToday: (value: unknown) => boolean;
+}) {
+  const rows = Array.from({ length: 8 }, (_, index) => ({
+    key: `hour-${index}`,
+    label: `${String(index * 3).padStart(2, "0")}:00`,
+    received: 0,
+    issued: 0,
+    collections: 0,
+    deposited: 0,
+  }));
+
+  const bucket = (value: unknown) => {
+    const date = new Date(String(value));
+    const shifted = new Date(date.getTime() + 3 * 60 * 60 * 1000);
+    return Math.min(7, Math.max(0, Math.floor(shifted.getUTCHours() / 3)));
+  };
+
+  for (const item of input.floats) {
+    const value = item.returnedAt || item.issuedAt || item.createdAt;
+    if (!input.inToday(value)) continue;
+    const row = rows[bucket(value)];
+
+    if (item.transactionType === "ACCOUNTANT_TO_STAFF" && item.toUserId === input.userId) {
+      row.received += n(item.amount);
+    }
+
+    if (item.transactionType === "STAFF_TO_BROKER" && item.fromUserId === input.userId) {
+      row.issued += n(item.amount);
+    }
+
+    if (item.transactionType === "STAFF_RETURN_TO_ACCOUNTANT" && item.fromUserId === input.userId) {
+      row.deposited += n(item.returnedAmount ?? item.amount);
+    }
+  }
+
+  for (const item of input.collections) {
+    if (!input.inToday(item.collectionDate)) continue;
+    rows[bucket(item.collectionDate)].collections += n(item.amount);
+  }
+
+  for (const item of input.deposits) {
+    if (!input.inToday(item.depositDate)) continue;
+    rows[bucket(item.depositDate)].deposited += n(item.amount);
+  }
+
+  return rows;
+}
+
 export async function GET(request: Request) {
   try {
     const session = await requireStaff();
@@ -400,12 +453,20 @@ export async function GET(request: Request) {
       .reduce((sum: number, item: any) => sum + n(item.amount), 0);
 
     const financialHold = deposits.find((item: any) => item.holdActive) || null;
-    const currentPerformance = await calculateStaffPerformance({
-      companyId: session.companyId,
-      userId: session.id,
-      period: period as any,
-      anchor,
-    });
+    const [currentPerformance, dailyPerformance] = await Promise.all([
+      calculateStaffPerformance({
+        companyId: session.companyId,
+        userId: session.id,
+        period: period as any,
+        anchor,
+      }),
+      calculateStaffPerformance({
+        companyId: session.companyId,
+        userId: session.id,
+        period: "DAY",
+        anchor: tzDateKey(),
+      }),
+    ]);
 
     // Rank is calculated, but no other staff identity or score is returned.
     const currentMonth = new Date().getMonth() + 1;
@@ -566,6 +627,53 @@ export async function GET(request: Request) {
       })),
     ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+    const dailyTransactions = assignedTransactions.filter((item: any) =>
+      inToday(item.date),
+    );
+    const dailyDeposits = deposits.filter((item: any) =>
+      inToday(item.depositDate),
+    );
+    const dailyFlowSeries = buildTodayHourlySeries({
+      floats,
+      collections,
+      deposits,
+      userId: session.id,
+      inToday,
+    });
+    const todayAvailableBalance = Math.max(
+      0,
+      todayFloatReceived +
+        todayCollections -
+        todayIssued -
+        todayReturned -
+        todayBanked,
+    );
+    const todayBrokerIds = new Set<string>();
+    const todayCustomerIds = new Set<string>();
+
+    for (const item of floats) {
+      if (
+        item.transactionType === "STAFF_TO_BROKER" &&
+        item.fromUserId === session.id &&
+        inToday(item.createdAt) &&
+        item.toUserId
+      ) {
+        todayBrokerIds.add(String(item.toUserId));
+      }
+    }
+
+    for (const item of collections) {
+      if (inToday(item.collectionDate) && item.brokerId) {
+        todayBrokerIds.add(String(item.brokerId));
+      }
+    }
+
+    for (const item of services) {
+      if (!inToday(item.servedAt)) continue;
+      if (item.brokerId) todayBrokerIds.add(String(item.brokerId));
+      if (item.customerId) todayCustomerIds.add(String(item.customerId));
+    }
+
     const series = buildDailySeries({
       start: report.start,
       end: report.end,
@@ -644,12 +752,17 @@ export async function GET(request: Request) {
         brokerStats,
         customerStats,
         assignedTransactions,
+        dailyTransactions,
+        dailyDeposits,
+        dailyFlowSeries,
+        dailyPerformance,
         reportSummary,
         reportRows: assignedTransactions.filter((item: any) => inReport(item.date)),
         flowSeries: series,
         financialHold,
         stats: {
-          availableBalance,
+          availableBalance: todayAvailableBalance,
+          allTimeAvailableBalance: availableBalance,
           todayFloatReceived,
           todayIssued,
           todayCollections,
@@ -657,18 +770,18 @@ export async function GET(request: Request) {
           todayBanked,
           pendingFloatReceipts: floats.filter((item: any) => item.transactionType === "ACCOUNTANT_TO_STAFF" && item.toUserId === session.id && item.status === "ISSUED").length,
           pendingApprovals:
-            collections.filter((item: any) => item.status === "PENDING").length +
-            deposits.filter((item: any) => item.status === "PENDING").length +
-            expenses.filter((item: any) => item.status === "PENDING").length,
+            collections.filter((item: any) => item.status === "PENDING" && inToday(item.collectionDate)).length +
+            deposits.filter((item: any) => item.status === "PENDING" && inToday(item.depositDate)).length +
+            expenses.filter((item: any) => item.status === "PENDING" && inToday(item.expenseDate)).length,
           unreadNotifications: notifications.filter((item: any) => !item.isRead).length,
           openGpsAlerts: gpsAlerts.filter((item: any) => item.status === "OPEN").length,
-          performanceScore: currentPerformance.score,
-          attendanceRate: currentPerformance.attendanceRate,
-          depositAccuracy: currentPerformance.depositAccuracyRate,
-          gpsCompliance: currentPerformance.gpsComplianceRate,
-          outstandingBalance: currentPerformance.outstandingBalance,
-          brokersServed: brokerStats.filter((item: any) => item.timesServed > 0).length,
-          customersServed: customerStats.length,
+          performanceScore: dailyPerformance.score,
+          attendanceRate: dailyPerformance.attendanceRate,
+          depositAccuracy: dailyPerformance.depositAccuracyRate,
+          gpsCompliance: dailyPerformance.gpsComplianceRate,
+          outstandingBalance: dailyPerformance.outstandingBalance,
+          brokersServed: todayBrokerIds.size,
+          customersServed: todayCustomerIds.size,
           assignedBrokers: assignments.brokerIds.length,
           assignedCustomers: assignments.customerIds.length,
         },

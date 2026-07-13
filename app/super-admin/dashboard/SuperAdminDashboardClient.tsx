@@ -5,7 +5,9 @@ import {
   useEffect,
   useMemo,
   useState,
+  type Dispatch,
   type ReactNode,
+  type SetStateAction,
 } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SuperAdminDashboard.module.css";
@@ -45,6 +47,7 @@ type UserItem = {
   companyId?: string | null;
   companyName: string;
   branchName: string;
+  createdAt: string;
 };
 
 type SubscriptionItem = {
@@ -110,6 +113,8 @@ type DashboardData = {
     suspendedCompanies: number;
     disabledCompanies: number;
     totalUsers: number;
+    totalCompanyAdmins: number;
+    activeCompanyAdmins: number;
     totalSubscriptions: number;
     activeSubscriptions: number;
     totalAuditLogs: number;
@@ -135,6 +140,7 @@ type SidebarPage =
   | "Dashboard"
   | "Create Companies"
   | "Manage Companies"
+  | "Manage Company Admins"
   | "Manage Subscriptions"
   | "Access Every Company"
   | "View Global Reports"
@@ -160,6 +166,25 @@ type SubscriptionForm = {
   isActive: boolean;
 };
 
+type CompanyAdminForm = {
+  companyId: string;
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  password: string;
+  status: "ACTIVE" | "SUSPENDED" | "REMOVED";
+};
+
+type SettingsState = {
+  mfa: boolean;
+  backups: boolean;
+  auditLogs: boolean;
+  passwordExpiry: boolean;
+  financialLocking: boolean;
+  maintenanceMode: boolean;
+};
+
 const PROFILE_IMAGE_KEY = "simamia_super_admin_profile_image";
 const SIDEBAR_COLLAPSE_KEY = "simamia_super_admin_sidebar_collapsed";
 
@@ -178,6 +203,16 @@ const emptySubscriptionForm: SubscriptionForm = {
   startsAt: "",
   endsAt: "",
   isActive: true,
+};
+
+const emptyCompanyAdminForm: CompanyAdminForm = {
+  companyId: "",
+  name: "",
+  username: "",
+  email: "",
+  phone: "",
+  password: "",
+  status: "ACTIVE",
 };
 
 function createPermissionState() {
@@ -259,15 +294,22 @@ export default function SuperAdminDashboardClient({ user }: Props) {
   const [editingSubscriptionId, setEditingSubscriptionId] = useState<
     string | null
   >(null);
+  const [editingCompanyAdminId, setEditingCompanyAdminId] = useState<
+    string | null
+  >(null);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
-    null
+    null,
   );
 
-  const [companyForm, setCompanyForm] =
-    useState<CompanyForm>(emptyCompanyForm);
+  const [companyForm, setCompanyForm] = useState<CompanyForm>(emptyCompanyForm);
 
-  const [subscriptionForm, setSubscriptionForm] =
-    useState<SubscriptionForm>(emptySubscriptionForm);
+  const [subscriptionForm, setSubscriptionForm] = useState<SubscriptionForm>(
+    emptySubscriptionForm,
+  );
+
+  const [companyAdminForm, setCompanyAdminForm] = useState<CompanyAdminForm>(
+    emptyCompanyAdminForm,
+  );
 
   const [messageForm, setMessageForm] = useState({
     receiverId: "",
@@ -277,7 +319,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
 
   const [permissions, setPermissions] = useState(createPermissionState);
 
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<SettingsState>({
     mfa: true,
     backups: true,
     auditLogs: true,
@@ -291,6 +333,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
       { label: "Dashboard" as const, icon: "🏠" },
       { label: "Create Companies" as const, icon: "➕" },
       { label: "Manage Companies" as const, icon: "🏢" },
+      { label: "Manage Company Admins" as const, icon: "👨‍💼" },
       { label: "Manage Subscriptions" as const, icon: "💳" },
       { label: "Access Every Company" as const, icon: "🌐" },
       { label: "View Global Reports" as const, icon: "📊" },
@@ -299,7 +342,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
       { label: "Reset Passwords" as const, icon: "🔑" },
       { label: "View Audit Logs" as const, icon: "🧾" },
     ],
-    []
+    [],
   );
 
   async function loadDashboard() {
@@ -332,7 +375,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
         setErrorMessage(
           `${result.message || "Dashboard API failed."}${
             result.error ? ` Error: ${result.error}` : ""
-          }`
+          }`,
         );
         console.error("DASHBOARD_API_ERROR:", {
           status: response.status,
@@ -464,7 +507,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
 
   async function updateCompanyStatus(
     companyId: string,
-    status: "ACTIVE" | "SUSPENDED" | "DISABLED"
+    status: "ACTIVE" | "SUSPENDED" | "DISABLED",
   ) {
     setActionLoading(true);
 
@@ -492,7 +535,11 @@ export default function SuperAdminDashboardClient({ user }: Props) {
   }
 
   async function removeCompany(companyId: string) {
-    if (!confirm("Remove this company? This action can delete related company data.")) {
+    if (
+      !confirm(
+        "Remove this company? This action can delete related company data.",
+      )
+    ) {
       return;
     }
 
@@ -512,6 +559,159 @@ export default function SuperAdminDashboardClient({ user }: Props) {
       }
 
       await loadDashboard();
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  function startEditCompanyAdmin(admin: UserItem) {
+    const status = String(admin.status || "ACTIVE").toUpperCase();
+
+    setEditingCompanyAdminId(admin.id);
+    setCompanyAdminForm({
+      companyId: admin.companyId || "",
+      name: admin.name || "",
+      username: admin.username || "",
+      email: admin.email || "",
+      phone: admin.phone || "",
+      password: "",
+      status:
+        status === "SUSPENDED" || status === "REMOVED" ? status : "ACTIVE",
+    });
+    openPage("Manage Company Admins");
+  }
+
+  function clearCompanyAdminForm() {
+    setEditingCompanyAdminId(null);
+    setCompanyAdminForm(emptyCompanyAdminForm);
+  }
+
+  async function saveCompanyAdmin() {
+    if (
+      !companyAdminForm.companyId ||
+      !companyAdminForm.name.trim() ||
+      !companyAdminForm.username.trim() ||
+      !companyAdminForm.email.trim()
+    ) {
+      alert("Company, full name, username and email are required.");
+      return;
+    }
+
+    if (!editingCompanyAdminId && companyAdminForm.password.length < 8) {
+      alert("Password must contain at least 8 characters.");
+      return;
+    }
+
+    setActionLoading(true);
+
+    try {
+      const url = editingCompanyAdminId
+        ? `/api/super-admin/company-admins/${editingCompanyAdminId}`
+        : "/api/super-admin/company-admins";
+
+      const response = await fetch(url, {
+        method: editingCompanyAdminId ? "PATCH" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(companyAdminForm),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        alert(result.message || "Failed to save company administrator.");
+        return;
+      }
+
+      alert(
+        editingCompanyAdminId
+          ? "Company administrator updated successfully."
+          : "Company administrator created successfully.",
+      );
+
+      clearCompanyAdminForm();
+      await loadDashboard();
+      openPage("Manage Company Admins");
+    } catch (error) {
+      console.error("SAVE_COMPANY_ADMIN_ERROR:", error);
+      alert("Could not connect to the company administrator API.");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function updateCompanyAdminStatus(
+    adminId: string,
+    status: "ACTIVE" | "SUSPENDED" | "REMOVED",
+  ) {
+    setActionLoading(true);
+
+    try {
+      const response = await fetch(
+        `/api/super-admin/company-admins/${adminId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ status }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        alert(result.message || "Failed to update administrator status.");
+        return;
+      }
+
+      await loadDashboard();
+    } catch (error) {
+      console.error("UPDATE_COMPANY_ADMIN_STATUS_ERROR:", error);
+      alert("Could not connect to the company administrator API.");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function removeCompanyAdmin(adminId: string) {
+    if (
+      !confirm(
+        "Remove this company administrator? The account will be marked as REMOVED and can be restored later.",
+      )
+    ) {
+      return;
+    }
+
+    setActionLoading(true);
+
+    try {
+      const response = await fetch(
+        `/api/super-admin/company-admins/${adminId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        alert(result.message || "Failed to remove company administrator.");
+        return;
+      }
+
+      if (editingCompanyAdminId === adminId) {
+        clearCompanyAdminForm();
+      }
+
+      await loadDashboard();
+    } catch (error) {
+      console.error("REMOVE_COMPANY_ADMIN_ERROR:", error);
+      alert("Could not connect to the company administrator API.");
     } finally {
       setActionLoading(false);
     }
@@ -587,7 +787,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
             endsAt: end.toISOString(),
             isActive: true,
           }),
-        }
+        },
       );
 
       const result = await response.json();
@@ -614,7 +814,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
         {
           method: "DELETE",
           credentials: "include",
-        }
+        },
       );
 
       const result = await response.json();
@@ -641,7 +841,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
         {
           method: "PATCH",
           credentials: "include",
-        }
+        },
       );
 
       const result = await response.json();
@@ -794,6 +994,9 @@ export default function SuperAdminDashboardClient({ user }: Props) {
             <button onClick={() => openPage("Manage Companies")}>
               🏢 Companies
             </button>
+            <button onClick={() => openPage("Manage Company Admins")}>
+              👨‍💼 Company Admins
+            </button>
             <button onClick={() => openPage("Manage Subscriptions")}>
               💳 Subscriptions
             </button>
@@ -875,7 +1078,9 @@ export default function SuperAdminDashboardClient({ user }: Props) {
                     type="button"
                     key={item.id}
                     onClick={() => markNotificationRead(item.id)}
-                    className={item.isRead ? styles.readItem : styles.unreadItem}
+                    className={
+                      item.isRead ? styles.readItem : styles.unreadItem
+                    }
                   >
                     <strong>{item.title}</strong>
                     <p>{item.message}</p>
@@ -896,7 +1101,9 @@ export default function SuperAdminDashboardClient({ user }: Props) {
                     type="button"
                     key={item.id}
                     onClick={() => markMessageRead(item.id)}
-                    className={item.isRead ? styles.readItem : styles.unreadItem}
+                    className={
+                      item.isRead ? styles.readItem : styles.unreadItem
+                    }
                   >
                     <strong>{item.subject}</strong>
                     <p>{item.body}</p>
@@ -936,6 +1143,14 @@ export default function SuperAdminDashboardClient({ user }: Props) {
             startEditCompany={startEditCompany}
             updateCompanyStatus={updateCompanyStatus}
             removeCompany={removeCompany}
+            companyAdminForm={companyAdminForm}
+            setCompanyAdminForm={setCompanyAdminForm}
+            editingCompanyAdminId={editingCompanyAdminId}
+            clearCompanyAdminForm={clearCompanyAdminForm}
+            saveCompanyAdmin={saveCompanyAdmin}
+            startEditCompanyAdmin={startEditCompanyAdmin}
+            updateCompanyAdminStatus={updateCompanyAdminStatus}
+            removeCompanyAdmin={removeCompanyAdmin}
             subscriptionForm={subscriptionForm}
             setSubscriptionForm={setSubscriptionForm}
             editingSubscriptionId={editingSubscriptionId}
@@ -974,6 +1189,14 @@ function DashboardContent({
   startEditCompany,
   updateCompanyStatus,
   removeCompany,
+  companyAdminForm,
+  setCompanyAdminForm,
+  editingCompanyAdminId,
+  clearCompanyAdminForm,
+  saveCompanyAdmin,
+  startEditCompanyAdmin,
+  updateCompanyAdminStatus,
+  removeCompanyAdmin,
   subscriptionForm,
   setSubscriptionForm,
   editingSubscriptionId,
@@ -1005,9 +1228,20 @@ function DashboardContent({
   startEditCompany: (company: CompanyItem) => void;
   updateCompanyStatus: (
     companyId: string,
-    status: "ACTIVE" | "SUSPENDED" | "DISABLED"
+    status: "ACTIVE" | "SUSPENDED" | "DISABLED",
   ) => void;
   removeCompany: (companyId: string) => void;
+  companyAdminForm: CompanyAdminForm;
+  setCompanyAdminForm: Dispatch<SetStateAction<CompanyAdminForm>>;
+  editingCompanyAdminId: string | null;
+  clearCompanyAdminForm: () => void;
+  saveCompanyAdmin: () => void;
+  startEditCompanyAdmin: (admin: UserItem) => void;
+  updateCompanyAdminStatus: (
+    adminId: string,
+    status: "ACTIVE" | "SUSPENDED" | "REMOVED",
+  ) => void;
+  removeCompanyAdmin: (adminId: string) => void;
   subscriptionForm: SubscriptionForm;
   setSubscriptionForm: (value: SubscriptionForm) => void;
   editingSubscriptionId: string | null;
@@ -1020,8 +1254,8 @@ function DashboardContent({
   setSelectedCompanyId: (id: string) => void;
   permissions: ReturnType<typeof createPermissionState>;
   setPermissions: (value: ReturnType<typeof createPermissionState>) => void;
-  settings: Record<string, boolean>;
-  setSettings: (value: Record<string, boolean>) => void;
+  settings: SettingsState;
+  setSettings: Dispatch<SetStateAction<SettingsState>>;
   resetPassword: (userId: string) => void;
   messageForm: {
     receiverId: string;
@@ -1072,6 +1306,23 @@ function DashboardContent({
     );
   }
 
+  if (activePage === "Manage Company Admins") {
+    return (
+      <ManageCompanyAdminsPage
+        data={data}
+        form={companyAdminForm}
+        setForm={setCompanyAdminForm}
+        editingAdminId={editingCompanyAdminId}
+        clearForm={clearCompanyAdminForm}
+        saveAdmin={saveCompanyAdmin}
+        startEdit={startEditCompanyAdmin}
+        updateStatus={updateCompanyAdminStatus}
+        removeAdmin={removeCompanyAdmin}
+        actionLoading={actionLoading}
+      />
+    );
+  }
+
   if (activePage === "Manage Subscriptions") {
     return (
       <ManageSubscriptionsPage
@@ -1117,7 +1368,9 @@ function DashboardContent({
   }
 
   if (activePage === "Reset Passwords") {
-    return <ResetPasswordsPage users={data.users} resetPassword={resetPassword} />;
+    return (
+      <ResetPasswordsPage users={data.users} resetPassword={resetPassword} />
+    );
   }
 
   if (activePage === "View Audit Logs") {
@@ -1158,7 +1411,9 @@ function DashboardHome({
 }) {
   const activeRate =
     data.stats.totalCompanies > 0
-      ? Math.round((data.stats.activeCompanies / data.stats.totalCompanies) * 100)
+      ? Math.round(
+          (data.stats.activeCompanies / data.stats.totalCompanies) * 100,
+        )
       : 0;
 
   return (
@@ -1176,6 +1431,10 @@ function DashboardHome({
         <div className={styles.heroQuickActions}>
           <button onClick={() => setActivePage("Create Companies")}>
             ➕ Add Company
+          </button>
+
+          <button onClick={() => setActivePage("Manage Company Admins")}>
+            👨‍💼 Add Company Admin
           </button>
 
           <button onClick={() => setActivePage("View Global Reports")}>
@@ -1198,6 +1457,12 @@ function DashboardHome({
           change="+4.1%"
         />
         <MetricCard
+          icon="👨‍💼"
+          label="Company Admins"
+          value={String(data.stats.totalCompanyAdmins)}
+          change={`${data.stats.activeCompanyAdmins} active`}
+        />
+        <MetricCard
           icon="💳"
           label="Active Subscriptions"
           value={String(data.stats.activeSubscriptions)}
@@ -1212,7 +1477,9 @@ function DashboardHome({
         <MetricCard
           icon="⛔"
           label="Suspended/Disabled"
-          value={String(data.stats.suspendedCompanies + data.stats.disabledCompanies)}
+          value={String(
+            data.stats.suspendedCompanies + data.stats.disabledCompanies,
+          )}
           change="-8.6%"
         />
       </section>
@@ -1238,7 +1505,9 @@ function DashboardHome({
               <div className={styles.salesBarItem} key={bar.day}>
                 <span>{bar.day}</span>
                 <div
-                  className={bar.active ? styles.activeSalesBar : styles.salesBar}
+                  className={
+                    bar.active ? styles.activeSalesBar : styles.salesBar
+                  }
                   style={{ height: bar.height }}
                 >
                   {bar.active && (
@@ -1320,10 +1589,26 @@ function DashboardHome({
         <article className={styles.bigCard}>
           <CardHeader title="System Summary" subtitle="Real database counts" />
 
-          <SummaryRow icon="🔔" label="Notifications" value={String(data.stats.totalNotifications)} />
-          <SummaryRow icon="💬" label="Messages" value={String(data.stats.totalMessages)} />
-          <SummaryRow icon="💳" label="Subscriptions" value={String(data.stats.activeSubscriptions)} />
-          <SummaryRow icon="🧾" label="Audit Logs" value={String(data.stats.totalAuditLogs)} />
+          <SummaryRow
+            icon="🔔"
+            label="Notifications"
+            value={String(data.stats.totalNotifications)}
+          />
+          <SummaryRow
+            icon="💬"
+            label="Messages"
+            value={String(data.stats.totalMessages)}
+          />
+          <SummaryRow
+            icon="💳"
+            label="Subscriptions"
+            value={String(data.stats.activeSubscriptions)}
+          />
+          <SummaryRow
+            icon="🧾"
+            label="Audit Logs"
+            value={String(data.stats.totalAuditLogs)}
+          />
 
           <div className={styles.totalBox}>
             <span>Total Revenue</span>
@@ -1364,7 +1649,11 @@ function CreateCompaniesPage({
         <article className={styles.formPanel}>
           <div className={styles.panelGlow}></div>
 
-          <h2>{editingCompanyId ? "Update company details" : "Register new company"}</h2>
+          <h2>
+            {editingCompanyId
+              ? "Update company details"
+              : "Register new company"}
+          </h2>
           <p>
             Fill company information carefully. Company code must be unique and
             will be used for identification.
@@ -1436,7 +1725,10 @@ function CreateCompaniesPage({
               </button>
 
               {editingCompanyId && (
-                <button className={styles.lightButton} onClick={clearCompanyForm}>
+                <button
+                  className={styles.lightButton}
+                  onClick={clearCompanyForm}
+                >
                   Cancel Edit
                 </button>
               )}
@@ -1466,7 +1758,10 @@ function CreateCompaniesPage({
               {data.companies.map((company) => (
                 <tr key={company.id}>
                   <td>
-                    <Entity name={company.name} sub={company.email || company.address || "No email"} />
+                    <Entity
+                      name={company.name}
+                      sub={company.email || company.address || "No email"}
+                    />
                   </td>
                   <td>{company.code}</td>
                   <td>
@@ -1503,7 +1798,7 @@ function ManageCompaniesPage({
   startEditCompany: (company: CompanyItem) => void;
   updateCompanyStatus: (
     companyId: string,
-    status: "ACTIVE" | "SUSPENDED" | "DISABLED"
+    status: "ACTIVE" | "SUSPENDED" | "DISABLED",
   ) => void;
   removeCompany: (companyId: string) => void;
   actionLoading: boolean;
@@ -1515,10 +1810,26 @@ function ManageCompaniesPage({
       subtitle="Company actions now change automatically according to the current company status."
     >
       <div className={styles.actionStats}>
-        <MiniStat label="Active" value={String(data.stats.activeCompanies)} icon="✅" />
-        <MiniStat label="Suspended" value={String(data.stats.suspendedCompanies)} icon="⛔" />
-        <MiniStat label="Deactivated" value={String(data.stats.disabledCompanies)} icon="🚫" />
-        <MiniStat label="Total" value={String(data.stats.totalCompanies)} icon="🏢" />
+        <MiniStat
+          label="Active"
+          value={String(data.stats.activeCompanies)}
+          icon="✅"
+        />
+        <MiniStat
+          label="Suspended"
+          value={String(data.stats.suspendedCompanies)}
+          icon="⛔"
+        />
+        <MiniStat
+          label="Deactivated"
+          value={String(data.stats.disabledCompanies)}
+          icon="🚫"
+        />
+        <MiniStat
+          label="Total"
+          value={String(data.stats.totalCompanies)}
+          icon="🏢"
+        />
       </div>
 
       <article className={styles.tablePanel}>
@@ -1637,6 +1948,468 @@ function ManageCompaniesPage({
           </tbody>
         </ResponsiveTable>
       </article>
+    </PageShell>
+  );
+}
+
+function ManageCompanyAdminsPage({
+  data,
+  form,
+  setForm,
+  editingAdminId,
+  clearForm,
+  saveAdmin,
+  startEdit,
+  updateStatus,
+  removeAdmin,
+  actionLoading,
+}: {
+  data: DashboardData;
+  form: CompanyAdminForm;
+  setForm: Dispatch<SetStateAction<CompanyAdminForm>>;
+  editingAdminId: string | null;
+  clearForm: () => void;
+  saveAdmin: () => void;
+  startEdit: (admin: UserItem) => void;
+  updateStatus: (
+    adminId: string,
+    status: "ACTIVE" | "SUSPENDED" | "REMOVED",
+  ) => void;
+  removeAdmin: (adminId: string) => void;
+  actionLoading: boolean;
+}) {
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (!editingAdminId && !form.companyId && data.companies[0]) {
+      setForm((current) => ({
+        ...current,
+        companyId: data.companies[0].id,
+      }));
+    }
+  }, [data.companies, editingAdminId, form.companyId, setForm]);
+
+  const companyAdmins = useMemo(
+    () =>
+      data.users.filter(
+        (item) => String(item.role || "").toUpperCase() === "COMPANY_ADMIN",
+      ),
+    [data.users],
+  );
+
+  const filteredAdmins = useMemo(() => {
+    const keyword = search.trim().toLowerCase();
+
+    if (!keyword) return companyAdmins;
+
+    return companyAdmins.filter((admin) =>
+      [
+        admin.name,
+        admin.username,
+        admin.email,
+        admin.phone || "",
+        admin.companyName,
+        admin.status,
+      ].some((value) =>
+        String(value || "")
+          .toLowerCase()
+          .includes(keyword),
+      ),
+    );
+  }, [companyAdmins, search]);
+
+  const activeAdmins = companyAdmins.filter(
+    (admin) => String(admin.status).toUpperCase() === "ACTIVE",
+  ).length;
+
+  const suspendedAdmins = companyAdmins.filter(
+    (admin) => String(admin.status).toUpperCase() === "SUSPENDED",
+  ).length;
+
+  const removedAdmins = companyAdmins.filter(
+    (admin) => String(admin.status).toUpperCase() === "REMOVED",
+  ).length;
+
+  const companiesWithAdmins = new Set(
+    companyAdmins
+      .filter((admin) => String(admin.status).toUpperCase() !== "REMOVED")
+      .map((admin) => admin.companyId)
+      .filter(Boolean),
+  ).size;
+
+  const selectedCompany = data.companies.find(
+    (company) => company.id === form.companyId,
+  );
+
+  return (
+    <PageShell
+      icon="👨‍💼"
+      title="Manage Company Administrators"
+      subtitle="Create and assign a company administrator to any registered company, then edit, suspend, restore or remove the account."
+    >
+      <div className={styles.adminOverviewGrid}>
+        <article className={styles.adminOverviewCard}>
+          <span>👨‍💼</span>
+          <div>
+            <p>Total Company Admins</p>
+            <strong>{companyAdmins.length}</strong>
+          </div>
+        </article>
+
+        <article className={styles.adminOverviewCard}>
+          <span>✅</span>
+          <div>
+            <p>Active Admins</p>
+            <strong>{activeAdmins}</strong>
+          </div>
+        </article>
+
+        <article className={styles.adminOverviewCard}>
+          <span>⏸</span>
+          <div>
+            <p>Suspended Admins</p>
+            <strong>{suspendedAdmins}</strong>
+          </div>
+        </article>
+
+        <article className={styles.adminOverviewCard}>
+          <span>🏢</span>
+          <div>
+            <p>Companies Assigned</p>
+            <strong>
+              {companiesWithAdmins}/{data.companies.length}
+            </strong>
+          </div>
+        </article>
+
+        <article className={styles.adminOverviewCard}>
+          <span>🗑</span>
+          <div>
+            <p>Removed Accounts</p>
+            <strong>{removedAdmins}</strong>
+          </div>
+        </article>
+      </div>
+
+      <div className={styles.twoColumnGrid}>
+        <article className={styles.formPanel}>
+          <div className={styles.panelGlow}></div>
+
+          <div className={styles.adminFormHeader}>
+            <div className={styles.adminFormIcon}>
+              {editingAdminId ? "✏️" : "➕"}
+            </div>
+            <div>
+              <h2>
+                {editingAdminId
+                  ? "Edit Company Administrator"
+                  : "Add Company Administrator"}
+              </h2>
+              <p>
+                {editingAdminId
+                  ? "Update the administrator and move the account to another company when required."
+                  : "Create a secure administrator account and connect it to a registered company."}
+              </p>
+            </div>
+          </div>
+
+          {selectedCompany && (
+            <div className={styles.adminCompanyPreview}>
+              <div>
+                <span>
+                  {selectedCompany.name
+                    .split(" ")
+                    .slice(0, 2)
+                    .map((word) => word.charAt(0))
+                    .join("")
+                    .toUpperCase()}
+                </span>
+              </div>
+              <section>
+                <small>Selected company</small>
+                <strong>{selectedCompany.name}</strong>
+                <p>
+                  {selectedCompany.code} • {selectedCompany.status}
+                </p>
+              </section>
+            </div>
+          )}
+
+          <div className={styles.formStack}>
+            <label>
+              Registered Company
+              <select
+                value={form.companyId}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    companyId: event.target.value,
+                  }))
+                }
+              >
+                <option value="">Select registered company</option>
+                {data.companies.map((company) => (
+                  <option key={company.id} value={company.id}>
+                    {company.name} - {company.code} ({company.status})
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Full Name
+              <input
+                value={form.name}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    name: event.target.value,
+                  }))
+                }
+                placeholder="Example: Asha Mtei"
+                autoComplete="name"
+              />
+            </label>
+
+            <label>
+              Username
+              <input
+                value={form.username}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    username: event.target.value
+                      .toLowerCase()
+                      .replace(/\s+/g, ""),
+                  }))
+                }
+                placeholder="Example: asha.admin"
+                autoComplete="username"
+              />
+            </label>
+
+            <label>
+              Email Address
+              <input
+                type="email"
+                value={form.email}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    email: event.target.value.toLowerCase(),
+                  }))
+                }
+                placeholder="admin@company.com"
+                autoComplete="email"
+              />
+            </label>
+
+            <label>
+              Phone Number
+              <input
+                value={form.phone}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    phone: event.target.value,
+                  }))
+                }
+                placeholder="+255..."
+                autoComplete="tel"
+              />
+            </label>
+
+            <label>
+              {editingAdminId
+                ? "New Password (leave blank to keep current password)"
+                : "Temporary Password"}
+              <input
+                type="password"
+                value={form.password}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    password: event.target.value,
+                  }))
+                }
+                placeholder={
+                  editingAdminId
+                    ? "Enter only when changing password"
+                    : "Minimum 8 characters"
+                }
+                autoComplete="new-password"
+              />
+            </label>
+
+            <div className={styles.adminPasswordNote}>
+              <span>🔐</span>
+              <p>
+                The password is securely hashed using bcrypt before it is saved
+                in the <strong>passwordHash</strong> database field.
+              </p>
+            </div>
+
+            <label>
+              Account Status
+              <select
+                value={form.status}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    status: event.target.value as CompanyAdminForm["status"],
+                  }))
+                }
+              >
+                <option value="ACTIVE">Active</option>
+                <option value="SUSPENDED">Suspended</option>
+                {editingAdminId && <option value="REMOVED">Removed</option>}
+              </select>
+            </label>
+
+            <div className={styles.formActions}>
+              <button
+                type="button"
+                onClick={saveAdmin}
+                disabled={actionLoading || data.companies.length === 0}
+              >
+                {actionLoading
+                  ? "Saving..."
+                  : editingAdminId
+                    ? "Update Administrator"
+                    : "Create Administrator"}
+              </button>
+
+              <button
+                type="button"
+                className={styles.lightButton}
+                onClick={clearForm}
+                disabled={actionLoading}
+              >
+                {editingAdminId ? "Cancel Edit" : "Clear Form"}
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article className={styles.tablePanel}>
+          <div className={styles.adminTableHeader}>
+            <div>
+              <h2>Company Administrators</h2>
+              <p>
+                Every company administrator with the related registered company.
+              </p>
+            </div>
+
+            <label className={styles.adminSearchBox}>
+              <span>🔎</span>
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search admin or company..."
+              />
+            </label>
+          </div>
+
+          <ResponsiveTable>
+            <thead>
+              <tr>
+                <th>Administrator</th>
+                <th>Company</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Registered</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredAdmins.length ? (
+                filteredAdmins.map((admin) => {
+                  const status = String(admin.status || "").toUpperCase();
+                  const isActive = status === "ACTIVE";
+                  const isRemoved = status === "REMOVED";
+
+                  return (
+                    <tr key={admin.id}>
+                      <td>
+                        <Entity name={admin.name} sub={admin.email} />
+                      </td>
+                      <td>
+                        <div className={styles.adminCompanyCell}>
+                          <strong>{admin.companyName || "No Company"}</strong>
+                          <small>
+                            {data.companies.find(
+                              (company) => company.id === admin.companyId,
+                            )?.code || "UNASSIGNED"}
+                          </small>
+                        </div>
+                      </td>
+                      <td>{admin.username}</td>
+                      <td>{admin.phone || "N/A"}</td>
+                      <td>
+                        <StatusBadge status={status} />
+                      </td>
+                      <td>{formatDate(admin.createdAt)}</td>
+                      <td>
+                        <div className={styles.actionButtons}>
+                          <button
+                            className={styles.editButton}
+                            onClick={() => startEdit(admin)}
+                            disabled={actionLoading}
+                          >
+                            ✏ Edit
+                          </button>
+
+                          {isActive ? (
+                            <button
+                              className={styles.warningButton}
+                              onClick={() =>
+                                updateStatus(admin.id, "SUSPENDED")
+                              }
+                              disabled={actionLoading}
+                            >
+                              ⏸ Suspend
+                            </button>
+                          ) : (
+                            <button
+                              className={styles.reactivateButton}
+                              onClick={() => updateStatus(admin.id, "ACTIVE")}
+                              disabled={actionLoading}
+                            >
+                              ↻ {isRemoved ? "Restore" : "Activate"}
+                            </button>
+                          )}
+
+                          {!isRemoved && (
+                            <button
+                              className={styles.dangerButton}
+                              onClick={() => removeAdmin(admin.id)}
+                              disabled={actionLoading}
+                            >
+                              🗑 Remove
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={7} className={styles.tableEmptyCell}>
+                    <span>👨‍💼</span>
+                    <strong>No company administrators found</strong>
+                    <p>
+                      Create the first company administrator using the form.
+                    </p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </ResponsiveTable>
+        </article>
+      </div>
     </PageShell>
   );
 }
@@ -1832,7 +2605,9 @@ function ManageSubscriptionsPage({
                   <td>
                     <span
                       className={
-                        sub.isActive ? styles.statusActive : styles.statusDisabled
+                        sub.isActive
+                          ? styles.statusActive
+                          : styles.statusDisabled
                       }
                     >
                       {sub.isActive ? "Active" : "Inactive"}
@@ -1884,7 +2659,9 @@ function AccessEveryCompanyPage({
     data.companies[0];
 
   const normalize = (value: string | null | undefined) =>
-    String(value || "").trim().toLowerCase();
+    String(value || "")
+      .trim()
+      .toLowerCase();
 
   const selectedUsers = selected
     ? data.users.filter((companyUser) => {
@@ -1898,24 +2675,24 @@ function AccessEveryCompanyPage({
 
   const selectedSubscriptions = selected
     ? data.subscriptions.filter(
-        (subscription) => subscription.company.id === selected.id
+        (subscription) => subscription.company.id === selected.id,
       )
     : [];
 
   const activeUsers = selectedUsers.filter(
-    (companyUser) => normalize(companyUser.status) === "active"
+    (companyUser) => normalize(companyUser.status) === "active",
   ).length;
 
   const adminUsers = selectedUsers.filter((companyUser) =>
     ["COMPANY_ADMIN", "SUPER_ADMIN", "SYSTEM_DEVELOPER"].includes(
-      String(companyUser.role || "").toUpperCase()
-    )
+      String(companyUser.role || "").toUpperCase(),
+    ),
   ).length;
 
   const uniqueBranches = new Set(
     selectedUsers
       .map((companyUser) => normalize(companyUser.branchName))
-      .filter((branchName) => branchName && branchName !== "n/a")
+      .filter((branchName) => branchName && branchName !== "n/a"),
   ).size;
 
   return (
@@ -1998,7 +2775,9 @@ function AccessEveryCompanyPage({
               </div>
 
               <div>
-                <span className={styles.companyReviewLabel}>Company workspace</span>
+                <span className={styles.companyReviewLabel}>
+                  Company workspace
+                </span>
                 <h2>{selected.name}</h2>
                 <p>{selected.address || "No address has been added."}</p>
               </div>
@@ -2137,7 +2916,10 @@ function AccessEveryCompanyPage({
                       <td>{companyUser.phone || "N/A"}</td>
                       <td>
                         <span className={styles.roleBadge}>
-                          {String(companyUser.role || "N/A").replaceAll("_", " ")}
+                          {String(companyUser.role || "N/A").replaceAll(
+                            "_",
+                            " ",
+                          )}
                         </span>
                       </td>
                       <td>{companyUser.branchName || "N/A"}</td>
@@ -2202,7 +2984,9 @@ function AccessEveryCompanyPage({
               <div className={styles.companyEmptyState}>
                 <span>💳</span>
                 <h3>No subscription found</h3>
-                <p>This company does not currently have a subscription record.</p>
+                <p>
+                  This company does not currently have a subscription record.
+                </p>
               </div>
             )}
           </article>
@@ -2228,41 +3012,45 @@ function GlobalReportsPage({ data }: { data: DashboardData }) {
       <div className={styles.reportCards}>
         <ReportCard title="Company Status Report" icon="🏢">
           <MiniReportTable
-            rows={data.companies.slice(0, 6).map((company) => [
-              company.name,
-              company.status,
-              `${company.usersCount} users`,
-            ])}
+            rows={data.companies
+              .slice(0, 6)
+              .map((company) => [
+                company.name,
+                company.status,
+                `${company.usersCount} users`,
+              ])}
           />
         </ReportCard>
 
         <ReportCard title="Subscription Revenue Report" icon="💳">
           <MiniReportTable
-            rows={data.subscriptions.slice(0, 6).map((sub) => [
-              sub.company.name,
-              sub.plan,
-              formatMoney(sub.amount),
-            ])}
+            rows={data.subscriptions
+              .slice(0, 6)
+              .map((sub) => [
+                sub.company.name,
+                sub.plan,
+                formatMoney(sub.amount),
+              ])}
           />
         </ReportCard>
 
         <ReportCard title="User Activity Report" icon="👥">
           <MiniReportTable
-            rows={data.users.slice(0, 6).map((user) => [
-              user.name,
-              user.role,
-              user.status,
-            ])}
+            rows={data.users
+              .slice(0, 6)
+              .map((user) => [user.name, user.role, user.status])}
           />
         </ReportCard>
 
         <ReportCard title="Audit Log Report" icon="🧾">
           <MiniReportTable
-            rows={data.auditLogs.slice(0, 6).map((log) => [
-              log.action,
-              log.module,
-              formatDate(log.createdAt),
-            ])}
+            rows={data.auditLogs
+              .slice(0, 6)
+              .map((log) => [
+                log.action,
+                log.module,
+                formatDate(log.createdAt),
+              ])}
           />
         </ReportCard>
       </div>
@@ -2291,7 +3079,10 @@ function ManagePermissionsPage({
       ...permissions,
       [role]: {
         ...permissions[role],
-        [permission]: !permissions[role][permission as keyof typeof permissions[typeof role]],
+        [permission]:
+          !permissions[role][
+            permission as keyof (typeof permissions)[typeof role]
+          ],
       },
     });
   }
@@ -2319,7 +3110,7 @@ function ManagePermissionsPage({
                     checked={Boolean(
                       rolePermissions[
                         permission as keyof typeof rolePermissions
-                      ]
+                      ],
                     )}
                     onChange={() =>
                       toggle(role as keyof typeof permissions, permission)
@@ -2339,15 +3130,27 @@ function SystemSettingsPage({
   settings,
   setSettings,
 }: {
-  settings: Record<string, boolean>;
-  setSettings: (value: Record<string, boolean>) => void;
+  settings: SettingsState;
+  setSettings: Dispatch<SetStateAction<SettingsState>>;
 }) {
-  const settingsList = [
-    ["mfa", "Multi-Factor Authentication", "Require extra verification for system users."],
+  const settingsList: Array<[keyof SettingsState, string, string]> = [
+    [
+      "mfa",
+      "Multi-Factor Authentication",
+      "Require extra verification for system users.",
+    ],
     ["backups", "Automatic Backups", "Run automatic daily database backups."],
     ["auditLogs", "Audit Logging", "Track important system activities."],
-    ["passwordExpiry", "Password Expiry", "Force password change after a period."],
-    ["financialLocking", "Financial Day Locking", "Lock approved accounting periods."],
+    [
+      "passwordExpiry",
+      "Password Expiry",
+      "Force password change after a period.",
+    ],
+    [
+      "financialLocking",
+      "Financial Day Locking",
+      "Lock approved accounting periods.",
+    ],
     ["maintenanceMode", "Maintenance Mode", "Temporarily stop company access."],
   ];
 
@@ -2369,10 +3172,10 @@ function SystemSettingsPage({
                 type="checkbox"
                 checked={Boolean(settings[key])}
                 onChange={() =>
-                  setSettings({
-                    ...settings,
-                    [key]: !settings[key],
-                  })
+                  setSettings((current) => ({
+                    ...current,
+                    [key]: !current[key],
+                  }))
                 }
               />
               <span>{settings[key] ? "Enabled" : "Disabled"}</span>
@@ -2696,7 +3499,11 @@ function PopupPanel({
 }
 
 function ResponsiveTable({ children }: { children: ReactNode }) {
-  return <div className={styles.tableScroll}><table>{children}</table></div>;
+  return (
+    <div className={styles.tableScroll}>
+      <table>{children}</table>
+    </div>
+  );
 }
 
 function Entity({ name, sub }: { name: string; sub: string }) {
@@ -2715,7 +3522,7 @@ function StatusBadge({ status }: { status: string }) {
   const className =
     status === "ACTIVE"
       ? styles.statusActive
-      : status === "DISABLED"
+      : status === "DISABLED" || status === "REMOVED"
         ? styles.statusDisabled
         : styles.statusSuspended;
 
@@ -2760,7 +3567,7 @@ async function compressImage(
   file: File,
   maxWidth: number,
   maxHeight: number,
-  quality: number
+  quality: number,
 ): Promise<string> {
   const imageBitmap = await createImageBitmap(file);
 

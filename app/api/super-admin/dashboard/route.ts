@@ -9,7 +9,7 @@ type SafeResult<T> = {
 
 async function safeQuery<T>(
   fallback: T,
-  callback: () => Promise<T>
+  callback: () => Promise<T>,
 ): Promise<SafeResult<T>> {
   try {
     return {
@@ -36,7 +36,7 @@ export async function GET() {
           success: false,
           message: "You are not logged in.",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -47,14 +47,14 @@ export async function GET() {
           message: "Only Super Admin can access this dashboard.",
           currentRole: user.role,
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     const db = prisma as any;
 
     const totalCompaniesResult = await safeQuery(0, () =>
-      prisma.company.count()
+      prisma.company.count(),
     );
 
     const activeCompaniesResult = await safeQuery(0, () =>
@@ -62,7 +62,7 @@ export async function GET() {
         where: {
           status: "ACTIVE",
         },
-      })
+      }),
     );
 
     const suspendedCompaniesResult = await safeQuery(0, () =>
@@ -70,7 +70,7 @@ export async function GET() {
         where: {
           status: "SUSPENDED",
         },
-      })
+      }),
     );
 
     const disabledCompaniesResult = await safeQuery(0, () =>
@@ -78,13 +78,30 @@ export async function GET() {
         where: {
           status: "DISABLED" as any,
         },
-      })
+      }),
     );
 
     const totalUsersResult = await safeQuery(0, () => prisma.user.count());
 
+    const totalCompanyAdminsResult = await safeQuery(0, () =>
+      prisma.user.count({
+        where: {
+          role: "COMPANY_ADMIN" as any,
+        },
+      }),
+    );
+
+    const activeCompanyAdminsResult = await safeQuery(0, () =>
+      prisma.user.count({
+        where: {
+          role: "COMPANY_ADMIN" as any,
+          status: "ACTIVE" as any,
+        },
+      }),
+    );
+
     const totalSubscriptionsResult = await safeQuery(0, () =>
-      prisma.subscription.count()
+      prisma.subscription.count(),
     );
 
     const activeSubscriptionsResult = await safeQuery(0, () =>
@@ -92,11 +109,11 @@ export async function GET() {
         where: {
           isActive: true,
         },
-      })
+      }),
     );
 
     const totalAuditLogsResult = await safeQuery(0, () =>
-      prisma.auditLog.count()
+      prisma.auditLog.count(),
     );
 
     const totalNotificationsResult = await safeQuery(0, () =>
@@ -104,7 +121,7 @@ export async function GET() {
         where: {
           userId: user.id,
         },
-      })
+      }),
     );
 
     const unreadNotificationsResult = await safeQuery(0, () =>
@@ -113,7 +130,7 @@ export async function GET() {
           userId: user.id,
           isRead: false,
         },
-      })
+      }),
     );
 
     const totalMessagesResult = await safeQuery(0, () =>
@@ -121,7 +138,7 @@ export async function GET() {
         where: {
           receiverId: user.id,
         },
-      })
+      }),
     );
 
     const unreadMessagesResult = await safeQuery(0, () =>
@@ -130,7 +147,7 @@ export async function GET() {
           receiverId: user.id,
           isRead: false,
         },
-      })
+      }),
     );
 
     const companiesResult = await safeQuery<any[]>([], () =>
@@ -156,7 +173,7 @@ export async function GET() {
             take: 1,
           },
         },
-      })
+      }),
     );
 
     const subscriptionsResult = await safeQuery<any[]>([], () =>
@@ -174,7 +191,7 @@ export async function GET() {
             },
           },
         },
-      })
+      }),
     );
 
     const auditLogsResult = await safeQuery<any[]>([], () =>
@@ -196,7 +213,7 @@ export async function GET() {
             },
           },
         },
-      })
+      }),
     );
 
     const notificationsResult = await safeQuery<any[]>([], () =>
@@ -208,7 +225,7 @@ export async function GET() {
           createdAt: "desc",
         },
         take: 20,
-      })
+      }),
     );
 
     const messagesResult = await safeQuery<any[]>([], () =>
@@ -235,7 +252,7 @@ export async function GET() {
             },
           },
         },
-      })
+      }),
     );
 
     const usersResult = await safeQuery<any[]>([], () =>
@@ -246,21 +263,24 @@ export async function GET() {
         include: {
           company: {
             select: {
+              id: true,
               name: true,
+              code: true,
             },
           },
           branch: {
             select: {
+              id: true,
               name: true,
             },
           },
         },
-      })
+      }),
     );
 
     const revenueTotal = subscriptionsResult.data.reduce(
       (sum: number, item: any) => sum + Number(item.amount),
-      0
+      0,
     );
 
     const warnings = [
@@ -269,6 +289,8 @@ export async function GET() {
       suspendedCompaniesResult.error,
       disabledCompaniesResult.error,
       totalUsersResult.error,
+      totalCompanyAdminsResult.error,
+      activeCompanyAdminsResult.error,
       totalSubscriptionsResult.error,
       activeSubscriptionsResult.error,
       totalAuditLogsResult.error,
@@ -294,6 +316,8 @@ export async function GET() {
         suspendedCompanies: suspendedCompaniesResult.data,
         disabledCompanies: disabledCompaniesResult.data,
         totalUsers: totalUsersResult.data,
+        totalCompanyAdmins: totalCompanyAdminsResult.data,
+        activeCompanyAdmins: activeCompanyAdminsResult.data,
         totalSubscriptions: totalSubscriptionsResult.data,
         activeSubscriptions: activeSubscriptionsResult.data,
         totalAuditLogs: totalAuditLogsResult.data,
@@ -342,7 +366,10 @@ export async function GET() {
         status: item.status,
         companyId: item.companyId,
         companyName: item.company?.name ?? "System",
+        companyCode: item.company?.code ?? null,
         branchName: item.branch?.name ?? "No Branch",
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
       })),
     });
   } catch (error) {
@@ -354,7 +381,7 @@ export async function GET() {
         message: "Dashboard API failed completely.",
         error: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

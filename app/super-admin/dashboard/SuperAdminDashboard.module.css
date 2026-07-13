@@ -2063,3 +2063,331 @@
         padding: 7px;
     }
 }
+
+
+/* =========================================================
+   COMPANY ADMIN MANAGEMENT SECTION
+   Append this code to SuperAdminDashboard.module.css
+   ========================================================= */
+
+.adminOverviewGrid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.adminOverviewCard {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 104px;
+    padding: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(124, 58, 237, 0.13);
+    border-radius: 20px;
+    background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.14), transparent 44%), linear-gradient(145deg, #ffffff, #f8f7ff);
+    box-shadow: 0 15px 35px rgba(49, 46, 129, 0.08);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.adminOverviewCard::after {
+    position: absolute;
+    right: -30px;
+    bottom: -40px;
+    width: 100px;
+    height: 100px;
+    content: "";
+    border-radius: 999px;
+    background: rgba(124, 58, 237, 0.06);
+}
+
+.adminOverviewCard:hover {
+    transform: translateY(-4px);
+    border-color: rgba(124, 58, 237, 0.35);
+    box-shadow: 0 20px 42px rgba(49, 46, 129, 0.14);
+}
+
+.adminOverviewCard>span {
+    display: grid;
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #ede9fe, #ddd6fe);
+    box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.08);
+    font-size: 23px;
+}
+
+.adminOverviewCard p {
+    margin: 0 0 5px;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.adminOverviewCard strong {
+    display: block;
+    color: #1f174d;
+    font-size: 25px;
+    line-height: 1;
+}
+
+.adminFormHeader {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.adminFormHeader h2 {
+    margin: 0 0 6px;
+}
+
+.adminFormHeader p {
+    margin: 0;
+}
+
+.adminFormIcon {
+    display: grid;
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+    place-items: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+    box-shadow: 0 12px 24px rgba(109, 40, 217, 0.25);
+    color: #ffffff;
+    font-size: 23px;
+}
+
+.adminCompanyPreview {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid rgba(124, 58, 237, 0.16);
+    border-radius: 17px;
+    background: linear-gradient(135deg, rgba(237, 233, 254, 0.8), rgba(255, 255, 255, 0.9));
+}
+
+.adminCompanyPreview>div {
+    display: grid;
+    width: 45px;
+    min-width: 45px;
+    height: 45px;
+    place-items: center;
+    border-radius: 14px;
+    background: #6d28d9;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+}
+
+.adminCompanyPreview section {
+    min-width: 0;
+}
+
+.adminCompanyPreview small,
+.adminCompanyPreview strong,
+.adminCompanyPreview p {
+    display: block;
+}
+
+.adminCompanyPreview small {
+    margin-bottom: 2px;
+    color: #7c3aed;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.adminCompanyPreview strong {
+    overflow: hidden;
+    color: #21184f;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.adminCompanyPreview p {
+    margin: 3px 0 0;
+    color: #6b7280;
+    font-size: 11px;
+}
+
+.adminPasswordNote {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 13px;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 14px;
+    background: #eff6ff;
+}
+
+.adminPasswordNote span {
+    font-size: 18px;
+}
+
+.adminPasswordNote p {
+    margin: 0;
+    color: #475569;
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.adminPasswordNote strong {
+    color: #1d4ed8;
+}
+
+.adminTableHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.adminTableHeader h2 {
+    margin: 0 0 5px;
+    color: #20164f;
+    font-size: 19px;
+}
+
+.adminTableHeader p {
+    margin: 0;
+    color: #7b8191;
+    font-size: 12px;
+}
+
+.adminSearchBox {
+    display: flex;
+    align-items: center;
+    width: min(290px, 100%);
+    gap: 8px;
+    padding: 0 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    background: #f9fafb;
+    transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.adminSearchBox:focus-within {
+    border-color: #8b5cf6;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.11);
+}
+
+.adminSearchBox span {
+    font-size: 14px;
+}
+
+.adminSearchBox input {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 12px;
+}
+
+.adminCompanyCell {
+    display: flex;
+    min-width: 145px;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.adminCompanyCell strong {
+    color: #29204f;
+    font-size: 12px;
+}
+
+.adminCompanyCell small {
+    width: fit-content;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #ede9fe;
+    color: #6d28d9;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.tableEmptyCell {
+    padding: 54px 20px !important;
+    text-align: center !important;
+}
+
+.tableEmptyCell span,
+.tableEmptyCell strong,
+.tableEmptyCell p {
+    display: block;
+}
+
+.tableEmptyCell span {
+    margin-bottom: 9px;
+    font-size: 32px;
+}
+
+.tableEmptyCell strong {
+    margin-bottom: 5px;
+    color: #29204f;
+    font-size: 14px;
+}
+
+.tableEmptyCell p {
+    margin: 0;
+    color: #8b90a0;
+    font-size: 11px;
+}
+
+@media (max-width: 1450px) {
+    .adminOverviewGrid {
+        grid-template-columns: repeat(3, minmax(160px, 1fr));
+    }
+}
+
+@media (max-width: 1050px) {
+    .adminOverviewGrid {
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
+    }
+    .adminTableHeader {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .adminSearchBox {
+        width: 100%;
+    }
+}
+
+@media (max-width: 620px) {
+    .adminOverviewGrid {
+        grid-template-columns: 1fr;
+    }
+    .adminOverviewCard {
+        min-height: 90px;
+    }
+    .adminFormHeader {
+        align-items: center;
+    }
+    .adminFormIcon {
+        width: 46px;
+        min-width: 46px;
+        height: 46px;
+    }
+}

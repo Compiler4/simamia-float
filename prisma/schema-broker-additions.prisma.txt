@@ -1,0 +1,73 @@
+// ============================================================
+// ADD THIS ENUM NEAR YOUR OTHER ENUMS IN prisma/schema.prisma
+// ============================================================
+
+enum BrokerCustomerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// ============================================================
+// ADD THIS RELATION FIELD INSIDE YOUR EXISTING Company MODEL
+// ============================================================
+//
+// brokerCustomers BrokerCustomer[]
+//
+
+// ============================================================
+// ADD THESE TWO FIELDS INSIDE YOUR EXISTING ServiceActivity MODEL
+// This allows staff to select a broker customer when providing service.
+// Keep any old brokerId relation temporarily if old records still use it.
+// ============================================================
+//
+// brokerCustomerId String?
+// brokerCustomer   BrokerCustomer? @relation(
+//   fields: [brokerCustomerId],
+//   references: [id],
+//   onDelete: SetNull
+// )
+//
+// @@index([brokerCustomerId])
+//
+
+// ============================================================
+// ADD THIS COMPLETE MODEL
+// ============================================================
+
+model BrokerCustomer {
+  id               String               @id @default(cuid())
+  companyId        String
+  code             String
+  name             String
+  businessName     String?
+  phone            String
+  alternatePhone   String?
+  email            String?
+  location         String
+  region           String?
+  district         String?
+  ward             String?
+  address          String?
+  latitude         Float?
+  longitude        Float?
+  status           BrokerCustomerStatus @default(ACTIVE)
+  notes            String?              @db.Text
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  company          Company              @relation(
+    fields: [companyId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  serviceActivities ServiceActivity[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, location])
+  @@index([companyId, status])
+  @@index([companyId, phone])
+  @@map("broker_customers")
+}
