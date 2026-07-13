@@ -1,0 +1,147 @@
+[
+  {
+    "path": "API-ENDPOINTS.md",
+    "size": 1471,
+    "sha256": "bc5705c90b4eba1cb2177c462bd5e4ba7040f472a0d5a73c73a07c3ff7d92eb5"
+  },
+  {
+    "path": "README.md",
+    "size": 6897,
+    "sha256": "1ad7bd95181462b1c1a6f3cbed86ac73b6e62b87fd4c8a07309dd8e97c85712c"
+  },
+  {
+    "path": "app/admin/dashboard/CompanyAdminDashboard.module.css",
+    "size": 62908,
+    "sha256": "dbfe0448ecdd0b4447c6b860bb7f0d942fd481cb07de3d3e41ad096a9f47b81d"
+  },
+  {
+    "path": "app/admin/dashboard/CompanyAdminDashboardClient.tsx",
+    "size": 119273,
+    "sha256": "bf3129a49e1cf6a0e2b585a76bf7cd122ea23706156cdabe6602458561e16485"
+  },
+  {
+    "path": "app/admin/dashboard/page.tsx",
+    "size": 902,
+    "sha256": "8c0495bdb2a27da121e0fe2b63bff2f7dea63ac31830aede75a4bc7646f7112f"
+  },
+  {
+    "path": "app/api/company-admin/attendance/route.ts",
+    "size": 2887,
+    "sha256": "68b600d8f5e59e315476626570db4bcf78492485b10fef14371162578f4f7aad"
+  },
+  {
+    "path": "app/api/company-admin/bank-verifications/[id]/message/route.ts",
+    "size": 1660,
+    "sha256": "1e23edeaaac529eb7d103baf582df829e96074384659aad8ec69fb5d591be40d"
+  },
+  {
+    "path": "app/api/company-admin/bank-verifications/[id]/route.ts",
+    "size": 2396,
+    "sha256": "f0b31297de76711d4e444030755d720d058fc3b7862a4175fe1a01459a3b4bd0"
+  },
+  {
+    "path": "app/api/company-admin/bank-verifications/route.ts",
+    "size": 2486,
+    "sha256": "ddeea625b466471633f22e8fcb43ec0d9431bd6cc3f50907a1f254d668e519e2"
+  },
+  {
+    "path": "app/api/company-admin/branches/[id]/route.ts",
+    "size": 2662,
+    "sha256": "c764138f403483129a17ce85ba992d9684e720c241a680029b0e0ce0d3c8a70f"
+  },
+  {
+    "path": "app/api/company-admin/branches/route.ts",
+    "size": 1239,
+    "sha256": "ee7043e588544a3b88e822575f9ddb8a030f29a5b9c2c4d8ff3ca8e38492f858"
+  },
+  {
+    "path": "app/api/company-admin/dashboard/route.ts",
+    "size": 11442,
+    "sha256": "9422aae36f007c8e4446cc444d3d5fc9fcb7623893d0833aca8183126f4d13e5"
+  },
+  {
+    "path": "app/api/company-admin/expenses/[id]/route.ts",
+    "size": 1918,
+    "sha256": "71f9c06ba5b2f7d9b98f80b97153726f394183e7480d3f19a0b09651cd9c5aeb"
+  },
+  {
+    "path": "app/api/company-admin/expenses/route.ts",
+    "size": 2301,
+    "sha256": "e5c740587a5c56b6cecf9f6040c7956f01bd101ca37437a2ef69ccb7200e026a"
+  },
+  {
+    "path": "app/api/company-admin/gps-devices/[id]/route.ts",
+    "size": 1587,
+    "sha256": "4c97af8687ce2754f07f7b22cb37bcdbc389d414a323c0d449f1327aa53034e5"
+  },
+  {
+    "path": "app/api/company-admin/gps-devices/route.ts",
+    "size": 1551,
+    "sha256": "0a989e8fbcd0f4d3ae513fbeaa30b468b4fcdc588555edbdadb4b3918c4820cb"
+  },
+  {
+    "path": "app/api/company-admin/notifications/[id]/read/route.ts",
+    "size": 1122,
+    "sha256": "8cef7867440f5dd508d1117b4d86ac52e1954468d5349e7d82b16d6b7e2e5595"
+  },
+  {
+    "path": "app/api/company-admin/notifications/read-all/route.ts",
+    "size": 820,
+    "sha256": "5d6e997e3a3b7d5a909e32a52775c1423706551235ac7435b7a2b9dc8f14a35e"
+  },
+  {
+    "path": "app/api/company-admin/settings/route.ts",
+    "size": 1574,
+    "sha256": "98e32495798e556efe5f70e1dd299d4815ca3e3cb1e28efe088e231e731f0d32"
+  },
+  {
+    "path": "app/api/company-admin/uploads/route.ts",
+    "size": 1964,
+    "sha256": "3a2651df7b9cdb514bed09fa7a9af1229a8db87f465b5022bc50bef76caa429e"
+  },
+  {
+    "path": "app/api/company-admin/users/[id]/route.ts",
+    "size": 3844,
+    "sha256": "68322ecf67e3e5b5ad9b83bfc33dc2c184971149a485ceea526f7d67767b4d1f"
+  },
+  {
+    "path": "app/api/company-admin/users/route.ts",
+    "size": 2167,
+    "sha256": "6585d9f32ecd402a5159f67a8ad4630df6803a782a41ade5bac35ecf54d5c3d5"
+  },
+  {
+    "path": "app/api/gps/ping/route.ts",
+    "size": 2349,
+    "sha256": "e6db34473943a607bf3a6a54ecd71cb990b0d37f5fa7bb4b0f4511adad440e2e"
+  },
+  {
+    "path": "app/device-tracker/DeviceTracker.module.css",
+    "size": 4011,
+    "sha256": "57f78fd8c1dfc4721ddc3af0a87fc5207bb5ab2f27699692d97b893998bff7b9"
+  },
+  {
+    "path": "app/device-tracker/page.tsx",
+    "size": 6345,
+    "sha256": "0f06cfa3cd38dc09bc44d5c71b9ff107f87a05d29867c6d6b29bc16045042675"
+  },
+  {
+    "path": "lib/company-admin-server.ts",
+    "size": 3132,
+    "sha256": "34e5e724874d6a133ebe30248e090de1fd7bb298a4dab9fcfcc3896be642fc85"
+  },
+  {
+    "path": "lib/prisma.ts",
+    "size": 393,
+    "sha256": "fb06bd2b909867137d2b5231104c9e831d1722b7df77774780b438d143109c9d"
+  },
+  {
+    "path": "prisma/company-admin-module.prisma",
+    "size": 5635,
+    "sha256": "d99eefe5dfd8e988b1ac7673eed4d3a23265e01dad51eaf56aae52195bcbb11a"
+  },
+  {
+    "path": "prisma/seed-company-admin.ts",
+    "size": 10466,
+    "sha256": "a17f6019eeea7b15427e0312f0383a63629567f737d1e12e526015ae44e18725"
+  }
+]
