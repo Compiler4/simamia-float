@@ -67,6 +67,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   Product: 'Product',
   Customer: 'Customer',
+  BrokerCustomer: 'BrokerCustomer',
   ServiceActivity: 'ServiceActivity',
   GpsTracking: 'GpsTracking',
   CompanySetting: 'CompanySetting',
@@ -264,6 +265,7 @@ export const FloatTransactionScalarFieldEnum = {
   fromUserId: 'fromUserId',
   toUserId: 'toUserId',
   approvedById: 'approvedById',
+  brokerCustomerId: 'brokerCustomerId',
   transactionType: 'transactionType',
   referenceNo: 'referenceNo',
   amount: 'amount',
@@ -289,6 +291,7 @@ export const StaffCollectionScalarFieldEnum = {
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   reviewedById: 'reviewedById',
   referenceNo: 'referenceNo',
   amount: 'amount',
@@ -408,11 +411,37 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
+export const BrokerCustomerScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  code: 'code',
+  name: 'name',
+  businessName: 'businessName',
+  phone: 'phone',
+  alternatePhone: 'alternatePhone',
+  email: 'email',
+  location: 'location',
+  region: 'region',
+  district: 'district',
+  ward: 'ward',
+  address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrokerCustomerScalarFieldEnum = (typeof BrokerCustomerScalarFieldEnum)[keyof typeof BrokerCustomerScalarFieldEnum]
+
+
 export const ServiceActivityScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   customerId: 'customerId',
   serviceType: 'serviceType',
   amount: 'amount',
@@ -741,6 +770,10 @@ export const StaffFileScalarFieldEnum = {
   storedName: 'storedName',
   mimeType: 'mimeType',
   sizeBytes: 'sizeBytes',
+  originalSizeBytes: 'originalSizeBytes',
+  compressionRatio: 'compressionRatio',
+  compressed: 'compressed',
+  checksumSha256: 'checksumSha256',
   storagePath: 'storagePath',
   createdAt: 'createdAt'
 } as const
@@ -875,6 +908,7 @@ export const FloatTransactionOrderByRelevanceFieldEnum = {
   fromUserId: 'fromUserId',
   toUserId: 'toUserId',
   approvedById: 'approvedById',
+  brokerCustomerId: 'brokerCustomerId',
   referenceNo: 'referenceNo',
   purpose: 'purpose',
   receiptUrl: 'receiptUrl',
@@ -889,6 +923,7 @@ export const StaffCollectionOrderByRelevanceFieldEnum = {
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   reviewedById: 'reviewedById',
   referenceNo: 'referenceNo',
   description: 'description',
@@ -972,11 +1007,32 @@ export const CustomerOrderByRelevanceFieldEnum = {
 export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
 
 
+export const BrokerCustomerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  code: 'code',
+  name: 'name',
+  businessName: 'businessName',
+  phone: 'phone',
+  alternatePhone: 'alternatePhone',
+  email: 'email',
+  location: 'location',
+  region: 'region',
+  district: 'district',
+  ward: 'ward',
+  address: 'address',
+  notes: 'notes'
+} as const
+
+export type BrokerCustomerOrderByRelevanceFieldEnum = (typeof BrokerCustomerOrderByRelevanceFieldEnum)[keyof typeof BrokerCustomerOrderByRelevanceFieldEnum]
+
+
 export const ServiceActivityOrderByRelevanceFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   customerId: 'customerId',
   serviceType: 'serviceType',
   status: 'status',
@@ -1202,6 +1258,7 @@ export const StaffFileOrderByRelevanceFieldEnum = {
   originalName: 'originalName',
   storedName: 'storedName',
   mimeType: 'mimeType',
+  checksumSha256: 'checksumSha256',
   storagePath: 'storagePath'
 } as const
 

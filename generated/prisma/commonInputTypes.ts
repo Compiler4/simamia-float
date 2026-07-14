@@ -444,6 +444,13 @@ export type FloatNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
 }
 
+export type EnumBrokerCustomerStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BrokerCustomerStatus | Prisma.EnumBrokerCustomerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BrokerCustomerStatus[]
+  notIn?: $Enums.BrokerCustomerStatus[]
+  not?: Prisma.NestedEnumBrokerCustomerStatusFilter<$PrismaModel> | $Enums.BrokerCustomerStatus
+}
+
 export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
   in?: number[] | null
@@ -458,6 +465,16 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type EnumBrokerCustomerStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BrokerCustomerStatus | Prisma.EnumBrokerCustomerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BrokerCustomerStatus[]
+  notIn?: $Enums.BrokerCustomerStatus[]
+  not?: Prisma.NestedEnumBrokerCustomerStatusWithAggregatesFilter<$PrismaModel> | $Enums.BrokerCustomerStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBrokerCustomerStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBrokerCustomerStatusFilter<$PrismaModel>
 }
 
 export type EnumCompanyExpenseStatusFilter<$PrismaModel = never> = {
@@ -1165,6 +1182,13 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
 }
 
+export type NestedEnumBrokerCustomerStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BrokerCustomerStatus | Prisma.EnumBrokerCustomerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BrokerCustomerStatus[]
+  notIn?: $Enums.BrokerCustomerStatus[]
+  not?: Prisma.NestedEnumBrokerCustomerStatusFilter<$PrismaModel> | $Enums.BrokerCustomerStatus
+}
+
 export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
   in?: number[] | null
@@ -1179,6 +1203,16 @@ export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumBrokerCustomerStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BrokerCustomerStatus | Prisma.EnumBrokerCustomerStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BrokerCustomerStatus[]
+  notIn?: $Enums.BrokerCustomerStatus[]
+  not?: Prisma.NestedEnumBrokerCustomerStatusWithAggregatesFilter<$PrismaModel> | $Enums.BrokerCustomerStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBrokerCustomerStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBrokerCustomerStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumCompanyExpenseStatusFilter<$PrismaModel = never> = {

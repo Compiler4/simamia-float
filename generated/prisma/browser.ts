@@ -98,6 +98,11 @@ export type Product = Prisma.ProductModel
  */
 export type Customer = Prisma.CustomerModel
 /**
+ * Model BrokerCustomer
+ * 
+ */
+export type BrokerCustomer = Prisma.BrokerCustomerModel
+/**
  * Model ServiceActivity
  * 
  */

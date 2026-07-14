@@ -154,6 +154,15 @@ export const CompanyGpsDeviceStatus = {
 export type CompanyGpsDeviceStatus = (typeof CompanyGpsDeviceStatus)[keyof typeof CompanyGpsDeviceStatus]
 
 
+export const BrokerCustomerStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type BrokerCustomerStatus = (typeof BrokerCustomerStatus)[keyof typeof BrokerCustomerStatus]
+
+
 export const AccountingPeriodStatus = {
   OPEN: 'OPEN',
   LOCKED: 'LOCKED'

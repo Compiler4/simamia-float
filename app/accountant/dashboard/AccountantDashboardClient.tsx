@@ -30,7 +30,7 @@ type PageKey =
   | "Opening Balances"
   | "Closing Balances"
   | "Cash Book"
-  | "Manual Cash Receipt"
+  | "Manual Cashflow"
   | "Expenses"
   | "General Ledger"
   | "Trial Balance"
@@ -135,7 +135,7 @@ const navigation: Array<{
   { page: "Opening Balances", glyph: "opening", group: "Financial Day" },
   { page: "Closing Balances", glyph: "closing", group: "Financial Day" },
   { page: "Cash Book", glyph: "cash", group: "Accounting Books" },
-  { page: "Manual Cash Receipt", glyph: "manual", group: "Accounting Books" },
+  { page: "Manual Cashflow", glyph: "manual", group: "Accounting Books" },
   { page: "General Ledger", glyph: "ledger", group: "Accounting Books" },
   { page: "Trial Balance", glyph: "trial", group: "Accounting Books" },
   { page: "Balance Sheet", glyph: "balance", group: "Statements" },
@@ -285,7 +285,15 @@ async function requestJson<T = any>(
   }
 
   if (!response.ok || result.success === false) {
-    throw new Error(result.message || "The accounting request failed.");
+    const details = [result.message, result.details, result.error]
+      .filter(Boolean)
+      .map((item) => String(item).trim())
+      .filter((item, index, rows) => rows.indexOf(item) === index)
+      .join(" ");
+
+    throw new Error(
+      details || `The accounting request failed (${response.status}).`,
+    );
   }
 
   return result as T;
@@ -302,8 +310,19 @@ function Glyph({
     return (
       <span className={`${styles.glyph} ${className}`} aria-hidden="true">
         <svg className={styles.bellSvg} viewBox="0 0 24 24" fill="none">
-          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M10 21h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path
+            d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M10 21h4"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
         </svg>
       </span>
     );
@@ -371,10 +390,15 @@ export default function AccountantDashboardClient({ user }: Props) {
     setBusy(true);
 
     try {
+      const endpoint =
+        action === "ASSIGN_STAFF_FLOAT"
+          ? "/api/accountant/manual-float"
+          : "/api/accountant/actions";
+
       const result = await requestJson<{
         success: true;
         message: string;
-      }>("/api/accountant/actions", {
+      }>(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -448,9 +472,7 @@ export default function AccountantDashboardClient({ user }: Props) {
 
   return (
     <main
-      className={`${styles.page} ${
-        collapsed ? styles.sidebarCollapsed : ""
-      }`}
+      className={`${styles.page} ${collapsed ? styles.sidebarCollapsed : ""}`}
     >
       <button
         type="button"
@@ -486,7 +508,11 @@ export default function AccountantDashboardClient({ user }: Props) {
 
             setCollapsed((current) => !current);
           }}
-          aria-label={collapsed ? "Expand accountant sidebar" : "Collapse accountant sidebar"}
+          aria-label={
+            collapsed
+              ? "Expand accountant sidebar"
+              : "Collapse accountant sidebar"
+          }
           aria-expanded={!collapsed}
           title={collapsed ? "Expand Menu" : "Collapse Menu"}
         >
@@ -547,7 +573,9 @@ export default function AccountantDashboardClient({ user }: Props) {
           </button>
 
           <div className={styles.heading}>
-            <small>{safeText(data?.company?.name) || "Finance workspace"}</small>
+            <small>
+              {safeText(data?.company?.name) || "Finance workspace"}
+            </small>
             <h1>{activePage}</h1>
           </div>
 
@@ -619,10 +647,7 @@ export default function AccountantDashboardClient({ user }: Props) {
         {loading ? (
           <LoadingState />
         ) : error ? (
-          <ErrorState
-            message={error}
-            retry={() => void loadDashboard()}
-          />
+          <ErrorState message={error} retry={() => void loadDashboard()} />
         ) : data ? (
           <div className={styles.pageReveal} key={activePage}>
             <PageContent
@@ -687,8 +712,8 @@ function PageContent({
 
   if (page === "Cash Book") return <CashBookPage data={data} />;
 
-  if (page === "Manual Cash Receipt") {
-    return <ManualCashReceiptPage {...common} />;
+  if (page === "Manual Cashflow") {
+    return <ManualCashflowPage {...common} />;
   }
 
   if (page === "Expenses") {
@@ -844,15 +869,26 @@ function DashboardHome({
                 <article key={item.id}>
                   <span className={styles.transactionAvatar}>
                     {item.user?.profileImageUrl ? (
-                      <img src={item.user.profileImageUrl} alt={item.user.name || "User"} />
+                      <img
+                        src={item.user.profileImageUrl}
+                        alt={item.user.name || "User"}
+                      />
                     ) : (
-                      safeText(item.user?.name || item.user?.email || "U").slice(0, 1).toUpperCase()
+                      safeText(item.user?.name || item.user?.email || "U")
+                        .slice(0, 1)
+                        .toUpperCase()
                     )}
                   </span>
                   <div>
-                    <strong>{item.user?.name || item.user?.email || "System transaction"}</strong>
+                    <strong>
+                      {item.user?.name ||
+                        item.user?.email ||
+                        "System transaction"}
+                    </strong>
                     <small>{item.user?.email || item.description}</small>
-                    <small>{formatDate(item.date, true)} · {item.description}</small>
+                    <small>
+                      {formatDate(item.date, true)} · {item.description}
+                    </small>
                   </div>
                   <b
                     className={
@@ -1013,8 +1049,14 @@ function FinancialDayPage({
 
               <div className={styles.detailGrid}>
                 <Detail label="Opened by" value={safeText(day.openedById)} />
-                <Detail label="Opened at" value={formatDate(day.openedAt, true)} />
-                <Detail label="Closed at" value={formatDate(day.closedAt, true)} />
+                <Detail
+                  label="Opened at"
+                  value={formatDate(day.openedAt, true)}
+                />
+                <Detail
+                  label="Closed at"
+                  value={formatDate(day.closedAt, true)}
+                />
                 <Detail
                   label="Blocked reason"
                   value={safeText(day.blockedReason) || "No restriction"}
@@ -1027,7 +1069,10 @@ function FinancialDayPage({
         </article>
       </div>
 
-      <TableCard title="Recent financial days" subtitle="Opening, movement and closing records">
+      <TableCard
+        title="Recent financial days"
+        subtitle="Opening, movement and closing records"
+      >
         <DataTable minWidth={1000}>
           <thead>
             <tr>
@@ -1067,12 +1112,7 @@ function FinancialDayPage({
   );
 }
 
-
-function OpeningBalancesPage({
-  data,
-  busy,
-  runAction,
-}: CommonPageProps) {
+function OpeningBalancesPage({ data, busy, runAction }: CommonPageProps) {
   const accounts = safeArray<any>(data.chartOfAccounts);
   const first = accounts[0] ?? {
     code: "1000",
@@ -1119,7 +1159,11 @@ function OpeningBalancesPage({
             text="The opposite side is posted automatically to Opening Balance Equity."
           />
           <Field label="Ledger account">
-            <select value={form.accountCode} onChange={(event) => selectAccount(event.target.value)} required>
+            <select
+              value={form.accountCode}
+              onChange={(event) => selectAccount(event.target.value)}
+              required
+            >
               {accounts.map((item) => (
                 <option key={item.id || item.code} value={item.code}>
                   {item.code} — {item.name}
@@ -1132,27 +1176,64 @@ function OpeningBalancesPage({
               <input value={roleLabel(form.accountType)} readOnly />
             </Field>
             <Field label="Normal side">
-              <select value={form.side} onChange={(event) => setForm({ ...form, side: event.target.value })}>
+              <select
+                value={form.side}
+                onChange={(event) =>
+                  setForm({ ...form, side: event.target.value })
+                }
+              >
                 <option value="DEBIT">Debit</option>
                 <option value="CREDIT">Credit</option>
               </select>
             </Field>
             <Field label="Amount">
-              <input type="number" min="1" step="0.01" value={form.amount} onChange={(event) => setForm({ ...form, amount: event.target.value })} required />
+              <input
+                type="number"
+                min="1"
+                step="0.01"
+                value={form.amount}
+                onChange={(event) =>
+                  setForm({ ...form, amount: event.target.value })
+                }
+                required
+              />
             </Field>
             <Field label="As-of date">
-              <input type="date" value={form.asOfDate} onChange={(event) => setForm({ ...form, asOfDate: event.target.value })} required />
+              <input
+                type="date"
+                value={form.asOfDate}
+                onChange={(event) =>
+                  setForm({ ...form, asOfDate: event.target.value })
+                }
+                required
+              />
             </Field>
           </div>
-          <button className={styles.primaryButton} type="submit" disabled={busy || !form.accountCode || !form.amount}>
-            <Glyph name="check" /> {busy ? "Posting..." : "Post opening balance"}
+          <button
+            className={styles.primaryButton}
+            type="submit"
+            disabled={busy || !form.accountCode || !form.amount}
+          >
+            <Glyph name="check" />{" "}
+            {busy ? "Posting..." : "Post opening balance"}
           </button>
         </form>
 
-        <TableCard title="Opening Balance Register" subtitle={`${safeArray<any>(data.openingBalances).length} posted balances`}>
+        <TableCard
+          title="Opening Balance Register"
+          subtitle={`${safeArray<any>(data.openingBalances).length} posted balances`}
+        >
           <DataTable minWidth={760}>
             <thead>
-              <tr><th>#</th><th>Date</th><th>Code</th><th>Account</th><th>Debit</th><th>Credit</th><th>Posted by</th></tr>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Code</th>
+                <th>Account</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Posted by</th>
+              </tr>
             </thead>
             <tbody>
               {safeArray<any>(data.openingBalances).map((item, index) => (
@@ -1163,10 +1244,17 @@ function OpeningBalancesPage({
                   <td>{item.account?.name}</td>
                   <td>{Number(item.debit) > 0 ? money(item.debit) : "—"}</td>
                   <td>{Number(item.credit) > 0 ? money(item.credit) : "—"}</td>
-                  <td>{item.postedBy?.name || item.postedBy?.email || "N/A"}</td>
+                  <td>
+                    {item.postedBy?.name || item.postedBy?.email || "N/A"}
+                  </td>
                 </tr>
               ))}
-              {!safeArray<any>(data.openingBalances).length && <EmptyRow colSpan={7} text="No opening balances have been posted." />}
+              {!safeArray<any>(data.openingBalances).length && (
+                <EmptyRow
+                  colSpan={7}
+                  text="No opening balances have been posted."
+                />
+              )}
             </tbody>
           </DataTable>
         </TableCard>
@@ -1235,7 +1323,10 @@ function BalanceHistoryPage({
         />
       </div>
 
-      <TableCard title={`${type === "OPENING" ? "Opening" : "Closing"} balance register`} subtitle="Real FinancialDay records">
+      <TableCard
+        title={`${type === "OPENING" ? "Opening" : "Closing"} balance register`}
+        subtitle="Real FinancialDay records"
+      >
         <DataTable>
           <thead>
             <tr>
@@ -1267,16 +1358,59 @@ function BalanceHistoryPage({
   );
 }
 
-
-function ManualCashReceiptPage({
+function ManualCashflowPage({
   data,
   busy,
   runAction,
   uploadFile,
   notify,
 }: CommonPageProps) {
-  const [form, setForm] = useState({
-    sourceUserId: data.users?.[0]?.id || "",
+  const staffUsers = useMemo(
+    () =>
+      safeArray<any>(data.users)
+        .filter(
+          (item) =>
+            safeText(item.role).toUpperCase() === "STAFF" &&
+            safeText(item.status || "ACTIVE").toUpperCase() === "ACTIVE",
+        )
+        .sort((left, right) =>
+          safeText(left.name).localeCompare(safeText(right.name)),
+        ),
+    [data.users],
+  );
+
+  const manualFloatRows = useMemo(
+    () =>
+      safeArray<any>(data.floats)
+        .filter(
+          (item) =>
+            safeText(item.transactionType).toUpperCase() ===
+              "ACCOUNTANT_TO_STAFF" &&
+            (safeText(item.fromUserId) === safeText(data.accountant?.id) ||
+              safeText(item.fromUser?.id) === safeText(data.accountant?.id)),
+        )
+        .sort(
+          (left, right) =>
+            new Date(right.issuedAt || right.createdAt || 0).getTime() -
+            new Date(left.issuedAt || left.createdAt || 0).getTime(),
+        ),
+    [data.floats, data.accountant?.id],
+  );
+
+  const firstStaffId = staffUsers[0]?.id || "";
+
+  const [floatForm, setFloatForm] = useState({
+    staffUserId: firstStaffId,
+    issueDate: dateInput(),
+    amount: "",
+    referenceNo: "",
+    purpose: "Morning operational float",
+    notes: "",
+    receiptUrl: "",
+  });
+
+  const [receiptForm, setReceiptForm] = useState({
+    sourceUserId: firstStaffId,
     transactionDate: dateInput(),
     amount: "",
     classification: "STAFF_RETURN",
@@ -1285,24 +1419,108 @@ function ManualCashReceiptPage({
     receiptUrl: "",
   });
 
-  async function handleReceipt(event: ChangeEvent<HTMLInputElement>) {
+  useEffect(() => {
+    if (!floatForm.staffUserId && firstStaffId) {
+      setFloatForm((current) => ({
+        ...current,
+        staffUserId: firstStaffId,
+      }));
+    }
+
+    if (!receiptForm.sourceUserId && firstStaffId) {
+      setReceiptForm((current) => ({
+        ...current,
+        sourceUserId: firstStaffId,
+      }));
+    }
+  }, [firstStaffId, floatForm.staffUserId, receiptForm.sourceUserId]);
+
+  const currentDayOpen =
+    Boolean(data.currentDay) &&
+    safeText(data.currentDay?.status).toUpperCase() === "OPEN";
+
+  const assignedTotal = manualFloatRows.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0,
+  );
+
+  const waitingConfirmation = manualFloatRows.filter((item) =>
+    ["PENDING", "ISSUED"].includes(safeText(item.status).toUpperCase()),
+  ).length;
+
+  const confirmedCount = manualFloatRows.filter((item) =>
+    ["CONFIRMED", "APPROVED", "RETURNED", "DEPOSITED"].includes(
+      safeText(item.status).toUpperCase(),
+    ),
+  ).length;
+
+  async function handleFloatProof(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    if (!file) return;
+
+    if (!file) {
+      return;
+    }
 
     try {
       const url = await uploadFile(file);
-      setForm((current) => ({ ...current, receiptUrl: url }));
-      notify("Manual receipt document uploaded.");
+
+      setFloatForm((current) => ({
+        ...current,
+        receiptUrl: url,
+      }));
+
+      notify("Float assignment proof uploaded.");
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Upload failed.");
+      notify(
+        error instanceof Error ? error.message : "Float proof upload failed.",
+      );
     }
   }
 
-  async function submit(event: FormEvent) {
+  async function handleReceipt(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const url = await uploadFile(file);
+
+      setReceiptForm((current) => ({
+        ...current,
+        receiptUrl: url,
+      }));
+
+      notify("Manual receipt document uploaded.");
+    } catch (error) {
+      notify(error instanceof Error ? error.message : "Receipt upload failed.");
+    }
+  }
+
+  async function submitFloat(event: FormEvent) {
     event.preventDefault();
-    const saved = await runAction("CREATE_MANUAL_RECEIPT", form);
+
+    const saved = await runAction("ASSIGN_STAFF_FLOAT", floatForm);
+
     if (saved) {
-      setForm((current) => ({
+      setFloatForm((current) => ({
+        ...current,
+        amount: "",
+        referenceNo: "",
+        notes: "",
+        receiptUrl: "",
+      }));
+    }
+  }
+
+  async function submitReceipt(event: FormEvent) {
+    event.preventDefault();
+
+    const saved = await runAction("CREATE_MANUAL_RECEIPT", receiptForm);
+
+    if (saved) {
+      setReceiptForm((current) => ({
         ...current,
         amount: "",
         description: "",
@@ -1314,40 +1532,117 @@ function ManualCashReceiptPage({
 
   return (
     <SectionPage
-      title="Manual Cash Receipt"
-      subtitle="Record money received directly from staff before it reaches a bank account. Float settlements increase cash and reduce staff-float receivable; only genuine revenue increases income."
+      title="Manual Cashflow"
+      subtitle="Assign operational float to active staff officers and record money received manually. Both registers are displayed on the same database-backed page."
       glyph="manual"
     >
-      <div className={styles.twoColumn}>
-        <form className={styles.formCard} onSubmit={submit}>
+      {!staffUsers.length && (
+        <div className={styles.featureWarning}>
+          <Glyph name="warning" />
+
+          <div>
+            <strong>No active staff users were found</strong>
+            <p>
+              A Company Admin must register an active user with the STAFF role
+              before the accountant can assign operational float.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {!currentDayOpen && (
+        <div className={styles.manualCashflowWarning}>
+          <Glyph name="warning" />
+
+          <div>
+            <strong>Open the financial day first</strong>
+            <p>
+              Manual staff-float assignment is disabled until today&apos;s
+              financial day has status OPEN.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className={styles.manualCashflowMetrics}>
+        <MetricCard
+          label="Active Staff"
+          value={String(staffUsers.length)}
+          theme="blue"
+          note="Available in the assignment dropdown"
+        />
+
+        <MetricCard
+          label="Float Assigned"
+          value={moneyShort(assignedTotal)}
+          theme="peach"
+          note={`${manualFloatRows.length} manual assignment records`}
+        />
+
+        <MetricCard
+          label="Waiting Confirmation"
+          value={String(waitingConfirmation)}
+          theme="orange"
+          note="Pending or issued to staff"
+        />
+
+        <MetricCard
+          label="Confirmed"
+          value={String(confirmedCount)}
+          theme="yellow"
+          note="Confirmed, approved, returned or deposited"
+        />
+      </div>
+
+      <div className={styles.manualCashflowWorkspace}>
+        <form
+          className={`${styles.formCard} ${styles.manualFloatCard}`}
+          onSubmit={submitFloat}
+        >
+          <div className={styles.cashflowCardLabel}>
+            <Glyph name="float" />
+            <span>Cash Out</span>
+          </div>
+
           <CardHeading
-            title="Receive money manually"
-            text="A receipt or supporting document is required before posting."
+            title="Assign float to staff"
+            text="Select an active STAFF user and record the amount physically or electronically issued."
           />
 
-          <div className={styles.formGrid}>
-            <Field label="Received from">
-              <select
-                value={form.sourceUserId}
-                onChange={(event) =>
-                  setForm({ ...form, sourceUserId: event.target.value })
-                }
-                required
-              >
-                {safeArray<any>(data.users).map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name} — {roleLabel(item.role)}
-                  </option>
-                ))}
-              </select>
-            </Field>
+          <Field label="Staff officer">
+            <select
+              value={floatForm.staffUserId}
+              onChange={(event) =>
+                setFloatForm({
+                  ...floatForm,
+                  staffUserId: event.target.value,
+                })
+              }
+              required
+            >
+              {!staffUsers.length && (
+                <option value="">No active STAFF users</option>
+              )}
 
-            <Field label="Transaction date">
+              {staffUsers.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} — {item.email} —{" "}
+                  {item.branch?.name || "No branch"}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <div className={styles.formGrid}>
+            <Field label="Issue date">
               <input
                 type="date"
-                value={form.transactionDate}
+                value={floatForm.issueDate}
                 onChange={(event) =>
-                  setForm({ ...form, transactionDate: event.target.value })
+                  setFloatForm({
+                    ...floatForm,
+                    issueDate: event.target.value,
+                  })
                 }
                 required
               />
@@ -1358,9 +1653,154 @@ function ManualCashReceiptPage({
                 type="number"
                 min="1"
                 step="0.01"
-                value={form.amount}
+                value={floatForm.amount}
                 onChange={(event) =>
-                  setForm({ ...form, amount: event.target.value })
+                  setFloatForm({
+                    ...floatForm,
+                    amount: event.target.value,
+                  })
+                }
+                placeholder="Example: 500000"
+                required
+              />
+            </Field>
+
+            <Field label="Reference number">
+              <input
+                value={floatForm.referenceNo}
+                onChange={(event) =>
+                  setFloatForm({
+                    ...floatForm,
+                    referenceNo: event.target.value,
+                  })
+                }
+                placeholder="Leave blank to auto-generate"
+              />
+            </Field>
+
+            <Field label="Purpose">
+              <input
+                value={floatForm.purpose}
+                onChange={(event) =>
+                  setFloatForm({
+                    ...floatForm,
+                    purpose: event.target.value,
+                  })
+                }
+                placeholder="Morning operational float"
+                required
+              />
+            </Field>
+          </div>
+
+          <Field label="Notes">
+            <textarea
+              value={floatForm.notes}
+              onChange={(event) =>
+                setFloatForm({
+                  ...floatForm,
+                  notes: event.target.value,
+                })
+              }
+              placeholder="Cash handover details, denomination notes or transfer information..."
+            />
+          </Field>
+
+          <label className={styles.fileBox}>
+            <Glyph name="upload" />
+
+            <span>
+              {floatForm.receiptUrl
+                ? "Float assignment proof uploaded"
+                : "Optional: upload cash handover or transfer proof"}
+            </span>
+
+            <input
+              type="file"
+              accept="image/*,.pdf"
+              onChange={handleFloatProof}
+            />
+          </label>
+
+          <button
+            type="submit"
+            className={styles.primaryButton}
+            disabled={
+              busy ||
+              !currentDayOpen ||
+              !floatForm.staffUserId ||
+              !floatForm.amount
+            }
+          >
+            <Glyph name="float" />
+
+            {busy ? "Assigning float..." : "Assign float to staff"}
+          </button>
+        </form>
+
+        <form
+          className={`${styles.formCard} ${styles.manualReceiptCard}`}
+          onSubmit={submitReceipt}
+        >
+          <div className={styles.cashflowCardLabel}>
+            <Glyph name="receipt" />
+            <span>Cash In</span>
+          </div>
+
+          <CardHeading
+            title="Receive money manually"
+            text="Record cash returned by a staff officer before it reaches a bank account."
+          />
+
+          <Field label="Received from staff">
+            <select
+              value={receiptForm.sourceUserId}
+              onChange={(event) =>
+                setReceiptForm({
+                  ...receiptForm,
+                  sourceUserId: event.target.value,
+                })
+              }
+              required
+            >
+              {!staffUsers.length && (
+                <option value="">No active STAFF users</option>
+              )}
+
+              {staffUsers.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} — {item.email}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <div className={styles.formGrid}>
+            <Field label="Transaction date">
+              <input
+                type="date"
+                value={receiptForm.transactionDate}
+                onChange={(event) =>
+                  setReceiptForm({
+                    ...receiptForm,
+                    transactionDate: event.target.value,
+                  })
+                }
+                required
+              />
+            </Field>
+
+            <Field label="Amount">
+              <input
+                type="number"
+                min="1"
+                step="0.01"
+                value={receiptForm.amount}
+                onChange={(event) =>
+                  setReceiptForm({
+                    ...receiptForm,
+                    amount: event.target.value,
+                  })
                 }
                 required
               />
@@ -1368,9 +1808,12 @@ function ManualCashReceiptPage({
 
             <Field label="Accounting classification">
               <select
-                value={form.classification}
+                value={receiptForm.classification}
                 onChange={(event) =>
-                  setForm({ ...form, classification: event.target.value })
+                  setReceiptForm({
+                    ...receiptForm,
+                    classification: event.target.value,
+                  })
                 }
               >
                 <option value="STAFF_RETURN">Staff float return</option>
@@ -1381,64 +1824,152 @@ function ManualCashReceiptPage({
 
             <Field label="Reference number">
               <input
-                value={form.referenceNo}
+                value={receiptForm.referenceNo}
                 onChange={(event) =>
-                  setForm({ ...form, referenceNo: event.target.value })
+                  setReceiptForm({
+                    ...receiptForm,
+                    referenceNo: event.target.value,
+                  })
                 }
                 placeholder="RCPT-2026-0001"
                 required
               />
             </Field>
-
-            <Field label="Description">
-              <input
-                value={form.description}
-                onChange={(event) =>
-                  setForm({ ...form, description: event.target.value })
-                }
-                placeholder="Reason for received money"
-                required
-              />
-            </Field>
           </div>
+
+          <Field label="Description">
+            <textarea
+              value={receiptForm.description}
+              onChange={(event) =>
+                setReceiptForm({
+                  ...receiptForm,
+                  description: event.target.value,
+                })
+              }
+              placeholder="Reason for received money"
+              required
+            />
+          </Field>
 
           <label className={styles.fileBox}>
             <Glyph name="upload" />
+
             <span>
-              {form.receiptUrl
+              {receiptForm.receiptUrl
                 ? "Receipt uploaded"
                 : "Upload receipt or supporting document"}
             </span>
-            <input
-              type="file"
-              accept="image/*,.pdf"
-              onChange={handleReceipt}
-            />
+
+            <input type="file" accept="image/*,.pdf" onChange={handleReceipt} />
           </label>
 
           <button
             type="submit"
             className={styles.primaryButton}
-            disabled={busy || !form.receiptUrl}
+            disabled={
+              busy || !receiptForm.sourceUserId || !receiptForm.receiptUrl
+            }
           >
-            <Glyph name="check" /> Post cash receipt
+            <Glyph name="check" />
+
+            {busy ? "Posting receipt..." : "Post cash receipt"}
           </button>
         </form>
-
-        <article className={styles.statusPanel}>
-          <CardHeading
-            title="Posting rule"
-            text="The transaction is posted through a balanced journal entry."
-          />
-          <ul className={styles.ruleList}>
-            <li>Staff float return: Debit Cash, Credit Staff Float Receivable.</li>
-            <li>Verified revenue: Debit Cash, Credit Service Revenue.</li>
-            <li>Other receipt: Debit Cash, Credit Other Receipts.</li>
-            <li>Locked accounting periods reject new postings.</li>
-            <li>Posted cash-book and ledger entries cannot be deleted by an accountant.</li>
-          </ul>
-        </article>
       </div>
+
+      <TableCard
+        title="Manual Staff Float Register"
+        subtitle={`${manualFloatRows.length} float assignment records entered by this accountant`}
+      >
+        <DataTable minWidth={1450}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Staff Officer</th>
+              <th>Email</th>
+              <th>Branch</th>
+              <th>Issue Date</th>
+              <th>Reference</th>
+              <th>Purpose</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Proof</th>
+              <th>Confirmed</th>
+              <th>Assigned By</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {manualFloatRows.map((item, index) => (
+              <tr key={item.id}>
+                <td>{index + 1}</td>
+
+                <td>
+                  <Entity
+                    name={item.toUser?.name || "Staff officer"}
+                    sub={roleLabel(item.toUser?.role || "STAFF")}
+                  />
+                </td>
+
+                <td>{item.toUser?.email || "N/A"}</td>
+
+                <td>
+                  {item.toUser?.branch?.name ||
+                    item.toUser?.branchId ||
+                    "No branch"}
+                </td>
+
+                <td>{formatDate(item.issuedAt || item.createdAt, true)}</td>
+
+                <td>{item.referenceNo || "Auto generated"}</td>
+
+                <td className={styles.wrapCell}>
+                  {item.purpose || "Operational float"}
+                </td>
+
+                <td>{money(item.amount)}</td>
+
+                <td>
+                  <Status status={item.status} />
+                </td>
+
+                <td>
+                  {item.receiptUrl ? (
+                    <a
+                      className={styles.documentLink}
+                      href={item.receiptUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Glyph name="eye" />
+                      View
+                    </a>
+                  ) : (
+                    "Optional"
+                  )}
+                </td>
+
+                <td>
+                  {item.confirmedAt
+                    ? formatDate(item.confirmedAt, true)
+                    : "Waiting for staff"}
+                </td>
+
+                <td>
+                  {item.fromUser?.name || data.accountant?.name || "Accountant"}
+                </td>
+              </tr>
+            ))}
+
+            {!manualFloatRows.length && (
+              <EmptyRow
+                colSpan={12}
+                text="No manual staff-float assignments have been entered."
+              />
+            )}
+          </tbody>
+        </DataTable>
+      </TableCard>
 
       <TableCard
         title="Manual Receipt Register"
@@ -1448,7 +1979,7 @@ function ManualCashReceiptPage({
           <thead>
             <tr>
               <th>#</th>
-              <th>Received from</th>
+              <th>Received From</th>
               <th>Email</th>
               <th>Role</th>
               <th>Date</th>
@@ -1456,9 +1987,10 @@ function ManualCashReceiptPage({
               <th>Classification</th>
               <th>Amount</th>
               <th>Document</th>
-              <th>Posted by</th>
+              <th>Posted By</th>
             </tr>
           </thead>
+
           <tbody>
             {safeArray<any>(data.manualReceipts).map((item, index) => (
               <tr key={item.id}>
@@ -1468,28 +2000,68 @@ function ManualCashReceiptPage({
                 <td>{roleLabel(item.sourceUser?.role)}</td>
                 <td>{formatDate(item.transactionDate)}</td>
                 <td>{item.referenceNo}</td>
-                <td><Status status={item.classification} /></td>
+                <td>
+                  <Status status={item.classification} />
+                </td>
                 <td>{money(item.amount)}</td>
                 <td>
                   {item.receiptUrl ? (
-                    <a className={styles.documentLink} href={item.receiptUrl} target="_blank" rel="noreferrer">
-                      <Glyph name="eye" /> View
+                    <a
+                      className={styles.documentLink}
+                      href={item.receiptUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Glyph name="eye" />
+                      View
                     </a>
-                  ) : "N/A"}
+                  ) : (
+                    "N/A"
+                  )}
                 </td>
                 <td>{item.postedBy?.name || "Accountant"}</td>
               </tr>
             ))}
+
             {!safeArray<any>(data.manualReceipts).length && (
               <EmptyRow colSpan={10} text="No manual cash receipts recorded." />
             )}
           </tbody>
         </DataTable>
       </TableCard>
+
+      <article className={styles.manualCashflowRules}>
+        <CardHeading
+          title="Accounting and control rules"
+          text="The portal separates float assignment from revenue and return postings."
+        />
+
+        <ul className={styles.ruleList}>
+          <li>
+            Float assigned to staff creates an ACCOUNTANT_TO_STAFF transaction
+            with status ISSUED.
+          </li>
+          <li>
+            The selected staff officer confirms the assigned float from the
+            Staff Portal.
+          </li>
+          <li>
+            Staff float return: Debit Cash, Credit Staff Float Receivable.
+          </li>
+          <li>Verified revenue: Debit Cash, Credit Service Revenue.</li>
+          <li>
+            Duplicate references are changed automatically to a unique company
+            reference.
+          </li>
+          <li>
+            Locked accounting periods and closed financial days reject new
+            manual assignments.
+          </li>
+        </ul>
+      </article>
     </SectionPage>
   );
 }
-
 
 function ExpensesPage({
   data,
@@ -1506,18 +2078,24 @@ function ExpensesPage({
     expenseDate: dateInput(),
     receiptUrl: "",
   });
-  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">("DAY");
+  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">(
+    "DAY",
+  );
   const [reference, setReference] = useState(dateInput());
   const [query, setQuery] = useState("");
   const [role, setRole] = useState("ALL");
   const [status, setStatus] = useState("ALL");
-  const range = useMemo(() => clientPeriodRange(period, reference), [period, reference]);
+  const range = useMemo(
+    () => clientPeriodRange(period, reference),
+    [period, reference],
+  );
   const rows = useMemo(
     () =>
       safeArray<any>(data.expenses).filter((item) => {
         const time = new Date(item.expenseDate || item.createdAt).getTime();
         const owner = item.employee || {};
-        const haystack = `${owner.name || ""} ${owner.username || ""} ${owner.email || ""} ${item.category || ""} ${item.description || ""}`.toLowerCase();
+        const haystack =
+          `${owner.name || ""} ${owner.username || ""} ${owner.email || ""} ${item.category || ""} ${item.description || ""}`.toLowerCase();
         return (
           time >= range.start.getTime() &&
           time <= range.end.getTime() &&
@@ -1528,7 +2106,13 @@ function ExpensesPage({
       }),
     [data.expenses, range, query, role, status],
   );
-  const roles = Array.from(new Set(safeArray<any>(data.users).map((item) => item.role).filter(Boolean)));
+  const roles = Array.from(
+    new Set(
+      safeArray<any>(data.users)
+        .map((item) => item.role)
+        .filter(Boolean),
+    ),
+  );
 
   async function handleReceipt(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -1546,7 +2130,12 @@ function ExpensesPage({
     event.preventDefault();
     const saved = await runAction("CREATE_EXPENSE", form);
     if (saved) {
-      setForm((current) => ({ ...current, description: "", amount: "", receiptUrl: "" }));
+      setForm((current) => ({
+        ...current,
+        description: "",
+        amount: "",
+        receiptUrl: "",
+      }));
     }
   }
 
@@ -1559,36 +2148,93 @@ function ExpensesPage({
     >
       <div className={styles.expenseWorkspace}>
         <form className={styles.formCard} onSubmit={submit}>
-          <CardHeading title="Add expense" text="A receipt is required. Posting happens only after approval." />
+          <CardHeading
+            title="Add expense"
+            text="A receipt is required. Posting happens only after approval."
+          />
           <Field label="Expense owner">
-            <select value={form.employeeId} onChange={(event) => setForm({ ...form, employeeId: event.target.value })} required>
+            <select
+              value={form.employeeId}
+              onChange={(event) =>
+                setForm({ ...form, employeeId: event.target.value })
+              }
+              required
+            >
               {safeArray<any>(data.users).map((item) => (
-                <option key={item.id} value={item.id}>{item.name} — {item.email} — {roleLabel(item.role)}</option>
+                <option key={item.id} value={item.id}>
+                  {item.name} — {item.email} — {roleLabel(item.role)}
+                </option>
               ))}
             </select>
           </Field>
           <div className={styles.formGrid}>
             <Field label="Category">
-              <select value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })}>
-                {["FUEL", "TRANSPORT", "AIRTIME", "ACCOMMODATION", "REPAIRS", "STATIONERY", "MEALS", "OFFICE", "EMERGENCY", "OTHER"].map((item) => <option key={item}>{item}</option>)}
+              <select
+                value={form.category}
+                onChange={(event) =>
+                  setForm({ ...form, category: event.target.value })
+                }
+              >
+                {[
+                  "FUEL",
+                  "TRANSPORT",
+                  "AIRTIME",
+                  "ACCOMMODATION",
+                  "REPAIRS",
+                  "STATIONERY",
+                  "MEALS",
+                  "OFFICE",
+                  "EMERGENCY",
+                  "OTHER",
+                ].map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
               </select>
             </Field>
             <Field label="Amount">
-              <input type="number" min="1" step="0.01" value={form.amount} onChange={(event) => setForm({ ...form, amount: event.target.value })} required />
+              <input
+                type="number"
+                min="1"
+                step="0.01"
+                value={form.amount}
+                onChange={(event) =>
+                  setForm({ ...form, amount: event.target.value })
+                }
+                required
+              />
             </Field>
             <Field label="Expense date">
-              <input type="date" value={form.expenseDate} onChange={(event) => setForm({ ...form, expenseDate: event.target.value })} required />
+              <input
+                type="date"
+                value={form.expenseDate}
+                onChange={(event) =>
+                  setForm({ ...form, expenseDate: event.target.value })
+                }
+                required
+              />
             </Field>
           </div>
           <Field label="Description">
-            <textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} required />
+            <textarea
+              value={form.description}
+              onChange={(event) =>
+                setForm({ ...form, description: event.target.value })
+              }
+              required
+            />
           </Field>
           <label className={styles.fileBox}>
             <Glyph name="upload" />
-            <span>{form.receiptUrl ? "Receipt uploaded" : "Upload receipt"}</span>
+            <span>
+              {form.receiptUrl ? "Receipt uploaded" : "Upload receipt"}
+            </span>
             <input type="file" accept="image/*,.pdf" onChange={handleReceipt} />
           </label>
-          <button type="submit" className={styles.primaryButton} disabled={busy || !form.receiptUrl || !form.employeeId}>
+          <button
+            type="submit"
+            className={styles.primaryButton}
+            disabled={busy || !form.receiptUrl || !form.employeeId}
+          >
             <Glyph name="check" /> {busy ? "Saving..." : "Submit expense"}
           </button>
         </form>
@@ -1596,47 +2242,114 @@ function ExpensesPage({
         <article className={styles.expenseTablePanel}>
           <div className={styles.autoFilterBar}>
             <Field label="Period">
-              <select value={period} onChange={(event) => setPeriod(event.target.value as typeof period)}>
-                <option value="DAY">Day</option><option value="WEEK">Week</option><option value="MONTH">Month</option><option value="YEAR">Year</option>
+              <select
+                value={period}
+                onChange={(event) =>
+                  setPeriod(event.target.value as typeof period)
+                }
+              >
+                <option value="DAY">Day</option>
+                <option value="WEEK">Week</option>
+                <option value="MONTH">Month</option>
+                <option value="YEAR">Year</option>
               </select>
             </Field>
             <Field label="Reference date">
-              <input type="date" value={reference} onChange={(event) => setReference(event.target.value)} />
+              <input
+                type="date"
+                value={reference}
+                onChange={(event) => setReference(event.target.value)}
+              />
             </Field>
             <Field label="Role">
-              <select value={role} onChange={(event) => setRole(event.target.value)}>
+              <select
+                value={role}
+                onChange={(event) => setRole(event.target.value)}
+              >
                 <option value="ALL">All roles</option>
-                {roles.map((item) => <option key={item} value={item}>{roleLabel(item)}</option>)}
+                {roles.map((item) => (
+                  <option key={item} value={item}>
+                    {roleLabel(item)}
+                  </option>
+                ))}
               </select>
             </Field>
             <Field label="Status">
-              <select value={status} onChange={(event) => setStatus(event.target.value)}>
-                <option value="ALL">All</option><option value="PENDING">Pending</option><option value="APPROVED">Approved</option><option value="REJECTED">Rejected</option>
+              <select
+                value={status}
+                onChange={(event) => setStatus(event.target.value)}
+              >
+                <option value="ALL">All</option>
+                <option value="PENDING">Pending</option>
+                <option value="APPROVED">Approved</option>
+                <option value="REJECTED">Rejected</option>
               </select>
             </Field>
             <Field label="Search">
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name, username, email..." />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Name, username, email..."
+              />
             </Field>
           </div>
-          <TableCard title="Expense Register" subtitle={`${rows.length} records · filters apply immediately`}>
+          <TableCard
+            title="Expense Register"
+            subtitle={`${rows.length} records · filters apply immediately`}
+          >
             <DataTable minWidth={1250}>
-              <thead><tr><th>#</th><th>User</th><th>Email</th><th>Role</th><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Date</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Receipt</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
               <tbody>
                 {rows.map((item, index) => (
                   <tr key={item.id}>
                     <td>{index + 1}</td>
-                    <td>{item.employee?.name || item.employee?.username || "N/A"}</td>
+                    <td>
+                      {item.employee?.name || item.employee?.username || "N/A"}
+                    </td>
                     <td>{item.employee?.email || "N/A"}</td>
                     <td>{roleLabel(item.employee?.role)}</td>
                     <td>{formatDate(item.expenseDate || item.createdAt)}</td>
                     <td>{item.category}</td>
                     <td className={styles.wrapCell}>{item.description}</td>
                     <td>{money(item.amount)}</td>
-                    <td>{item.receiptUrl ? <a className={styles.documentLink} href={item.receiptUrl} target="_blank" rel="noreferrer">View</a> : "Missing"}</td>
-                    <td><Status status={item.status} /></td>
+                    <td>
+                      {item.receiptUrl ? (
+                        <a
+                          className={styles.documentLink}
+                          href={item.receiptUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          View
+                        </a>
+                      ) : (
+                        "Missing"
+                      )}
+                    </td>
+                    <td>
+                      <Status status={item.status} />
+                    </td>
                   </tr>
                 ))}
-                {!rows.length && <EmptyRow colSpan={10} text="No expenses match the current automatic filters." />}
+                {!rows.length && (
+                  <EmptyRow
+                    colSpan={10}
+                    text="No expenses match the current automatic filters."
+                  />
+                )}
               </tbody>
             </DataTable>
           </TableCard>
@@ -1703,7 +2416,9 @@ function ExpenseEntryPage({
             <Field label="Expense owner">
               <select
                 value={form.employeeId}
-                onChange={(event) => setForm({ ...form, employeeId: event.target.value })}
+                onChange={(event) =>
+                  setForm({ ...form, employeeId: event.target.value })
+                }
                 required
               >
                 {safeArray<any>(data.users).map((item) => (
@@ -1716,7 +2431,9 @@ function ExpenseEntryPage({
             <Field label="Category">
               <select
                 value={form.category}
-                onChange={(event) => setForm({ ...form, category: event.target.value })}
+                onChange={(event) =>
+                  setForm({ ...form, category: event.target.value })
+                }
               >
                 {[
                   "FUEL",
@@ -1729,7 +2446,9 @@ function ExpenseEntryPage({
                   "OFFICE",
                   "EMERGENCY",
                   "OTHER",
-                ].map((item) => <option key={item}>{item}</option>)}
+                ].map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
               </select>
             </Field>
             <Field label="Amount">
@@ -1738,7 +2457,9 @@ function ExpenseEntryPage({
                 min="1"
                 step="0.01"
                 value={form.amount}
-                onChange={(event) => setForm({ ...form, amount: event.target.value })}
+                onChange={(event) =>
+                  setForm({ ...form, amount: event.target.value })
+                }
                 required
               />
             </Field>
@@ -1746,7 +2467,9 @@ function ExpenseEntryPage({
               <input
                 type="date"
                 value={form.expenseDate}
-                onChange={(event) => setForm({ ...form, expenseDate: event.target.value })}
+                onChange={(event) =>
+                  setForm({ ...form, expenseDate: event.target.value })
+                }
                 required
               />
             </Field>
@@ -1754,23 +2477,34 @@ function ExpenseEntryPage({
           <Field label="Description">
             <textarea
               value={form.description}
-              onChange={(event) => setForm({ ...form, description: event.target.value })}
+              onChange={(event) =>
+                setForm({ ...form, description: event.target.value })
+              }
               placeholder="Describe what was purchased and why"
               required
             />
           </Field>
           <label className={styles.fileBox}>
             <Glyph name="upload" />
-            <span>{form.receiptUrl ? "Receipt uploaded" : "Upload expense receipt"}</span>
+            <span>
+              {form.receiptUrl ? "Receipt uploaded" : "Upload expense receipt"}
+            </span>
             <input type="file" accept="image/*,.pdf" onChange={handleReceipt} />
           </label>
-          <button type="submit" className={styles.primaryButton} disabled={busy || !form.receiptUrl}>
+          <button
+            type="submit"
+            className={styles.primaryButton}
+            disabled={busy || !form.receiptUrl}
+          >
             <Glyph name="check" /> Submit expense
           </button>
         </form>
 
         <article className={styles.statusPanel}>
-          <CardHeading title="Expense controls" text="These rules are enforced in the API, not only in the interface." />
+          <CardHeading
+            title="Expense controls"
+            text="These rules are enforced in the API, not only in the interface."
+          />
           <ul className={styles.ruleList}>
             <li>A receipt is required.</li>
             <li>An accountant cannot approve their own request.</li>
@@ -1785,25 +2519,43 @@ function ExpenseEntryPage({
 }
 
 function ExpenseRegisterPage({ data }: { data: DashboardData }) {
-  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">("MONTH");
+  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">(
+    "MONTH",
+  );
   const [reference, setReference] = useState(dateInput());
   const [query, setQuery] = useState("");
   const [role, setRole] = useState("ALL");
   const [status, setStatus] = useState("ALL");
 
-  const range = useMemo(() => clientPeriodRange(period, reference), [period, reference]);
-  const rows = useMemo(() => safeArray<any>(data.expenses).filter((item) => {
-    const time = new Date(item.expenseDate || item.createdAt).getTime();
-    const owner = item.employee || {};
-    const haystack = `${owner.name || ""} ${owner.email || ""} ${item.category || ""} ${item.description || ""}`.toLowerCase();
-    return time >= range.start.getTime() &&
-      time <= range.end.getTime() &&
-      (role === "ALL" || owner.role === role) &&
-      (status === "ALL" || item.status === status) &&
-      (!query.trim() || haystack.includes(query.trim().toLowerCase()));
-  }), [data.expenses, period, reference, query, role, status, range]);
+  const range = useMemo(
+    () => clientPeriodRange(period, reference),
+    [period, reference],
+  );
+  const rows = useMemo(
+    () =>
+      safeArray<any>(data.expenses).filter((item) => {
+        const time = new Date(item.expenseDate || item.createdAt).getTime();
+        const owner = item.employee || {};
+        const haystack =
+          `${owner.name || ""} ${owner.email || ""} ${item.category || ""} ${item.description || ""}`.toLowerCase();
+        return (
+          time >= range.start.getTime() &&
+          time <= range.end.getTime() &&
+          (role === "ALL" || owner.role === role) &&
+          (status === "ALL" || item.status === status) &&
+          (!query.trim() || haystack.includes(query.trim().toLowerCase()))
+        );
+      }),
+    [data.expenses, period, reference, query, role, status, range],
+  );
 
-  const roles = Array.from(new Set(safeArray<any>(data.users).map((item) => item.role).filter(Boolean)));
+  const roles = Array.from(
+    new Set(
+      safeArray<any>(data.users)
+        .map((item) => item.role)
+        .filter(Boolean),
+    ),
+  );
 
   return (
     <SectionPage
@@ -1815,7 +2567,12 @@ function ExpenseRegisterPage({ data }: { data: DashboardData }) {
       <article className={styles.reportFilter}>
         <div className={styles.filterGrid}>
           <Field label="Period">
-            <select value={period} onChange={(event) => setPeriod(event.target.value as typeof period)}>
+            <select
+              value={period}
+              onChange={(event) =>
+                setPeriod(event.target.value as typeof period)
+              }
+            >
               <option value="DAY">Day</option>
               <option value="WEEK">Week</option>
               <option value="MONTH">Month</option>
@@ -1823,16 +2580,30 @@ function ExpenseRegisterPage({ data }: { data: DashboardData }) {
             </select>
           </Field>
           <Field label="Reference date">
-            <input type="date" value={reference} onChange={(event) => setReference(event.target.value)} />
+            <input
+              type="date"
+              value={reference}
+              onChange={(event) => setReference(event.target.value)}
+            />
           </Field>
           <Field label="Role">
-            <select value={role} onChange={(event) => setRole(event.target.value)}>
+            <select
+              value={role}
+              onChange={(event) => setRole(event.target.value)}
+            >
               <option value="ALL">All roles</option>
-              {roles.map((item) => <option key={item} value={item}>{roleLabel(item)}</option>)}
+              {roles.map((item) => (
+                <option key={item} value={item}>
+                  {roleLabel(item)}
+                </option>
+              ))}
             </select>
           </Field>
           <Field label="Status">
-            <select value={status} onChange={(event) => setStatus(event.target.value)}>
+            <select
+              value={status}
+              onChange={(event) => setStatus(event.target.value)}
+            >
               <option value="ALL">All statuses</option>
               <option value="PENDING">Pending</option>
               <option value="APPROVED">Approved</option>
@@ -1840,16 +2611,33 @@ function ExpenseRegisterPage({ data }: { data: DashboardData }) {
             </select>
           </Field>
           <Field label="Search name, email or description">
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search..." />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search..."
+            />
           </Field>
         </div>
       </article>
 
-      <TableCard title="All Expenses" subtitle={`${rows.length} matching records`}>
+      <TableCard
+        title="All Expenses"
+        subtitle={`${rows.length} matching records`}
+      >
         <DataTable minWidth={1300}>
           <thead>
             <tr>
-              <th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Receipt</th>
+              <th>Status</th>
+              <th>Reviewer</th>
             </tr>
           </thead>
           <tbody>
@@ -1863,12 +2651,32 @@ function ExpenseRegisterPage({ data }: { data: DashboardData }) {
                 <td>{item.category}</td>
                 <td className={styles.wrapCell}>{item.description}</td>
                 <td>{money(item.amount)}</td>
-                <td>{item.receiptUrl ? <a className={styles.documentLink} href={item.receiptUrl} target="_blank" rel="noreferrer">View</a> : "Missing"}</td>
-                <td><Status status={item.status} /></td>
+                <td>
+                  {item.receiptUrl ? (
+                    <a
+                      className={styles.documentLink}
+                      href={item.receiptUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View
+                    </a>
+                  ) : (
+                    "Missing"
+                  )}
+                </td>
+                <td>
+                  <Status status={item.status} />
+                </td>
                 <td>{item.reviewedBy?.name || "Pending"}</td>
               </tr>
             ))}
-            {!rows.length && <EmptyRow colSpan={11} text="No expenses match the selected filters." />}
+            {!rows.length && (
+              <EmptyRow
+                colSpan={11}
+                text="No expenses match the selected filters."
+              />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -1884,7 +2692,10 @@ function CashBookPage({ data }: { data: DashboardData }) {
       glyph="cash"
       action={<ReportButtons filename="cash-book" rows={data.cashBook} />}
     >
-      <TableCard title="Cash Book Entries" subtitle={`${data.cashBook.length} posted transactions`}>
+      <TableCard
+        title="Cash Book Entries"
+        subtitle={`${data.cashBook.length} posted transactions`}
+      >
         <DataTable minWidth={1100}>
           <thead>
             <tr>
@@ -1906,12 +2717,18 @@ function CashBookPage({ data }: { data: DashboardData }) {
                 <td>{item.reference}</td>
                 <td>{item.description}</td>
                 <td>{item.account}</td>
-                <td className={styles.debit}>{item.debit ? money(item.debit) : "—"}</td>
-                <td className={styles.credit}>{item.credit ? money(item.credit) : "—"}</td>
+                <td className={styles.debit}>
+                  {item.debit ? money(item.debit) : "—"}
+                </td>
+                <td className={styles.credit}>
+                  {item.credit ? money(item.credit) : "—"}
+                </td>
                 <td>{money(item.balance)}</td>
               </tr>
             ))}
-            {!data.cashBook.length && <EmptyRow colSpan={8} text="No posted cash-book transactions." />}
+            {!data.cashBook.length && (
+              <EmptyRow colSpan={8} text="No posted cash-book transactions." />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -1940,7 +2757,10 @@ function LedgerPage({ data }: { data: DashboardData }) {
         ))}
       </div>
 
-      <TableCard title="Ledger Summary" subtitle="Debit and credit account positions">
+      <TableCard
+        title="Ledger Summary"
+        subtitle="Debit and credit account positions"
+      >
         <DataTable>
           <thead>
             <tr>
@@ -1984,7 +2804,11 @@ function TrialBalancePage({ data }: { data: DashboardData }) {
           <small>Total Debit</small>
           <strong>{money(data.trialBalance.totalDebit)}</strong>
         </div>
-        <span className={data.trialBalance.balanced ? styles.balanceOkay : styles.balanceBad}>
+        <span
+          className={
+            data.trialBalance.balanced ? styles.balanceOkay : styles.balanceBad
+          }
+        >
           {data.trialBalance.balanced ? "BALANCED" : "OUT OF BALANCE"}
         </span>
         <div>
@@ -1993,7 +2817,10 @@ function TrialBalancePage({ data }: { data: DashboardData }) {
         </div>
       </div>
 
-      <TableCard title="Trial Balance Accounts" subtitle="Accounting equation control">
+      <TableCard
+        title="Trial Balance Accounts"
+        subtitle="Accounting equation control"
+      >
         <DataTable>
           <thead>
             <tr>
@@ -2009,7 +2836,9 @@ function TrialBalancePage({ data }: { data: DashboardData }) {
                 <td>{index + 1}</td>
                 <td>{item.account}</td>
                 <td>{item.balance >= 0 ? money(item.balance) : "—"}</td>
-                <td>{item.balance < 0 ? money(Math.abs(item.balance)) : "—"}</td>
+                <td>
+                  {item.balance < 0 ? money(Math.abs(item.balance)) : "—"}
+                </td>
               </tr>
             ))}
             <tr className={styles.totalRow}>
@@ -2056,8 +2885,14 @@ function StatementPage({
             <small>Total Assets</small>
             <strong>{money(statement.totalAssets)}</strong>
           </div>
-          <span className={statement.balanced ? styles.balanceOkay : styles.balanceBad}>
-            {statement.balanced ? "ACCOUNTING EQUATION BALANCED" : `DIFFERENCE ${money(statement.difference)}`}
+          <span
+            className={
+              statement.balanced ? styles.balanceOkay : styles.balanceBad
+            }
+          >
+            {statement.balanced
+              ? "ACCOUNTING EQUATION BALANCED"
+              : `DIFFERENCE ${money(statement.difference)}`}
           </span>
           <div>
             <small>Liabilities + Equity</small>
@@ -2068,33 +2903,62 @@ function StatementPage({
         <div className={styles.statementGrid}>
           <StatementColumn
             title="Assets"
-            rows={assets.map((row) => [`${row.code} · ${row.name}`, Number(row.amount)])}
+            rows={assets.map((row) => [
+              `${row.code} · ${row.name}`,
+              Number(row.amount),
+            ])}
             total={Number(statement.totalAssets || 0)}
           />
           <div className={styles.statementStack}>
             <StatementColumn
               title="Liabilities"
-              rows={liabilities.map((row) => [`${row.code} · ${row.name}`, Number(row.amount)])}
+              rows={liabilities.map((row) => [
+                `${row.code} · ${row.name}`,
+                Number(row.amount),
+              ])}
               total={Number(statement.totalLiabilities || 0)}
             />
             <StatementColumn
               title="Equity"
-              rows={equity.map((row) => [`${row.code} · ${row.name}`, Number(row.amount)])}
+              rows={equity.map((row) => [
+                `${row.code} · ${row.name}`,
+                Number(row.amount),
+              ])}
               total={Number(statement.totalEquity || 0)}
             />
           </div>
         </div>
 
-        <TableCard title="Balance Sheet Account Detail" subtitle="Balances generated from posted double-entry journal lines">
+        <TableCard
+          title="Balance Sheet Account Detail"
+          subtitle="Balances generated from posted double-entry journal lines"
+        >
           <DataTable minWidth={900}>
-            <thead><tr><th>#</th><th>Section</th><th>Code</th><th>Account</th><th>Balance</th></tr></thead>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Section</th>
+                <th>Code</th>
+                <th>Account</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
             <tbody>
               {reportRows.map((row, index) => (
                 <tr key={`${row.section}-${row.code}-${index}`}>
-                  <td>{index + 1}</td><td>{row.section}</td><td>{row.code}</td><td>{row.name}</td><td>{money(row.amount)}</td>
+                  <td>{index + 1}</td>
+                  <td>{row.section}</td>
+                  <td>{row.code}</td>
+                  <td>{row.name}</td>
+                  <td>{money(row.amount)}</td>
                 </tr>
               ))}
-              {!reportRows.length && <EmptyRow colSpan={5} text="No posted ledger balances are available." />}
+              {!reportRows.length && (
+                <EmptyRow
+                  colSpan={5}
+                  text="No posted ledger balances are available."
+                />
+              )}
             </tbody>
           </DataTable>
         </TableCard>
@@ -2113,27 +2977,77 @@ function StatementPage({
         action={<ReportButtons filename="cash-flow-statement" rows={rows} />}
       >
         <div className={styles.metricGrid}>
-          <MetricCard label="Opening Cash" value={money(statement.openingCash)} theme="peach" note="Beginning balance" />
-          <MetricCard label="Cash Inflow" value={money(statement.operatingInflow)} theme="blue" note="Total cash received" />
-          <MetricCard label="Cash Outflow" value={money(statement.operatingOutflow)} theme="orange" note="Total cash paid" />
-          <MetricCard label="Closing Cash" value={money(statement.closingCash)} theme="yellow" note={`Net movement ${money(statement.netCashFlow)}`} />
+          <MetricCard
+            label="Opening Cash"
+            value={money(statement.openingCash)}
+            theme="peach"
+            note="Beginning balance"
+          />
+          <MetricCard
+            label="Cash Inflow"
+            value={money(statement.operatingInflow)}
+            theme="blue"
+            note="Total cash received"
+          />
+          <MetricCard
+            label="Cash Outflow"
+            value={money(statement.operatingOutflow)}
+            theme="orange"
+            note="Total cash paid"
+          />
+          <MetricCard
+            label="Closing Cash"
+            value={money(statement.closingCash)}
+            theme="yellow"
+            note={`Net movement ${money(statement.netCashFlow)}`}
+          />
         </div>
-        <GlassCard title="Cash Flow Movement" subtitle="Last 30 days of inflow, outflow and net movement">
+        <GlassCard
+          title="Cash Flow Movement"
+          subtitle="Last 30 days of inflow, outflow and net movement"
+        >
           <CashFlowChart rows={safeArray<any>(statement.series)} />
         </GlassCard>
-        <TableCard title="Cash Flow Transactions" subtitle={`${rows.length} cash-book movements`}>
+        <TableCard
+          title="Cash Flow Transactions"
+          subtitle={`${rows.length} cash-book movements`}
+        >
           <DataTable minWidth={1150}>
-            <thead><tr><th>#</th><th>Date</th><th>Reference</th><th>Description</th><th>Cash In</th><th>Cash Out</th><th>Net</th><th>Running Balance</th></tr></thead>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Reference</th>
+                <th>Description</th>
+                <th>Cash In</th>
+                <th>Cash Out</th>
+                <th>Net</th>
+                <th>Running Balance</th>
+              </tr>
+            </thead>
             <tbody>
               {rows.map((item, index) => (
                 <tr key={item.id}>
-                  <td>{index + 1}</td><td>{formatDate(item.date, true)}</td><td>{item.reference}</td><td>{item.description}</td>
-                  <td className={styles.debit}>{item.inflow ? money(item.inflow) : "—"}</td>
-                  <td className={styles.credit}>{item.outflow ? money(item.outflow) : "—"}</td>
-                  <td>{money(item.net)}</td><td>{money(item.balance)}</td>
+                  <td>{index + 1}</td>
+                  <td>{formatDate(item.date, true)}</td>
+                  <td>{item.reference}</td>
+                  <td>{item.description}</td>
+                  <td className={styles.debit}>
+                    {item.inflow ? money(item.inflow) : "—"}
+                  </td>
+                  <td className={styles.credit}>
+                    {item.outflow ? money(item.outflow) : "—"}
+                  </td>
+                  <td>{money(item.net)}</td>
+                  <td>{money(item.balance)}</td>
                 </tr>
               ))}
-              {!rows.length && <EmptyRow colSpan={8} text="No cash flow transactions have been posted." />}
+              {!rows.length && (
+                <EmptyRow
+                  colSpan={8}
+                  text="No cash flow transactions have been posted."
+                />
+              )}
             </tbody>
           </DataTable>
         </TableCard>
@@ -2151,29 +3065,84 @@ function StatementPage({
       action={<ReportButtons filename="profit-and-loss" rows={rows} />}
     >
       <div className={styles.metricGrid}>
-        <MetricCard label="Total Revenue" value={money(statement.revenue)} theme="blue" note="Credit balances in revenue accounts" />
-        <MetricCard label="Total Expenses" value={money(statement.expenses)} theme="orange" note="Debit balances in expense accounts" />
-        <MetricCard label="Net Profit" value={money(statement.netProfit)} theme="yellow" note="Revenue less expenses" />
-        <MetricCard label="Transactions" value={String(rows.length)} theme="peach" note="Posted P&L journal entries" />
+        <MetricCard
+          label="Total Revenue"
+          value={money(statement.revenue)}
+          theme="blue"
+          note="Credit balances in revenue accounts"
+        />
+        <MetricCard
+          label="Total Expenses"
+          value={money(statement.expenses)}
+          theme="orange"
+          note="Debit balances in expense accounts"
+        />
+        <MetricCard
+          label="Net Profit"
+          value={money(statement.netProfit)}
+          theme="yellow"
+          note="Revenue less expenses"
+        />
+        <MetricCard
+          label="Transactions"
+          value={String(rows.length)}
+          theme="peach"
+          note="Posted P&L journal entries"
+        />
       </div>
       <div className={styles.statementHero}>
         <small>Net Profit / Loss</small>
         <strong>{money(statement.netProfit)}</strong>
-        <span>{Number(statement.netProfit) >= 0 ? "Profit for the selected accounting records" : "Loss: expenses exceed revenue"}</span>
+        <span>
+          {Number(statement.netProfit) >= 0
+            ? "Profit for the selected accounting records"
+            : "Loss: expenses exceed revenue"}
+        </span>
       </div>
-      <TableCard title="Profit & Loss Transaction Detail" subtitle="Every posted transaction that affected revenue or expense">
+      <TableCard
+        title="Profit & Loss Transaction Detail"
+        subtitle="Every posted transaction that affected revenue or expense"
+      >
         <DataTable minWidth={1250}>
-          <thead><tr><th>#</th><th>Date</th><th>Reference</th><th>Description</th><th>Source</th><th>Revenue</th><th>Expense</th><th>Net Effect</th><th>Posted By</th></tr></thead>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Reference</th>
+              <th>Description</th>
+              <th>Source</th>
+              <th>Revenue</th>
+              <th>Expense</th>
+              <th>Net Effect</th>
+              <th>Posted By</th>
+            </tr>
+          </thead>
           <tbody>
             {rows.map((item, index) => (
               <tr key={item.id}>
-                <td>{index + 1}</td><td>{formatDate(item.date, true)}</td><td>{item.reference}</td><td className={styles.wrapCell}>{item.description}</td>
-                <td>{roleLabel(item.sourceType)}</td><td className={styles.debit}>{item.revenue ? money(item.revenue) : "—"}</td>
-                <td className={styles.credit}>{item.expense ? money(item.expense) : "—"}</td><td>{money(item.net)}</td>
-                <td>{item.postedBy?.name || item.postedBy?.email || "System"}</td>
+                <td>{index + 1}</td>
+                <td>{formatDate(item.date, true)}</td>
+                <td>{item.reference}</td>
+                <td className={styles.wrapCell}>{item.description}</td>
+                <td>{roleLabel(item.sourceType)}</td>
+                <td className={styles.debit}>
+                  {item.revenue ? money(item.revenue) : "—"}
+                </td>
+                <td className={styles.credit}>
+                  {item.expense ? money(item.expense) : "—"}
+                </td>
+                <td>{money(item.net)}</td>
+                <td>
+                  {item.postedBy?.name || item.postedBy?.email || "System"}
+                </td>
               </tr>
             ))}
-            {!rows.length && <EmptyRow colSpan={9} text="No revenue or expense journal entries are available." />}
+            {!rows.length && (
+              <EmptyRow
+                colSpan={9}
+                text="No revenue or expense journal entries are available."
+              />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -2249,14 +3218,39 @@ function BankReconciliationPage({
       glyph="bank"
     >
       <div className={styles.metricGrid}>
-        <MetricCard label="Pending" value={String(data.stats.pendingDeposits || 0)} theme="blue" note="Waiting for statement review" />
-        <MetricCard label="Verified" value={String(deposits.filter((item) => item.status === "VERIFIED").length)} theme="yellow" note="Posted to cash records" />
-        <MetricCard label="Mismatches" value={String(data.stats.unresolvedMismatches || 0)} theme="orange" note="Day closing blocked" />
-        <MetricCard label="Financial Holds" value={String(data.financialHolds.length)} theme="peach" note="Staff cannot submit another deposit" />
+        <MetricCard
+          label="Pending"
+          value={String(data.stats.pendingDeposits || 0)}
+          theme="blue"
+          note="Waiting for statement review"
+        />
+        <MetricCard
+          label="Verified"
+          value={String(
+            deposits.filter((item) => item.status === "VERIFIED").length,
+          )}
+          theme="yellow"
+          note="Posted to cash records"
+        />
+        <MetricCard
+          label="Mismatches"
+          value={String(data.stats.unresolvedMismatches || 0)}
+          theme="orange"
+          note="Day closing blocked"
+        />
+        <MetricCard
+          label="Financial Holds"
+          value={String(data.financialHolds.length)}
+          theme="peach"
+          note="Staff cannot submit another deposit"
+        />
       </div>
 
       <div className={styles.bankLayout}>
-        <TableCard title="Staff Bank Deposits" subtitle="Select a deposit to investigate">
+        <TableCard
+          title="Staff Bank Deposits"
+          subtitle="Select a deposit to investigate"
+        >
           <DataTable minWidth={1100}>
             <thead>
               <tr>
@@ -2276,7 +3270,10 @@ function BankReconciliationPage({
                 <tr key={item.id}>
                   <td>{index + 1}</td>
                   <td>
-                    <Entity name={item.staff?.name || "Staff"} sub={roleLabel(item.staff?.role)} />
+                    <Entity
+                      name={item.staff?.name || "Staff"}
+                      sub={roleLabel(item.staff?.role)}
+                    />
                   </td>
                   <td>{item.referenceNo || "N/A"}</td>
                   <td>{formatDate(item.depositDate)}</td>
@@ -2295,35 +3292,62 @@ function BankReconciliationPage({
                     <Status status={item.status} />
                   </td>
                   <td>
-                    <button type="button" className={styles.miniButton} onClick={() => setSelectedId(item.id)}>
+                    <button
+                      type="button"
+                      className={styles.miniButton}
+                      onClick={() => setSelectedId(item.id)}
+                    >
                       <Glyph name="eye" /> Open
                     </button>
                   </td>
                 </tr>
               ))}
-              {!deposits.length && <EmptyRow colSpan={9} text="No staff deposits found." />}
+              {!deposits.length && (
+                <EmptyRow colSpan={9} text="No staff deposits found." />
+              )}
             </tbody>
           </DataTable>
         </TableCard>
 
         <article className={styles.reviewPanel}>
           <CardHeading
-            title={selected ? `Review ${selected.referenceNo || selected.id}` : "Select a deposit"}
-            text={selected ? `${selected.staff?.name || "Staff"} · ${money(selected.amount)}` : "Choose a deposit from the table."}
+            title={
+              selected
+                ? `Review ${selected.referenceNo || selected.id}`
+                : "Select a deposit"
+            }
+            text={
+              selected
+                ? `${selected.staff?.name || "Staff"} · ${money(selected.amount)}`
+                : "Choose a deposit from the table."
+            }
           />
 
           {selected && (
             <>
               <div className={styles.detailGrid}>
                 <Detail label="Staff amount" value={money(selected.amount)} />
-                <Detail label="Deposit date" value={formatDate(selected.depositDate)} />
-                <Detail label="Bank account" value={selected.bankAccount || "N/A"} />
-                <Detail label="Current status" value={safeText(selected.status)} />
+                <Detail
+                  label="Deposit date"
+                  value={formatDate(selected.depositDate)}
+                />
+                <Detail
+                  label="Bank account"
+                  value={selected.bankAccount || "N/A"}
+                />
+                <Detail
+                  label="Current status"
+                  value={safeText(selected.status)}
+                />
               </div>
 
               <label className={styles.fileBox}>
                 <Glyph name="upload" />
-                <span>{form.bankStatementUrl ? "Bank statement uploaded" : "Upload PDF, Excel or CSV statement"}</span>
+                <span>
+                  {form.bankStatementUrl
+                    ? "Bank statement uploaded"
+                    : "Upload PDF, Excel or CSV statement"}
+                </span>
                 <input
                   type="file"
                   accept=".pdf,.csv,.xls,.xlsx"
@@ -2336,14 +3360,21 @@ function BankReconciliationPage({
                   <input
                     type="number"
                     value={form.statementAmount}
-                    onChange={(event) => setForm({ ...form, statementAmount: event.target.value })}
+                    onChange={(event) =>
+                      setForm({ ...form, statementAmount: event.target.value })
+                    }
                     placeholder={safeText(selected.amount)}
                   />
                 </Field>
                 <Field label="Statement reference">
                   <input
                     value={form.statementReference}
-                    onChange={(event) => setForm({ ...form, statementReference: event.target.value })}
+                    onChange={(event) =>
+                      setForm({
+                        ...form,
+                        statementReference: event.target.value,
+                      })
+                    }
                     placeholder={selected.referenceNo || ""}
                   />
                 </Field>
@@ -2351,31 +3382,56 @@ function BankReconciliationPage({
                   <input
                     type="date"
                     value={form.statementDate}
-                    onChange={(event) => setForm({ ...form, statementDate: event.target.value })}
+                    onChange={(event) =>
+                      setForm({ ...form, statementDate: event.target.value })
+                    }
                   />
                 </Field>
                 <Field label="Statement bank account">
                   <input
                     value={form.statementBankAccount}
-                    onChange={(event) => setForm({ ...form, statementBankAccount: event.target.value })}
+                    onChange={(event) =>
+                      setForm({
+                        ...form,
+                        statementBankAccount: event.target.value,
+                      })
+                    }
                     placeholder={selected.bankAccount || ""}
                   />
                 </Field>
               </div>
 
-              <button type="button" className={styles.primaryButton} onClick={review} disabled={busy}>
+              <button
+                type="button"
+                className={styles.primaryButton}
+                onClick={review}
+                disabled={busy}
+              >
                 <Glyph name="check" /> Compare and verify
               </button>
 
-              {["AMOUNT_MISMATCH", "MISSING_RECEIPT", "DUPLICATE_DEPOSIT", "MISSING_BANK_RECORD"].includes(selected.status) && (
+              {[
+                "AMOUNT_MISMATCH",
+                "MISSING_RECEIPT",
+                "DUPLICATE_DEPOSIT",
+                "MISSING_BANK_RECORD",
+              ].includes(selected.status) && (
                 <div className={styles.holdBox}>
                   <Glyph name="warning" />
                   <div>
                     <strong>Financial Hold Active</strong>
-                    <p>{selected.mismatchReason || "This deposit requires investigation."}</p>
+                    <p>
+                      {selected.mismatchReason ||
+                        "This deposit requires investigation."}
+                    </p>
                     <textarea
                       value={form.investigationNote}
-                      onChange={(event) => setForm({ ...form, investigationNote: event.target.value })}
+                      onChange={(event) =>
+                        setForm({
+                          ...form,
+                          investigationNote: event.target.value,
+                        })
+                      }
                       placeholder="Investigation findings required before clearing..."
                     />
                     <button type="button" onClick={clearHold} disabled={busy}>
@@ -2392,11 +3448,7 @@ function BankReconciliationPage({
   );
 }
 
-function ExpenseApprovalPage({
-  data,
-  busy,
-  runAction,
-}: CommonPageProps) {
+function ExpenseApprovalPage({ data, busy, runAction }: CommonPageProps) {
   const [note, setNote] = useState("");
   const expenses = safeArray<any>(data.expenses);
 
@@ -2409,10 +3461,38 @@ function ExpenseApprovalPage({
       <ExpenseWorkflow />
 
       <div className={styles.metricGrid}>
-        <MetricCard label="Pending Requests" value={String(expenses.filter((item) => item.status === "PENDING").length)} theme="blue" note="Awaiting accountant review" />
-        <MetricCard label="Approved" value={moneyShort(expenses.filter((item) => item.status === "APPROVED").reduce((sum, item) => sum + Number(item.amount), 0))} theme="yellow" note="Posted to financial records" />
-        <MetricCard label="Rejected" value={String(expenses.filter((item) => item.status === "REJECTED").length)} theme="orange" note="Not posted to accounts" />
-        <MetricCard label="Categories" value={String(new Set(expenses.map((item) => item.category)).size)} theme="peach" note="Fuel, transport, airtime and more" />
+        <MetricCard
+          label="Pending Requests"
+          value={String(
+            expenses.filter((item) => item.status === "PENDING").length,
+          )}
+          theme="blue"
+          note="Awaiting accountant review"
+        />
+        <MetricCard
+          label="Approved"
+          value={moneyShort(
+            expenses
+              .filter((item) => item.status === "APPROVED")
+              .reduce((sum, item) => sum + Number(item.amount), 0),
+          )}
+          theme="yellow"
+          note="Posted to financial records"
+        />
+        <MetricCard
+          label="Rejected"
+          value={String(
+            expenses.filter((item) => item.status === "REJECTED").length,
+          )}
+          theme="orange"
+          note="Not posted to accounts"
+        />
+        <MetricCard
+          label="Categories"
+          value={String(new Set(expenses.map((item) => item.category)).size)}
+          theme="peach"
+          note="Fuel, transport, airtime and more"
+        />
       </div>
 
       <article className={styles.noteCard}>
@@ -2425,7 +3505,10 @@ function ExpenseApprovalPage({
         </Field>
       </article>
 
-      <TableCard title="Employee Expense Requests" subtitle="Receipt-backed expense workflow">
+      <TableCard
+        title="Employee Expense Requests"
+        subtitle="Receipt-backed expense workflow"
+      >
         <DataTable minWidth={1250}>
           <thead>
             <tr>
@@ -2446,14 +3529,22 @@ function ExpenseApprovalPage({
               <tr key={item.id}>
                 <td>{index + 1}</td>
                 <td>
-                  <Entity name={item.employee?.name || "Employee"} sub={`${item.employee?.email || ""} · ${roleLabel(item.employee?.role)}`} />
+                  <Entity
+                    name={item.employee?.name || "Employee"}
+                    sub={`${item.employee?.email || ""} · ${roleLabel(item.employee?.role)}`}
+                  />
                 </td>
                 <td>{item.category}</td>
                 <td className={styles.wrapCell}>{item.description || "N/A"}</td>
                 <td>{money(item.amount)}</td>
                 <td>
                   {item.receiptUrl ? (
-                    <a className={styles.documentLink} href={item.receiptUrl} target="_blank" rel="noreferrer">
+                    <a
+                      className={styles.documentLink}
+                      href={item.receiptUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       <Glyph name="eye" /> Receipt
                     </a>
                   ) : (
@@ -2471,8 +3562,17 @@ function ExpenseApprovalPage({
                       <button
                         type="button"
                         className={styles.approveButton}
-                        disabled={busy || item.employeeId === data.accountant?.id || item.createdById === data.accountant?.id}
-                        title={item.employeeId === data.accountant?.id || item.createdById === data.accountant?.id ? "You cannot approve your own expense" : "Approve expense"}
+                        disabled={
+                          busy ||
+                          item.employeeId === data.accountant?.id ||
+                          item.createdById === data.accountant?.id
+                        }
+                        title={
+                          item.employeeId === data.accountant?.id ||
+                          item.createdById === data.accountant?.id
+                            ? "You cannot approve your own expense"
+                            : "Approve expense"
+                        }
                         onClick={() =>
                           void runAction("APPROVE_EXPENSE", {
                             expenseId: item.id,
@@ -2485,8 +3585,17 @@ function ExpenseApprovalPage({
                       <button
                         type="button"
                         className={styles.rejectButton}
-                        disabled={busy || item.employeeId === data.accountant?.id || item.createdById === data.accountant?.id}
-                        title={item.employeeId === data.accountant?.id || item.createdById === data.accountant?.id ? "Another authorized reviewer must decide this expense" : "Reject expense"}
+                        disabled={
+                          busy ||
+                          item.employeeId === data.accountant?.id ||
+                          item.createdById === data.accountant?.id
+                        }
+                        title={
+                          item.employeeId === data.accountant?.id ||
+                          item.createdById === data.accountant?.id
+                            ? "Another authorized reviewer must decide this expense"
+                            : "Reject expense"
+                        }
                         onClick={() =>
                           void runAction("REJECT_EXPENSE", {
                             expenseId: item.id,
@@ -2503,7 +3612,9 @@ function ExpenseApprovalPage({
                 </td>
               </tr>
             ))}
-            {!expenses.length && <EmptyRow colSpan={10} text="No expense requests found." />}
+            {!expenses.length && (
+              <EmptyRow colSpan={10} text="No expense requests found." />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -2511,11 +3622,7 @@ function ExpenseApprovalPage({
   );
 }
 
-function FloatVerificationPage({
-  data,
-  busy,
-  runAction,
-}: CommonPageProps) {
+function FloatVerificationPage({ data, busy, runAction }: CommonPageProps) {
   const rows = safeArray<any>(data.floats);
 
   return (
@@ -2525,17 +3632,55 @@ function FloatVerificationPage({
       glyph="float"
     >
       <div className={styles.metricGrid}>
-        <MetricCard label="Outstanding Float" value={moneyShort(data.stats.outstandingFloat)} theme="peach" note="Pending, issued or confirmed" />
-        <MetricCard label="Pending Review" value={String(data.stats.pendingFloats || 0)} theme="blue" note="Receipt-backed verification required" />
-        <MetricCard label="Approved" value={String(rows.filter((item) => item.status === "APPROVED").length)} theme="yellow" note="Posted transactions" />
-        <MetricCard label="Returned" value={String(rows.filter((item) => item.status === "RETURNED").length)} theme="orange" note="Collections returned" />
+        <MetricCard
+          label="Outstanding Float"
+          value={moneyShort(data.stats.outstandingFloat)}
+          theme="peach"
+          note="Pending, issued or confirmed"
+        />
+        <MetricCard
+          label="Pending Review"
+          value={String(data.stats.pendingFloats || 0)}
+          theme="blue"
+          note="Receipt-backed verification required"
+        />
+        <MetricCard
+          label="Approved"
+          value={String(
+            rows.filter((item) => item.status === "APPROVED").length,
+          )}
+          theme="yellow"
+          note="Posted transactions"
+        />
+        <MetricCard
+          label="Returned"
+          value={String(
+            rows.filter((item) => item.status === "RETURNED").length,
+          )}
+          theme="orange"
+          note="Collections returned"
+        />
       </div>
 
-      <TableCard title="Float Transactions" subtitle="Receipt-backed float verification">
+      <TableCard
+        title="Float Transactions"
+        subtitle="Receipt-backed float verification"
+      >
         <DataTable minWidth={1350}>
           <thead>
             <tr>
-              <th>#</th><th>From</th><th>To</th><th>Email</th><th>Purpose</th><th>Issued</th><th>Returned</th><th>Receipt</th><th>Status</th><th>Created</th><th>Confirmed</th><th>Decision</th>
+              <th>#</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Email</th>
+              <th>Purpose</th>
+              <th>Issued</th>
+              <th>Returned</th>
+              <th>Receipt</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Confirmed</th>
+              <th>Decision</th>
             </tr>
           </thead>
           <tbody>
@@ -2545,25 +3690,48 @@ function FloatVerificationPage({
                 <td>{item.fromUser?.name || "Company"}</td>
                 <td>{item.toUser?.name || "Company"}</td>
                 <td>{item.toUser?.email || item.fromUser?.email || "N/A"}</td>
-                <td className={styles.wrapCell}>{item.purpose || "Operational float"}</td>
+                <td className={styles.wrapCell}>
+                  {item.purpose || "Operational float"}
+                </td>
                 <td>{money(item.amount)}</td>
                 <td>{money(item.returnedAmount || item.amount)}</td>
                 <td>
                   {item.receiptUrl ? (
-                    <a className={styles.documentLink} href={item.receiptUrl} target="_blank" rel="noreferrer"><Glyph name="eye" /> Receipt</a>
-                  ) : <Status status="MISSING_RECEIPT" />}
+                    <a
+                      className={styles.documentLink}
+                      href={item.receiptUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Glyph name="eye" /> Receipt
+                    </a>
+                  ) : (
+                    <Status status="MISSING_RECEIPT" />
+                  )}
                 </td>
-                <td><Status status={item.status} /></td>
+                <td>
+                  <Status status={item.status} />
+                </td>
                 <td>{formatDate(item.createdAt, true)}</td>
                 <td>{formatDate(item.confirmedAt, true)}</td>
                 <td>
-                  {["PENDING", "ISSUED", "CONFIRMED", "RETURNED"].includes(item.status) ? (
-                    <FloatDecision item={item} busy={busy} runAction={runAction} />
-                  ) : "Completed"}
+                  {["PENDING", "ISSUED", "CONFIRMED", "RETURNED"].includes(
+                    item.status,
+                  ) ? (
+                    <FloatDecision
+                      item={item}
+                      busy={busy}
+                      runAction={runAction}
+                    />
+                  ) : (
+                    "Completed"
+                  )}
                 </td>
               </tr>
             ))}
-            {!rows.length && <EmptyRow colSpan={12} text="No float transactions found." />}
+            {!rows.length && (
+              <EmptyRow colSpan={12} text="No float transactions found." />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -2584,7 +3752,10 @@ function FloatDecision({
 
   return (
     <div className={styles.floatDecision}>
-      <select value={classification} onChange={(event) => setClassification(event.target.value)}>
+      <select
+        value={classification}
+        onChange={(event) => setClassification(event.target.value)}
+      >
         <option value="FLOAT_SETTLEMENT">Float settlement</option>
         <option value="REVENUE">Earned revenue</option>
       </select>
@@ -2593,7 +3764,12 @@ function FloatDecision({
           type="button"
           className={styles.approveButton}
           disabled={busy || !item.receiptUrl}
-          onClick={() => void runAction("APPROVE_FLOAT", { floatId: item.id, classification })}
+          onClick={() =>
+            void runAction("APPROVE_FLOAT", {
+              floatId: item.id,
+              classification,
+            })
+          }
         >
           <Glyph name="check" /> Verify
         </button>
@@ -2611,9 +3787,14 @@ function FloatDecision({
 }
 
 function ReportsPage({ data }: { data: DashboardData }) {
-  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">("MONTH");
+  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">(
+    "MONTH",
+  );
   const [reference, setReference] = useState(dateInput());
-  const range = useMemo(() => clientPeriodRange(period, reference), [period, reference]);
+  const range = useMemo(
+    () => clientPeriodRange(period, reference),
+    [period, reference],
+  );
 
   function inside(value: unknown) {
     const time = new Date(String(value)).getTime();
@@ -2621,19 +3802,28 @@ function ReportsPage({ data }: { data: DashboardData }) {
   }
 
   const filteredDays = useMemo(
-    () => safeArray<any>(data.financialDays).filter((item) => inside(item.date)),
+    () =>
+      safeArray<any>(data.financialDays).filter((item) => inside(item.date)),
     [data.financialDays, range],
   );
   const filteredExpenses = useMemo(
-    () => safeArray<any>(data.expenses).filter((item) => inside(item.expenseDate || item.createdAt)),
+    () =>
+      safeArray<any>(data.expenses).filter((item) =>
+        inside(item.expenseDate || item.createdAt),
+      ),
     [data.expenses, range],
   );
   const filteredDeposits = useMemo(
-    () => safeArray<any>(data.deposits).filter((item) => inside(item.depositDate)),
+    () =>
+      safeArray<any>(data.deposits).filter((item) => inside(item.depositDate)),
     [data.deposits, range],
   );
 
-  const reportRows = [...filteredDays, ...filteredExpenses, ...filteredDeposits];
+  const reportRows = [
+    ...filteredDays,
+    ...filteredExpenses,
+    ...filteredDeposits,
+  ];
   const label = `${formatDate(range.start)} — ${formatDate(range.end)}`;
   const reportTrend = useMemo(() => {
     const startMs = range.start.getTime();
@@ -2646,8 +3836,14 @@ function ReportsPage({ data }: { data: DashboardData }) {
         key: `${bucketStart.toISOString()}-${index}`,
         label:
           period === "DAY"
-            ? bucketStart.toLocaleTimeString("en-TZ", { hour: "2-digit", minute: "2-digit" })
-            : bucketStart.toLocaleDateString("en-TZ", { day: "2-digit", month: "short" }),
+            ? bucketStart.toLocaleTimeString("en-TZ", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : bucketStart.toLocaleDateString("en-TZ", {
+                day: "2-digit",
+                month: "short",
+              }),
         start: bucketStart.getTime(),
         end: bucketEnd.getTime(),
         income: 0,
@@ -2658,11 +3854,14 @@ function ReportsPage({ data }: { data: DashboardData }) {
 
     for (const item of safeArray<any>(data.cashBook)) {
       const time = new Date(item.date).getTime();
-      const bucket = buckets.find((entry) => time >= entry.start && time <= entry.end);
+      const bucket = buckets.find(
+        (entry) => time >= entry.start && time <= entry.end,
+      );
       if (!bucket) continue;
       bucket.income += Number(item.debit || 0);
       bucket.expense += Number(item.credit || 0);
-      if (item.type === "BANK_DEPOSIT") bucket.deposit += Number(item.debit || 0);
+      if (item.type === "BANK_DEPOSIT")
+        bucket.deposit += Number(item.debit || 0);
     }
 
     return buckets.map(({ start, end, ...item }) => item);
@@ -2678,7 +3877,12 @@ function ReportsPage({ data }: { data: DashboardData }) {
       <article className={styles.reportFilter}>
         <div className={styles.filterGrid}>
           <Field label="Period">
-            <select value={period} onChange={(event) => setPeriod(event.target.value as typeof period)}>
+            <select
+              value={period}
+              onChange={(event) =>
+                setPeriod(event.target.value as typeof period)
+              }
+            >
               <option value="DAY">Day</option>
               <option value="WEEK">Week</option>
               <option value="MONTH">Month</option>
@@ -2686,18 +3890,60 @@ function ReportsPage({ data }: { data: DashboardData }) {
             </select>
           </Field>
           <Field label="Reference date">
-            <input type="date" value={reference} onChange={(event) => setReference(event.target.value)} />
+            <input
+              type="date"
+              value={reference}
+              onChange={(event) => setReference(event.target.value)}
+            />
           </Field>
           <div className={styles.reportRangeLabel}>{label}</div>
         </div>
-        <ReportButtons filename={`financial-report-${period.toLowerCase()}-${reference}`} rows={reportRows} />
+        <ReportButtons
+          filename={`financial-report-${period.toLowerCase()}-${reference}`}
+          rows={reportRows}
+        />
       </article>
 
       <div className={styles.reportCardGrid}>
-        <ReportSummaryCard title="Financial Days" value={String(filteredDays.length)} note={`${filteredDays.filter((item) => item.status === "CLOSED").length} closed`} glyph="calendar" />
-        <ReportSummaryCard title="Verified Deposits" value={moneyShort(filteredDeposits.filter((item) => item.status === "VERIFIED").reduce((sum, item) => sum + Number(item.amount), 0))} note={`${filteredDeposits.length} deposit records`} glyph="bank" />
-        <ReportSummaryCard title="Approved Expenses" value={moneyShort(filteredExpenses.filter((item) => item.status === "APPROVED").reduce((sum, item) => sum + Number(item.amount), 0))} note={`${filteredExpenses.length} expense records`} glyph="expense" />
-        <ReportSummaryCard title="Net Cash Movement" value={moneyShort(filteredDeposits.filter((item) => item.status === "VERIFIED").reduce((sum, item) => sum + Number(item.amount), 0) - filteredExpenses.filter((item) => item.status === "APPROVED").reduce((sum, item) => sum + Number(item.amount), 0))} note="Deposits less approved expenses" glyph="flow" />
+        <ReportSummaryCard
+          title="Financial Days"
+          value={String(filteredDays.length)}
+          note={`${filteredDays.filter((item) => item.status === "CLOSED").length} closed`}
+          glyph="calendar"
+        />
+        <ReportSummaryCard
+          title="Verified Deposits"
+          value={moneyShort(
+            filteredDeposits
+              .filter((item) => item.status === "VERIFIED")
+              .reduce((sum, item) => sum + Number(item.amount), 0),
+          )}
+          note={`${filteredDeposits.length} deposit records`}
+          glyph="bank"
+        />
+        <ReportSummaryCard
+          title="Approved Expenses"
+          value={moneyShort(
+            filteredExpenses
+              .filter((item) => item.status === "APPROVED")
+              .reduce((sum, item) => sum + Number(item.amount), 0),
+          )}
+          note={`${filteredExpenses.length} expense records`}
+          glyph="expense"
+        />
+        <ReportSummaryCard
+          title="Net Cash Movement"
+          value={moneyShort(
+            filteredDeposits
+              .filter((item) => item.status === "VERIFIED")
+              .reduce((sum, item) => sum + Number(item.amount), 0) -
+              filteredExpenses
+                .filter((item) => item.status === "APPROVED")
+                .reduce((sum, item) => sum + Number(item.amount), 0),
+          )}
+          note="Deposits less approved expenses"
+          glyph="flow"
+        />
       </div>
 
       <div className={styles.chartGrid}>
@@ -2712,7 +3958,14 @@ function ReportsPage({ data }: { data: DashboardData }) {
       <TableCard title="Filtered Financial Days" subtitle={label}>
         <DataTable>
           <thead>
-            <tr><th>Date</th><th>Opening</th><th>Cash in</th><th>Cash out</th><th>Closing</th><th>Status</th></tr>
+            <tr>
+              <th>Date</th>
+              <th>Opening</th>
+              <th>Cash in</th>
+              <th>Cash out</th>
+              <th>Closing</th>
+              <th>Status</th>
+            </tr>
           </thead>
           <tbody>
             {filteredDays.map((item) => (
@@ -2722,10 +3975,14 @@ function ReportsPage({ data }: { data: DashboardData }) {
                 <td>{money(item.cashIn)}</td>
                 <td>{money(item.cashOut)}</td>
                 <td>{money(item.closingBalance)}</td>
-                <td><Status status={item.status} /></td>
+                <td>
+                  <Status status={item.status} />
+                </td>
               </tr>
             ))}
-            {!filteredDays.length && <EmptyRow colSpan={6} text="No financial days in this period." />}
+            {!filteredDays.length && (
+              <EmptyRow colSpan={6} text="No financial days in this period." />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -2733,11 +3990,7 @@ function ReportsPage({ data }: { data: DashboardData }) {
   );
 }
 
-function PeriodsPage({
-  data,
-  busy,
-  runAction,
-}: CommonPageProps) {
+function PeriodsPage({ data, busy, runAction }: CommonPageProps) {
   const [form, setForm] = useState({
     periodKey: monthInput(),
     reason: "",
@@ -2792,12 +4045,8 @@ function PeriodsPage({
           <button
             type="button"
             className={styles.primaryButton}
-            disabled={
-              busy || data.features?.accountingPeriods === false
-            }
-            onClick={() =>
-              void runAction("LOCK_PERIOD", form)
-            }
+            disabled={busy || data.features?.accountingPeriods === false}
+            onClick={() => void runAction("LOCK_PERIOD", form)}
           >
             <Glyph name="lock" /> Lock accounting period
           </button>
@@ -2813,12 +4062,18 @@ function PeriodsPage({
             <li>All financial days in the month must be closed.</li>
             <li>Bank mismatches must be resolved.</li>
             <li>Approved expenses remain unchanged.</li>
-            <li>Accountants may request reopening; only Company Admin approval reopens a locked period.</li>
+            <li>
+              Accountants may request reopening; only Company Admin approval
+              reopens a locked period.
+            </li>
           </ul>
         </article>
       </div>
 
-      <TableCard title="Accounting Period Register" subtitle="Open and locked months">
+      <TableCard
+        title="Accounting Period Register"
+        subtitle="Open and locked months"
+      >
         <DataTable>
           <thead>
             <tr>
@@ -2865,7 +4120,12 @@ function PeriodsPage({
                 </td>
               </tr>
             ))}
-            {!data.periods.length && <EmptyRow colSpan={8} text="No accounting periods have been registered." />}
+            {!data.periods.length && (
+              <EmptyRow
+                colSpan={8}
+                text="No accounting periods have been registered."
+              />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -2873,12 +4133,10 @@ function PeriodsPage({
   );
 }
 
-function AttendancePage({
-  data,
-  busy,
-  runAction,
-}: CommonPageProps) {
-  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">("WEEK");
+function AttendancePage({ data, busy, runAction }: CommonPageProps) {
+  const [period, setPeriod] = useState<"DAY" | "WEEK" | "MONTH" | "YEAR">(
+    "WEEK",
+  );
   const [reference, setReference] = useState(dateInput());
   const [form, setForm] = useState({
     userId: data.users?.[0]?.id || "",
@@ -2944,14 +4202,36 @@ function AttendancePage({
             onChange={(event) => setReference(event.target.value)}
           />
         </Field>
-        <span>{formatDate(range.start)} — {formatDate(range.end)}</span>
+        <span>
+          {formatDate(range.start)} — {formatDate(range.end)}
+        </span>
       </div>
 
       <div className={styles.metricGrid}>
-        <MetricCard label="Present" value={String(summary.present)} theme="yellow" note="Returned within deadline" />
-        <MetricCard label="Late" value={String(summary.late)} theme="orange" note="Returned after cutoff" />
-        <MetricCard label="Absent" value={String(summary.absent)} theme="peach" note="Failed operational rules" />
-        <MetricCard label="Attendance Rate" value={`${summary.rate}%`} theme="blue" note={`${summary.attended}/${summary.working} attendance`} />
+        <MetricCard
+          label="Present"
+          value={String(summary.present)}
+          theme="yellow"
+          note="Returned within deadline"
+        />
+        <MetricCard
+          label="Late"
+          value={String(summary.late)}
+          theme="orange"
+          note="Returned after cutoff"
+        />
+        <MetricCard
+          label="Absent"
+          value={String(summary.absent)}
+          theme="peach"
+          note="Failed operational rules"
+        />
+        <MetricCard
+          label="Attendance Rate"
+          value={`${summary.rate}%`}
+          theme="blue"
+          note={`${summary.attended}/${summary.working} attendance`}
+        />
       </div>
 
       <article className={styles.adjustmentCard}>
@@ -3027,7 +4307,10 @@ function AttendancePage({
         runAction={runAction}
       />
 
-      <TableCard title="Attendance Register" subtitle={`${records.length} records in selected period`}>
+      <TableCard
+        title="Attendance Register"
+        subtitle={`${records.length} records in selected period`}
+      >
         <DataTable minWidth={1100}>
           <thead>
             <tr>
@@ -3047,7 +4330,10 @@ function AttendancePage({
               <tr key={item.id}>
                 <td>{index + 1}</td>
                 <td>
-                  <Entity name={item.user?.name || "User"} sub={item.user?.email || ""} />
+                  <Entity
+                    name={item.user?.name || "User"}
+                    sub={item.user?.email || ""}
+                  />
                 </td>
                 <td>{roleLabel(item.user?.role)}</td>
                 <td>{formatDate(item.date)}</td>
@@ -3060,7 +4346,12 @@ function AttendancePage({
                 <td className={styles.wrapCell}>{item.notes || "N/A"}</td>
               </tr>
             ))}
-            {!records.length && <EmptyRow colSpan={9} text="No attendance records in this period." />}
+            {!records.length && (
+              <EmptyRow
+                colSpan={9}
+                text="No attendance records in this period."
+              />
+            )}
           </tbody>
         </DataTable>
       </TableCard>
@@ -3068,11 +4359,7 @@ function AttendancePage({
   );
 }
 
-function NotificationsPage({
-  data,
-  busy,
-  runAction,
-}: CommonPageProps) {
+function NotificationsPage({ data, busy, runAction }: CommonPageProps) {
   return (
     <SectionPage
       title="Notifications"
@@ -3153,7 +4440,6 @@ function NotificationsPage({
   );
 }
 
-
 function ClassAttendanceGrid({
   users,
   records,
@@ -3168,48 +4454,86 @@ function ClassAttendanceGrid({
   runAction: CommonPageProps["runAction"];
 }) {
   const selectedKey = dateInput(selectedDate);
-  const dayRows = records.filter((item) => dateInput(item.date) === selectedKey);
+  const dayRows = records.filter(
+    (item) => dateInput(item.date) === selectedKey,
+  );
 
   return (
     <article className={styles.classAttendance}>
       <header>
         <div>
           <h3>Daily Class Attendance</h3>
-          <p>✓ marks present, ✕ marks absent. Missing rows remain unfilled and trigger company notifications.</p>
+          <p>
+            ✓ marks present, ✕ marks absent. Missing rows remain unfilled and
+            trigger company notifications.
+          </p>
         </div>
         <button
           type="button"
           className={styles.headerButton}
           disabled={busy}
-          onClick={() => void runAction("GENERATE_ATTENDANCE_ALERTS", { date: selectedDate })}
+          onClick={() =>
+            void runAction("GENERATE_ATTENDANCE_ALERTS", { date: selectedDate })
+          }
         >
           <Glyph name="bell" /> Send missing-attendance alert
         </button>
       </header>
       <div className={styles.attendanceRoster}>
         {users.map((person, index) => {
-          const record = dayRows.find((item) => item.userId === person.id || item.user?.id === person.id);
+          const record = dayRows.find(
+            (item) => item.userId === person.id || item.user?.id === person.id,
+          );
           return (
             <div className={styles.attendancePerson} key={person.id}>
               <span className={styles.rollNumber}>{index + 1}</span>
-              <Entity name={person.name || "User"} sub={`${person.email || ""} · ${roleLabel(person.role)}`} />
+              <Entity
+                name={person.name || "User"}
+                sub={`${person.email || ""} · ${roleLabel(person.role)}`}
+              />
               <div className={styles.attendanceMarks}>
                 <button
                   type="button"
-                  className={record?.status === "PRESENT" ? styles.markPresentActive : styles.markPresent}
+                  className={
+                    record?.status === "PRESENT"
+                      ? styles.markPresentActive
+                      : styles.markPresent
+                  }
                   disabled={busy}
                   title="Mark present"
-                  onClick={() => void runAction("MARK_ATTENDANCE", { userId: person.id, date: selectedDate, status: "PRESENT" })}
-                >✓</button>
+                  onClick={() =>
+                    void runAction("MARK_ATTENDANCE", {
+                      userId: person.id,
+                      date: selectedDate,
+                      status: "PRESENT",
+                    })
+                  }
+                >
+                  ✓
+                </button>
                 <button
                   type="button"
-                  className={record?.status === "ABSENT" ? styles.markAbsentActive : styles.markAbsent}
+                  className={
+                    record?.status === "ABSENT"
+                      ? styles.markAbsentActive
+                      : styles.markAbsent
+                  }
                   disabled={busy}
                   title="Mark absent"
-                  onClick={() => void runAction("MARK_ATTENDANCE", { userId: person.id, date: selectedDate, status: "ABSENT" })}
-                >✕</button>
+                  onClick={() =>
+                    void runAction("MARK_ATTENDANCE", {
+                      userId: person.id,
+                      date: selectedDate,
+                      status: "ABSENT",
+                    })
+                  }
+                >
+                  ✕
+                </button>
               </div>
-              <span className={styles.attendanceResult}>{record ? roleLabel(record.status) : "Not filled"}</span>
+              <span className={styles.attendanceResult}>
+                {record ? roleLabel(record.status) : "Not filled"}
+              </span>
             </div>
           );
         })}
@@ -3225,7 +4549,9 @@ function ProfilePage({
   uploadFile,
   notify,
 }: CommonPageProps) {
-  const [preview, setPreview] = useState(safeText(data.accountant?.profileImageUrl));
+  const [preview, setPreview] = useState(
+    safeText(data.accountant?.profileImageUrl),
+  );
 
   async function selectImage(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -3233,7 +4559,9 @@ function ProfilePage({
     try {
       const url = await uploadFile(file);
       setPreview(url);
-      const saved = await runAction("UPDATE_PROFILE_IMAGE", { profileImageUrl: url });
+      const saved = await runAction("UPDATE_PROFILE_IMAGE", {
+        profileImageUrl: url,
+      });
       if (saved) notify("Profile image updated.");
     } catch (error) {
       notify(error instanceof Error ? error.message : "Profile upload failed.");
@@ -3241,28 +4569,55 @@ function ProfilePage({
   }
 
   return (
-    <SectionPage title="Profile" subtitle="Accountant identity and portal profile image." glyph="profile">
+    <SectionPage
+      title="Profile"
+      subtitle="Accountant identity and portal profile image."
+      glyph="profile"
+    >
       <div className={styles.profilePageGrid}>
         <article className={styles.profileImageCard}>
           <div className={styles.profileImageLarge}>
-            {preview ? <img src={preview} alt={safeText(data.accountant?.name)} /> : safeText(data.accountant?.name).slice(0, 1).toUpperCase()}
+            {preview ? (
+              <img src={preview} alt={safeText(data.accountant?.name)} />
+            ) : (
+              safeText(data.accountant?.name).slice(0, 1).toUpperCase()
+            )}
           </div>
           <label className={styles.primaryButton}>
             <Glyph name="upload" /> Upload profile image
-            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={selectImage} disabled={busy} hidden />
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={selectImage}
+              disabled={busy}
+              hidden
+            />
           </label>
           <small>JPG, PNG or WebP. Maximum 5 MB.</small>
         </article>
 
         <article className={styles.statusPanel}>
-          <CardHeading title="Account information" text="Read directly from the authenticated database user." />
+          <CardHeading
+            title="Account information"
+            text="Read directly from the authenticated database user."
+          />
           <div className={styles.detailGrid}>
             <Detail label="Name" value={safeText(data.accountant?.name)} />
             <Detail label="Email" value={safeText(data.accountant?.email)} />
             <Detail label="Role" value={roleLabel(data.accountant?.role)} />
             <Detail label="Company" value={safeText(data.company?.name)} />
-            <Detail label="Approval limit" value={money(data.accountant?.approvalLimit || data.settings?.accountantExpenseApprovalLimit || 0)} />
-            <Detail label="Status" value={safeText(data.accountant?.status || "ACTIVE")} />
+            <Detail
+              label="Approval limit"
+              value={money(
+                data.accountant?.approvalLimit ||
+                  data.settings?.accountantExpenseApprovalLimit ||
+                  0,
+              )}
+            />
+            <Detail
+              label="Status"
+              value={safeText(data.accountant?.status || "ACTIVE")}
+            />
           </div>
         </article>
       </div>
@@ -3373,13 +4728,11 @@ function EarningsChart({ rows }: { rows: any[] }) {
       .map((item, index) => {
         const x =
           padding +
-          (index * (width - padding * 2)) /
-            Math.max(1, list.length - 1);
+          (index * (width - padding * 2)) / Math.max(1, list.length - 1);
         const y =
           height -
           padding -
-          (Number(item[field] || 0) / max) *
-            (height - padding * 2);
+          (Number(item[field] || 0) / max) * (height - padding * 2);
         return `${x},${y}`;
       })
       .join(" ");
@@ -3388,12 +4741,22 @@ function EarningsChart({ rows }: { rows: any[] }) {
   return (
     <div className={styles.lineChart}>
       <div className={styles.chartLegend}>
-        <span><i className={styles.legendIncome}></i>Income</span>
-        <span><i className={styles.legendExpense}></i>Expenses</span>
-        <span><i className={styles.legendDeposit}></i>Deposits</span>
+        <span>
+          <i className={styles.legendIncome}></i>Income
+        </span>
+        <span>
+          <i className={styles.legendExpense}></i>Expenses
+        </span>
+        <span>
+          <i className={styles.legendDeposit}></i>Deposits
+        </span>
       </div>
 
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Earnings overview chart">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label="Earnings overview chart"
+      >
         <defs>
           <linearGradient id="incomeArea" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#a9d8ff" stopOpacity="0.6" />
@@ -3416,7 +4779,9 @@ function EarningsChart({ rows }: { rows: any[] }) {
       </svg>
 
       <div className={styles.chartLabels}>
-        {list.map((item) => <span key={item.key}>{item.label}</span>)}
+        {list.map((item) => (
+          <span key={item.key}>{item.label}</span>
+        ))}
       </div>
     </div>
   );
@@ -3440,17 +4805,23 @@ function BreakdownChart({ rows }: { rows: any[] }) {
           <div>
             <span
               className={styles.incomeBar}
-              style={{ height: `${Math.max(6, (Number(item.income || 0) / max) * 100)}%` }}
+              style={{
+                height: `${Math.max(6, (Number(item.income || 0) / max) * 100)}%`,
+              }}
               title={`Income ${money(item.income)}`}
             ></span>
             <span
               className={styles.expenseBar}
-              style={{ height: `${Math.max(6, (Number(item.expense || 0) / max) * 100)}%` }}
+              style={{
+                height: `${Math.max(6, (Number(item.expense || 0) / max) * 100)}%`,
+              }}
               title={`Expense ${money(item.expense)}`}
             ></span>
             <span
               className={styles.depositBar}
-              style={{ height: `${Math.max(6, (Number(item.deposit || 0) / max) * 100)}%` }}
+              style={{
+                height: `${Math.max(6, (Number(item.deposit || 0) / max) * 100)}%`,
+              }}
               title={`Deposit ${money(item.deposit)}`}
             ></span>
           </div>
@@ -3461,42 +4832,83 @@ function BreakdownChart({ rows }: { rows: any[] }) {
   );
 }
 
-
 function CashFlowChart({ rows }: { rows: any[] }) {
   const values = safeArray<any>(rows).slice(-30);
   if (!values.length) return <Empty text="No cash flow data is available." />;
   const width = 960;
   const height = 280;
   const padding = 34;
-  const max = Math.max(1, ...values.flatMap((item) => [Number(item.inflow || 0), Number(item.outflow || 0), Math.abs(Number(item.net || 0))]));
-  const x = (index: number) => padding + (index * (width - padding * 2)) / Math.max(values.length - 1, 1);
-  const y = (value: number) => height - padding - (Math.max(0, value) / max) * (height - padding * 2);
-  const inflowPoints = values.map((item, index) => `${x(index)},${y(Number(item.inflow || 0))}`).join(" ");
-  const outflowPoints = values.map((item, index) => `${x(index)},${y(Number(item.outflow || 0))}`).join(" ");
+  const max = Math.max(
+    1,
+    ...values.flatMap((item) => [
+      Number(item.inflow || 0),
+      Number(item.outflow || 0),
+      Math.abs(Number(item.net || 0)),
+    ]),
+  );
+  const x = (index: number) =>
+    padding + (index * (width - padding * 2)) / Math.max(values.length - 1, 1);
+  const y = (value: number) =>
+    height - padding - (Math.max(0, value) / max) * (height - padding * 2);
+  const inflowPoints = values
+    .map((item, index) => `${x(index)},${y(Number(item.inflow || 0))}`)
+    .join(" ");
+  const outflowPoints = values
+    .map((item, index) => `${x(index)},${y(Number(item.outflow || 0))}`)
+    .join(" ");
 
   return (
     <div className={styles.cashFlowChart}>
       <div className={styles.chartLegend}>
-        <span><i className={styles.legendIncome}></i>Cash in</span>
-        <span><i className={styles.legendExpense}></i>Cash out</span>
+        <span>
+          <i className={styles.legendIncome}></i>Cash in
+        </span>
+        <span>
+          <i className={styles.legendExpense}></i>Cash out
+        </span>
       </div>
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Cash flow movement chart">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label="Cash flow movement chart"
+      >
         {[0, 1, 2, 3, 4].map((line) => {
           const lineY = padding + (line * (height - padding * 2)) / 4;
-          return <line key={line} x1={padding} y1={lineY} x2={width - padding} y2={lineY} className={styles.chartGridLine} />;
+          return (
+            <line
+              key={line}
+              x1={padding}
+              y1={lineY}
+              x2={width - padding}
+              y2={lineY}
+              className={styles.chartGridLine}
+            />
+          );
         })}
         <polyline points={inflowPoints} className={styles.incomeLine} />
         <polyline points={outflowPoints} className={styles.expenseLine} />
         {values.map((item, index) => (
           <g key={item.key || index}>
-            <circle cx={x(index)} cy={y(Number(item.inflow || 0))} r="3.5" className={styles.cashInPoint} />
-            <circle cx={x(index)} cy={y(Number(item.outflow || 0))} r="3.5" className={styles.cashOutPoint} />
+            <circle
+              cx={x(index)}
+              cy={y(Number(item.inflow || 0))}
+              r="3.5"
+              className={styles.cashInPoint}
+            />
+            <circle
+              cx={x(index)}
+              cy={y(Number(item.outflow || 0))}
+              r="3.5"
+              className={styles.cashOutPoint}
+            />
           </g>
         ))}
       </svg>
       <div className={styles.cashFlowLabels}>
         {values.map((item, index) => (
-          <span key={item.key || index}>{index % 4 === 0 || index === values.length - 1 ? item.label : ""}</span>
+          <span key={item.key || index}>
+            {index % 4 === 0 || index === values.length - 1 ? item.label : ""}
+          </span>
         ))}
       </div>
     </div>
@@ -3578,13 +4990,7 @@ function DataTable({
   );
 }
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className={styles.field}>
       <span>{label}</span>
@@ -3593,13 +4999,7 @@ function Field({
   );
 }
 
-function CardHeading({
-  title,
-  text,
-}: {
-  title: string;
-  text: string;
-}) {
+function CardHeading({ title, text }: { title: string; text: string }) {
   return (
     <div className={styles.cardHeading}>
       <h3>{title}</h3>
@@ -3643,13 +5043,7 @@ function Status({ status }: { status: unknown }) {
   );
 }
 
-function Entity({
-  name,
-  sub,
-}: {
-  name: string;
-  sub: string;
-}) {
+function Entity({ name, sub }: { name: string; sub: string }) {
   return (
     <div className={styles.entity}>
       <span>{name.slice(0, 1).toUpperCase() || "?"}</span>
@@ -3661,13 +5055,7 @@ function Entity({
   );
 }
 
-function Detail({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className={styles.detail}>
       <span>{label}</span>
@@ -3686,7 +5074,9 @@ function SummaryLine({
   warning?: boolean;
 }) {
   return (
-    <div className={`${styles.summaryLine} ${warning ? styles.summaryWarning : ""}`}>
+    <div
+      className={`${styles.summaryLine} ${warning ? styles.summaryWarning : ""}`}
+    >
       <span>{label}</span>
       <strong>{value}</strong>
     </div>
@@ -3773,7 +5163,10 @@ function ExpenseWorkflow() {
     <article className={styles.workflowCard}>
       <div>
         <h3>Expense Management Workflow</h3>
-        <p>Fuel, transport, airtime, accommodation, repairs, stationery, meals, office and emergency expenses.</p>
+        <p>
+          Fuel, transport, airtime, accommodation, repairs, stationery, meals,
+          office and emergency expenses.
+        </p>
       </div>
       <section>
         {steps.map((step, index) => (
@@ -3811,13 +5204,7 @@ function ReportSummaryCard({
   );
 }
 
-function ReportButtons({
-  filename,
-  rows,
-}: {
-  filename: string;
-  rows: any[];
-}) {
+function ReportButtons({ filename, rows }: { filename: string; rows: any[] }) {
   function primitiveKeys(): string[] {
     return Array.from(
       rows.reduce<Set<string>>((set, row) => {
@@ -3832,8 +5219,15 @@ function ReportButtons({
   function exportCsv() {
     if (!rows.length) return;
     const keys = primitiveKeys();
-    const csv = [keys, ...rows.map((row) => keys.map((key) => safeText(row[key])))]
-      .map((line) => line.map((cell) => `"${safeText(cell).replaceAll('"', '""')}"`).join(","))
+    const csv = [
+      keys,
+      ...rows.map((row) => keys.map((key) => safeText(row[key]))),
+    ]
+      .map((line) =>
+        line
+          .map((cell) => `"${safeText(cell).replaceAll('"', '""')}"`)
+          .join(","),
+      )
       .join("\n");
     const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
     downloadBlob(blob, `${filename}-${dateInput()}.csv`);
@@ -3890,9 +5284,13 @@ function buildSimplePdf(sourceLines: string[]): Blob {
       wrapped.push("");
       continue;
     }
-    for (let index = 0; index < line.length; index += 105) wrapped.push(line.slice(index, index + 105));
+    for (let index = 0; index < line.length; index += 105)
+      wrapped.push(line.slice(index, index + 105));
   }
-  const pages = Array.from({ length: Math.max(1, Math.ceil(wrapped.length / 45)) }, (_, index) => wrapped.slice(index * 45, index * 45 + 45));
+  const pages = Array.from(
+    { length: Math.max(1, Math.ceil(wrapped.length / 45)) },
+    (_, index) => wrapped.slice(index * 45, index * 45 + 45),
+  );
   const objects: string[] = [];
   const pageRefs = pages.map((_, index) => `${4 + index * 2} 0 R`).join(" ");
   objects[1] = "<< /Type /Catalog /Pages 2 0 R >>";
@@ -3901,10 +5299,17 @@ function buildSimplePdf(sourceLines: string[]): Blob {
   pages.forEach((pageLines, index) => {
     const pageObject = 4 + index * 2;
     const contentObject = pageObject + 1;
-    const text = pageLines.map((line, lineIndex) => `${lineIndex === 0 ? "" : "0 -16 Td "}(${line}) Tj`).join("\n");
+    const text = pageLines
+      .map(
+        (line, lineIndex) =>
+          `${lineIndex === 0 ? "" : "0 -16 Td "}(${line}) Tj`,
+      )
+      .join("\n");
     const stream = `BT /F1 8 Tf 40 800 Td\n${text}\nET`;
-    objects[pageObject] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentObject} 0 R >>`;
-    objects[contentObject] = `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`;
+    objects[pageObject] =
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentObject} 0 R >>`;
+    objects[contentObject] =
+      `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`;
   });
 
   let pdf = "%PDF-1.4\n";
@@ -3915,14 +5320,19 @@ function buildSimplePdf(sourceLines: string[]): Blob {
   }
   const xref = pdf.length;
   pdf += `xref\n0 ${objects.length}\n0000000000 65535 f \n`;
-  for (let index = 1; index < objects.length; index += 1) pdf += `${String(offsets[index]).padStart(10, "0")} 00000 n \n`;
+  for (let index = 1; index < objects.length; index += 1)
+    pdf += `${String(offsets[index]).padStart(10, "0")} 00000 n \n`;
   pdf += `trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
   return new Blob([pdf], { type: "application/pdf" });
 }
 
 function PrintButton() {
   return (
-    <button type="button" className={styles.headerButton} onClick={() => window.print()}>
+    <button
+      type="button"
+      className={styles.headerButton}
+      onClick={() => window.print()}
+    >
       <Glyph name="print" /> Print / PDF
     </button>
   );
@@ -3949,7 +5359,10 @@ function NotificationPopup({
           <strong>Notifications</strong>
           <small>{unread} unread</small>
         </div>
-        <button type="button" onClick={() => void runAction("MARK_ALL_NOTIFICATIONS_READ")}>
+        <button
+          type="button"
+          onClick={() => void runAction("MARK_ALL_NOTIFICATIONS_READ")}
+        >
           Mark all read
         </button>
       </header>
@@ -3976,7 +5389,9 @@ function NotificationPopup({
           ))}
       </section>
       <footer>
-        <button type="button" onClick={openAll}>Open notification center</button>
+        <button type="button" onClick={openAll}>
+          Open notification center
+        </button>
       </footer>
     </div>
   );
@@ -3987,7 +5402,9 @@ function LoadingState() {
     <div className={styles.stateCard}>
       <span className={styles.loader}></span>
       <h2>Loading finance records...</h2>
-      <p>Financial days, bank deposits, expenses, float, attendance and reports.</p>
+      <p>
+        Financial days, bank deposits, expenses, float, attendance and reports.
+      </p>
     </div>
   );
 }
@@ -4004,7 +5421,9 @@ function ErrorState({
       <Glyph name="warning" />
       <h2>Accountant portal could not load</h2>
       <p>{message}</p>
-      <button type="button" onClick={retry}>Try again</button>
+      <button type="button" onClick={retry}>
+        Try again
+      </button>
     </div>
   );
 }
@@ -4013,13 +5432,7 @@ function Empty({ text }: { text: string }) {
   return <div className={styles.empty}>{text}</div>;
 }
 
-function EmptyRow({
-  colSpan,
-  text,
-}: {
-  colSpan: number;
-  text: string;
-}) {
+function EmptyRow({ colSpan, text }: { colSpan: number; text: string }) {
   return (
     <tr>
       <td colSpan={colSpan}>

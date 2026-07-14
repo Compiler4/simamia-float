@@ -1,6 +1,7 @@
-// ============================================================
+// ============================================================================
 // ADD THIS ENUM NEAR YOUR OTHER ENUMS IN prisma/schema.prisma
-// ============================================================
+// Do not create a second enum if it already exists.
+// ============================================================================
 
 enum BrokerCustomerStatus {
   ACTIVE
@@ -8,61 +9,49 @@ enum BrokerCustomerStatus {
   SUSPENDED
 }
 
-// ============================================================
+// ============================================================================
 // ADD THIS RELATION FIELD INSIDE YOUR EXISTING Company MODEL
-// ============================================================
+// Example:
 //
+// model Company {
+//   id String @id @default(cuid())
+//   ...
+//   brokerCustomers BrokerCustomer[]
+// }
+// ============================================================================
+
 // brokerCustomers BrokerCustomer[]
-//
 
-// ============================================================
-// ADD THESE TWO FIELDS INSIDE YOUR EXISTING ServiceActivity MODEL
-// This allows staff to select a broker customer when providing service.
-// Keep any old brokerId relation temporarily if old records still use it.
-// ============================================================
-//
-// brokerCustomerId String?
-// brokerCustomer   BrokerCustomer? @relation(
-//   fields: [brokerCustomerId],
-//   references: [id],
-//   onDelete: SetNull
-// )
-//
-// @@index([brokerCustomerId])
-//
-
-// ============================================================
-// ADD THIS COMPLETE MODEL
-// ============================================================
+// ============================================================================
+// ADD THIS COMPLETE MODEL AT THE END OF prisma/schema.prisma
+// ============================================================================
 
 model BrokerCustomer {
-  id               String               @id @default(cuid())
-  companyId        String
-  code             String
-  name             String
-  businessName     String?
-  phone            String
-  alternatePhone   String?
-  email            String?
-  location         String
-  region           String?
-  district         String?
-  ward             String?
-  address          String?
-  latitude         Float?
-  longitude        Float?
-  status           BrokerCustomerStatus @default(ACTIVE)
-  notes            String?              @db.Text
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
+  id             String               @id @default(cuid())
+  companyId      String
+  code           String
+  name           String
+  businessName   String?
+  phone          String
+  alternatePhone String?
+  email          String?
+  location       String
+  region         String?
+  district       String?
+  ward           String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  status         BrokerCustomerStatus @default(ACTIVE)
+  notes          String?              @db.Text
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
 
-  company          Company              @relation(
+  company Company @relation(
     fields: [companyId],
     references: [id],
     onDelete: Cascade
   )
-
-  serviceActivities ServiceActivity[]
 
   @@unique([companyId, code])
   @@index([companyId])
@@ -71,3 +60,8 @@ model BrokerCustomer {
   @@index([companyId, phone])
   @@map("broker_customers")
 }
+
+// IMPORTANT:
+// The file schema-broker-additions.prisma.txt is only an instruction file.
+// Prisma will ignore it unless the enum, Company relation field, and model above
+// are copied into the real prisma/schema.prisma file.

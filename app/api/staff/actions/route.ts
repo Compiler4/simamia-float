@@ -1,662 +1,1990 @@
-import { compare, hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
-import { db } from "@/lib/db";
-import { markOperationalAttendance } from "@/lib/staff/attendance";
-import { sendNotice, sendNoticeToRoles } from "@/lib/staff/notify";
-import { requireStaff } from "@/lib/staff/permissions";
-import { requireAssignedBroker, requireAssignedCustomer } from "@/lib/staff/scopes";
-import { dateAtNoon } from "@/lib/staff/time";
-import { verifyBankDeposit } from "@/lib/staff/bank";
+import { prisma } from "@/lib/prisma";
+import {
+  markOperationalAttendance,
+} from "@/lib/staff/attendance";
+import {
+  sendNoticeToRoles,
+} from "@/lib/staff/notify";
+import {
+  requireStaff,
+} from "@/lib/staff/permissions";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-function text(value: unknown): string {
-  return value == null ? "" : String(value).trim();
+type StaffSession = {
+  id: string;
+  name: string;
+  companyId: string;
+};
+
+type WarningItem = {
+  task: string;
+  message: string;
+};
+
+const ACTIONS = [
+  "CONFIRM_FLOAT_RECEIVED",
+  "ISSUE_FLOAT",
+  "RECORD_COLLECTION",
+  "RETURN_MONEY",
+  "DEPOSIT_TO_BANK",
+  "UPLOAD_PROOF_OF_PAYMENT",
+  "SUBMIT_EXPENSE",
+  "RECORD_SERVICE_VISIT",
+  "MARK_NOTIFICATION_READ",
+  "MARK_ALL_NOTIFICATIONS_READ",
+] as const;
+
+function cleanText(
+  value: unknown,
+): string {
+  return value === null ||
+    value === undefined
+    ? ""
+    : String(value).trim();
 }
 
-function required(value: unknown, name: string): string {
-  const result = text(value);
-  if (!result) throw new Error(`REQUIRED:${name}`);
+function requiredText(
+  value: unknown,
+  field: string,
+): string {
+  const result = cleanText(value);
+
+  if (!result) {
+    throw new Error(
+      `REQUIRED:${field}`,
+    );
+  }
+
   return result;
 }
 
-
-function normalizedUsername(value: unknown): string {
-  const username = required(value, "username").toLowerCase();
-
-  if (!/^[a-z0-9._-]{3,40}$/.test(username)) {
-    throw new Error("INVALID_USERNAME");
-  }
-
-  return username;
-}
-
-function strongPassword(value: unknown): string {
-  const password = required(value, "newPassword");
-
-  if (password.length < 8 || password.length > 128) {
-    throw new Error("WEAK_PASSWORD");
-  }
+function positiveAmount(
+  value: unknown,
+): number {
+  const amount = Number(value);
 
   if (
-    !/[A-Z]/.test(password) ||
-    !/[a-z]/.test(password) ||
-    !/[0-9]/.test(password)
+    !Number.isFinite(amount) ||
+    amount <= 0
   ) {
-    throw new Error("WEAK_PASSWORD");
+    throw new Error(
+      "INVALID_AMOUNT",
+    );
   }
 
-  return password;
+  return amount;
 }
 
-function positiveAmount(value: unknown): number {
+function optionalNumber(
+  value: unknown,
+): number | null {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
+  }
+
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed <= 0) throw new Error("INVALID_AMOUNT");
+
+  if (!Number.isFinite(parsed)) {
+    throw new Error(
+      "INVALID_NUMBER",
+    );
+  }
+
   return parsed;
 }
 
-function optionalNumber(value: unknown): number | null {
-  if (value == null || value === "") return null;
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) throw new Error("INVALID_NUMBER");
-  return parsed;
+function dateAtLocalNoon(
+  value: unknown,
+): Date {
+  const text =
+    requiredText(
+      value,
+      "date",
+    );
+
+  const match =
+    text.match(
+      /^(\d{4})-(\d{2})-(\d{2})$/,
+    );
+
+  if (!match) {
+    throw new Error(
+      "INVALID_DATE",
+    );
+  }
+
+  const year = Number(
+    match[1],
+  );
+  const month = Number(
+    match[2],
+  );
+  const day = Number(
+    match[3],
+  );
+
+  const date = new Date(
+    Date.UTC(
+      year,
+      month - 1,
+      day,
+      9,
+      0,
+      0,
+    ),
+  );
+
+  if (
+    date.getUTCFullYear() !==
+      year ||
+    date.getUTCMonth() !==
+      month - 1 ||
+    date.getUTCDate() !==
+      day
+  ) {
+    throw new Error(
+      "INVALID_DATE",
+    );
+  }
+
+  return date;
 }
 
-function reference(prefix: string): string {
-  return `${prefix}-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+function numberValue(
+  value: unknown,
+): number {
+  const parsed = Number(
+    value ?? 0,
+  );
+
+  return Number.isFinite(parsed)
+    ? parsed
+    : 0;
 }
 
-function lockedStatus(status: string, kind: "FLOAT" | "COLLECTION" | "DEPOSIT" | "EXPENSE") {
-  const values: Record<typeof kind, string[]> = {
-    FLOAT: ["APPROVED", "DEPOSITED", "REJECTED"],
-    COLLECTION: ["VERIFIED", "DEPOSITED", "REJECTED"],
-    DEPOSIT: ["VERIFIED"],
-    EXPENSE: ["APPROVED", "REJECTED"],
-  };
-  return values[kind].includes(status);
+function createReference(
+  prefix: string,
+): string {
+  return `${prefix}-${Date.now()
+    .toString(36)
+    .toUpperCase()}-${Math.random()
+    .toString(36)
+    .slice(2, 8)
+    .toUpperCase()}`;
 }
 
-async function audit(companyId: string, userId: string, action: string, details: string) {
-  await (db as any).auditLog.create({
-    data: { companyId, userId, action, module: "STAFF_FLOAT_PORTAL", details },
-  });
+function normalizeReference(
+  value: unknown,
+  prefix: string,
+): string {
+  const supplied = cleanText(value)
+    .toUpperCase()
+    .replace(
+      /[^A-Z0-9/_-]+/g,
+      "-",
+    )
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 150);
+
+  return supplied ||
+    createReference(prefix);
 }
 
-async function availableBalance(companyId: string, staffId: string): Promise<number> {
-  const [floats, collections, deposits] = await Promise.all([
-    (db as any).floatTransaction.findMany({
-      where: { companyId, OR: [{ fromUserId: staffId }, { toUserId: staffId }] },
-    }),
-    (db as any).staffCollection.findMany({ where: { companyId, staffId } }),
-    (db as any).bankDeposit.findMany({ where: { companyId, staffId } }),
-  ]);
-  const n = (value: unknown) => {
-    const parsed = Number(value ?? 0);
-    return Number.isFinite(parsed) ? parsed : 0;
-  };
-  const received = floats
-    .filter((item: any) => item.transactionType === "ACCOUNTANT_TO_STAFF" && item.toUserId === staffId && ["CONFIRMED", "APPROVED", "RETURNED", "DEPOSITED"].includes(item.status))
-    .reduce((sum: number, item: any) => sum + n(item.amount), 0);
-  const issued = floats
-    .filter((item: any) => item.transactionType === "STAFF_TO_BROKER" && item.fromUserId === staffId && item.status !== "REJECTED")
-    .reduce((sum: number, item: any) => sum + n(item.amount), 0);
-  const brokerReturns = floats
-    .filter((item: any) => item.transactionType === "BROKER_RETURN_TO_STAFF" && item.toUserId === staffId && !["PENDING", "ISSUED", "REJECTED"].includes(item.status))
-    .reduce((sum: number, item: any) => sum + n(item.returnedAmount ?? item.amount), 0);
-  const collectionCash = collections.filter((item: any) => item.status !== "REJECTED").reduce((sum: number, item: any) => sum + n(item.amount), 0);
-  const returned = floats
-    .filter((item: any) => item.transactionType === "STAFF_RETURN_TO_ACCOUNTANT" && item.fromUserId === staffId && item.status !== "REJECTED")
-    .reduce((sum: number, item: any) => sum + n(item.returnedAmount ?? item.amount), 0);
-  const banked = deposits.filter((item: any) => item.status !== "DUPLICATE_DEPOSIT").reduce((sum: number, item: any) => sum + n(item.amount), 0);
-  return Math.max(0, received + brokerReturns + collectionCash - issued - returned - banked);
+function prismaCode(
+  error: unknown,
+): string {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error
+  ) {
+    return String(
+      (error as {
+        code?: unknown;
+      }).code ?? "",
+    );
+  }
+
+  return "";
+}
+
+function errorMessage(
+  error: unknown,
+): string {
+  return error instanceof Error
+    ? error.message
+    : String(
+        error ?? "Unknown error",
+      );
+}
+
+function serialize<T>(
+  value: T,
+): T {
+  return JSON.parse(
+    JSON.stringify(
+      value,
+      (_key, item) => {
+        if (
+          typeof item ===
+          "bigint"
+        ) {
+          return Number(item);
+        }
+
+        if (
+          item &&
+          typeof item ===
+            "object" &&
+          typeof item.toNumber ===
+            "function"
+        ) {
+          return item.toNumber();
+        }
+
+        return item;
+      },
+    ),
+  );
+}
+
+async function safeTask(
+  task: string,
+  warnings: WarningItem[],
+  operation: () => Promise<unknown>,
+) {
+  try {
+    await operation();
+  } catch (error) {
+    const message =
+      errorMessage(error)
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 500);
+
+    warnings.push({
+      task,
+      message,
+    });
+
+    console.warn(
+      `STAFF_OPTIONAL_${task.toUpperCase()}:`,
+      error,
+    );
+  }
+}
+
+async function uniqueReference(
+  model:
+    | "float"
+    | "collection",
+  companyId: string,
+  requested: unknown,
+  prefix: string,
+): Promise<string> {
+  const base =
+    normalizeReference(
+      requested,
+      prefix,
+    );
+
+  for (
+    let attempt = 0;
+    attempt < 30;
+    attempt += 1
+  ) {
+    const candidate =
+      attempt === 0
+        ? base
+        : `${base.slice(
+            0,
+            140,
+          )}-${attempt + 1}`;
+
+    const exists =
+      model === "float"
+        ? await prisma.floatTransaction.findFirst(
+            {
+              where: {
+                companyId,
+                referenceNo:
+                  candidate,
+              },
+              select: {
+                id: true,
+              },
+            },
+          )
+        : await prisma.staffCollection.findFirst(
+            {
+              where: {
+                companyId,
+                referenceNo:
+                  candidate,
+              },
+              select: {
+                id: true,
+              },
+            },
+          );
+
+    if (!exists) {
+      return candidate;
+    }
+  }
+
+  return createReference(prefix);
+}
+
+async function requireBroker(
+  companyId: string,
+  id: string,
+) {
+  const broker =
+    await prisma.brokerCustomer.findFirst(
+      {
+        where: {
+          id,
+          companyId,
+          status: "ACTIVE",
+        },
+      },
+    );
+
+  if (!broker) {
+    throw new Error(
+      "BROKER_NOT_FOUND",
+    );
+  }
+
+  return broker;
+}
+
+async function requireCustomer(
+  companyId: string,
+  id: string,
+) {
+  const customer =
+    await prisma.customer.findFirst({
+      where: {
+        id,
+        companyId,
+        status: "ACTIVE",
+      },
+    });
+
+  if (!customer) {
+    throw new Error(
+      "CUSTOMER_NOT_FOUND",
+    );
+  }
+
+  return customer;
+}
+
+async function requireAccountant(
+  companyId: string,
+  id: string,
+) {
+  const accountant =
+    await prisma.user.findFirst({
+      where: {
+        id,
+        companyId,
+        role: "ACCOUNTANT",
+        status: "ACTIVE",
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+  if (!accountant) {
+    throw new Error(
+      "ACCOUNTANT_NOT_FOUND",
+    );
+  }
+
+  return accountant;
 }
 
 async function requireOwnedFileUrl(
   companyId: string,
-  userId: string,
+  staffId: string,
   url: string | null,
   allowedKinds: string[],
 ) {
-  if (!url) return null;
-  const match = url.match(/^\/api\/staff\/files\/([^/?#]+)$/);
-  if (!match) throw new Error("FILE_NOT_OWNED");
-  const file = await (db as any).staffFile.findFirst({
-    where: {
-      id: match[1],
-      companyId,
-      ownerUserId: userId,
-      kind: { in: allowedKinds },
-    },
-    select: { id: true },
-  });
-  if (!file) throw new Error("FILE_NOT_OWNED");
+  if (!url) {
+    return null;
+  }
+
+  const match =
+    url.match(
+      /^\/api\/staff\/files\/([^/?#]+)$/,
+    );
+
+  if (!match) {
+    throw new Error(
+      "FILE_NOT_OWNED",
+    );
+  }
+
+  const file =
+    await prisma.staffFile.findFirst({
+      where: {
+        id: match[1],
+        companyId,
+        ownerUserId:
+          staffId,
+        kind: {
+          in: allowedKinds as any,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+  if (!file) {
+    throw new Error(
+      "FILE_NOT_OWNED",
+    );
+  }
+
   return url;
 }
 
-function apiError(error: unknown) {
-  const message = error instanceof Error ? error.message : "UNKNOWN_ERROR";
-  const known: Record<string, [number, string]> = {
-    UNAUTHENTICATED: [401, "Please sign in."],
-    FORBIDDEN: [403, "Staff access is required."],
-    STAFF_COMPANY_REQUIRED: [403, "Your staff account is not attached to a company."],
-    INVALID_JSON: [400, "The request body must be valid JSON."],
-    INVALID_AMOUNT: [400, "Enter an amount greater than zero."],
-    INVALID_NUMBER: [400, "One of the numeric values is invalid."],
-    INVALID_DATE: [400, "Enter a valid date."],
-    RECORD_NOT_FOUND: [404, "The selected record was not found."],
-    BROKER_NOT_FOUND: [404, "The selected active broker was not found in your company."],
-    BROKER_NOT_ASSIGNED: [403, "This broker is not assigned to your staff account."],
-    CUSTOMER_NOT_ASSIGNED: [403, "This customer is not assigned to your staff account."],
-    ACCOUNTANT_NOT_FOUND: [404, "The selected active accountant was not found in your company."],
-    CUSTOMER_NOT_FOUND: [404, "The selected customer was not found in your company."],
-    INSUFFICIENT_FLOAT: [409, "The amount exceeds your available float balance."],
-    TRANSACTION_LOCKED: [409, "Approved, verified, rejected, or deposited records cannot be edited."],
-    RECEIPT_REQUIRED: [400, "Upload the required proof or receipt before submitting."],
-    FLOAT_NOT_ASSIGNED: [403, "This float was not assigned to your staff account."],
-    FLOAT_NOT_RECEIVABLE: [409, "Only an issued float can be confirmed as received."],
-    FINANCIAL_HOLD: [409, "A bank mismatch is unresolved. You cannot submit another bank deposit."],
-    DUPLICATE_REFERENCE: [409, "This transaction reference already exists."],
-    INVALID_EXPENSE_CATEGORY: [400, "Choose a valid expense category."],
-    FILE_NOT_OWNED: [403, "Use a file uploaded from your own staff account."],
-    INVALID_USERNAME: [400, "Username must be 3–40 characters and use only letters, numbers, dot, underscore, or hyphen."],
-    USERNAME_TAKEN: [409, "That username is already used by another account."],
-    CURRENT_PASSWORD_INCORRECT: [403, "The current password is incorrect."],
-    WEAK_PASSWORD: [400, "The new password must contain at least 8 characters, uppercase, lowercase, and a number."],
-    PASSWORD_CONFIRMATION_MISMATCH: [400, "The new password confirmation does not match."],
-    PASSWORD_REUSE: [400, "Choose a new password that is different from the current password."],
-  };
-  if (message.startsWith("REQUIRED:")) {
-    return NextResponse.json({ success: false, message: `${message.split(":")[1]} is required.` }, { status: 400 });
-  }
-  if (known[message]) {
-    return NextResponse.json({ success: false, message: known[message][1] }, { status: known[message][0] });
-  }
-  const code = (error as any)?.code;
-  if (code === "P2002") {
-    return NextResponse.json({ success: false, message: "This reference already exists." }, { status: 409 });
-  }
-  if (code === "P2021" || code === "P2022") {
-    return NextResponse.json(
-      { success: false, message: "The database is not synchronized. Run npx prisma db push and npx prisma generate.", error: `${code}: ${message}` },
-      { status: 500 },
-    );
-  }
-  console.error("[STAFF_ACTION]", error);
-  return NextResponse.json({ success: false, message: `The staff transaction failed: ${message}` }, { status: 500 });
+async function availableBalance(
+  companyId: string,
+  staffId: string,
+): Promise<number> {
+  const [
+    floats,
+    collections,
+    deposits,
+  ] = await Promise.all([
+    prisma.floatTransaction.findMany({
+      where: {
+        companyId,
+        OR: [
+          {
+            fromUserId:
+              staffId,
+          },
+          {
+            toUserId:
+              staffId,
+          },
+        ],
+      },
+    }),
+
+    prisma.staffCollection.findMany({
+      where: {
+        companyId,
+        staffId,
+      },
+    }),
+
+    prisma.bankDeposit.findMany({
+      where: {
+        companyId,
+        staffId,
+      },
+    }),
+  ]);
+
+  const received =
+    floats
+      .filter(
+        (item) =>
+          item.transactionType ===
+            "ACCOUNTANT_TO_STAFF" &&
+          item.toUserId ===
+            staffId &&
+          [
+            "CONFIRMED",
+            "APPROVED",
+            "RETURNED",
+            "DEPOSITED",
+          ].includes(
+            item.status,
+          ),
+      )
+      .reduce(
+        (sum, item) =>
+          sum +
+          numberValue(
+            item.amount,
+          ),
+        0,
+      );
+
+  const issued =
+    floats
+      .filter(
+        (item) =>
+          item.transactionType ===
+            "STAFF_TO_BROKER" &&
+          item.fromUserId ===
+            staffId &&
+          item.status !==
+            "REJECTED",
+      )
+      .reduce(
+        (sum, item) =>
+          sum +
+          numberValue(
+            item.amount,
+          ),
+        0,
+      );
+
+  const collectionCash =
+    collections
+      .filter(
+        (item) =>
+          item.status !==
+            "REJECTED",
+      )
+      .reduce(
+        (sum, item) =>
+          sum +
+          numberValue(
+            item.amount,
+          ),
+        0,
+      );
+
+  const returned =
+    floats
+      .filter(
+        (item) =>
+          item.transactionType ===
+            "STAFF_RETURN_TO_ACCOUNTANT" &&
+          item.fromUserId ===
+            staffId &&
+          item.status !==
+            "REJECTED",
+      )
+      .reduce(
+        (sum, item) =>
+          sum +
+          numberValue(
+            item.returnedAmount ??
+              item.amount,
+          ),
+        0,
+      );
+
+  const banked =
+    deposits
+      .filter(
+        (item) =>
+          item.status !==
+            "DUPLICATE_DEPOSIT",
+      )
+      .reduce(
+        (sum, item) =>
+          sum +
+          numberValue(
+            item.amount,
+          ),
+        0,
+      );
+
+  return Math.max(
+    0,
+    received +
+      collectionCash -
+      issued -
+      returned -
+      banked,
+  );
 }
 
-export async function POST(request: Request) {
+async function followUps(
+  session: StaffSession,
+  input: {
+    attendanceAction?:
+      | "FLOAT_RECEIVED"
+      | "FLOAT_ISSUED"
+      | "COLLECTION_RETURNED"
+      | "MONEY_RETURNED";
+
+    notice?: {
+      title: string;
+      message: string;
+      type:
+        | "INFO"
+        | "SUCCESS"
+        | "WARNING"
+        | "ERROR";
+    };
+
+    audit: {
+      action: string;
+      details: string;
+    };
+  },
+) {
+  const warnings:
+    WarningItem[] = [];
+
+  if (input.attendanceAction) {
+    await safeTask(
+      "attendance",
+      warnings,
+      () =>
+        markOperationalAttendance({
+          companyId:
+            session.companyId,
+          userId:
+            session.id,
+          action:
+            input.attendanceAction!,
+        }),
+    );
+  }
+
+  if (input.notice) {
+    await safeTask(
+      "notifications",
+      warnings,
+      () =>
+        sendNoticeToRoles({
+          companyId:
+            session.companyId,
+          roles: [
+            "ACCOUNTANT",
+            "COMPANY_ADMIN",
+          ],
+          title:
+            input.notice!.title,
+          message:
+            input.notice!.message,
+          type:
+            input.notice!.type,
+        }),
+    );
+  }
+
+  await safeTask(
+    "audit",
+    warnings,
+    () =>
+      prisma.auditLog.create({
+        data: {
+          companyId:
+            session.companyId,
+          userId:
+            session.id,
+          action:
+            input.audit.action,
+          module:
+            "STAFF_PORTAL",
+          details:
+            input.audit.details,
+        },
+      }),
+  );
+
+  return warnings;
+}
+
+function actionError(
+  error: unknown,
+) {
+  const code =
+    prismaCode(error);
+
+  const details =
+    errorMessage(error)
+      .replace(/\s+/g, " ")
+      .trim();
+
+  if (
+    details.startsWith(
+      "REQUIRED:",
+    )
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: `${
+          details
+            .split(":")
+            .slice(1)
+            .join(":")
+        } is required.`,
+      },
+      { status: 400 },
+    );
+  }
+
+  const known: Record<
+    string,
+    [number, string]
+  > = {
+    INVALID_AMOUNT: [
+      400,
+      "Enter an amount greater than zero.",
+    ],
+    INVALID_NUMBER: [
+      400,
+      "One of the numeric values is invalid.",
+    ],
+    INVALID_DATE: [
+      400,
+      "Enter a valid date.",
+    ],
+    BROKER_NOT_FOUND: [
+      404,
+      "The selected active broker was not found in your company.",
+    ],
+    CUSTOMER_NOT_FOUND: [
+      404,
+      "The selected active customer was not found in your company.",
+    ],
+    ACCOUNTANT_NOT_FOUND: [
+      404,
+      "The selected active accountant was not found in your company.",
+    ],
+    TRANSACTION_NOT_FOUND: [
+      404,
+      "The selected staff transaction was not found.",
+    ],
+    DEPOSIT_NOT_FOUND: [
+      404,
+      "The selected staff deposit was not found.",
+    ],
+    INSUFFICIENT_FLOAT: [
+      409,
+      "The amount exceeds your available float balance.",
+    ],
+    FINANCIAL_HOLD: [
+      409,
+      "A financial hold must be resolved before another bank deposit is submitted.",
+    ],
+    FILE_NOT_OWNED: [
+      403,
+      "Use a file uploaded from your own staff account.",
+    ],
+    REQUIRED_ENTITY: [
+      400,
+      "Choose a broker or a customer.",
+    ],
+    UNSUPPORTED_ACTION: [
+      400,
+      "This staff operation is not supported.",
+    ],
+  };
+
+  if (known[details]) {
+    const [
+      status,
+      message,
+    ] = known[details];
+
+    return NextResponse.json(
+      {
+        success: false,
+        message,
+        code: details,
+      },
+      { status },
+    );
+  }
+
+  if (code === "P2002") {
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "A transaction with the same reference already exists. Leave the reference blank or submit again.",
+        code,
+        details,
+      },
+      { status: 409 },
+    );
+  }
+
+  if (
+    code === "P2021" ||
+    code === "P2022"
+  ) {
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "The staff database is not synchronized with Prisma.",
+        code,
+        details:
+          "Run npx prisma db push, regenerate Prisma Client, remove .next and restart.",
+        originalError:
+          details,
+      },
+      { status: 503 },
+    );
+  }
+
+  console.error(
+    "STAFF_ACTION_FATAL:",
+    error,
+  );
+
+  return NextResponse.json(
+    {
+      success: false,
+      message:
+        "The staff operation could not be completed.",
+      code:
+        code ||
+        "STAFF_ACTION_FAILED",
+      details,
+    },
+    { status: 500 },
+  );
+}
+
+export async function GET() {
   try {
-    const session = await requireStaff();
-    let body: Record<string, any>;
-    try {
-      body = await request.json();
-    } catch {
-      throw new Error("INVALID_JSON");
-    }
-    const action = required(body.action, "action").toUpperCase();
-    const companyId = session.companyId;
+    const session =
+      await requireStaff();
 
-    switch (action) {
-      case "RECEIVE_FLOAT":
-      case "CONFIRM_FLOAT_RECEIVED": {
-        const transactionId = required(body.transactionId, "transactionId");
-        const transaction = await (db as any).floatTransaction.findFirst({
-          where: { id: transactionId, companyId },
-          include: { fromUser: true },
-        });
-        if (!transaction) throw new Error("RECORD_NOT_FOUND");
-        if (transaction.toUserId !== session.id || transaction.transactionType !== "ACCOUNTANT_TO_STAFF") throw new Error("FLOAT_NOT_ASSIGNED");
-        if (transaction.status !== "ISSUED") throw new Error("FLOAT_NOT_RECEIVABLE");
-
-        await (db as any).floatTransaction.update({
-          where: { id: transaction.id },
-          data: { status: "CONFIRMED", confirmedAt: new Date() },
-        });
-        await markOperationalAttendance({ companyId, userId: session.id, action: "FLOAT_RECEIVED" });
-        if (transaction.fromUserId) {
-          await sendNotice({
-            companyId,
-            userId: transaction.fromUserId,
-            title: "Float confirmed",
-            message: `${session.name} confirmed receipt of TZS ${Number(transaction.amount).toLocaleString()}.`,
-            type: "SUCCESS",
-          });
-        }
-        await audit(companyId, session.id, "CONFIRM_FLOAT_RECEIVED", `Confirmed float ${transaction.id}`);
-        return NextResponse.json({ success: true, message: "Float received and added to your available balance." });
-      }
-
-      case "ISSUE_FLOAT": {
-        const brokerId = required(body.brokerId, "brokerId");
-        const amount = positiveAmount(body.amount);
-        const purpose = required(body.purpose, "purpose");
-        const broker = await requireAssignedBroker(session, brokerId);
-        if (amount > (await availableBalance(companyId, session.id))) throw new Error("INSUFFICIENT_FLOAT");
-        const receiptUrl = await requireOwnedFileUrl(
-          companyId, session.id, text(body.receiptUrl) || null, ["RECEIPT", "PROOF", "OTHER"],
-        );
-
-        const transaction = await (db as any).floatTransaction.create({
-          data: {
-            companyId,
-            fromUserId: session.id,
-            toUserId: broker.id,
-            transactionType: "STAFF_TO_BROKER",
-            referenceNo: text(body.referenceNo) || reference("SFB"),
-            amount,
-            purpose,
-            notes: text(body.notes) || null,
-            receiptUrl,
-            status: "ISSUED",
-            issuedAt: new Date(),
-          },
-        });
-        await markOperationalAttendance({ companyId, userId: session.id, action: "FLOAT_ISSUED" });
-        await sendNotice({
-          companyId,
-          userId: broker.id,
-          title: "Float issued",
-          message: `${session.name} issued TZS ${amount.toLocaleString()} for ${purpose}.`,
-          type: "INFO",
-        });
-        await audit(companyId, session.id, "ISSUE_FLOAT_TO_BROKER", `Issued ${amount} to broker ${broker.id}`);
-        return NextResponse.json({ success: true, message: "Float issued to the broker successfully.", transaction });
-      }
-
-      case "RECORD_COLLECTION": {
-        const brokerId = required(body.brokerId, "brokerId");
-        const amount = positiveAmount(body.amount);
-        const collectionDate = dateAtNoon(required(body.collectionDate, "collectionDate"));
-        const broker = await requireAssignedBroker(session, brokerId);
-        const receiptUrl = await requireOwnedFileUrl(
-          companyId, session.id, text(body.receiptUrl) || null, ["RECEIPT", "PROOF", "OTHER"],
-        );
-
-        const collection = await (db as any).staffCollection.create({
-          data: {
-            companyId,
-            staffId: session.id,
-            brokerId,
-            referenceNo: text(body.referenceNo) || reference("COL"),
-            amount,
-            collectionDate,
-            description: text(body.description) || null,
-            receiptUrl,
-            status: "PENDING",
-          },
-        });
-        await markOperationalAttendance({ companyId, userId: session.id, action: "COLLECTION_RETURNED" });
-        await sendNoticeToRoles({
-          companyId,
-          roles: ["ACCOUNTANT", "COMPANY_ADMIN"],
-          title: "Collection awaiting verification",
-          message: `${session.name} recorded TZS ${amount.toLocaleString()} from ${broker.name}.`,
-          type: "INFO",
-        });
-        await audit(companyId, session.id, "RECORD_COLLECTION", `Recorded collection ${collection.id}`);
-        return NextResponse.json({ success: true, message: "Broker collection recorded and sent for verification.", collection });
-      }
-
-      case "RETURN_TO_ACCOUNTANT":
-      case "RETURN_MONEY": {
-        const accountantId = required(body.accountantId, "accountantId");
-        const amount = positiveAmount(body.amount);
-        const receiptUrl = await requireOwnedFileUrl(
-          companyId, session.id, required(body.receiptUrl, "receiptUrl"), ["RECEIPT", "PROOF", "OTHER"],
-        );
-        const accountant = await (db as any).user.findFirst({ where: { id: accountantId, companyId, role: "ACCOUNTANT", status: "ACTIVE" } });
-        if (!accountant) throw new Error("ACCOUNTANT_NOT_FOUND");
-        if (amount > (await availableBalance(companyId, session.id))) throw new Error("INSUFFICIENT_FLOAT");
-        const transaction = await (db as any).floatTransaction.create({
-          data: {
-            companyId,
-            fromUserId: session.id,
-            toUserId: accountant.id,
-            transactionType: "STAFF_RETURN_TO_ACCOUNTANT",
-            referenceNo: text(body.referenceNo) || reference("SRA"),
-            amount,
-            returnedAmount: amount,
-            purpose: text(body.purpose) || "Afternoon float and collection return",
-            notes: text(body.notes) || null,
-            receiptUrl,
-            status: "RETURNED",
-            returnedAt: new Date(),
-          },
-        });
-        await markOperationalAttendance({ companyId, userId: session.id, action: "COLLECTION_RETURNED" });
-        await sendNotice({
-          companyId,
-          userId: accountant.id,
-          title: "Staff return awaiting verification",
-          message: `${session.name} returned TZS ${amount.toLocaleString()} with proof of payment.`,
-          type: "INFO",
-        });
-        await audit(companyId, session.id, "RETURN_TO_ACCOUNTANT", `Returned ${amount} to accountant ${accountant.id}`);
-        return NextResponse.json({ success: true, message: "Money returned to the accountant and proof recorded.", transaction });
-      }
-
-      case "DEPOSIT_TO_BANK": {
-        const unresolved = await (db as any).bankDeposit.findFirst({ where: { companyId, staffId: session.id, holdActive: true } });
-        if (unresolved) throw new Error("FINANCIAL_HOLD");
-        const amount = positiveAmount(body.amount);
-        if (amount > (await availableBalance(companyId, session.id))) throw new Error("INSUFFICIENT_FLOAT");
-        const referenceNo = required(body.referenceNo, "referenceNo");
-        const bankAccount = required(body.bankAccount, "bankAccount");
-        const depositDate = dateAtNoon(required(body.depositDate, "depositDate"));
-        const receiptUrl = await requireOwnedFileUrl(
-          companyId, session.id, text(body.receiptUrl) || null, ["BANK", "RECEIPT", "PROOF", "OTHER"],
-        );
-        const depositSlipUrl = await requireOwnedFileUrl(
-          companyId, session.id, text(body.depositSlipUrl) || null, ["BANK", "RECEIPT", "PROOF", "OTHER"],
-        );
-
-        const duplicate = await (db as any).bankDeposit.findFirst({ where: { companyId, referenceNo } });
-        const deposit = await (db as any).bankDeposit.create({
-          data: {
-            companyId,
-            staffId: session.id,
-            amount,
-            referenceNo,
-            bankAccount,
-            depositDate,
-            depositSlipUrl: depositSlipUrl || receiptUrl || null,
-            bankReceiptUrl: receiptUrl || null,
-            status: duplicate ? "DUPLICATE_DEPOSIT" : receiptUrl ? "PENDING" : "MISSING_RECEIPT",
-            holdActive: Boolean(duplicate) || !receiptUrl,
-            mismatchReason: duplicate ? "Duplicate reference number" : receiptUrl ? null : "Bank receipt is missing",
-          },
-        });
-        await markOperationalAttendance({ companyId, userId: session.id, action: "COLLECTION_RETURNED" });
-        await sendNoticeToRoles({
-          companyId,
-          roles: ["ACCOUNTANT", "COMPANY_ADMIN"],
-          title: duplicate ? "Duplicate bank deposit" : "Bank deposit submitted",
-          message: `${session.name} submitted ${referenceNo} for TZS ${amount.toLocaleString()}.`,
-          type: duplicate ? "WARNING" : "INFO",
-        });
-        if (duplicate || !receiptUrl) await verifyBankDeposit(deposit.id, null);
-        await audit(companyId, session.id, "DEPOSIT_TO_BANK", `Submitted bank deposit ${deposit.id}`);
-        return NextResponse.json({
-          success: true,
-          message: duplicate
-            ? "Deposit saved with a financial hold because the reference is duplicated."
-            : receiptUrl
-              ? "Bank deposit submitted for statement verification."
-              : "Deposit saved, but a financial hold was applied until a receipt is uploaded.",
-          deposit,
-        });
-      }
-
-      case "UPLOAD_BANK_RECEIPT":
-      case "UPLOAD_PROOF_OF_PAYMENT": {
-        const depositId = required(body.depositId, "depositId");
-        const receiptUrl = await requireOwnedFileUrl(
-          companyId, session.id, required(body.receiptUrl, "receiptUrl"), ["BANK", "RECEIPT", "PROOF", "OTHER"],
-        );
-        const deposit = await (db as any).bankDeposit.findFirst({ where: { id: depositId, companyId, staffId: session.id } });
-        if (!deposit) throw new Error("RECORD_NOT_FOUND");
-        if (lockedStatus(deposit.status, "DEPOSIT")) throw new Error("TRANSACTION_LOCKED");
-        await (db as any).bankDeposit.update({
-          where: { id: deposit.id },
-          data: { bankReceiptUrl: receiptUrl, depositSlipUrl: deposit.depositSlipUrl || receiptUrl, status: "PENDING", mismatchReason: null },
-        });
-        await verifyBankDeposit(deposit.id, null);
-        await audit(companyId, session.id, "UPLOAD_BANK_RECEIPT", `Uploaded receipt for ${deposit.id}`);
-        return NextResponse.json({ success: true, message: "Bank receipt uploaded and comparison refreshed." });
-      }
-
-      case "SUBMIT_EXPENSE": {
-        const categories = new Set(["FUEL", "TRANSPORT", "AIRTIME", "ACCOMMODATION", "REPAIRS", "STATIONERY", "MEALS", "OFFICE_EXPENSES", "EMERGENCY_EXPENSES"]);
-        const category = required(body.category, "category").toUpperCase();
-        if (!categories.has(category)) throw new Error("INVALID_EXPENSE_CATEGORY");
-        const amount = positiveAmount(body.amount);
-        const description = required(body.description, "description");
-        const expenseDate = dateAtNoon(required(body.expenseDate, "expenseDate"));
-        const receiptUrl = await requireOwnedFileUrl(
-          companyId, session.id, text(body.receiptUrl) || null, ["EXPENSE", "RECEIPT", "PROOF", "OTHER"],
-        );
-        const expense = await (db as any).expense.create({
-          data: {
-            companyId,
-            employeeId: session.id,
-            expenseDate,
-            category,
-            amount,
-            description,
-            receiptUrl,
-            status: "PENDING",
-          },
-        });
-        await sendNoticeToRoles({
-          companyId,
-          roles: ["ACCOUNTANT", "COMPANY_ADMIN"],
-          title: "Expense request submitted",
-          message: `${session.name} submitted ${category.replaceAll("_", " ")} for TZS ${amount.toLocaleString()}.`,
-          type: "INFO",
-        });
-        await audit(companyId, session.id, "SUBMIT_EXPENSE", `Submitted expense ${expense.id}`);
-        return NextResponse.json({ success: true, message: "Expense request submitted for approval.", expense });
-      }
-
-      case "RECORD_SERVICE_VISIT": {
-        const brokerId = text(body.brokerId) || null;
-        const customerId = text(body.customerId) || null;
-        if (!brokerId && !customerId) throw new Error("REQUIRED:broker or customer");
-        if (brokerId) {
-          await requireAssignedBroker(session, brokerId);
-        }
-        if (customerId) {
-          await requireAssignedCustomer(session, customerId);
-        }
-        const activity = await (db as any).serviceActivity.create({
-          data: {
-            companyId,
-            staffId: session.id,
-            brokerId,
-            customerId,
-            serviceType: required(body.serviceType, "serviceType"),
-            amount: optionalNumber(body.amount) || 0,
-            status: "COMPLETED",
-            servedAt: new Date(),
-            latitude: optionalNumber(body.latitude),
-            longitude: optionalNumber(body.longitude),
-            locationName: text(body.locationName) || null,
-            notes: text(body.notes) || null,
-          },
-        });
-        await audit(companyId, session.id, "RECORD_SERVICE_VISIT", `Recorded visit ${activity.id}`);
-        return NextResponse.json({ success: true, message: "Broker or customer visit recorded.", activity });
-      }
-
-      case "MARK_NOTIFICATION_READ": {
-        const notificationId = required(body.notificationId, "notificationId");
-        const notification = await (db as any).notification.findFirst({ where: { id: notificationId, companyId, userId: session.id } });
-        if (!notification) throw new Error("RECORD_NOT_FOUND");
-        await (db as any).notification.update({ where: { id: notification.id }, data: { isRead: true } });
-        return NextResponse.json({ success: true, message: "Notification marked as read." });
-      }
-
-      case "MARK_ALL_NOTIFICATIONS_READ": {
-        await (db as any).notification.updateMany({ where: { companyId, userId: session.id, isRead: false }, data: { isRead: true } });
-        return NextResponse.json({ success: true, message: "All notifications marked as read." });
-      }
-
-      case "UPDATE_PROFILE":
-      case "UPDATE_PROFILE_IMAGE": {
-        const profileImageUrl = await requireOwnedFileUrl(
-          companyId,
-          session.id,
-          required(body.profileImageUrl, "profileImageUrl"),
-          ["PROFILE"],
-        );
-
-        const updated = await (db as any).user.update({
-          where: { id: session.id },
-          data: { profileImageUrl },
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            email: true,
-            profileImageUrl: true,
-            updatedAt: true,
-          },
-        });
-
-        await audit(
-          companyId,
-          session.id,
-          "UPDATE_PROFILE_IMAGE",
-          "Updated compressed staff profile image",
-        );
-
-        return NextResponse.json({
-          success: true,
-          message: "Compressed profile image saved to your account.",
-          user: updated,
-        });
-      }
-
-      case "UPDATE_USERNAME": {
-        const username = normalizedUsername(body.username);
-        const currentPassword = required(
-          body.currentPassword,
-          "currentPassword",
-        );
-
-        const currentUser = await (db as any).user.findFirst({
-          where: {
-            id: session.id,
-            companyId,
-            role: "STAFF",
-          },
-          select: {
-            id: true,
-            username: true,
-            passwordHash: true,
-          },
-        });
-
-        if (!currentUser) throw new Error("RECORD_NOT_FOUND");
-
-        const passwordCorrect = await compare(
-          currentPassword,
-          currentUser.passwordHash,
-        );
-
-        if (!passwordCorrect) {
-          throw new Error("CURRENT_PASSWORD_INCORRECT");
-        }
-
-        const duplicate = await (db as any).user.findFirst({
-          where: {
-            username,
-            id: { not: session.id },
-          },
-          select: { id: true },
-        });
-
-        if (duplicate) throw new Error("USERNAME_TAKEN");
-
-        const previousUsername = currentUser.username;
-        const updated = await (db as any).user.update({
-          where: { id: session.id },
-          data: {
-            username,
-            usernameChangedAt: new Date(),
-          },
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            email: true,
-            profileImageUrl: true,
-            usernameChangedAt: true,
-          },
-        });
-
-        await audit(
-          companyId,
-          session.id,
-          "UPDATE_STAFF_USERNAME",
-          `Changed username from ${previousUsername} to ${username}`,
-        );
-
-        return NextResponse.json({
-          success: true,
-          message: "Username updated successfully.",
-          user: updated,
-        });
-      }
-
-      case "CHANGE_PASSWORD": {
-        const currentPassword = required(
-          body.currentPassword,
-          "currentPassword",
-        );
-        const newPassword = strongPassword(body.newPassword);
-        const confirmPassword = required(
-          body.confirmPassword,
-          "confirmPassword",
-        );
-
-        if (newPassword !== confirmPassword) {
-          throw new Error("PASSWORD_CONFIRMATION_MISMATCH");
-        }
-
-        const currentUser = await (db as any).user.findFirst({
-          where: {
-            id: session.id,
-            companyId,
-            role: "STAFF",
-          },
-          select: { id: true, passwordHash: true },
-        });
-
-        if (!currentUser) throw new Error("RECORD_NOT_FOUND");
-
-        const passwordCorrect = await compare(
-          currentPassword,
-          currentUser.passwordHash,
-        );
-
-        if (!passwordCorrect) {
-          throw new Error("CURRENT_PASSWORD_INCORRECT");
-        }
-
-        if (await compare(newPassword, currentUser.passwordHash)) {
-          throw new Error("PASSWORD_REUSE");
-        }
-
-        const passwordHash = await hash(newPassword, 12);
-
-        await (db as any).user.update({
-          where: { id: session.id },
-          data: {
-            passwordHash,
-            passwordChangedAt: new Date(),
-          },
-        });
-
-        await audit(
-          companyId,
-          session.id,
-          "CHANGE_STAFF_PASSWORD",
-          "Changed staff account password",
-        );
-
-        return NextResponse.json({
-          success: true,
-          message: "Password changed successfully. Use the new password on your next sign-in.",
-        });
-      }
-
-      default:
-        return NextResponse.json({ success: false, message: `Unsupported staff action: ${action}` }, { status: 400 });
-    }
+    return NextResponse.json({
+      success: true,
+      message:
+        "The unified Staff Actions route is active.",
+      staffId: session.id,
+      companyId:
+        session.companyId,
+      methods: [
+        "GET",
+        "POST",
+      ],
+      actions: ACTIONS,
+    });
   } catch (error) {
-    return apiError(error);
+    return actionError(error);
+  }
+}
+
+export async function POST(
+  request: Request,
+) {
+  try {
+    const current =
+      await requireStaff();
+
+    const session:
+      StaffSession = {
+      id: String(current.id),
+      name: String(
+        current.name ||
+          "Staff officer",
+      ),
+      companyId: String(
+        current.companyId,
+      ),
+    };
+
+    let body: Record<
+      string,
+      unknown
+    >;
+
+    try {
+      body =
+        (await request.json()) as Record<
+          string,
+          unknown
+        >;
+    } catch {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "The request body must contain valid JSON.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const action =
+      requiredText(
+        body.action,
+        "action",
+      ).toUpperCase();
+
+    if (
+      action ===
+      "CONFIRM_FLOAT_RECEIVED"
+    ) {
+      const transactionId =
+        requiredText(
+          body.transactionId,
+          "transactionId",
+        );
+
+      const existing =
+        await prisma.floatTransaction.findFirst(
+          {
+            where: {
+              id: transactionId,
+              companyId:
+                session.companyId,
+              toUserId:
+                session.id,
+              transactionType:
+                "ACCOUNTANT_TO_STAFF",
+            },
+          },
+        );
+
+      if (!existing) {
+        throw new Error(
+          "TRANSACTION_NOT_FOUND",
+        );
+      }
+
+      if (
+        ![
+          "PENDING",
+          "ISSUED",
+        ].includes(
+          existing.status,
+        )
+      ) {
+        return NextResponse.json({
+          success: true,
+          message:
+            "The float was already confirmed or locked.",
+          transaction:
+            serialize(existing),
+        });
+      }
+
+      const transaction =
+        await prisma.floatTransaction.update(
+          {
+            where: {
+              id:
+                existing.id,
+            },
+            data: {
+              status:
+                "CONFIRMED",
+              confirmedAt:
+                new Date(),
+            },
+            include: {
+              fromUser: true,
+              toUser: true,
+            },
+          },
+        );
+
+      const warnings =
+        await followUps(
+          session,
+          {
+            attendanceAction:
+              "FLOAT_RECEIVED",
+            audit: {
+              action:
+                "CONFIRM_FLOAT_RECEIVED",
+              details:
+                `Confirmed float ${transaction.id}.`,
+            },
+          },
+        );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "Morning float confirmed successfully.",
+        transaction:
+          serialize(transaction),
+        warnings,
+      });
+    }
+
+    if (
+      action ===
+      "ISSUE_FLOAT"
+    ) {
+      const broker =
+        await requireBroker(
+          session.companyId,
+          requiredText(
+            body.brokerCustomerId ??
+              body.brokerId,
+            "brokerId",
+          ),
+        );
+
+      const amount =
+        positiveAmount(
+          body.amount,
+        );
+
+      if (
+        amount >
+        (await availableBalance(
+          session.companyId,
+          session.id,
+        ))
+      ) {
+        throw new Error(
+          "INSUFFICIENT_FLOAT",
+        );
+      }
+
+      const receiptUrl =
+        await requireOwnedFileUrl(
+          session.companyId,
+          session.id,
+          cleanText(
+            body.receiptUrl,
+          ) || null,
+          [
+            "RECEIPT",
+            "PROOF",
+            "OTHER",
+          ],
+        );
+
+      let referenceNo =
+        await uniqueReference(
+          "float",
+          session.companyId,
+          body.referenceNo,
+          "SFB",
+        );
+
+      let transaction:
+        any = null;
+
+      for (
+        let attempt = 0;
+        attempt < 5;
+        attempt += 1
+      ) {
+        try {
+          transaction =
+            await prisma.floatTransaction.create(
+              {
+                data: {
+                  companyId:
+                    session.companyId,
+                  fromUserId:
+                    session.id,
+                  toUserId: null,
+                  approvedById:
+                    null,
+                  brokerCustomerId:
+                    broker.id,
+                  transactionType:
+                    "STAFF_TO_BROKER",
+                  referenceNo,
+                  amount,
+                  purpose:
+                    requiredText(
+                      body.purpose,
+                      "purpose",
+                    ),
+                  receiptUrl,
+                  notes:
+                    cleanText(
+                      body.notes,
+                    ) || null,
+                  status:
+                    "ISSUED",
+                  issuedAt:
+                    new Date(),
+                },
+                include: {
+                  brokerCustomer:
+                    true,
+                },
+              },
+            );
+
+          break;
+        } catch (error) {
+          if (
+            prismaCode(error) !==
+            "P2002"
+          ) {
+            throw error;
+          }
+
+          referenceNo =
+            createReference(
+              "SFB",
+            );
+        }
+      }
+
+      if (!transaction) {
+        throw Object.assign(
+          new Error(
+            "Could not generate a unique float reference.",
+          ),
+          {
+            code: "P2002",
+          },
+        );
+      }
+
+      const warnings =
+        await followUps(
+          session,
+          {
+            attendanceAction:
+              "FLOAT_ISSUED",
+            notice: {
+              title:
+                "Float issued to registered broker",
+              message:
+                `${session.name} issued TZS ${amount.toLocaleString()} to ${broker.name}.`,
+              type: "INFO",
+            },
+            audit: {
+              action:
+                "ISSUE_FLOAT_TO_BROKER",
+              details:
+                `Issued ${amount} to BrokerCustomer ${broker.id} using ${referenceNo}.`,
+            },
+          },
+        );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          `Float issued successfully with reference ${referenceNo}.`,
+        transaction:
+          serialize(transaction),
+        warnings,
+      });
+    }
+
+    if (
+      action ===
+      "RECORD_COLLECTION"
+    ) {
+      const broker =
+        await requireBroker(
+          session.companyId,
+          requiredText(
+            body.brokerCustomerId ??
+              body.brokerId,
+            "brokerId",
+          ),
+        );
+
+      const amount =
+        positiveAmount(
+          body.amount,
+        );
+
+      const receiptUrl =
+        await requireOwnedFileUrl(
+          session.companyId,
+          session.id,
+          cleanText(
+            body.receiptUrl,
+          ) || null,
+          [
+            "RECEIPT",
+            "PROOF",
+            "OTHER",
+          ],
+        );
+
+      let referenceNo =
+        await uniqueReference(
+          "collection",
+          session.companyId,
+          body.referenceNo,
+          "COL",
+        );
+
+      let collection:
+        any = null;
+
+      for (
+        let attempt = 0;
+        attempt < 5;
+        attempt += 1
+      ) {
+        try {
+          collection =
+            await prisma.staffCollection.create(
+              {
+                data: {
+                  companyId:
+                    session.companyId,
+                  staffId:
+                    session.id,
+                  brokerId: null,
+                  brokerCustomerId:
+                    broker.id,
+                  reviewedById:
+                    null,
+                  referenceNo,
+                  amount,
+                  collectionDate:
+                    dateAtLocalNoon(
+                      body.collectionDate,
+                    ),
+                  description:
+                    cleanText(
+                      body.description,
+                    ) || null,
+                  receiptUrl,
+                  status:
+                    "PENDING",
+                },
+                include: {
+                  brokerCustomer:
+                    true,
+                },
+              },
+            );
+
+          break;
+        } catch (error) {
+          if (
+            prismaCode(error) !==
+            "P2002"
+          ) {
+            throw error;
+          }
+
+          referenceNo =
+            createReference(
+              "COL",
+            );
+        }
+      }
+
+      if (!collection) {
+        throw Object.assign(
+          new Error(
+            "Could not generate a unique collection reference.",
+          ),
+          {
+            code: "P2002",
+          },
+        );
+      }
+
+      const warnings =
+        await followUps(
+          session,
+          {
+            attendanceAction:
+              "COLLECTION_RETURNED",
+            notice: {
+              title:
+                "Broker collection awaiting verification",
+              message:
+                `${session.name} recorded TZS ${amount.toLocaleString()} from ${broker.name}.`,
+              type: "INFO",
+            },
+            audit: {
+              action:
+                "RECORD_BROKER_COLLECTION",
+              details:
+                `Recorded collection ${collection.id} using ${referenceNo}.`,
+            },
+          },
+        );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          `Collection saved successfully with reference ${referenceNo}.`,
+        collection:
+          serialize(collection),
+        warnings,
+      });
+    }
+
+    if (
+      action ===
+      "RETURN_MONEY"
+    ) {
+      const accountant =
+        await requireAccountant(
+          session.companyId,
+          requiredText(
+            body.accountantId,
+            "accountantId",
+          ),
+        );
+
+      const amount =
+        positiveAmount(
+          body.amount,
+        );
+
+      if (
+        amount >
+        (await availableBalance(
+          session.companyId,
+          session.id,
+        ))
+      ) {
+        throw new Error(
+          "INSUFFICIENT_FLOAT",
+        );
+      }
+
+      const receiptUrl =
+        await requireOwnedFileUrl(
+          session.companyId,
+          session.id,
+          cleanText(
+            body.receiptUrl,
+          ) || null,
+          [
+            "RECEIPT",
+            "PROOF",
+            "OTHER",
+          ],
+        );
+
+      let referenceNo =
+        await uniqueReference(
+          "float",
+          session.companyId,
+          body.referenceNo,
+          "SRA",
+        );
+
+      let transaction:
+        any = null;
+
+      for (
+        let attempt = 0;
+        attempt < 5;
+        attempt += 1
+      ) {
+        try {
+          transaction =
+            await prisma.floatTransaction.create(
+              {
+                data: {
+                  companyId:
+                    session.companyId,
+                  fromUserId:
+                    session.id,
+                  toUserId:
+                    accountant.id,
+                  approvedById:
+                    null,
+                  brokerCustomerId:
+                    null,
+                  transactionType:
+                    "STAFF_RETURN_TO_ACCOUNTANT",
+                  referenceNo,
+                  amount,
+                  returnedAmount:
+                    amount,
+                  purpose:
+                    cleanText(
+                      body.purpose,
+                    ) ||
+                    "Staff float and collection return",
+                  receiptUrl,
+                  notes:
+                    cleanText(
+                      body.notes,
+                    ) || null,
+                  status:
+                    "RETURNED",
+                  returnedAt:
+                    new Date(),
+                },
+                include: {
+                  fromUser: true,
+                  toUser: true,
+                },
+              },
+            );
+
+          break;
+        } catch (error) {
+          if (
+            prismaCode(error) !==
+            "P2002"
+          ) {
+            throw error;
+          }
+
+          referenceNo =
+            createReference(
+              "SRA",
+            );
+        }
+      }
+
+      if (!transaction) {
+        throw Object.assign(
+          new Error(
+            "Could not generate a unique return reference.",
+          ),
+          {
+            code: "P2002",
+          },
+        );
+      }
+
+      const warnings =
+        await followUps(
+          session,
+          {
+            attendanceAction:
+              "MONEY_RETURNED",
+            notice: {
+              title:
+                "Staff return awaiting verification",
+              message:
+                `${session.name} returned TZS ${amount.toLocaleString()} to ${accountant.name}.`,
+              type: "INFO",
+            },
+            audit: {
+              action:
+                "RETURN_MONEY_TO_ACCOUNTANT",
+              details:
+                `Returned ${amount} using ${referenceNo}.`,
+            },
+          },
+        );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          `Money returned successfully with reference ${referenceNo}.`,
+        transaction:
+          serialize(transaction),
+        warnings,
+      });
+    }
+
+    if (
+      action ===
+      "DEPOSIT_TO_BANK"
+    ) {
+      const hold =
+        await prisma.bankDeposit.findFirst(
+          {
+            where: {
+              companyId:
+                session.companyId,
+              staffId:
+                session.id,
+              holdActive:
+                true,
+            },
+            select: {
+              id: true,
+            },
+          },
+        );
+
+      if (hold) {
+        throw new Error(
+          "FINANCIAL_HOLD",
+        );
+      }
+
+      const amount =
+        positiveAmount(
+          body.amount,
+        );
+
+      if (
+        amount >
+        (await availableBalance(
+          session.companyId,
+          session.id,
+        ))
+      ) {
+        throw new Error(
+          "INSUFFICIENT_FLOAT",
+        );
+      }
+
+      const receiptUrl =
+        await requireOwnedFileUrl(
+          session.companyId,
+          session.id,
+          requiredText(
+            body.receiptUrl,
+            "receiptUrl",
+          ),
+          [
+            "BANK",
+            "RECEIPT",
+            "PROOF",
+          ],
+        );
+
+      const deposit =
+        await prisma.bankDeposit.create(
+          {
+            data: {
+              companyId:
+                session.companyId,
+              staffId:
+                session.id,
+              accountantId:
+                null,
+              amount,
+              referenceNo:
+                requiredText(
+                  body.referenceNo,
+                  "referenceNo",
+                ),
+              bankAccount:
+                requiredText(
+                  body.bankAccount,
+                  "bankAccount",
+                ),
+              depositDate:
+                dateAtLocalNoon(
+                  body.depositDate,
+                ),
+              depositSlipUrl:
+                receiptUrl,
+              bankReceiptUrl:
+                receiptUrl,
+              status:
+                "PENDING",
+              holdActive:
+                false,
+            },
+          },
+        );
+
+      const warnings =
+        await followUps(
+          session,
+          {
+            notice: {
+              title:
+                "Bank deposit awaiting verification",
+              message:
+                `${session.name} submitted TZS ${amount.toLocaleString()} for bank verification.`,
+              type: "INFO",
+            },
+            audit: {
+              action:
+                "DEPOSIT_TO_BANK",
+              details:
+                `Created bank deposit ${deposit.id}.`,
+            },
+          },
+        );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "Bank deposit submitted successfully.",
+        deposit:
+          serialize(deposit),
+        warnings,
+      });
+    }
+
+    if (
+      action ===
+      "UPLOAD_PROOF_OF_PAYMENT"
+    ) {
+      const depositId =
+        requiredText(
+          body.depositId,
+          "depositId",
+        );
+
+      const receiptUrl =
+        await requireOwnedFileUrl(
+          session.companyId,
+          session.id,
+          requiredText(
+            body.receiptUrl,
+            "receiptUrl",
+          ),
+          [
+            "BANK",
+            "RECEIPT",
+            "PROOF",
+          ],
+        );
+
+      const existing =
+        await prisma.bankDeposit.findFirst(
+          {
+            where: {
+              id: depositId,
+              companyId:
+                session.companyId,
+              staffId:
+                session.id,
+            },
+          },
+        );
+
+      if (!existing) {
+        throw new Error(
+          "DEPOSIT_NOT_FOUND",
+        );
+      }
+
+      if (
+        existing.status ===
+        "VERIFIED"
+      ) {
+        return NextResponse.json({
+          success: true,
+          message:
+            "The verified deposit is locked and was not changed.",
+          deposit:
+            serialize(existing),
+        });
+      }
+
+      const deposit =
+        await prisma.bankDeposit.update(
+          {
+            where: {
+              id:
+                existing.id,
+            },
+            data: {
+              bankReceiptUrl:
+                receiptUrl,
+              depositSlipUrl:
+                receiptUrl,
+              status:
+                existing.status ===
+                "MISSING_RECEIPT"
+                  ? "PENDING"
+                  : existing.status,
+            },
+          },
+        );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "Proof of payment uploaded successfully.",
+        deposit:
+          serialize(deposit),
+      });
+    }
+
+    if (
+      action ===
+      "SUBMIT_EXPENSE"
+    ) {
+      const receiptUrl =
+        await requireOwnedFileUrl(
+          session.companyId,
+          session.id,
+          cleanText(
+            body.receiptUrl,
+          ) || null,
+          [
+            "EXPENSE",
+            "RECEIPT",
+            "PROOF",
+          ],
+        );
+
+      const expense =
+        await prisma.expense.create({
+          data: {
+            companyId:
+              session.companyId,
+            employeeId:
+              session.id,
+            reviewedById:
+              null,
+            expenseDate:
+              dateAtLocalNoon(
+                body.expenseDate,
+              ),
+            category:
+              requiredText(
+                body.category,
+                "category",
+              ),
+            amount:
+              positiveAmount(
+                body.amount,
+              ),
+            description:
+              requiredText(
+                body.description,
+                "description",
+              ),
+            receiptUrl,
+            status:
+              "PENDING",
+          },
+        });
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "Expense request submitted successfully.",
+        expense:
+          serialize(expense),
+      });
+    }
+
+    if (
+      action ===
+      "RECORD_SERVICE_VISIT"
+    ) {
+      const brokerCustomerId =
+        cleanText(
+          body.brokerCustomerId ??
+            body.brokerId,
+        ) || null;
+
+      const customerId =
+        cleanText(
+          body.customerId,
+        ) || null;
+
+      if (
+        !brokerCustomerId &&
+        !customerId
+      ) {
+        throw new Error(
+          "REQUIRED_ENTITY",
+        );
+      }
+
+      const broker =
+        brokerCustomerId
+          ? await requireBroker(
+              session.companyId,
+              brokerCustomerId,
+            )
+          : null;
+
+      const customer =
+        customerId
+          ? await requireCustomer(
+              session.companyId,
+              customerId,
+            )
+          : null;
+
+      const latitude =
+        optionalNumber(
+          body.latitude,
+        );
+
+      const longitude =
+        optionalNumber(
+          body.longitude,
+        );
+
+      if (
+        latitude !== null &&
+        (
+          latitude < -90 ||
+          latitude > 90
+        )
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Latitude must be between -90 and 90.",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (
+        longitude !== null &&
+        (
+          longitude < -180 ||
+          longitude > 180
+        )
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Longitude must be between -180 and 180.",
+          },
+          { status: 400 },
+        );
+      }
+
+      const activity =
+        await prisma.serviceActivity.create(
+          {
+            data: {
+              companyId:
+                session.companyId,
+              staffId:
+                session.id,
+              brokerId: null,
+              brokerCustomerId:
+                broker?.id ??
+                null,
+              customerId:
+                customer?.id ??
+                null,
+              serviceType:
+                requiredText(
+                  body.serviceType,
+                  "serviceType",
+                ),
+              amount:
+                optionalNumber(
+                  body.amount,
+                ) ?? 0,
+              status:
+                "COMPLETED",
+              servedAt:
+                new Date(),
+              latitude,
+              longitude,
+              locationName:
+                cleanText(
+                  body.locationName,
+                ) || null,
+              notes:
+                cleanText(
+                  body.notes,
+                ) || null,
+            },
+            include: {
+              brokerCustomer:
+                true,
+              customer: true,
+            },
+          },
+        );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "Service visit recorded successfully.",
+        activity:
+          serialize(activity),
+      });
+    }
+
+    if (
+      action ===
+      "MARK_NOTIFICATION_READ"
+    ) {
+      const notificationId =
+        requiredText(
+          body.notificationId,
+          "notificationId",
+        );
+
+      const notification =
+        await prisma.notification.findFirst(
+          {
+            where: {
+              id:
+                notificationId,
+              companyId:
+                session.companyId,
+              userId:
+                session.id,
+            },
+          },
+        );
+
+      if (!notification) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "The notification was not found.",
+          },
+          { status: 404 },
+        );
+      }
+
+      await prisma.notification.update(
+        {
+          where: {
+            id:
+              notification.id,
+          },
+          data: {
+            isRead: true,
+          },
+        },
+      );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "Notification marked as read.",
+      });
+    }
+
+    if (
+      action ===
+      "MARK_ALL_NOTIFICATIONS_READ"
+    ) {
+      await prisma.notification.updateMany(
+        {
+          where: {
+            companyId:
+              session.companyId,
+            userId:
+              session.id,
+            isRead:
+              false,
+          },
+          data: {
+            isRead: true,
+          },
+        },
+      );
+
+      return NextResponse.json({
+        success: true,
+        message:
+          "All notifications were marked as read.",
+      });
+    }
+
+    throw new Error(
+      "UNSUPPORTED_ACTION",
+    );
+  } catch (error) {
+    return actionError(error);
   }
 }

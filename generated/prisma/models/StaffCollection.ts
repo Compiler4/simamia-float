@@ -39,6 +39,7 @@ export type StaffCollectionMinAggregateOutputType = {
   companyId: string | null
   staffId: string | null
   brokerId: string | null
+  brokerCustomerId: string | null
   reviewedById: string | null
   referenceNo: string | null
   amount: runtime.Decimal | null
@@ -58,6 +59,7 @@ export type StaffCollectionMaxAggregateOutputType = {
   companyId: string | null
   staffId: string | null
   brokerId: string | null
+  brokerCustomerId: string | null
   reviewedById: string | null
   referenceNo: string | null
   amount: runtime.Decimal | null
@@ -77,6 +79,7 @@ export type StaffCollectionCountAggregateOutputType = {
   companyId: number
   staffId: number
   brokerId: number
+  brokerCustomerId: number
   reviewedById: number
   referenceNo: number
   amount: number
@@ -106,6 +109,7 @@ export type StaffCollectionMinAggregateInputType = {
   companyId?: true
   staffId?: true
   brokerId?: true
+  brokerCustomerId?: true
   reviewedById?: true
   referenceNo?: true
   amount?: true
@@ -125,6 +129,7 @@ export type StaffCollectionMaxAggregateInputType = {
   companyId?: true
   staffId?: true
   brokerId?: true
+  brokerCustomerId?: true
   reviewedById?: true
   referenceNo?: true
   amount?: true
@@ -144,6 +149,7 @@ export type StaffCollectionCountAggregateInputType = {
   companyId?: true
   staffId?: true
   brokerId?: true
+  brokerCustomerId?: true
   reviewedById?: true
   referenceNo?: true
   amount?: true
@@ -249,7 +255,8 @@ export type StaffCollectionGroupByOutputType = {
   id: string
   companyId: string
   staffId: string
-  brokerId: string
+  brokerId: string | null
+  brokerCustomerId: string | null
   reviewedById: string | null
   referenceNo: string
   amount: runtime.Decimal
@@ -291,7 +298,8 @@ export type StaffCollectionWhereInput = {
   id?: Prisma.StringFilter<"StaffCollection"> | string
   companyId?: Prisma.StringFilter<"StaffCollection"> | string
   staffId?: Prisma.StringFilter<"StaffCollection"> | string
-  brokerId?: Prisma.StringFilter<"StaffCollection"> | string
+  brokerId?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
   reviewedById?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
   referenceNo?: Prisma.StringFilter<"StaffCollection"> | string
   amount?: Prisma.DecimalFilter<"StaffCollection"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -306,7 +314,8 @@ export type StaffCollectionWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"StaffCollection"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   staff?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  broker?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  broker?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -314,7 +323,8 @@ export type StaffCollectionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
-  brokerId?: Prisma.SortOrder
+  brokerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -330,6 +340,7 @@ export type StaffCollectionOrderByWithRelationInput = {
   company?: Prisma.CompanyOrderByWithRelationInput
   staff?: Prisma.UserOrderByWithRelationInput
   broker?: Prisma.UserOrderByWithRelationInput
+  brokerCustomer?: Prisma.BrokerCustomerOrderByWithRelationInput
   reviewedBy?: Prisma.UserOrderByWithRelationInput
   _relevance?: Prisma.StaffCollectionOrderByRelevanceInput
 }
@@ -342,7 +353,8 @@ export type StaffCollectionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.StaffCollectionWhereInput | Prisma.StaffCollectionWhereInput[]
   companyId?: Prisma.StringFilter<"StaffCollection"> | string
   staffId?: Prisma.StringFilter<"StaffCollection"> | string
-  brokerId?: Prisma.StringFilter<"StaffCollection"> | string
+  brokerId?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
   reviewedById?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
   referenceNo?: Prisma.StringFilter<"StaffCollection"> | string
   amount?: Prisma.DecimalFilter<"StaffCollection"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -357,7 +369,8 @@ export type StaffCollectionWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"StaffCollection"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   staff?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  broker?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  broker?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "companyId_referenceNo">
 
@@ -365,7 +378,8 @@ export type StaffCollectionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
-  brokerId?: Prisma.SortOrder
+  brokerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -392,7 +406,8 @@ export type StaffCollectionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"StaffCollection"> | string
   companyId?: Prisma.StringWithAggregatesFilter<"StaffCollection"> | string
   staffId?: Prisma.StringWithAggregatesFilter<"StaffCollection"> | string
-  brokerId?: Prisma.StringWithAggregatesFilter<"StaffCollection"> | string
+  brokerId?: Prisma.StringNullableWithAggregatesFilter<"StaffCollection"> | string | null
+  brokerCustomerId?: Prisma.StringNullableWithAggregatesFilter<"StaffCollection"> | string | null
   reviewedById?: Prisma.StringNullableWithAggregatesFilter<"StaffCollection"> | string | null
   referenceNo?: Prisma.StringWithAggregatesFilter<"StaffCollection"> | string
   amount?: Prisma.DecimalWithAggregatesFilter<"StaffCollection"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -422,7 +437,8 @@ export type StaffCollectionCreateInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffCollectionsInput
   staff: Prisma.UserCreateNestedOneWithoutStaffCollectionsRecordedInput
-  broker: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  broker?: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutStaffCollectionsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutStaffCollectionsVerifiedInput
 }
 
@@ -430,7 +446,8 @@ export type StaffCollectionUncheckedCreateInput = {
   id?: string
   companyId: string
   staffId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -460,7 +477,8 @@ export type StaffCollectionUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffCollectionsNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutStaffCollectionsRecordedNestedInput
-  broker?: Prisma.UserUpdateOneRequiredWithoutBrokerCollectionsNestedInput
+  broker?: Prisma.UserUpdateOneWithoutBrokerCollectionsNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutStaffCollectionsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutStaffCollectionsVerifiedNestedInput
 }
 
@@ -468,7 +486,8 @@ export type StaffCollectionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -487,7 +506,8 @@ export type StaffCollectionCreateManyInput = {
   id?: string
   companyId: string
   staffId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -521,7 +541,8 @@ export type StaffCollectionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -562,6 +583,7 @@ export type StaffCollectionCountOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -585,6 +607,7 @@ export type StaffCollectionMaxOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -604,6 +627,7 @@ export type StaffCollectionMinOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -794,6 +818,48 @@ export type EnumStaffCollectionStatusFieldUpdateOperationsInput = {
   set?: $Enums.StaffCollectionStatus
 }
 
+export type StaffCollectionCreateNestedManyWithoutBrokerCustomerInput = {
+  create?: Prisma.XOR<Prisma.StaffCollectionCreateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.StaffCollectionCreateWithoutBrokerCustomerInput[] | Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput | Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput[]
+  createMany?: Prisma.StaffCollectionCreateManyBrokerCustomerInputEnvelope
+  connect?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+}
+
+export type StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput = {
+  create?: Prisma.XOR<Prisma.StaffCollectionCreateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.StaffCollectionCreateWithoutBrokerCustomerInput[] | Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput | Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput[]
+  createMany?: Prisma.StaffCollectionCreateManyBrokerCustomerInputEnvelope
+  connect?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+}
+
+export type StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.StaffCollectionCreateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.StaffCollectionCreateWithoutBrokerCustomerInput[] | Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput | Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput[]
+  upsert?: Prisma.StaffCollectionUpsertWithWhereUniqueWithoutBrokerCustomerInput | Prisma.StaffCollectionUpsertWithWhereUniqueWithoutBrokerCustomerInput[]
+  createMany?: Prisma.StaffCollectionCreateManyBrokerCustomerInputEnvelope
+  set?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  disconnect?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  delete?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  connect?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  update?: Prisma.StaffCollectionUpdateWithWhereUniqueWithoutBrokerCustomerInput | Prisma.StaffCollectionUpdateWithWhereUniqueWithoutBrokerCustomerInput[]
+  updateMany?: Prisma.StaffCollectionUpdateManyWithWhereWithoutBrokerCustomerInput | Prisma.StaffCollectionUpdateManyWithWhereWithoutBrokerCustomerInput[]
+  deleteMany?: Prisma.StaffCollectionScalarWhereInput | Prisma.StaffCollectionScalarWhereInput[]
+}
+
+export type StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.StaffCollectionCreateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.StaffCollectionCreateWithoutBrokerCustomerInput[] | Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput | Prisma.StaffCollectionCreateOrConnectWithoutBrokerCustomerInput[]
+  upsert?: Prisma.StaffCollectionUpsertWithWhereUniqueWithoutBrokerCustomerInput | Prisma.StaffCollectionUpsertWithWhereUniqueWithoutBrokerCustomerInput[]
+  createMany?: Prisma.StaffCollectionCreateManyBrokerCustomerInputEnvelope
+  set?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  disconnect?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  delete?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  connect?: Prisma.StaffCollectionWhereUniqueInput | Prisma.StaffCollectionWhereUniqueInput[]
+  update?: Prisma.StaffCollectionUpdateWithWhereUniqueWithoutBrokerCustomerInput | Prisma.StaffCollectionUpdateWithWhereUniqueWithoutBrokerCustomerInput[]
+  updateMany?: Prisma.StaffCollectionUpdateManyWithWhereWithoutBrokerCustomerInput | Prisma.StaffCollectionUpdateManyWithWhereWithoutBrokerCustomerInput[]
+  deleteMany?: Prisma.StaffCollectionScalarWhereInput | Prisma.StaffCollectionScalarWhereInput[]
+}
+
 export type StaffCollectionCreateWithoutCompanyInput = {
   id?: string
   referenceNo: string
@@ -808,14 +874,16 @@ export type StaffCollectionCreateWithoutCompanyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   staff: Prisma.UserCreateNestedOneWithoutStaffCollectionsRecordedInput
-  broker: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  broker?: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutStaffCollectionsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutStaffCollectionsVerifiedInput
 }
 
 export type StaffCollectionUncheckedCreateWithoutCompanyInput = {
   id?: string
   staffId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -863,7 +931,8 @@ export type StaffCollectionScalarWhereInput = {
   id?: Prisma.StringFilter<"StaffCollection"> | string
   companyId?: Prisma.StringFilter<"StaffCollection"> | string
   staffId?: Prisma.StringFilter<"StaffCollection"> | string
-  brokerId?: Prisma.StringFilter<"StaffCollection"> | string
+  brokerId?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
   reviewedById?: Prisma.StringNullableFilter<"StaffCollection"> | string | null
   referenceNo?: Prisma.StringFilter<"StaffCollection"> | string
   amount?: Prisma.DecimalFilter<"StaffCollection"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -892,14 +961,16 @@ export type StaffCollectionCreateWithoutStaffInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffCollectionsInput
-  broker: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  broker?: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutStaffCollectionsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutStaffCollectionsVerifiedInput
 }
 
 export type StaffCollectionUncheckedCreateWithoutStaffInput = {
   id?: string
   companyId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -939,6 +1010,7 @@ export type StaffCollectionCreateWithoutBrokerInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffCollectionsInput
   staff: Prisma.UserCreateNestedOneWithoutStaffCollectionsRecordedInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutStaffCollectionsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutStaffCollectionsVerifiedInput
 }
 
@@ -946,6 +1018,7 @@ export type StaffCollectionUncheckedCreateWithoutBrokerInput = {
   id?: string
   companyId: string
   staffId: string
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -985,14 +1058,16 @@ export type StaffCollectionCreateWithoutReviewedByInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffCollectionsInput
   staff: Prisma.UserCreateNestedOneWithoutStaffCollectionsRecordedInput
-  broker: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  broker?: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutStaffCollectionsInput
 }
 
 export type StaffCollectionUncheckedCreateWithoutReviewedByInput = {
   id?: string
   companyId: string
   staffId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   collectionDate: Date | string
@@ -1064,10 +1139,75 @@ export type StaffCollectionUpdateManyWithWhereWithoutReviewedByInput = {
   data: Prisma.XOR<Prisma.StaffCollectionUpdateManyMutationInput, Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByInput>
 }
 
+export type StaffCollectionCreateWithoutBrokerCustomerInput = {
+  id?: string
+  referenceNo: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  collectionDate: Date | string
+  description?: string | null
+  receiptUrl?: string | null
+  status?: $Enums.StaffCollectionStatus
+  reviewNote?: string | null
+  reviewedAt?: Date | string | null
+  depositedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutStaffCollectionsInput
+  staff: Prisma.UserCreateNestedOneWithoutStaffCollectionsRecordedInput
+  broker?: Prisma.UserCreateNestedOneWithoutBrokerCollectionsInput
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutStaffCollectionsVerifiedInput
+}
+
+export type StaffCollectionUncheckedCreateWithoutBrokerCustomerInput = {
+  id?: string
+  companyId: string
+  staffId: string
+  brokerId?: string | null
+  reviewedById?: string | null
+  referenceNo: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  collectionDate: Date | string
+  description?: string | null
+  receiptUrl?: string | null
+  status?: $Enums.StaffCollectionStatus
+  reviewNote?: string | null
+  reviewedAt?: Date | string | null
+  depositedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StaffCollectionCreateOrConnectWithoutBrokerCustomerInput = {
+  where: Prisma.StaffCollectionWhereUniqueInput
+  create: Prisma.XOR<Prisma.StaffCollectionCreateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput>
+}
+
+export type StaffCollectionCreateManyBrokerCustomerInputEnvelope = {
+  data: Prisma.StaffCollectionCreateManyBrokerCustomerInput | Prisma.StaffCollectionCreateManyBrokerCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type StaffCollectionUpsertWithWhereUniqueWithoutBrokerCustomerInput = {
+  where: Prisma.StaffCollectionWhereUniqueInput
+  update: Prisma.XOR<Prisma.StaffCollectionUpdateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedUpdateWithoutBrokerCustomerInput>
+  create: Prisma.XOR<Prisma.StaffCollectionCreateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedCreateWithoutBrokerCustomerInput>
+}
+
+export type StaffCollectionUpdateWithWhereUniqueWithoutBrokerCustomerInput = {
+  where: Prisma.StaffCollectionWhereUniqueInput
+  data: Prisma.XOR<Prisma.StaffCollectionUpdateWithoutBrokerCustomerInput, Prisma.StaffCollectionUncheckedUpdateWithoutBrokerCustomerInput>
+}
+
+export type StaffCollectionUpdateManyWithWhereWithoutBrokerCustomerInput = {
+  where: Prisma.StaffCollectionScalarWhereInput
+  data: Prisma.XOR<Prisma.StaffCollectionUpdateManyMutationInput, Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerInput>
+}
+
 export type StaffCollectionCreateManyCompanyInput = {
   id?: string
   staffId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1096,14 +1236,16 @@ export type StaffCollectionUpdateWithoutCompanyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   staff?: Prisma.UserUpdateOneRequiredWithoutStaffCollectionsRecordedNestedInput
-  broker?: Prisma.UserUpdateOneRequiredWithoutBrokerCollectionsNestedInput
+  broker?: Prisma.UserUpdateOneWithoutBrokerCollectionsNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutStaffCollectionsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutStaffCollectionsVerifiedNestedInput
 }
 
 export type StaffCollectionUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1121,7 +1263,8 @@ export type StaffCollectionUncheckedUpdateWithoutCompanyInput = {
 export type StaffCollectionUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1139,7 +1282,8 @@ export type StaffCollectionUncheckedUpdateManyWithoutCompanyInput = {
 export type StaffCollectionCreateManyStaffInput = {
   id?: string
   companyId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1158,6 +1302,7 @@ export type StaffCollectionCreateManyBrokerInput = {
   id?: string
   companyId: string
   staffId: string
+  brokerCustomerId?: string | null
   reviewedById?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1176,7 +1321,8 @@ export type StaffCollectionCreateManyReviewedByInput = {
   id?: string
   companyId: string
   staffId: string
-  brokerId: string
+  brokerId?: string | null
+  brokerCustomerId?: string | null
   referenceNo: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   collectionDate: Date | string
@@ -1204,14 +1350,16 @@ export type StaffCollectionUpdateWithoutStaffInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffCollectionsNestedInput
-  broker?: Prisma.UserUpdateOneRequiredWithoutBrokerCollectionsNestedInput
+  broker?: Prisma.UserUpdateOneWithoutBrokerCollectionsNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutStaffCollectionsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutStaffCollectionsVerifiedNestedInput
 }
 
 export type StaffCollectionUncheckedUpdateWithoutStaffInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1229,7 +1377,8 @@ export type StaffCollectionUncheckedUpdateWithoutStaffInput = {
 export type StaffCollectionUncheckedUpdateManyWithoutStaffInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1259,6 +1408,7 @@ export type StaffCollectionUpdateWithoutBrokerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffCollectionsNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutStaffCollectionsRecordedNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutStaffCollectionsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutStaffCollectionsVerifiedNestedInput
 }
 
@@ -1266,6 +1416,7 @@ export type StaffCollectionUncheckedUpdateWithoutBrokerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1284,6 +1435,7 @@ export type StaffCollectionUncheckedUpdateManyWithoutBrokerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1313,14 +1465,16 @@ export type StaffCollectionUpdateWithoutReviewedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffCollectionsNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutStaffCollectionsRecordedNestedInput
-  broker?: Prisma.UserUpdateOneRequiredWithoutBrokerCollectionsNestedInput
+  broker?: Prisma.UserUpdateOneWithoutBrokerCollectionsNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutStaffCollectionsNestedInput
 }
 
 export type StaffCollectionUncheckedUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   collectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1338,7 +1492,84 @@ export type StaffCollectionUncheckedUpdateManyWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
-  brokerId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  collectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumStaffCollectionStatusFieldUpdateOperationsInput | $Enums.StaffCollectionStatus
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  depositedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StaffCollectionCreateManyBrokerCustomerInput = {
+  id?: string
+  companyId: string
+  staffId: string
+  brokerId?: string | null
+  reviewedById?: string | null
+  referenceNo: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  collectionDate: Date | string
+  description?: string | null
+  receiptUrl?: string | null
+  status?: $Enums.StaffCollectionStatus
+  reviewNote?: string | null
+  reviewedAt?: Date | string | null
+  depositedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StaffCollectionUpdateWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  collectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumStaffCollectionStatusFieldUpdateOperationsInput | $Enums.StaffCollectionStatus
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  depositedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutStaffCollectionsNestedInput
+  staff?: Prisma.UserUpdateOneRequiredWithoutStaffCollectionsRecordedNestedInput
+  broker?: Prisma.UserUpdateOneWithoutBrokerCollectionsNestedInput
+  reviewedBy?: Prisma.UserUpdateOneWithoutStaffCollectionsVerifiedNestedInput
+}
+
+export type StaffCollectionUncheckedUpdateWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  collectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumStaffCollectionStatusFieldUpdateOperationsInput | $Enums.StaffCollectionStatus
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  depositedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   referenceNo?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   collectionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1359,6 +1590,7 @@ export type StaffCollectionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   companyId?: boolean
   staffId?: boolean
   brokerId?: boolean
+  brokerCustomerId?: boolean
   reviewedById?: boolean
   referenceNo?: boolean
   amount?: boolean
@@ -1373,7 +1605,8 @@ export type StaffCollectionSelect<ExtArgs extends runtime.Types.Extensions.Inter
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   staff?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  broker?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  broker?: boolean | Prisma.StaffCollection$brokerArgs<ExtArgs>
+  brokerCustomer?: boolean | Prisma.StaffCollection$brokerCustomerArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.StaffCollection$reviewedByArgs<ExtArgs>
 }, ExtArgs["result"]["staffCollection"]>
 
@@ -1384,6 +1617,7 @@ export type StaffCollectionSelectScalar = {
   companyId?: boolean
   staffId?: boolean
   brokerId?: boolean
+  brokerCustomerId?: boolean
   reviewedById?: boolean
   referenceNo?: boolean
   amount?: boolean
@@ -1398,11 +1632,12 @@ export type StaffCollectionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StaffCollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "staffId" | "brokerId" | "reviewedById" | "referenceNo" | "amount" | "collectionDate" | "description" | "receiptUrl" | "status" | "reviewNote" | "reviewedAt" | "depositedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["staffCollection"]>
+export type StaffCollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "staffId" | "brokerId" | "brokerCustomerId" | "reviewedById" | "referenceNo" | "amount" | "collectionDate" | "description" | "receiptUrl" | "status" | "reviewNote" | "reviewedAt" | "depositedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["staffCollection"]>
 export type StaffCollectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   staff?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  broker?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  broker?: boolean | Prisma.StaffCollection$brokerArgs<ExtArgs>
+  brokerCustomer?: boolean | Prisma.StaffCollection$brokerCustomerArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.StaffCollection$reviewedByArgs<ExtArgs>
 }
 
@@ -1411,14 +1646,16 @@ export type $StaffCollectionPayload<ExtArgs extends runtime.Types.Extensions.Int
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
     staff: Prisma.$UserPayload<ExtArgs>
-    broker: Prisma.$UserPayload<ExtArgs>
+    broker: Prisma.$UserPayload<ExtArgs> | null
+    brokerCustomer: Prisma.$BrokerCustomerPayload<ExtArgs> | null
     reviewedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     companyId: string
     staffId: string
-    brokerId: string
+    brokerId: string | null
+    brokerCustomerId: string | null
     reviewedById: string | null
     referenceNo: string
     amount: runtime.Decimal
@@ -1773,7 +2010,8 @@ export interface Prisma__StaffCollectionClient<T, Null = never, ExtArgs extends 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   staff<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  broker<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  broker<T extends Prisma.StaffCollection$brokerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StaffCollection$brokerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  brokerCustomer<T extends Prisma.StaffCollection$brokerCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StaffCollection$brokerCustomerArgs<ExtArgs>>): Prisma.Prisma__BrokerCustomerClient<runtime.Types.Result.GetResult<Prisma.$BrokerCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   reviewedBy<T extends Prisma.StaffCollection$reviewedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StaffCollection$reviewedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1808,6 +2046,7 @@ export interface StaffCollectionFieldRefs {
   readonly companyId: Prisma.FieldRef<"StaffCollection", 'String'>
   readonly staffId: Prisma.FieldRef<"StaffCollection", 'String'>
   readonly brokerId: Prisma.FieldRef<"StaffCollection", 'String'>
+  readonly brokerCustomerId: Prisma.FieldRef<"StaffCollection", 'String'>
   readonly reviewedById: Prisma.FieldRef<"StaffCollection", 'String'>
   readonly referenceNo: Prisma.FieldRef<"StaffCollection", 'String'>
   readonly amount: Prisma.FieldRef<"StaffCollection", 'Decimal'>
@@ -2165,6 +2404,44 @@ export type StaffCollectionDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many StaffCollections to delete.
    */
   limit?: number
+}
+
+/**
+ * StaffCollection.broker
+ */
+export type StaffCollection$brokerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * StaffCollection.brokerCustomer
+ */
+export type StaffCollection$brokerCustomerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerCustomer
+   */
+  select?: Prisma.BrokerCustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerCustomer
+   */
+  omit?: Prisma.BrokerCustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerCustomerInclude<ExtArgs> | null
+  where?: Prisma.BrokerCustomerWhereInput
 }
 
 /**

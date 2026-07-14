@@ -116,6 +116,12 @@ enum CompanyGpsDeviceStatus {
   INACTIVE
 }
 
+enum BrokerCustomerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
 enum AccountingPeriodStatus {
   OPEN
   LOCKED
@@ -199,6 +205,7 @@ model Company {
   messages           Message[]
   products           Product[]
   customers          Customer[]
+  brokerCustomers    BrokerCustomer[]
   serviceActivities  ServiceActivity[]
   gpsTrackings       GpsTracking[]
   companySettings    CompanySetting[]
@@ -457,68 +464,74 @@ model BankDeposit {
 }
 
 model FloatTransaction {
-  id              String         @id @default(cuid())
-  companyId       String
-  fromUserId      String?
-  toUserId        String?
-  approvedById    String?
-  transactionType StaffFloatType @default(ACCOUNTANT_TO_STAFF)
-  referenceNo     String?
-  amount          Decimal        @db.Decimal(18, 2)
-  returnedAmount  Decimal?       @db.Decimal(18, 2)
-  purpose         String?        @db.Text
-  receiptUrl      String?        @db.VarChar(500)
-  notes           String?        @db.Text
-  status          FloatStatus    @default(PENDING)
-  issuedAt        DateTime?
-  confirmedAt     DateTime?
-  returnedAt      DateTime?
-  approvedAt      DateTime?
-  lockedAt        DateTime?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id               String         @id @default(cuid())
+  companyId        String
+  fromUserId       String?
+  toUserId         String?
+  approvedById     String?
+  brokerCustomerId String?
+  transactionType  StaffFloatType @default(ACCOUNTANT_TO_STAFF)
+  referenceNo      String?
+  amount           Decimal        @db.Decimal(18, 2)
+  returnedAmount   Decimal?       @db.Decimal(18, 2)
+  purpose          String?        @db.Text
+  receiptUrl       String?        @db.VarChar(500)
+  notes            String?        @db.Text
+  status           FloatStatus    @default(PENDING)
+  issuedAt         DateTime?
+  confirmedAt      DateTime?
+  returnedAt       DateTime?
+  approvedAt       DateTime?
+  lockedAt         DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
-  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  fromUser   User?   @relation("FloatFrom", fields: [fromUserId], references: [id], onDelete: SetNull)
-  toUser     User?   @relation("FloatTo", fields: [toUserId], references: [id], onDelete: SetNull)
-  approvedBy User?   @relation("FloatApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  fromUser       User?           @relation("FloatFrom", fields: [fromUserId], references: [id], onDelete: SetNull)
+  toUser         User?           @relation("FloatTo", fields: [toUserId], references: [id], onDelete: SetNull)
+  approvedBy     User?           @relation("FloatApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  brokerCustomer BrokerCustomer? @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
   @@unique([companyId, referenceNo])
   @@index([companyId, transactionType, status])
   @@index([fromUserId])
   @@index([toUserId])
   @@index([approvedById])
+  @@index([brokerCustomerId])
   @@index([createdAt])
   @@map("float_transactions")
 }
 
 model StaffCollection {
-  id             String                @id @default(cuid())
-  companyId      String
-  staffId        String
-  brokerId       String
-  reviewedById   String?
-  referenceNo    String
-  amount         Decimal               @db.Decimal(18, 2)
-  collectionDate DateTime
-  description    String?               @db.Text
-  receiptUrl     String?               @db.VarChar(500)
-  status         StaffCollectionStatus @default(PENDING)
-  reviewNote     String?               @db.Text
-  reviewedAt     DateTime?
-  depositedAt    DateTime?
-  createdAt      DateTime              @default(now())
-  updatedAt      DateTime              @updatedAt
+  id               String                @id @default(cuid())
+  companyId        String
+  staffId          String
+  brokerId         String?
+  brokerCustomerId String?
+  reviewedById     String?
+  referenceNo      String
+  amount           Decimal               @db.Decimal(18, 2)
+  collectionDate   DateTime
+  description      String?               @db.Text
+  receiptUrl       String?               @db.VarChar(500)
+  status           StaffCollectionStatus @default(PENDING)
+  reviewNote       String?               @db.Text
+  reviewedAt       DateTime?
+  depositedAt      DateTime?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
 
-  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  staff      User    @relation("StaffCollectionOfficer", fields: [staffId], references: [id], onDelete: Restrict)
-  broker     User    @relation("StaffCollectionBroker", fields: [brokerId], references: [id], onDelete: Restrict)
-  reviewedBy User?   @relation("StaffCollectionVerifier", fields: [reviewedById], references: [id], onDelete: SetNull)
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff          User            @relation("StaffCollectionOfficer", fields: [staffId], references: [id], onDelete: Restrict)
+  broker         User?           @relation("StaffCollectionBroker", fields: [brokerId], references: [id], onDelete: SetNull)
+  brokerCustomer BrokerCustomer? @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  reviewedBy     User?           @relation("StaffCollectionVerifier", fields: [reviewedById], references: [id], onDelete: SetNull)
 
   @@unique([companyId, referenceNo])
   @@index([companyId, collectionDate])
   @@index([staffId, status])
   @@index([brokerId])
+  @@index([brokerCustomerId])
   @@index([reviewedById])
   @@map("staff_collections")
 }
@@ -653,31 +666,68 @@ model Customer {
   @@map("customers")
 }
 
-model ServiceActivity {
-  id           String   @id @default(cuid())
-  companyId    String
-  staffId      String
-  brokerId     String?
-  customerId   String?
-  serviceType  String
-  amount       Decimal  @default(0) @db.Decimal(18, 2)
-  status       String   @default("COMPLETED")
-  servedAt     DateTime @default(now())
-  latitude     Float?
-  longitude    Float?
-  locationName String?  @db.VarChar(191)
-  notes        String?  @db.Text
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model BrokerCustomer {
+  id             String               @id @default(cuid())
+  companyId      String
+  code           String
+  name           String
+  businessName   String?
+  phone          String
+  alternatePhone String?
+  email          String?
+  location       String
+  region         String?
+  district       String?
+  ward           String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  status         BrokerCustomerStatus @default(ACTIVE)
+  notes          String?              @db.Text
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
 
-  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  staff    User      @relation("ServiceStaff", fields: [staffId], references: [id], onDelete: Cascade)
-  broker   User?     @relation("ServiceBroker", fields: [brokerId], references: [id], onDelete: SetNull)
-  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  company           Company            @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  floatTransactions FloatTransaction[]
+  staffCollections  StaffCollection[]
+  serviceActivities ServiceActivity[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, location])
+  @@index([companyId, status])
+  @@index([companyId, phone])
+  @@map("broker_customers")
+}
+
+model ServiceActivity {
+  id               String   @id @default(cuid())
+  companyId        String
+  staffId          String
+  brokerId         String?
+  brokerCustomerId String?
+  customerId       String?
+  serviceType      String
+  amount           Decimal  @default(0) @db.Decimal(18, 2)
+  status           String   @default("COMPLETED")
+  servedAt         DateTime @default(now())
+  latitude         Float?
+  longitude        Float?
+  locationName     String?  @db.VarChar(191)
+  notes            String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff          User            @relation("ServiceStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  broker         User?           @relation("ServiceBroker", fields: [brokerId], references: [id], onDelete: SetNull)
+  brokerCustomer BrokerCustomer? @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  customer       Customer?       @relation(fields: [customerId], references: [id], onDelete: SetNull)
 
   @@index([companyId])
   @@index([staffId])
   @@index([brokerId])
+  @@index([brokerCustomerId])
   @@index([customerId])
   @@map("service_activities")
 }
@@ -1081,20 +1131,25 @@ model StaffCustomerAssignment {
 }
 
 model StaffFile {
-  id           String        @id @default(cuid())
-  companyId    String
-  ownerUserId  String
-  kind         StaffFileKind @default(OTHER)
-  originalName String        @db.VarChar(255)
-  storedName   String        @db.VarChar(255)
-  mimeType     String        @db.VarChar(120)
-  sizeBytes    Int
-  storagePath  String        @db.VarChar(600)
-  createdAt    DateTime      @default(now())
+  id                String        @id @default(cuid())
+  companyId         String
+  ownerUserId       String
+  kind              StaffFileKind @default(OTHER)
+  originalName      String        @db.VarChar(255)
+  storedName        String        @db.VarChar(255)
+  mimeType          String        @db.VarChar(120)
+  sizeBytes         Int
+  originalSizeBytes Int?
+  compressionRatio  Float?
+  compressed        Boolean       @default(false)
+  checksumSha256    String?       @db.VarChar(64)
+  storagePath       String        @db.VarChar(600)
+  createdAt         DateTime      @default(now())
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   owner   User    @relation("StaffFileOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
 
   @@index([companyId, ownerUserId, createdAt])
+  @@index([ownerUserId, kind, createdAt])
   @@map("staff_files")
 }

@@ -1,0 +1,47 @@
+// Add this enum near the other enums in prisma/schema.prisma.
+enum BrokerCustomerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// Add this relation field INSIDE the existing model Company:
+//
+// brokerCustomers BrokerCustomer[]
+
+// Add this complete model at the end of prisma/schema.prisma.
+model BrokerCustomer {
+  id             String               @id @default(cuid())
+  companyId      String
+  code           String
+  name           String
+  businessName   String?
+  phone          String
+  alternatePhone String?
+  email          String?
+  location       String
+  region         String?
+  district       String?
+  ward           String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  status         BrokerCustomerStatus @default(ACTIVE)
+  notes          String?              @db.Text
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  company Company @relation(
+    fields: [companyId],
+    references: [id],
+    onDelete: Cascade,
+    onUpdate: Cascade
+  )
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, location])
+  @@index([companyId, status])
+  @@index([companyId, phone])
+  @@map("broker_customers")
+}

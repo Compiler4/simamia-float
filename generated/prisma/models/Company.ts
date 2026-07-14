@@ -228,6 +228,7 @@ export type CompanyWhereInput = {
   messages?: Prisma.MessageListRelationFilter
   products?: Prisma.ProductListRelationFilter
   customers?: Prisma.CustomerListRelationFilter
+  brokerCustomers?: Prisma.BrokerCustomerListRelationFilter
   serviceActivities?: Prisma.ServiceActivityListRelationFilter
   gpsTrackings?: Prisma.GpsTrackingListRelationFilter
   companySettings?: Prisma.CompanySettingListRelationFilter
@@ -273,6 +274,7 @@ export type CompanyOrderByWithRelationInput = {
   messages?: Prisma.MessageOrderByRelationAggregateInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   customers?: Prisma.CustomerOrderByRelationAggregateInput
+  brokerCustomers?: Prisma.BrokerCustomerOrderByRelationAggregateInput
   serviceActivities?: Prisma.ServiceActivityOrderByRelationAggregateInput
   gpsTrackings?: Prisma.GpsTrackingOrderByRelationAggregateInput
   companySettings?: Prisma.CompanySettingOrderByRelationAggregateInput
@@ -322,6 +324,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   messages?: Prisma.MessageListRelationFilter
   products?: Prisma.ProductListRelationFilter
   customers?: Prisma.CustomerListRelationFilter
+  brokerCustomers?: Prisma.BrokerCustomerListRelationFilter
   serviceActivities?: Prisma.ServiceActivityListRelationFilter
   gpsTrackings?: Prisma.GpsTrackingListRelationFilter
   companySettings?: Prisma.CompanySettingListRelationFilter
@@ -397,6 +400,7 @@ export type CompanyCreateInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -442,6 +446,7 @@ export type CompanyUncheckedCreateInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -487,6 +492,7 @@ export type CompanyUpdateInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -532,6 +538,7 @@ export type CompanyUncheckedUpdateInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -877,6 +884,20 @@ export type CompanyUpdateOneRequiredWithoutCustomersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCustomersInput, Prisma.CompanyUpdateWithoutCustomersInput>, Prisma.CompanyUncheckedUpdateWithoutCustomersInput>
 }
 
+export type CompanyCreateNestedOneWithoutBrokerCustomersInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomersInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomersInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutBrokerCustomersInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomersInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomersInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutBrokerCustomersInput
+  upsert?: Prisma.CompanyUpsertWithoutBrokerCustomersInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutBrokerCustomersInput, Prisma.CompanyUpdateWithoutBrokerCustomersInput>, Prisma.CompanyUncheckedUpdateWithoutBrokerCustomersInput>
+}
+
 export type CompanyCreateNestedOneWithoutServiceActivitiesInput = {
   create?: Prisma.XOR<Prisma.CompanyCreateWithoutServiceActivitiesInput, Prisma.CompanyUncheckedCreateWithoutServiceActivitiesInput>
   connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutServiceActivitiesInput
@@ -1152,6 +1173,7 @@ export type CompanyCreateWithoutBranchesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -1196,6 +1218,7 @@ export type CompanyUncheckedCreateWithoutBranchesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -1256,6 +1279,7 @@ export type CompanyUpdateWithoutBranchesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -1300,6 +1324,7 @@ export type CompanyUncheckedUpdateWithoutBranchesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1344,6 +1369,7 @@ export type CompanyCreateWithoutUsersInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -1388,6 +1414,7 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -1448,6 +1475,7 @@ export type CompanyUpdateWithoutUsersInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -1492,6 +1520,7 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1536,6 +1565,7 @@ export type CompanyCreateWithoutSubscriptionsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -1580,6 +1610,7 @@ export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -1640,6 +1671,7 @@ export type CompanyUpdateWithoutSubscriptionsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -1684,6 +1716,7 @@ export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1728,6 +1761,7 @@ export type CompanyCreateWithoutFinancialDaysInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -1772,6 +1806,7 @@ export type CompanyUncheckedCreateWithoutFinancialDaysInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -1832,6 +1867,7 @@ export type CompanyUpdateWithoutFinancialDaysInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -1876,6 +1912,7 @@ export type CompanyUncheckedUpdateWithoutFinancialDaysInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1920,6 +1957,7 @@ export type CompanyCreateWithoutAttendanceRecordsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -1964,6 +2002,7 @@ export type CompanyUncheckedCreateWithoutAttendanceRecordsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -2024,6 +2063,7 @@ export type CompanyUpdateWithoutAttendanceRecordsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -2068,6 +2108,7 @@ export type CompanyUncheckedUpdateWithoutAttendanceRecordsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -2112,6 +2153,7 @@ export type CompanyCreateWithoutExpensesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -2156,6 +2198,7 @@ export type CompanyUncheckedCreateWithoutExpensesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -2216,6 +2259,7 @@ export type CompanyUpdateWithoutExpensesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -2260,6 +2304,7 @@ export type CompanyUncheckedUpdateWithoutExpensesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -2304,6 +2349,7 @@ export type CompanyCreateWithoutBankDepositsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -2348,6 +2394,7 @@ export type CompanyUncheckedCreateWithoutBankDepositsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -2408,6 +2455,7 @@ export type CompanyUpdateWithoutBankDepositsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -2452,6 +2500,7 @@ export type CompanyUncheckedUpdateWithoutBankDepositsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -2496,6 +2545,7 @@ export type CompanyCreateWithoutFloatTransactionsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -2540,6 +2590,7 @@ export type CompanyUncheckedCreateWithoutFloatTransactionsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -2600,6 +2651,7 @@ export type CompanyUpdateWithoutFloatTransactionsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -2644,6 +2696,7 @@ export type CompanyUncheckedUpdateWithoutFloatTransactionsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -2689,6 +2742,7 @@ export type CompanyCreateWithoutStaffCollectionsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -2733,6 +2787,7 @@ export type CompanyUncheckedCreateWithoutStaffCollectionsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -2793,6 +2848,7 @@ export type CompanyUpdateWithoutStaffCollectionsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -2837,6 +2893,7 @@ export type CompanyUncheckedUpdateWithoutStaffCollectionsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -2880,6 +2937,7 @@ export type CompanyCreateWithoutPerformanceRecordsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -2924,6 +2982,7 @@ export type CompanyUncheckedCreateWithoutPerformanceRecordsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -2984,6 +3043,7 @@ export type CompanyUpdateWithoutPerformanceRecordsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -3028,6 +3088,7 @@ export type CompanyUncheckedUpdateWithoutPerformanceRecordsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -3072,6 +3133,7 @@ export type CompanyCreateWithoutNotificationsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -3116,6 +3178,7 @@ export type CompanyUncheckedCreateWithoutNotificationsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -3176,6 +3239,7 @@ export type CompanyUpdateWithoutNotificationsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -3220,6 +3284,7 @@ export type CompanyUncheckedUpdateWithoutNotificationsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -3264,6 +3329,7 @@ export type CompanyCreateWithoutMessagesInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -3308,6 +3374,7 @@ export type CompanyUncheckedCreateWithoutMessagesInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -3368,6 +3435,7 @@ export type CompanyUpdateWithoutMessagesInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -3412,6 +3480,7 @@ export type CompanyUncheckedUpdateWithoutMessagesInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -3456,6 +3525,7 @@ export type CompanyCreateWithoutAuditLogsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -3500,6 +3570,7 @@ export type CompanyUncheckedCreateWithoutAuditLogsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -3560,6 +3631,7 @@ export type CompanyUpdateWithoutAuditLogsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -3604,6 +3676,7 @@ export type CompanyUncheckedUpdateWithoutAuditLogsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -3648,6 +3721,7 @@ export type CompanyCreateWithoutProductsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -3692,6 +3766,7 @@ export type CompanyUncheckedCreateWithoutProductsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -3752,6 +3827,7 @@ export type CompanyUpdateWithoutProductsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -3796,6 +3872,7 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -3840,6 +3917,7 @@ export type CompanyCreateWithoutCustomersInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -3884,6 +3962,7 @@ export type CompanyUncheckedCreateWithoutCustomersInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -3944,6 +4023,7 @@ export type CompanyUpdateWithoutCustomersInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -3988,6 +4068,203 @@ export type CompanyUncheckedUpdateWithoutCustomersInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutBrokerCustomersInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutBrokerCustomersInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositUncheckedCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutBrokerCustomersInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomersInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomersInput>
+}
+
+export type CompanyUpsertWithoutBrokerCustomersInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutBrokerCustomersInput, Prisma.CompanyUncheckedUpdateWithoutBrokerCustomersInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomersInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomersInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutBrokerCustomersInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutBrokerCustomersInput, Prisma.CompanyUncheckedUpdateWithoutBrokerCustomersInput>
+}
+
+export type CompanyUpdateWithoutBrokerCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutBrokerCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUncheckedUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -4033,6 +4310,7 @@ export type CompanyCreateWithoutServiceActivitiesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
   adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
@@ -4077,6 +4355,7 @@ export type CompanyUncheckedCreateWithoutServiceActivitiesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
   adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
@@ -4137,6 +4416,7 @@ export type CompanyUpdateWithoutServiceActivitiesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
   adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
@@ -4181,6 +4461,7 @@ export type CompanyUncheckedUpdateWithoutServiceActivitiesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
   adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
@@ -4225,6 +4506,7 @@ export type CompanyCreateWithoutGpsTrackingsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
   adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
@@ -4269,6 +4551,7 @@ export type CompanyUncheckedCreateWithoutGpsTrackingsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
   adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
@@ -4329,6 +4612,7 @@ export type CompanyUpdateWithoutGpsTrackingsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
   adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
@@ -4373,6 +4657,7 @@ export type CompanyUncheckedUpdateWithoutGpsTrackingsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
   adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
@@ -4417,6 +4702,7 @@ export type CompanyCreateWithoutCompanySettingsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
@@ -4461,6 +4747,7 @@ export type CompanyUncheckedCreateWithoutCompanySettingsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
@@ -4521,6 +4808,7 @@ export type CompanyUpdateWithoutCompanySettingsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
@@ -4565,6 +4853,7 @@ export type CompanyUncheckedUpdateWithoutCompanySettingsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
@@ -4609,6 +4898,7 @@ export type CompanyCreateWithoutAdminExpensesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -4653,6 +4943,7 @@ export type CompanyUncheckedCreateWithoutAdminExpensesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -4713,6 +5004,7 @@ export type CompanyUpdateWithoutAdminExpensesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -4757,6 +5049,7 @@ export type CompanyUncheckedUpdateWithoutAdminExpensesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -4801,6 +5094,7 @@ export type CompanyCreateWithoutAdminBankVerificationsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -4845,6 +5139,7 @@ export type CompanyUncheckedCreateWithoutAdminBankVerificationsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -4905,6 +5200,7 @@ export type CompanyUpdateWithoutAdminBankVerificationsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -4949,6 +5245,7 @@ export type CompanyUncheckedUpdateWithoutAdminBankVerificationsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -4993,6 +5290,7 @@ export type CompanyCreateWithoutAdminBankMessagesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -5037,6 +5335,7 @@ export type CompanyUncheckedCreateWithoutAdminBankMessagesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -5097,6 +5396,7 @@ export type CompanyUpdateWithoutAdminBankMessagesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -5141,6 +5441,7 @@ export type CompanyUncheckedUpdateWithoutAdminBankMessagesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -5185,6 +5486,7 @@ export type CompanyCreateWithoutAdminAttendanceJournalInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -5229,6 +5531,7 @@ export type CompanyUncheckedCreateWithoutAdminAttendanceJournalInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -5289,6 +5592,7 @@ export type CompanyUpdateWithoutAdminAttendanceJournalInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -5333,6 +5637,7 @@ export type CompanyUncheckedUpdateWithoutAdminAttendanceJournalInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -5377,6 +5682,7 @@ export type CompanyCreateWithoutAdminNotificationsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -5421,6 +5727,7 @@ export type CompanyUncheckedCreateWithoutAdminNotificationsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -5481,6 +5788,7 @@ export type CompanyUpdateWithoutAdminNotificationsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -5525,6 +5833,7 @@ export type CompanyUncheckedUpdateWithoutAdminNotificationsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -5569,6 +5878,7 @@ export type CompanyCreateWithoutAdminGpsDevicesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -5613,6 +5923,7 @@ export type CompanyUncheckedCreateWithoutAdminGpsDevicesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -5673,6 +5984,7 @@ export type CompanyUpdateWithoutAdminGpsDevicesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -5717,6 +6029,7 @@ export type CompanyUncheckedUpdateWithoutAdminGpsDevicesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -5761,6 +6074,7 @@ export type CompanyCreateWithoutAdminGpsPingsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -5805,6 +6119,7 @@ export type CompanyUncheckedCreateWithoutAdminGpsPingsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -5865,6 +6180,7 @@ export type CompanyUpdateWithoutAdminGpsPingsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -5909,6 +6225,7 @@ export type CompanyUncheckedUpdateWithoutAdminGpsPingsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -5953,6 +6270,7 @@ export type CompanyCreateWithoutAdminSettingInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -5997,6 +6315,7 @@ export type CompanyUncheckedCreateWithoutAdminSettingInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -6057,6 +6376,7 @@ export type CompanyUpdateWithoutAdminSettingInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -6101,6 +6421,7 @@ export type CompanyUncheckedUpdateWithoutAdminSettingInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -6145,6 +6466,7 @@ export type CompanyCreateWithoutAdminAuditEventsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -6189,6 +6511,7 @@ export type CompanyUncheckedCreateWithoutAdminAuditEventsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -6249,6 +6572,7 @@ export type CompanyUpdateWithoutAdminAuditEventsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -6293,6 +6617,7 @@ export type CompanyUncheckedUpdateWithoutAdminAuditEventsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -6337,6 +6662,7 @@ export type CompanyCreateWithoutAccountingPeriodsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -6381,6 +6707,7 @@ export type CompanyUncheckedCreateWithoutAccountingPeriodsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -6441,6 +6768,7 @@ export type CompanyUpdateWithoutAccountingPeriodsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -6485,6 +6813,7 @@ export type CompanyUncheckedUpdateWithoutAccountingPeriodsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -6529,6 +6858,7 @@ export type CompanyCreateWithoutGpsAlertsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -6573,6 +6903,7 @@ export type CompanyUncheckedCreateWithoutGpsAlertsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -6633,6 +6964,7 @@ export type CompanyUpdateWithoutGpsAlertsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -6677,6 +7009,7 @@ export type CompanyUncheckedUpdateWithoutGpsAlertsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -6721,6 +7054,7 @@ export type CompanyCreateWithoutNotificationDeliveriesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -6765,6 +7099,7 @@ export type CompanyUncheckedCreateWithoutNotificationDeliveriesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -6825,6 +7160,7 @@ export type CompanyUpdateWithoutNotificationDeliveriesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -6869,6 +7205,7 @@ export type CompanyUncheckedUpdateWithoutNotificationDeliveriesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -6913,6 +7250,7 @@ export type CompanyCreateWithoutStaffBrokerAssignmentsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -6957,6 +7295,7 @@ export type CompanyUncheckedCreateWithoutStaffBrokerAssignmentsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -7017,6 +7356,7 @@ export type CompanyUpdateWithoutStaffBrokerAssignmentsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -7061,6 +7401,7 @@ export type CompanyUncheckedUpdateWithoutStaffBrokerAssignmentsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -7105,6 +7446,7 @@ export type CompanyCreateWithoutStaffCustomerAssignmentsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -7149,6 +7491,7 @@ export type CompanyUncheckedCreateWithoutStaffCustomerAssignmentsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -7209,6 +7552,7 @@ export type CompanyUpdateWithoutStaffCustomerAssignmentsInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -7253,6 +7597,7 @@ export type CompanyUncheckedUpdateWithoutStaffCustomerAssignmentsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -7297,6 +7642,7 @@ export type CompanyCreateWithoutStaffFilesInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
@@ -7341,6 +7687,7 @@ export type CompanyUncheckedCreateWithoutStaffFilesInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
   customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
   companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
@@ -7401,6 +7748,7 @@ export type CompanyUpdateWithoutStaffFilesInput = {
   messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
@@ -7445,6 +7793,7 @@ export type CompanyUncheckedUpdateWithoutStaffFilesInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
   products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
   customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
   gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
   companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
@@ -7485,6 +7834,7 @@ export type CompanyCountOutputType = {
   messages: number
   products: number
   customers: number
+  brokerCustomers: number
   serviceActivities: number
   gpsTrackings: number
   companySettings: number
@@ -7520,6 +7870,7 @@ export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   messages?: boolean | CompanyCountOutputTypeCountMessagesArgs
   products?: boolean | CompanyCountOutputTypeCountProductsArgs
   customers?: boolean | CompanyCountOutputTypeCountCustomersArgs
+  brokerCustomers?: boolean | CompanyCountOutputTypeCountBrokerCustomersArgs
   serviceActivities?: boolean | CompanyCountOutputTypeCountServiceActivitiesArgs
   gpsTrackings?: boolean | CompanyCountOutputTypeCountGpsTrackingsArgs
   companySettings?: boolean | CompanyCountOutputTypeCountCompanySettingsArgs
@@ -7646,6 +7997,13 @@ export type CompanyCountOutputTypeCountProductsArgs<ExtArgs extends runtime.Type
  */
 export type CompanyCountOutputTypeCountCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CustomerWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountBrokerCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BrokerCustomerWhereInput
 }
 
 /**
@@ -7799,6 +8157,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   messages?: boolean | Prisma.Company$messagesArgs<ExtArgs>
   products?: boolean | Prisma.Company$productsArgs<ExtArgs>
   customers?: boolean | Prisma.Company$customersArgs<ExtArgs>
+  brokerCustomers?: boolean | Prisma.Company$brokerCustomersArgs<ExtArgs>
   serviceActivities?: boolean | Prisma.Company$serviceActivitiesArgs<ExtArgs>
   gpsTrackings?: boolean | Prisma.Company$gpsTrackingsArgs<ExtArgs>
   companySettings?: boolean | Prisma.Company$companySettingsArgs<ExtArgs>
@@ -7851,6 +8210,7 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   messages?: boolean | Prisma.Company$messagesArgs<ExtArgs>
   products?: boolean | Prisma.Company$productsArgs<ExtArgs>
   customers?: boolean | Prisma.Company$customersArgs<ExtArgs>
+  brokerCustomers?: boolean | Prisma.Company$brokerCustomersArgs<ExtArgs>
   serviceActivities?: boolean | Prisma.Company$serviceActivitiesArgs<ExtArgs>
   gpsTrackings?: boolean | Prisma.Company$gpsTrackingsArgs<ExtArgs>
   companySettings?: boolean | Prisma.Company$companySettingsArgs<ExtArgs>
@@ -7890,6 +8250,7 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     messages: Prisma.$MessagePayload<ExtArgs>[]
     products: Prisma.$ProductPayload<ExtArgs>[]
     customers: Prisma.$CustomerPayload<ExtArgs>[]
+    brokerCustomers: Prisma.$BrokerCustomerPayload<ExtArgs>[]
     serviceActivities: Prisma.$ServiceActivityPayload<ExtArgs>[]
     gpsTrackings: Prisma.$GpsTrackingPayload<ExtArgs>[]
     companySettings: Prisma.$CompanySettingPayload<ExtArgs>[]
@@ -8280,6 +8641,7 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
   messages<T extends Prisma.Company$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   products<T extends Prisma.Company$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customers<T extends Prisma.Company$customersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$customersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  brokerCustomers<T extends Prisma.Company$brokerCustomersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$brokerCustomersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrokerCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   serviceActivities<T extends Prisma.Company$serviceActivitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$serviceActivitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   gpsTrackings<T extends Prisma.Company$gpsTrackingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$gpsTrackingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GpsTrackingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   companySettings<T extends Prisma.Company$companySettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$companySettingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanySettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9018,6 +9380,30 @@ export type Company$customersArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.CustomerScalarFieldEnum | Prisma.CustomerScalarFieldEnum[]
+}
+
+/**
+ * Company.brokerCustomers
+ */
+export type Company$brokerCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerCustomer
+   */
+  select?: Prisma.BrokerCustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerCustomer
+   */
+  omit?: Prisma.BrokerCustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerCustomerInclude<ExtArgs> | null
+  where?: Prisma.BrokerCustomerWhereInput
+  orderBy?: Prisma.BrokerCustomerOrderByWithRelationInput | Prisma.BrokerCustomerOrderByWithRelationInput[]
+  cursor?: Prisma.BrokerCustomerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BrokerCustomerScalarFieldEnum | Prisma.BrokerCustomerScalarFieldEnum[]
 }
 
 /**

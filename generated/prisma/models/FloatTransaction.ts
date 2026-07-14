@@ -42,6 +42,7 @@ export type FloatTransactionMinAggregateOutputType = {
   fromUserId: string | null
   toUserId: string | null
   approvedById: string | null
+  brokerCustomerId: string | null
   transactionType: $Enums.StaffFloatType | null
   referenceNo: string | null
   amount: runtime.Decimal | null
@@ -65,6 +66,7 @@ export type FloatTransactionMaxAggregateOutputType = {
   fromUserId: string | null
   toUserId: string | null
   approvedById: string | null
+  brokerCustomerId: string | null
   transactionType: $Enums.StaffFloatType | null
   referenceNo: string | null
   amount: runtime.Decimal | null
@@ -88,6 +90,7 @@ export type FloatTransactionCountAggregateOutputType = {
   fromUserId: number
   toUserId: number
   approvedById: number
+  brokerCustomerId: number
   transactionType: number
   referenceNo: number
   amount: number
@@ -123,6 +126,7 @@ export type FloatTransactionMinAggregateInputType = {
   fromUserId?: true
   toUserId?: true
   approvedById?: true
+  brokerCustomerId?: true
   transactionType?: true
   referenceNo?: true
   amount?: true
@@ -146,6 +150,7 @@ export type FloatTransactionMaxAggregateInputType = {
   fromUserId?: true
   toUserId?: true
   approvedById?: true
+  brokerCustomerId?: true
   transactionType?: true
   referenceNo?: true
   amount?: true
@@ -169,6 +174,7 @@ export type FloatTransactionCountAggregateInputType = {
   fromUserId?: true
   toUserId?: true
   approvedById?: true
+  brokerCustomerId?: true
   transactionType?: true
   referenceNo?: true
   amount?: true
@@ -279,6 +285,7 @@ export type FloatTransactionGroupByOutputType = {
   fromUserId: string | null
   toUserId: string | null
   approvedById: string | null
+  brokerCustomerId: string | null
   transactionType: $Enums.StaffFloatType
   referenceNo: string | null
   amount: runtime.Decimal
@@ -325,6 +332,7 @@ export type FloatTransactionWhereInput = {
   fromUserId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   toUserId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   approvedById?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFilter<"FloatTransaction"> | $Enums.StaffFloatType
   referenceNo?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   amount?: Prisma.DecimalFilter<"FloatTransaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -344,6 +352,7 @@ export type FloatTransactionWhereInput = {
   fromUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   toUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
 }
 
 export type FloatTransactionOrderByWithRelationInput = {
@@ -352,6 +361,7 @@ export type FloatTransactionOrderByWithRelationInput = {
   fromUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   toUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionType?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -371,6 +381,7 @@ export type FloatTransactionOrderByWithRelationInput = {
   fromUser?: Prisma.UserOrderByWithRelationInput
   toUser?: Prisma.UserOrderByWithRelationInput
   approvedBy?: Prisma.UserOrderByWithRelationInput
+  brokerCustomer?: Prisma.BrokerCustomerOrderByWithRelationInput
   _relevance?: Prisma.FloatTransactionOrderByRelevanceInput
 }
 
@@ -384,6 +395,7 @@ export type FloatTransactionWhereUniqueInput = Prisma.AtLeast<{
   fromUserId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   toUserId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   approvedById?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFilter<"FloatTransaction"> | $Enums.StaffFloatType
   referenceNo?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   amount?: Prisma.DecimalFilter<"FloatTransaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -403,6 +415,7 @@ export type FloatTransactionWhereUniqueInput = Prisma.AtLeast<{
   fromUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   toUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
 }, "id" | "companyId_referenceNo">
 
 export type FloatTransactionOrderByWithAggregationInput = {
@@ -411,6 +424,7 @@ export type FloatTransactionOrderByWithAggregationInput = {
   fromUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   toUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionType?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -442,6 +456,7 @@ export type FloatTransactionScalarWhereWithAggregatesInput = {
   fromUserId?: Prisma.StringNullableWithAggregatesFilter<"FloatTransaction"> | string | null
   toUserId?: Prisma.StringNullableWithAggregatesFilter<"FloatTransaction"> | string | null
   approvedById?: Prisma.StringNullableWithAggregatesFilter<"FloatTransaction"> | string | null
+  brokerCustomerId?: Prisma.StringNullableWithAggregatesFilter<"FloatTransaction"> | string | null
   transactionType?: Prisma.EnumStaffFloatTypeWithAggregatesFilter<"FloatTransaction"> | $Enums.StaffFloatType
   referenceNo?: Prisma.StringNullableWithAggregatesFilter<"FloatTransaction"> | string | null
   amount?: Prisma.DecimalWithAggregatesFilter<"FloatTransaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -480,6 +495,7 @@ export type FloatTransactionCreateInput = {
   fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
 }
 
 export type FloatTransactionUncheckedCreateInput = {
@@ -488,6 +504,7 @@ export type FloatTransactionUncheckedCreateInput = {
   fromUserId?: string | null
   toUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -526,6 +543,7 @@ export type FloatTransactionUpdateInput = {
   fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateInput = {
@@ -534,6 +552,7 @@ export type FloatTransactionUncheckedUpdateInput = {
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -557,6 +576,7 @@ export type FloatTransactionCreateManyInput = {
   fromUserId?: string | null
   toUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -599,6 +619,7 @@ export type FloatTransactionUncheckedUpdateManyInput = {
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -643,6 +664,7 @@ export type FloatTransactionCountOrderByAggregateInput = {
   fromUserId?: Prisma.SortOrder
   toUserId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   transactionType?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -671,6 +693,7 @@ export type FloatTransactionMaxOrderByAggregateInput = {
   fromUserId?: Prisma.SortOrder
   toUserId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   transactionType?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -694,6 +717,7 @@ export type FloatTransactionMinOrderByAggregateInput = {
   fromUserId?: Prisma.SortOrder
   toUserId?: Prisma.SortOrder
   approvedById?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   transactionType?: Prisma.SortOrder
   referenceNo?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -892,6 +916,48 @@ export type EnumFloatStatusFieldUpdateOperationsInput = {
   set?: $Enums.FloatStatus
 }
 
+export type FloatTransactionCreateNestedManyWithoutBrokerCustomerInput = {
+  create?: Prisma.XOR<Prisma.FloatTransactionCreateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.FloatTransactionCreateWithoutBrokerCustomerInput[] | Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput | Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput[]
+  createMany?: Prisma.FloatTransactionCreateManyBrokerCustomerInputEnvelope
+  connect?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+}
+
+export type FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput = {
+  create?: Prisma.XOR<Prisma.FloatTransactionCreateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.FloatTransactionCreateWithoutBrokerCustomerInput[] | Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput | Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput[]
+  createMany?: Prisma.FloatTransactionCreateManyBrokerCustomerInputEnvelope
+  connect?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+}
+
+export type FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.FloatTransactionCreateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.FloatTransactionCreateWithoutBrokerCustomerInput[] | Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput | Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput[]
+  upsert?: Prisma.FloatTransactionUpsertWithWhereUniqueWithoutBrokerCustomerInput | Prisma.FloatTransactionUpsertWithWhereUniqueWithoutBrokerCustomerInput[]
+  createMany?: Prisma.FloatTransactionCreateManyBrokerCustomerInputEnvelope
+  set?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  disconnect?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  delete?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  connect?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  update?: Prisma.FloatTransactionUpdateWithWhereUniqueWithoutBrokerCustomerInput | Prisma.FloatTransactionUpdateWithWhereUniqueWithoutBrokerCustomerInput[]
+  updateMany?: Prisma.FloatTransactionUpdateManyWithWhereWithoutBrokerCustomerInput | Prisma.FloatTransactionUpdateManyWithWhereWithoutBrokerCustomerInput[]
+  deleteMany?: Prisma.FloatTransactionScalarWhereInput | Prisma.FloatTransactionScalarWhereInput[]
+}
+
+export type FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.FloatTransactionCreateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput> | Prisma.FloatTransactionCreateWithoutBrokerCustomerInput[] | Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput | Prisma.FloatTransactionCreateOrConnectWithoutBrokerCustomerInput[]
+  upsert?: Prisma.FloatTransactionUpsertWithWhereUniqueWithoutBrokerCustomerInput | Prisma.FloatTransactionUpsertWithWhereUniqueWithoutBrokerCustomerInput[]
+  createMany?: Prisma.FloatTransactionCreateManyBrokerCustomerInputEnvelope
+  set?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  disconnect?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  delete?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  connect?: Prisma.FloatTransactionWhereUniqueInput | Prisma.FloatTransactionWhereUniqueInput[]
+  update?: Prisma.FloatTransactionUpdateWithWhereUniqueWithoutBrokerCustomerInput | Prisma.FloatTransactionUpdateWithWhereUniqueWithoutBrokerCustomerInput[]
+  updateMany?: Prisma.FloatTransactionUpdateManyWithWhereWithoutBrokerCustomerInput | Prisma.FloatTransactionUpdateManyWithWhereWithoutBrokerCustomerInput[]
+  deleteMany?: Prisma.FloatTransactionScalarWhereInput | Prisma.FloatTransactionScalarWhereInput[]
+}
+
 export type FloatTransactionCreateWithoutCompanyInput = {
   id?: string
   transactionType?: $Enums.StaffFloatType
@@ -912,6 +978,7 @@ export type FloatTransactionCreateWithoutCompanyInput = {
   fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutCompanyInput = {
@@ -919,6 +986,7 @@ export type FloatTransactionUncheckedCreateWithoutCompanyInput = {
   fromUserId?: string | null
   toUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -971,6 +1039,7 @@ export type FloatTransactionScalarWhereInput = {
   fromUserId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   toUserId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   approvedById?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFilter<"FloatTransaction"> | $Enums.StaffFloatType
   referenceNo?: Prisma.StringNullableFilter<"FloatTransaction"> | string | null
   amount?: Prisma.DecimalFilter<"FloatTransaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1008,6 +1077,7 @@ export type FloatTransactionCreateWithoutFromUserInput = {
   company: Prisma.CompanyCreateNestedOneWithoutFloatTransactionsInput
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutFromUserInput = {
@@ -1015,6 +1085,7 @@ export type FloatTransactionUncheckedCreateWithoutFromUserInput = {
   companyId: string
   toUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1062,6 +1133,7 @@ export type FloatTransactionCreateWithoutToUserInput = {
   company: Prisma.CompanyCreateNestedOneWithoutFloatTransactionsInput
   fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutToUserInput = {
@@ -1069,6 +1141,7 @@ export type FloatTransactionUncheckedCreateWithoutToUserInput = {
   companyId: string
   fromUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1116,6 +1189,7 @@ export type FloatTransactionCreateWithoutApprovedByInput = {
   company: Prisma.CompanyCreateNestedOneWithoutFloatTransactionsInput
   fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutApprovedByInput = {
@@ -1123,6 +1197,7 @@ export type FloatTransactionUncheckedCreateWithoutApprovedByInput = {
   companyId: string
   fromUserId?: string | null
   toUserId?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1198,11 +1273,84 @@ export type FloatTransactionUpdateManyWithWhereWithoutApprovedByInput = {
   data: Prisma.XOR<Prisma.FloatTransactionUpdateManyMutationInput, Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByInput>
 }
 
+export type FloatTransactionCreateWithoutBrokerCustomerInput = {
+  id?: string
+  transactionType?: $Enums.StaffFloatType
+  referenceNo?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: string | null
+  receiptUrl?: string | null
+  notes?: string | null
+  status?: $Enums.FloatStatus
+  issuedAt?: Date | string | null
+  confirmedAt?: Date | string | null
+  returnedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  lockedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutFloatTransactionsInput
+  fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
+  toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
+}
+
+export type FloatTransactionUncheckedCreateWithoutBrokerCustomerInput = {
+  id?: string
+  companyId: string
+  fromUserId?: string | null
+  toUserId?: string | null
+  approvedById?: string | null
+  transactionType?: $Enums.StaffFloatType
+  referenceNo?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: string | null
+  receiptUrl?: string | null
+  notes?: string | null
+  status?: $Enums.FloatStatus
+  issuedAt?: Date | string | null
+  confirmedAt?: Date | string | null
+  returnedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  lockedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FloatTransactionCreateOrConnectWithoutBrokerCustomerInput = {
+  where: Prisma.FloatTransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.FloatTransactionCreateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput>
+}
+
+export type FloatTransactionCreateManyBrokerCustomerInputEnvelope = {
+  data: Prisma.FloatTransactionCreateManyBrokerCustomerInput | Prisma.FloatTransactionCreateManyBrokerCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type FloatTransactionUpsertWithWhereUniqueWithoutBrokerCustomerInput = {
+  where: Prisma.FloatTransactionWhereUniqueInput
+  update: Prisma.XOR<Prisma.FloatTransactionUpdateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedUpdateWithoutBrokerCustomerInput>
+  create: Prisma.XOR<Prisma.FloatTransactionCreateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedCreateWithoutBrokerCustomerInput>
+}
+
+export type FloatTransactionUpdateWithWhereUniqueWithoutBrokerCustomerInput = {
+  where: Prisma.FloatTransactionWhereUniqueInput
+  data: Prisma.XOR<Prisma.FloatTransactionUpdateWithoutBrokerCustomerInput, Prisma.FloatTransactionUncheckedUpdateWithoutBrokerCustomerInput>
+}
+
+export type FloatTransactionUpdateManyWithWhereWithoutBrokerCustomerInput = {
+  where: Prisma.FloatTransactionScalarWhereInput
+  data: Prisma.XOR<Prisma.FloatTransactionUpdateManyMutationInput, Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerInput>
+}
+
 export type FloatTransactionCreateManyCompanyInput = {
   id?: string
   fromUserId?: string | null
   toUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1240,6 +1388,7 @@ export type FloatTransactionUpdateWithoutCompanyInput = {
   fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutCompanyInput = {
@@ -1247,6 +1396,7 @@ export type FloatTransactionUncheckedUpdateWithoutCompanyInput = {
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1269,6 +1419,7 @@ export type FloatTransactionUncheckedUpdateManyWithoutCompanyInput = {
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1291,6 +1442,7 @@ export type FloatTransactionCreateManyFromUserInput = {
   companyId: string
   toUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1313,6 +1465,7 @@ export type FloatTransactionCreateManyToUserInput = {
   companyId: string
   fromUserId?: string | null
   approvedById?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1335,6 +1488,7 @@ export type FloatTransactionCreateManyApprovedByInput = {
   companyId: string
   fromUserId?: string | null
   toUserId?: string | null
+  brokerCustomerId?: string | null
   transactionType?: $Enums.StaffFloatType
   referenceNo?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1372,6 +1526,7 @@ export type FloatTransactionUpdateWithoutFromUserInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutFloatTransactionsNestedInput
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutFromUserInput = {
@@ -1379,6 +1534,7 @@ export type FloatTransactionUncheckedUpdateWithoutFromUserInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1401,6 +1557,7 @@ export type FloatTransactionUncheckedUpdateManyWithoutFromUserInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1438,6 +1595,7 @@ export type FloatTransactionUpdateWithoutToUserInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutFloatTransactionsNestedInput
   fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutToUserInput = {
@@ -1445,6 +1603,7 @@ export type FloatTransactionUncheckedUpdateWithoutToUserInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1467,6 +1626,7 @@ export type FloatTransactionUncheckedUpdateManyWithoutToUserInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1504,6 +1664,7 @@ export type FloatTransactionUpdateWithoutApprovedByInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutFloatTransactionsNestedInput
   fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutApprovedByInput = {
@@ -1511,6 +1672,7 @@ export type FloatTransactionUncheckedUpdateWithoutApprovedByInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1533,6 +1695,99 @@ export type FloatTransactionUncheckedUpdateManyWithoutApprovedByInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumFloatStatusFieldUpdateOperationsInput | $Enums.FloatStatus
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FloatTransactionCreateManyBrokerCustomerInput = {
+  id?: string
+  companyId: string
+  fromUserId?: string | null
+  toUserId?: string | null
+  approvedById?: string | null
+  transactionType?: $Enums.StaffFloatType
+  referenceNo?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: string | null
+  receiptUrl?: string | null
+  notes?: string | null
+  status?: $Enums.FloatStatus
+  issuedAt?: Date | string | null
+  confirmedAt?: Date | string | null
+  returnedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  lockedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FloatTransactionUpdateWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumFloatStatusFieldUpdateOperationsInput | $Enums.FloatStatus
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutFloatTransactionsNestedInput
+  fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
+  toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
+}
+
+export type FloatTransactionUncheckedUpdateWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumFloatStatusFieldUpdateOperationsInput | $Enums.FloatStatus
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
   referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1558,6 +1813,7 @@ export type FloatTransactionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   fromUserId?: boolean
   toUserId?: boolean
   approvedById?: boolean
+  brokerCustomerId?: boolean
   transactionType?: boolean
   referenceNo?: boolean
   amount?: boolean
@@ -1577,6 +1833,7 @@ export type FloatTransactionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   fromUser?: boolean | Prisma.FloatTransaction$fromUserArgs<ExtArgs>
   toUser?: boolean | Prisma.FloatTransaction$toUserArgs<ExtArgs>
   approvedBy?: boolean | Prisma.FloatTransaction$approvedByArgs<ExtArgs>
+  brokerCustomer?: boolean | Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs>
 }, ExtArgs["result"]["floatTransaction"]>
 
 
@@ -1587,6 +1844,7 @@ export type FloatTransactionSelectScalar = {
   fromUserId?: boolean
   toUserId?: boolean
   approvedById?: boolean
+  brokerCustomerId?: boolean
   transactionType?: boolean
   referenceNo?: boolean
   amount?: boolean
@@ -1604,12 +1862,13 @@ export type FloatTransactionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type FloatTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "fromUserId" | "toUserId" | "approvedById" | "transactionType" | "referenceNo" | "amount" | "returnedAmount" | "purpose" | "receiptUrl" | "notes" | "status" | "issuedAt" | "confirmedAt" | "returnedAt" | "approvedAt" | "lockedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["floatTransaction"]>
+export type FloatTransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "fromUserId" | "toUserId" | "approvedById" | "brokerCustomerId" | "transactionType" | "referenceNo" | "amount" | "returnedAmount" | "purpose" | "receiptUrl" | "notes" | "status" | "issuedAt" | "confirmedAt" | "returnedAt" | "approvedAt" | "lockedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["floatTransaction"]>
 export type FloatTransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   fromUser?: boolean | Prisma.FloatTransaction$fromUserArgs<ExtArgs>
   toUser?: boolean | Prisma.FloatTransaction$toUserArgs<ExtArgs>
   approvedBy?: boolean | Prisma.FloatTransaction$approvedByArgs<ExtArgs>
+  brokerCustomer?: boolean | Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs>
 }
 
 export type $FloatTransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1619,6 +1878,7 @@ export type $FloatTransactionPayload<ExtArgs extends runtime.Types.Extensions.In
     fromUser: Prisma.$UserPayload<ExtArgs> | null
     toUser: Prisma.$UserPayload<ExtArgs> | null
     approvedBy: Prisma.$UserPayload<ExtArgs> | null
+    brokerCustomer: Prisma.$BrokerCustomerPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1626,6 +1886,7 @@ export type $FloatTransactionPayload<ExtArgs extends runtime.Types.Extensions.In
     fromUserId: string | null
     toUserId: string | null
     approvedById: string | null
+    brokerCustomerId: string | null
     transactionType: $Enums.StaffFloatType
     referenceNo: string | null
     amount: runtime.Decimal
@@ -1985,6 +2246,7 @@ export interface Prisma__FloatTransactionClient<T, Null = never, ExtArgs extends
   fromUser<T extends Prisma.FloatTransaction$fromUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$fromUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   toUser<T extends Prisma.FloatTransaction$toUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$toUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   approvedBy<T extends Prisma.FloatTransaction$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  brokerCustomer<T extends Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs>>): Prisma.Prisma__BrokerCustomerClient<runtime.Types.Result.GetResult<Prisma.$BrokerCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2019,6 +2281,7 @@ export interface FloatTransactionFieldRefs {
   readonly fromUserId: Prisma.FieldRef<"FloatTransaction", 'String'>
   readonly toUserId: Prisma.FieldRef<"FloatTransaction", 'String'>
   readonly approvedById: Prisma.FieldRef<"FloatTransaction", 'String'>
+  readonly brokerCustomerId: Prisma.FieldRef<"FloatTransaction", 'String'>
   readonly transactionType: Prisma.FieldRef<"FloatTransaction", 'StaffFloatType'>
   readonly referenceNo: Prisma.FieldRef<"FloatTransaction", 'String'>
   readonly amount: Prisma.FieldRef<"FloatTransaction", 'Decimal'>
@@ -2436,6 +2699,25 @@ export type FloatTransaction$approvedByArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * FloatTransaction.brokerCustomer
+ */
+export type FloatTransaction$brokerCustomerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerCustomer
+   */
+  select?: Prisma.BrokerCustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerCustomer
+   */
+  omit?: Prisma.BrokerCustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerCustomerInclude<ExtArgs> | null
+  where?: Prisma.BrokerCustomerWhereInput
 }
 
 /**

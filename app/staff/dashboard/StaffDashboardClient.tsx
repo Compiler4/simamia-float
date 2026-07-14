@@ -26,20 +26,74 @@ type Props = {
   };
 };
 
+
+type BrokerDirectoryItem = {
+  id: string;
+  companyId: string;
+  code: string;
+  name: string;
+  businessName: string | null;
+  phone: string;
+  alternatePhone: string | null;
+  email: string | null;
+  location: string;
+  region: string | null;
+  district: string | null;
+  ward: string | null;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  status: "ACTIVE" | "INACTIVE" | "SUSPENDED";
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type CustomerDirectoryItem = {
+  id: string;
+  companyId: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  region: string | null;
+  address: string | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type DirectoryResponse = {
+  success: true;
+  brokers: BrokerDirectoryItem[];
+  customers: CustomerDirectoryItem[];
+  brokerLocations: string[];
+  customerRegions: string[];
+  totals: {
+    brokers: number;
+    customers: number;
+  };
+};
+
+type MapPoint = {
+  latitude: number;
+  longitude: number;
+  label: string;
+  subtitle?: string;
+  capturedAt?: string;
+  type?: "history" | "broker" | "staff" | "customer";
+};
+
 type PageKey =
   | "Dashboard"
   | "Receive & Confirm Float"
-  | "Issue Float to Brokers"
-  | "Receive Collections"
-  | "Return Money"
+  | "Float Operations"
   | "Deposit to Accountant"
   | "Deposit to Bank"
   | "Upload Proof of Payment"
   | "Bank Verification"
   | "Expense Management"
   | "Service Visits"
-  | "Assigned Transactions"
-  | "Transaction History"
+  | "My Transactions"
   | "Own Performance"
   | "Reports"
   | "Attendance"
@@ -53,15 +107,23 @@ type DashboardData = {
   success: boolean;
   staff: any;
   company: any;
-  brokers: any[];
+  brokers: BrokerDirectoryItem[];
   accountants: any[];
-  customers: any[];
+  customers: CustomerDirectoryItem[];
   assignments?: { brokerCount: number; customerCount: number };
   floats: any[];
   collections: any[];
   deposits: any[];
   expenses: any[];
   attendance: any[];
+  attendanceSummary?: {
+    requiredDays: number;
+    attendedDays: number;
+    missedDays: number;
+    rate: number;
+    period: string;
+    rule: string;
+  };
   notifications: any[];
   services: any[];
   devices: any[];
@@ -96,17 +158,14 @@ type IconName =
 const nav: Array<{ page: PageKey; group: string; icon: IconName }> = [
   { page: "Dashboard", group: "Overview", icon: "grid" },
   { page: "Receive & Confirm Float", group: "Morning Float", icon: "confirm" },
-  { page: "Issue Float to Brokers", group: "Float Operations", icon: "send" },
-  { page: "Receive Collections", group: "Float Operations", icon: "collection" },
-  { page: "Return Money", group: "Float Operations", icon: "return" },
+  { page: "Float Operations", group: "Float Operations", icon: "wallet" },
   { page: "Deposit to Accountant", group: "Settlement", icon: "accountant" },
   { page: "Deposit to Bank", group: "Settlement", icon: "bank" },
   { page: "Upload Proof of Payment", group: "Settlement", icon: "upload" },
   { page: "Bank Verification", group: "Settlement", icon: "verify" },
   { page: "Expense Management", group: "Operations", icon: "expense" },
   { page: "Service Visits", group: "Operations", icon: "visit" },
-  { page: "Assigned Transactions", group: "Records", icon: "transactions" },
-  { page: "Transaction History", group: "Records", icon: "history" },
+  { page: "My Transactions", group: "Records", icon: "transactions" },
   { page: "Own Performance", group: "Analytics", icon: "performance" },
   { page: "Reports", group: "Analytics", icon: "report" },
   { page: "Attendance", group: "Analytics", icon: "attendance" },
@@ -119,7 +178,7 @@ const nav: Array<{ page: PageKey; group: string; icon: IconName }> = [
 
 const topTabs: Array<{ label: string; page: PageKey }> = [
   { label: "Dashboard", page: "Dashboard" },
-  { label: "Operations", page: "Issue Float to Brokers" },
+  { label: "Operations", page: "Float Operations" },
   { label: "Analytics", page: "Own Performance" },
   { label: "Finance", page: "Bank Verification" },
   { label: "Documents", page: "Reports" },
@@ -177,6 +236,158 @@ function date(value: unknown, time = false) {
 function today() { return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Africa/Dar_es_Salaam" }).format(new Date()); }
 function label(value: unknown) { return String(value || "").replaceAll("_", " ").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()); }
 
+function brokerDisplayName(broker: BrokerDirectoryItem | any): string {
+  return String(
+    broker?.businessName ||
+      broker?.name ||
+      broker?.code ||
+      "Broker",
+  );
+}
+
+function brokerDisplayMeta(broker: BrokerDirectoryItem | any): string {
+  return String(
+    broker?.phone ||
+      broker?.email ||
+      broker?.location ||
+      broker?.region ||
+      broker?.code ||
+      "Registered broker",
+  );
+}
+
+function customerDisplayMeta(customer: CustomerDirectoryItem | any): string {
+  return String(
+    customer?.phone ||
+      customer?.email ||
+      customer?.region ||
+      customer?.address ||
+      "Registered customer",
+  );
+}
+
+function mergeRegisteredDirectory(
+  dashboard: DashboardData,
+  directory: DirectoryResponse,
+): DashboardData {
+  const brokers = arr<BrokerDirectoryItem>(directory.brokers);
+  const customers = arr<CustomerDirectoryItem>(directory.customers);
+
+  const brokerById = new Map(
+    brokers.map((broker) => [String(broker.id), broker]),
+  );
+
+  const customerById = new Map(
+    customers.map((customer) => [String(customer.id), customer]),
+  );
+
+  const resolveBroker = (row: any) => {
+    const id = String(
+      row?.brokerCustomerId ||
+        row?.brokerCustomer?.id ||
+        row?.brokerId ||
+        row?.broker?.id ||
+        "",
+    );
+
+    return (
+      row?.brokerCustomer ||
+      brokerById.get(id) ||
+      row?.broker ||
+      null
+    );
+  };
+
+  const resolveCustomer = (row: any) => {
+    const id = String(
+      row?.customerId ||
+        row?.customer?.id ||
+        "",
+    );
+
+    return (
+      row?.customer ||
+      customerById.get(id) ||
+      null
+    );
+  };
+
+  const floats = arr<any>(dashboard.floats).map((row) => {
+    const brokerCustomer = resolveBroker(row);
+
+    return {
+      ...row,
+      brokerCustomer,
+      toUser: row.toUser || brokerCustomer,
+    };
+  });
+
+  const collections = arr<any>(dashboard.collections).map((row) => {
+    const brokerCustomer = resolveBroker(row);
+
+    return {
+      ...row,
+      brokerCustomer,
+      broker: row.broker || brokerCustomer,
+    };
+  });
+
+  const services = arr<any>(dashboard.services).map((row) => ({
+    ...row,
+    brokerCustomer: resolveBroker(row),
+    customer: resolveCustomer(row),
+  }));
+
+  const brokerStats = arr<any>(dashboard.brokerStats).map((row) => {
+    const brokerCustomer = resolveBroker(row);
+
+    return {
+      ...row,
+      brokerCustomer,
+      broker: row.broker || brokerCustomer,
+    };
+  });
+
+  const customerStats = arr<any>(dashboard.customerStats).map((row) => ({
+    ...row,
+    customer: resolveCustomer(row),
+  }));
+
+  const hydrateTransaction = (row: any) => {
+    const brokerCustomer = resolveBroker(row);
+
+    return {
+      ...row,
+      person: row.person || brokerCustomer || resolveCustomer(row),
+    };
+  };
+
+  return {
+    ...dashboard,
+    brokers,
+    customers,
+    assignments: {
+      brokerCount: brokers.length,
+      customerCount: customers.length,
+    },
+    floats,
+    collections,
+    services,
+    brokerStats,
+    customerStats,
+    assignedTransactions: arr<any>(
+      dashboard.assignedTransactions,
+    ).map(hydrateTransaction),
+    dailyTransactions: arr<any>(
+      dashboard.dailyTransactions,
+    ).map(hydrateTransaction),
+    reportRows: arr<any>(
+      dashboard.reportRows,
+    ).map(hydrateTransaction),
+  };
+}
+
+
 async function compressImageInBrowser(
   file: File,
   kind: UploadClientKind,
@@ -218,12 +429,55 @@ async function compressImageInBrowser(
   });
 }
 
-async function requestJson<T = any>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, { credentials: "include", cache: "no-store", ...options });
+async function requestJson<T = any>(
+  url: string,
+  options?: RequestInit,
+): Promise<T> {
+  const response = await fetch(url, {
+    credentials: "include",
+    cache: "no-store",
+    ...options,
+  });
+
   const text = await response.text();
   let result: any = {};
-  try { result = text ? JSON.parse(text) : {}; } catch { throw new Error(`Server returned invalid JSON (${response.status}).`); }
-  if (!response.ok || result.success === false) throw new Error(result.message || "The request failed.");
+
+  try {
+    result = text
+      ? JSON.parse(text)
+      : {};
+  } catch {
+    throw new Error(
+      `Server returned invalid JSON (${response.status}).`,
+    );
+  }
+
+  if (
+    !response.ok ||
+    result.success === false
+  ) {
+    const parts = [
+      result.message,
+      result.details,
+      result.error,
+      result.originalError,
+    ]
+      .map((value) =>
+        String(value || "").trim(),
+      )
+      .filter(Boolean);
+
+    const uniqueParts =
+      Array.from(
+        new Set(parts),
+      );
+
+    throw new Error(
+      uniqueParts.join(" ") ||
+        `Request failed (${response.status}).`,
+    );
+  }
+
   return result as T;
 }
 
@@ -246,7 +500,7 @@ export default function StaffDashboardClient({ user }: Props) {
 
   useEffect(() => { void load(true); }, []);
   useEffect(() => {
-    if (page === "Reports" || page === "Own Performance" || page === "Transaction History") void load(false);
+    if (page === "Reports" || page === "Own Performance" || page === "My Transactions") void load(false);
   }, [period, anchor]);
   useEffect(() => {
     if (!toast) return;
@@ -257,24 +511,82 @@ export default function StaffDashboardClient({ user }: Props) {
   async function load(show = false) {
     if (show) setLoading(true);
     setError("");
+
     try {
-      setData(await requestJson<DashboardData>(`/api/staff/dashboard?period=${period}&date=${anchor}`));
+      const [dashboard, directory] = await Promise.all([
+        requestJson<DashboardData>(
+          `/api/staff/dashboard?period=${period}&date=${anchor}`,
+        ),
+        requestJson<DirectoryResponse>(
+          "/api/staff/directory",
+        ),
+      ]);
+
+      setData(
+        mergeRegisteredDirectory(
+          dashboard,
+          directory,
+        ),
+      );
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Staff dashboard could not load.");
-    } finally { setLoading(false); }
+      setError(
+        e instanceof Error
+          ? e.message
+          : "Staff dashboard could not load.",
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
-  async function action(name: string, payload: Record<string, unknown> = {}) {
+  async function action(
+    name: string,
+    payload: Record<string, unknown> = {},
+  ) {
     setBusy(true);
+
     try {
-      const result = await requestJson<{ success: true; message: string }>("/api/staff/actions", {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: name, ...payload }),
+      const profileActions = new Set([
+        "UPDATE_PROFILE_IMAGE",
+        "UPDATE_USERNAME",
+        "CHANGE_PASSWORD",
+      ]);
+
+      const endpoint =
+        profileActions.has(
+          name.toUpperCase(),
+        )
+          ? "/api/staff/profile"
+          : "/api/staff/actions";
+
+      const result = await requestJson<{
+        success: true;
+        message: string;
+      }>(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: name,
+          ...payload,
+        }),
       });
+
       setToast(result.message);
       await load(false);
       return true;
-    } catch (e) { setToast(e instanceof Error ? e.message : "Action failed."); return false; }
-    finally { setBusy(false); }
+    } catch (e) {
+      setToast(
+        e instanceof Error
+          ? e.message
+          : "Action failed.",
+      );
+
+      return false;
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function upload(
@@ -355,16 +667,14 @@ function PageContent(props: {
   const common = { data: props.data, busy: props.busy, action: props.action, upload: props.upload, notify: props.notify };
   switch (props.page) {
     case "Receive & Confirm Float": return <ReceiveFloatPage {...common}/>;
-    case "Issue Float to Brokers": return <IssueFloatPage {...common}/>;
-    case "Receive Collections": return <CollectionsPage {...common}/>;
-    case "Return Money": case "Deposit to Accountant": return <ReturnMoneyPage {...common}/>;
+    case "Float Operations": return <FloatOperationsPage {...common}/>;
+    case "Deposit to Accountant": return <ReturnMoneyPage {...common}/>;
     case "Deposit to Bank": return <BankDepositPage {...common}/>;
     case "Upload Proof of Payment": return <ProofPage {...common}/>;
     case "Bank Verification": return <BankStatusPage data={props.data}/>;
     case "Expense Management": return <ExpensePage {...common}/>;
     case "Service Visits": return <ServiceVisitPage {...common}/>;
-    case "Assigned Transactions": return <TransactionsPage data={props.data} assigned/>;
-    case "Transaction History": return <TransactionsPage data={props.data}/>;
+    case "My Transactions": return <TransactionsPage data={props.data}/>;
     case "Own Performance": return <PerformancePage data={props.data} period={props.period} setPeriod={props.setPeriod} anchor={props.anchor} setAnchor={props.setAnchor}/>;
     case "Reports": return <ReportsPage data={props.data} period={props.period} setPeriod={props.setPeriod} anchor={props.anchor} setAnchor={props.setAnchor}/>;
     case "Attendance": return <AttendancePage data={props.data}/>;
@@ -383,7 +693,7 @@ function DashboardHome({ data, open }: { data: DashboardData; open: (page: PageK
   const verifiedPct = depositTotal ? (verified / depositTotal) * 100 : 100;
   return <section className={styles.stack}>
     {data.financialHold && <div className={styles.holdBanner}><Icon name="alert" size={25}/><div><strong>Financial Hold</strong><span>{data.financialHold.mismatchReason || "A bank deposit mismatch must be resolved before another deposit is submitted."}</span></div><button onClick={() => open("Bank Verification")}>Review hold</button></div>}
-    {!data.brokers.length && !data.customers.length && <div className={styles.holdBanner}><Icon name="user" size={25}/><div><strong>No work assignments</strong><span>A Company Admin must assign your brokers and customers before you can issue float or record service visits.</span></div></div>}
+    {!data.brokers.length && !data.customers.length && <div className={styles.holdBanner}><Icon name="user" size={25}/><div><strong>No work assignments</strong><span>A Company Admin must register active brokers and customers before you can issue float or record service visits.</span></div></div>}
     <div className={styles.metricGrid}>
       <Metric title="Float Received Today" value={money(data.stats.todayFloatReceived)} change="Morning accountant supply" icon="receive" tone="green"/>
       <Metric title="Float Issued Today" value={money(data.stats.todayIssued)} change={`${data.stats.brokersServed || 0} brokers served`} icon="send" tone="purple"/>
@@ -396,7 +706,7 @@ function DashboardHome({ data, open }: { data: DashboardData; open: (page: PageK
     </div>
     <div className={styles.secondaryGrid}>
       <Card title="Current Float Position" subtitle="Available, outstanding and pending"><div className={styles.bigBalance}>{money(data.stats.availableBalance)}</div><Progress label="Performance score" value={data.stats.performanceScore || 0}/><Progress label="Attendance" value={data.stats.attendanceRate || 0}/><Progress label="GPS compliance" value={data.stats.gpsCompliance || 0}/></Card>
-      <Card title="Quick Operations" subtitle="Common staff actions"><div className={styles.quickGrid}><Quick icon="confirm" text="Confirm float" onClick={() => open("Receive & Confirm Float")}/><Quick icon="send" text="Issue to broker" onClick={() => open("Issue Float to Brokers")}/><Quick icon="bank" text="Bank deposit" onClick={() => open("Deposit to Bank")}/><Quick icon="location" text="Start live GPS" onClick={() => open("Live Locations")}/><Quick icon="expense" text="Submit expense" onClick={() => open("Expense Management")}/><Quick icon="report" text="View reports" onClick={() => open("Reports")}/></div></Card>
+      <Card title="Quick Operations" subtitle="Common staff actions"><div className={styles.quickGrid}><Quick icon="confirm" text="Confirm float" onClick={() => open("Receive & Confirm Float")}/><Quick icon="send" text="Issue to broker" onClick={() => open("Float Operations")}/><Quick icon="bank" text="Bank deposit" onClick={() => open("Deposit to Bank")}/><Quick icon="location" text="Start live GPS" onClick={() => open("Live Locations")}/><Quick icon="expense" text="Submit expense" onClick={() => open("Expense Management")}/><Quick icon="report" text="View reports" onClick={() => open("Reports")}/></div></Card>
       <Card title="Recent Transactions" subtitle="Database records with user details"><MiniTransactions rows={data.dailyTransactions.slice(0, 6)}/></Card>
     </div>
   </section>;
@@ -413,13 +723,60 @@ function ReceiveFloatPage({ data, busy, action }: CommonProps) {
 
 type CommonProps = { data: DashboardData; busy: boolean; action: (name: string, payload?: Record<string, unknown>) => Promise<boolean>; upload: (file: File, kind?: UploadClientKind) => Promise<string>; notify: (text: string) => void };
 
+function FloatOperationsPage(props: CommonProps) {
+  const [mode, setMode] = useState<"ISSUE" | "COLLECTION" | "RETURN">("ISSUE");
+
+  return (
+    <section className={styles.stack}>
+      <header className={styles.sectionHeader}>
+        <span><Icon name="wallet" size={25}/></span>
+        <div>
+          <small>STAFF FLOAT OFFICER</small>
+          <h2>Float Operations</h2>
+          <p>Issue float, receive broker collections and return money to the accountant from one page.</p>
+        </div>
+      </header>
+
+      <div className={styles.operationTabs}>
+        <button
+          type="button"
+          className={mode === "ISSUE" ? styles.activeOperationTab : ""}
+          onClick={() => setMode("ISSUE")}
+        >
+          <Icon name="send"/>Issue Float
+        </button>
+
+        <button
+          type="button"
+          className={mode === "COLLECTION" ? styles.activeOperationTab : ""}
+          onClick={() => setMode("COLLECTION")}
+        >
+          <Icon name="collection"/>Receive Collection
+        </button>
+
+        <button
+          type="button"
+          className={mode === "RETURN" ? styles.activeOperationTab : ""}
+          onClick={() => setMode("RETURN")}
+        >
+          <Icon name="return"/>Return Money
+        </button>
+      </div>
+
+      {mode === "ISSUE" && <IssueFloatPage {...props}/>}
+      {mode === "COLLECTION" && <CollectionsPage {...props}/>}
+      {mode === "RETURN" && <ReturnMoneyPage {...props}/>}
+    </section>
+  );
+}
+
 function IssueFloatPage({ data, busy, action, upload, notify }: CommonProps) {
   const [form, setForm] = useState({ brokerId: "", amount: "", purpose: "Morning float supply", referenceNo: "", notes: "", receiptUrl: "" });
   const [up, setUp] = useState(false);
   async function file(e: ChangeEvent<HTMLInputElement>) { const f = e.target.files?.[0]; if (!f) return; setUp(true); try { setForm({ ...form, receiptUrl: await upload(f,"proof") }); notify("Proof uploaded."); } catch (x) { notify(x instanceof Error ? x.message : "Upload failed."); } finally { setUp(false); } }
   async function submit(e: FormEvent) { e.preventDefault(); if (await action("ISSUE_FLOAT", form)) setForm({ brokerId: "", amount: "", purpose: "Morning float supply", referenceNo: "", notes: "", receiptUrl: "" }); }
   return <Section title="Issue Float to Brokers" subtitle={`Available balance: ${money(data.stats.availableBalance)}. Approved records cannot be edited.`} icon="send"><div className={styles.split}>
-    <FormCard title="New broker float" onSubmit={submit}><Field label="Broker"><select required value={form.brokerId} onChange={(e) => setForm({ ...form, brokerId: e.target.value })}><option value="">Select broker</option>{data.brokers.map((b) => <option key={b.id} value={b.id}>{b.name} — {b.username}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })}/></Field><Field label="Reference"><input value={form.referenceNo} onChange={(e) => setForm({ ...form, referenceNo: e.target.value })} placeholder="Automatic when blank"/></Field></div><Field label="Purpose"><input required value={form.purpose} onChange={(e) => setForm({ ...form, purpose: e.target.value })}/></Field><Field label="Notes"><textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy || up} text="Issue float" icon="send"/></FormCard>
+    <FormCard title="New broker float" onSubmit={submit}><Field label="Broker"><select required value={form.brokerId} onChange={(e) => setForm({ ...form, brokerId: e.target.value })}><option value="">Select broker</option>{data.brokers.map((b) => <option key={b.id} value={b.id}>{brokerDisplayName(b)} — {brokerDisplayMeta(b)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })}/></Field><Field label="Reference"><input value={form.referenceNo} onChange={(e) => setForm({ ...form, referenceNo: e.target.value })} placeholder="Automatic when blank"/></Field></div><Field label="Purpose"><input required value={form.purpose} onChange={(e) => setForm({ ...form, purpose: e.target.value })}/></Field><Field label="Notes"><textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy || up} text="Issue float" icon="send"/></FormCard>
     <Card title="Broker supply register" subtitle="How many times and how much each broker received"><BrokerTable rows={data.brokerStats}/></Card>
   </div></Section>;
 }
@@ -428,7 +785,7 @@ function CollectionsPage({ data, busy, action, upload, notify }: CommonProps) {
   const [form, setForm] = useState({ brokerId: "", amount: "", referenceNo: "", collectionDate: today(), description: "", receiptUrl: "" }); const [up, setUp] = useState(false);
   async function file(e: ChangeEvent<HTMLInputElement>) { const f=e.target.files?.[0]; if(!f)return; setUp(true); try{setForm({...form,receiptUrl:await upload(f,"receipt")});notify("Collection receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);} }
   async function submit(e:FormEvent){e.preventDefault();if(await action("RECORD_COLLECTION",form))setForm({brokerId:"",amount:"",referenceNo:"",collectionDate:today(),description:"",receiptUrl:""});}
-  return <Section title="Receive Collections" subtitle="Record money returned by brokers, exact time, proof and reference." icon="collection"><div className={styles.split}><FormCard title="New broker collection" onSubmit={submit}><Field label="Broker"><select required value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">Select broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{b.name} — {b.email}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Collection date"><input type="date" required value={form.collectionDate} onChange={(e)=>setForm({...form,collectionDate:e.target.value})}/></Field></div><Field label="Reference"><input value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field><Field label="Description"><textarea value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Record collection" icon="collection"/></FormCard><Card title="Recent collections" subtitle="Verification status from accounting"><MiniTransactions rows={data.collections.map((r)=>({id:r.id,description:r.description||"Broker collection",amount:r.amount,status:r.status,date:r.collectionDate,person:r.broker,reference:r.referenceNo})).slice(0,15)}/></Card></div></Section>;
+  return <Section title="Receive Collections" subtitle="Record money returned by brokers, exact time, proof and reference." icon="collection"><div className={styles.split}><FormCard title="New broker collection" onSubmit={submit}><Field label="Broker"><select required value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">Select broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{brokerDisplayName(b)} — {brokerDisplayMeta(b)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Collection date"><input type="date" required value={form.collectionDate} onChange={(e)=>setForm({...form,collectionDate:e.target.value})}/></Field></div><Field label="Reference"><input value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field><Field label="Description"><textarea value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Record collection" icon="collection"/></FormCard><Card title="Recent collections" subtitle="Verification status from accounting"><MiniTransactions rows={data.collections.map((r)=>({id:r.id,description:r.description||"Broker collection",amount:r.amount,status:r.status,date:r.collectionDate,person:r.broker,reference:r.referenceNo})).slice(0,15)}/></Card></div></Section>;
 }
 
 function ReturnMoneyPage({ data, busy, action, upload, notify }: CommonProps) {
@@ -447,19 +804,19 @@ function BankStatusPage({data}:{data:DashboardData}){return <Section title="Bank
 
 function ExpensePage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"expense")});notify("Expense receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("SUBMIT_EXPENSE",form))setForm({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});}return <Section title="Expense Management" subtitle="Every employee may submit an expense request. Approved or rejected requests cannot be edited." icon="expense"><div className={styles.expenseLayout}><FormCard title="New expense request" onSubmit={submit}><Field label="Category"><select value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}>{["FUEL","TRANSPORT","AIRTIME","ACCOMMODATION","REPAIRS","STATIONERY","MEALS","OFFICE_EXPENSES","EMERGENCY_EXPENSES"].map((v)=><option key={v}>{label(v)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Expense date"><input type="date" required value={form.expenseDate} onChange={(e)=>setForm({...form,expenseDate:e.target.value})}/></Field></div><Field label="Description"><textarea required value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Submit expense" icon="expense"/></FormCard><Card title="My expense requests" subtitle="Approval workflow and review notes"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th></tr></thead><tbody>{data.expenses.map((r)=><tr key={r.id}><td>{date(r.expenseDate)}</td><td>{label(r.category)}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/>{r.reviewNote&&<small>{r.reviewNote}</small>}</td><td>{r.reviewedBy?.name||"Awaiting review"}</td></tr>)}</tbody></table></div></Card></div></Section>}
 
-function ServiceVisitPage({data,busy,action}:CommonProps){const latest=data.devices?.[0];const[form,setForm]=useState({brokerId:"",customerId:"",serviceType:"Float supply visit",amount:"",notes:"",latitude:latest?.lastLatitude||"",longitude:latest?.lastLongitude||"",locationName:data.staff?.assignedRegion||""});async function submit(e:FormEvent){e.preventDefault();if(await action("RECORD_SERVICE_VISIT",form))setForm({...form,brokerId:"",customerId:"",amount:"",notes:""});}return <Section title="Broker and Customer Visits" subtitle="Record who was served, the location and how many times service was provided." icon="visit"><div className={styles.split}><FormCard title="Record service visit" onSubmit={submit}><Field label="Broker (optional)"><select value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">No broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{b.name}</option>)}</select></Field><Field label="Customer (optional)"><select value={form.customerId} onChange={(e)=>setForm({...form,customerId:e.target.value})}><option value="">No customer</option>{data.customers.map((c)=><option key={c.id} value={c.id}>{c.name} — {c.region||"No region"}</option>)}</select></Field><Field label="Service type"><input required value={form.serviceType} onChange={(e)=>setForm({...form,serviceType:e.target.value})}/></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="0" value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Location name"><input value={form.locationName} onChange={(e)=>setForm({...form,locationName:e.target.value})}/></Field></div><div className={styles.formRow}><Field label="Latitude"><input value={form.latitude} onChange={(e)=>setForm({...form,latitude:e.target.value})}/></Field><Field label="Longitude"><input value={form.longitude} onChange={(e)=>setForm({...form,longitude:e.target.value})}/></Field></div><Field label="Notes"><textarea value={form.notes} onChange={(e)=>setForm({...form,notes:e.target.value})}/></Field><Submit busy={busy} text="Record visit" icon="visit"/></FormCard><Card title="Customers and brokers served" subtitle="Period totals and latest locations"><div className={styles.visits}><h4>Brokers</h4><BrokerTable rows={data.brokerStats}/><h4>Customers</h4>{data.customerStats.map((r)=><article key={r.customer.id}><div><strong>{r.customer.name}</strong><span>{r.customer.region||r.customer.address||"No location"}</span></div><b>{r.visits} visits</b><em>{money(r.amount)}</em></article>)}</div></Card></div></Section>}
+function ServiceVisitPage({data,busy,action}:CommonProps){const latest=data.devices?.[0];const[form,setForm]=useState({brokerId:"",customerId:"",serviceType:"Float supply visit",amount:"",notes:"",latitude:latest?.lastLatitude||"",longitude:latest?.lastLongitude||"",locationName:data.staff?.assignedRegion||""});async function submit(e:FormEvent){e.preventDefault();if(await action("RECORD_SERVICE_VISIT",form))setForm({...form,brokerId:"",customerId:"",amount:"",notes:""});}return <Section title="Broker and Customer Visits" subtitle="Record who was served, the location and how many times service was provided." icon="visit"><div className={styles.split}><FormCard title="Record service visit" onSubmit={submit}><Field label="Broker (optional)"><select value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">No broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{brokerDisplayName(b)} — {brokerDisplayMeta(b)}</option>)}</select></Field><Field label="Customer (optional)"><select value={form.customerId} onChange={(e)=>setForm({...form,customerId:e.target.value})}><option value="">No customer</option>{data.customers.map((c)=><option key={c.id} value={c.id}>{c.name} — {customerDisplayMeta(c)}</option>)}</select></Field><Field label="Service type"><input required value={form.serviceType} onChange={(e)=>setForm({...form,serviceType:e.target.value})}/></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="0" value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Location name"><input value={form.locationName} onChange={(e)=>setForm({...form,locationName:e.target.value})}/></Field></div><div className={styles.formRow}><Field label="Latitude"><input value={form.latitude} onChange={(e)=>setForm({...form,latitude:e.target.value})}/></Field><Field label="Longitude"><input value={form.longitude} onChange={(e)=>setForm({...form,longitude:e.target.value})}/></Field></div><Field label="Notes"><textarea value={form.notes} onChange={(e)=>setForm({...form,notes:e.target.value})}/></Field><Submit busy={busy} text="Record visit" icon="visit"/></FormCard><Card title="Customers and brokers served" subtitle="Period totals and latest locations"><div className={styles.visits}><h4>Brokers</h4><BrokerTable rows={data.brokerStats}/><h4>Customers</h4>{data.customerStats.map((r)=><article key={r.customer.id}><div><strong>{r.customer.name}</strong><span>{r.customer.region||r.customer.address||"No location"}</span></div><b>{r.visits} visits</b><em>{money(r.amount)}</em></article>)}</div></Card></div></Section>}
 
-function TransactionsPage({data,assigned=false}:{data:DashboardData;assigned?:boolean}){const[type,setType]=useState("ALL");const[status,setStatus]=useState("ALL");const[query,setQuery]=useState("");const rows=useMemo(()=>data.assignedTransactions.filter((r)=>{if(type!=="ALL"&&r.kind!==type)return false;if(status!=="ALL"&&r.status!==status)return false;const q=query.toLowerCase();return !q||`${r.reference} ${r.description} ${r.person?.name||""} ${r.person?.email||""}`.toLowerCase().includes(q);}),[data.assignedTransactions,type,status,query]);return <Section title={assigned?"Assigned Transactions":"Transaction History"} subtitle="Filters apply automatically. Locked records cannot be changed." icon={assigned?"transactions":"history"}><FilterBar><select value={type} onChange={(e)=>setType(e.target.value)}><option value="ALL">All types</option>{["FLOAT","COLLECTION","BANK_DEPOSIT","EXPENSE"].map((v)=><option key={v}>{v}</option>)}</select><select value={status} onChange={(e)=>setStatus(e.target.value)}><option value="ALL">All statuses</option>{Array.from(new Set(data.assignedTransactions.map((r)=>r.status))).map((v)=><option key={v}>{label(v)}</option>)}</select><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search name, email, reference..."/></FilterBar><Card title={`${rows.length} transaction records`} subtitle="Real data fetched from MySQL"><TransactionTable rows={rows}/></Card></Section>}
+function TransactionsPage({data}:{data:DashboardData}){const[type,setType]=useState("ALL");const[status,setStatus]=useState("ALL");const[query,setQuery]=useState("");const rows=useMemo(()=>data.assignedTransactions.filter((r)=>{if(type!=="ALL"&&r.kind!==type)return false;if(status!=="ALL"&&r.status!==status)return false;const q=query.toLowerCase();return !q||`${r.reference} ${r.description} ${r.person?.name||""} ${r.person?.email||""}`.toLowerCase().includes(q);}),[data.assignedTransactions,type,status,query]);return <Section title="My Transactions" subtitle="Only transactions created by, assigned to, received by or returned by the logged-in staff officer are included." icon="transactions"><FilterBar><select value={type} onChange={(e)=>setType(e.target.value)}><option value="ALL">All types</option>{["FLOAT","COLLECTION","BANK_DEPOSIT","EXPENSE"].map((v)=><option key={v}>{v}</option>)}</select><select value={status} onChange={(e)=>setStatus(e.target.value)}><option value="ALL">All statuses</option>{Array.from(new Set(data.assignedTransactions.map((r)=>r.status))).map((v)=><option key={v}>{label(v)}</option>)}</select><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search my reference, person or description..."/></FilterBar><Card title={`${rows.length} personal transaction records`} subtitle="Server-filtered by the current staff ID and company ID"><TransactionTable rows={rows}/></Card></Section>}
 
 function PerformancePage({data,period,setPeriod,anchor,setAnchor}:{data:DashboardData;period:string;setPeriod:(v:string)=>void;anchor:string;setAnchor:(v:string)=>void}){const p=data.currentPerformance||{};return <Section title="Staff Performance" subtitle="Automatic KPI score from float, collection, bank, attendance, GPS and approval data." icon="performance"><PeriodFilter period={period} setPeriod={setPeriod} anchor={anchor} setAnchor={setAnchor}/><div className={styles.scoreHero}><div className={styles.scoreCircle}><strong>{p.score||0}</strong><span>/100</span></div><div><small>PERFORMANCE RATING</small><h3>{p.rating||"Needs Improvement"}</h3><p>90–100 Excellent · 80–89 Very Good · 70–79 Good · 60–69 Fair</p></div></div><div className={styles.kpiGrid}>{[["Total Float Issued",money(p.totalFloatIssued)],["Total Collections",money(p.totalCollections)],["Outstanding Balance",money(p.outstandingBalance)],["Average Return Time",`${Math.round(Number(p.averageReturnMinutes||0))} min`],["Deposit Accuracy",`${Math.round(Number(p.depositAccuracyRate||0))}%`],["Bank Mismatches",String(p.bankMismatches||0)],["Attendance Rate",`${Math.round(Number(p.attendanceRate||0))}%`],["GPS Compliance",`${Math.round(Number(p.gpsComplianceRate||0))}%`],["Customer Visits",String(p.customerVisits||0)],["Broker Visits",String(p.brokerVisits||0)],["Transactions Completed",String(p.transactionsCompleted||0)],["Approval Compliance",`${Math.round(Number(p.approvalComplianceRate||0))}%`]].map(([a,b])=><article key={a}><span>{a}</span><strong>{b}</strong></article>)}</div><div className={styles.analyticsGrid}><Card title="Monthly comparison" subtitle="Stored performance history"><PerformanceBars rows={data.latestPerformanceRecords}/></Card><Card title="Your current position" subtitle="Only your own rank is visible"><div className={styles.ranking}>{data.ranking.map((r)=><article key={r.id}><b>#{r.rank}</b><Avatar person={r}/><div><strong>{r.name}</strong><span>{r.rating} · {r.totalStaff || 1} staff officers</span></div><em>{r.score}/100</em></article>)}</div></Card></div></Section>}
 
 function ReportsPage({data,period,setPeriod,anchor,setAnchor}:{data:DashboardData;period:string;setPeriod:(v:string)=>void;anchor:string;setAnchor:(v:string)=>void}){const summary=data.reportSummary||{};function exportCsv(){const rows=[["Date","Type","Reference","Description","Person","Email","Amount","Status"],...data.reportRows.map((r)=>[date(r.date,true),r.kind,r.reference,r.description,r.person?.name||"",r.person?.email||"",Number(r.amount||0),r.status])];downloadBlob(`staff-report-${period.toLowerCase()}-${anchor}.csv`,rows.map((r)=>r.map(csvCell).join(",")).join("\n"),"text/csv;charset=utf-8");}function exportPdf(){const lines=[`${data.company?.name||"Company"} - Staff Float Officer Report`,`${summary.label||anchor} (${period})`,`Officer: ${data.staff?.name} <${data.staff?.email}>`,``, `Float received: ${money(summary.totalFloatReceived)}`,`Float issued: ${money(summary.totalFloatIssued)}`,`Collections: ${money(summary.totalCollections)}`,`Returned: ${money(summary.totalReturned)}`,`Banked: ${money(summary.totalBanked)}`,`Expenses: ${money(summary.totalExpenses)}`,`Brokers served: ${summary.brokersServed||0}`,`Customers served: ${summary.customersServed||0}`,``,"TRANSACTIONS",...data.reportRows.map((r)=>`${date(r.date,true)} | ${r.kind} | ${r.reference} | ${r.person?.name||""} | ${money(r.amount)} | ${r.status}`)];downloadPdf(`staff-report-${period.toLowerCase()}-${anchor}.pdf`,lines);}return <Section title="Daily, Weekly, Monthly and Yearly Reports" subtitle="Automatic period filters, broker/customer service statistics, returns and bank checks." icon="report"><div className={styles.reportToolbar}><PeriodFilter period={period} setPeriod={setPeriod} anchor={anchor} setAnchor={setAnchor}/><button onClick={exportCsv}><Icon name="download"/>CSV</button><button onClick={exportPdf}><Icon name="document"/>PDF</button></div><div className={styles.metricGrid}><Metric title="Float Received" value={money(summary.totalFloatReceived)} change={summary.label} icon="receive" tone="green"/><Metric title="Float Issued" value={money(summary.totalFloatIssued)} change={`${summary.brokersServed||0} brokers`} icon="send" tone="purple"/><Metric title="Collections" value={money(summary.totalCollections)} change={`${summary.customersServed||0} customers`} icon="collection" tone="gold"/><Metric title="Daily Return" value={money(summary.dailyReturn)} change={`${summary.bankMismatches||0} bank mismatches`} icon="return" tone="blue"/></div><div className={styles.analyticsGrid}><Card title="Period movement trend" subtitle="Float and collection movement"><LineChart rows={data.flowSeries}/></Card><Card title="Report summary" subtitle="Financial and operational totals"><div className={styles.summaryList}>{Object.entries(summary).filter(([k])=>!["label","period"].includes(k)).map(([k,v])=><div key={k}><span>{label(k.replace(/([A-Z])/g,"_$1"))}</span><strong>{typeof v==="number"&&k.toLowerCase().includes("total")?money(v):String(v)}</strong></div>)}</div></Card></div><Card title="Period transactions" subtitle={`${data.reportRows.length} records`}><TransactionTable rows={data.reportRows}/></Card></Section>}
 
-function AttendancePage({data}:{data:DashboardData}){return <Section title="Attendance Management" subtitle="Generated automatically from receiving float, issuing float, returns and GPS movement." icon="attendance"><div className={styles.metricGrid}><Metric title="Attendance Rate" value={`${Math.round(Number(data.currentPerformance?.attendanceRate||0))}%`} change="Operational activity" icon="attendance" tone="green"/><Metric title="Present" value={String(data.attendance.filter((r)=>r.status==="PRESENT").length)} change="Returned before cutoff" icon="check" tone="blue"/><Metric title="Late" value={String(data.attendance.filter((r)=>r.status==="LATE").length)} change="Returned after cutoff" icon="history" tone="gold"/><Metric title="Absent" value={String(data.attendance.filter((r)=>r.status==="ABSENT").length)} change="No return by cutoff" icon="x" tone="red"/></div><Card title="Class-style attendance register" subtitle="✓ present, ⏱ late and ✕ absent"><div className={styles.attendanceTable}><table><thead><tr><th>Date</th><th>Mark</th><th>Status</th><th>Check-in</th><th>Check-out</th><th>Source</th><th>Notes</th></tr></thead><tbody>{data.attendance.map((r)=><tr key={r.id}><td>{date(r.date)}</td><td><span className={`${styles.attMark} ${r.status==="ABSENT"?styles.absent:r.status==="LATE"?styles.late:styles.present}`}>{r.status==="ABSENT"?"✕":r.status==="LATE"?"⏱":"✓"}</span></td><td><Status value={r.status}/></td><td>{date(r.checkInAt,true)}</td><td>{date(r.checkOutAt,true)}</td><td>{label(r.source)}</td><td>{r.notes||"—"}</td></tr>)}</tbody></table></div></Card></Section>}
+function AttendancePage({data}:{data:DashboardData}){const summary=data.attendanceSummary||{requiredDays:5,attendedDays:0,missedDays:5,rate:0,rule:"Staff is expected to supply float Monday to Friday."};return <Section title="Attendance Management" subtitle={`${summary.rule} Weekly rate is calculated from ${summary.attendedDays} attended day(s) out of ${summary.requiredDays} required days.`} icon="attendance"><div className={styles.metricGrid}><Metric title="Weekly Attendance Rate" value={`${Math.round(Number(summary.rate||0))}%`} change={`${summary.attendedDays}/${summary.requiredDays} required float-supply days`} icon="attendance" tone="green"/><Metric title="Days Attended" value={String(summary.attendedDays)} change="Present or late operational days" icon="check" tone="blue"/><Metric title="Required Days" value={String(summary.requiredDays)} change="Monday to Friday" icon="calendar" tone="gold"/><Metric title="Missed Days" value={String(summary.missedDays)} change="Required days without attendance" icon="x" tone="red"/></div><Card title="My attendance register" subtitle="Only the logged-in staff officer's attendance records are displayed."><div className={styles.attendanceTable}><table><thead><tr><th>Date</th><th>Mark</th><th>Status</th><th>Check-in</th><th>Check-out</th><th>Source</th><th>Notes</th></tr></thead><tbody>{data.attendance.map((r)=><tr key={r.id}><td>{date(r.date)}</td><td><span className={`${styles.attMark} ${r.status==="ABSENT"?styles.absent:r.status==="LATE"?styles.late:styles.present}`}>{r.status==="ABSENT"?"✕":r.status==="LATE"?"⏱":"✓"}</span></td><td><Status value={r.status}/></td><td>{date(r.checkInAt,true)}</td><td>{date(r.checkOutAt,true)}</td><td>{label(r.source)}</td><td>{r.notes||"—"}</td></tr>)}</tbody></table></div></Card></Section>}
 
-function GpsPage({data,notify,reload}:{data:DashboardData;notify:(t:string)=>void;reload:()=>Promise<void>}){const[tracking,setTracking]=useState(false);const[latest,setLatest]=useState<any>(null);const watch=useRef<number|null>(null);const lastSent=useRef(0);function token(){let value=localStorage.getItem("simamia_staff_device_token");if(!value){value=crypto.randomUUID();localStorage.setItem("simamia_staff_device_token",value);}return value;}async function send(pos:GeolocationPosition){const now=Date.now();if(now-lastSent.current<12000)return;lastSent.current=now;const payload={deviceToken:token(),deviceName:navigator.userAgent.includes("Mobile")?"Staff mobile phone":"Staff browser device",latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy:pos.coords.accuracy,speed:pos.coords.speed,heading:pos.coords.heading,capturedAt:new Date(pos.timestamp).toISOString()};setLatest(payload);try{await requestJson("/api/staff/gps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});await reload();}catch(e){notify(e instanceof Error?e.message:"GPS save failed.");}}function start(){if(!navigator.geolocation)return notify("This device does not support browser geolocation.");watch.current=navigator.geolocation.watchPosition((p)=>void send(p),async(e)=>{setTracking(false);notify(e.message);await fetch("/api/staff/gps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({event:"DISABLED"})});},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});setTracking(true);}async function stop(){if(watch.current!=null)navigator.geolocation.clearWatch(watch.current);watch.current=null;setTracking(false);await fetch("/api/staff/gps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({event:"DISABLED"})});notify("Live GPS stopped and a GPS-disabled event was recorded.");}useEffect(()=>()=>{if(watch.current!=null)navigator.geolocation.clearWatch(watch.current);},[]);const points=data.liveLocations.filter((r)=>r.latitude!=null&&r.longitude!=null).map((r)=>({latitude:Number(r.latitude),longitude:Number(r.longitude),label:r.owner?.name||r.name,subtitle:`${label(r.owner?.role)} • ${r.speedKph?Math.round(r.speedKph)+" km/h":"Stationary"}`,capturedAt:r.lastSeenAt,type:r.owner?.role==="BROKER"?"broker":"staff"}));return <Section title="Live Locations" subtitle="Uses browser location permission and stores real GPS pings in MySQL." icon="location"><div className={styles.gpsToolbar}><button className={styles.primary} onClick={tracking?()=>void stop():start}>{tracking?<><Icon name="x"/>Stop Live GPS</>:<><Icon name="location"/>Start Live GPS</>}</button><span className={tracking?styles.online:styles.offline}>{tracking?"Sharing live location":"GPS not sharing"}</span>{latest&&<small>{Number(latest.latitude).toFixed(6)}, {Number(latest.longitude).toFixed(6)}</small>}</div><div className={styles.mapGrid}><Card title="Your operational map" subtitle="Your device and assigned broker devices"><LiveMap points={points}/></Card><Card title="Device status" subtitle="Only your device and assigned brokers are visible"><div className={styles.deviceList}>{data.liveLocations.map((r)=><article key={r.id}><Avatar person={r.owner}/><div><strong>{r.owner?.name||r.name}</strong><span>{r.latitude?.toFixed?.(5)}, {r.longitude?.toFixed?.(5)}</span><small>{date(r.lastSeenAt,true)} • {Math.round(Number(r.speedKph||0))} km/h</small></div><Status value={r.status}/></article>)}</div></Card></div><div className={styles.note}>Location access works on <b>localhost</b> during development and on an <b>HTTPS</b> domain after deployment.</div></Section>}
+function GpsPage({data,notify,reload}:{data:DashboardData;notify:(t:string)=>void;reload:()=>Promise<void>}){const[tracking,setTracking]=useState(false);const[latest,setLatest]=useState<any>(null);const watch=useRef<number|null>(null);const lastSent=useRef(0);function token(){let value=localStorage.getItem("simamia_staff_device_token");if(!value){value=crypto.randomUUID();localStorage.setItem("simamia_staff_device_token",value);}return value;}async function send(pos:GeolocationPosition){const now=Date.now();if(now-lastSent.current<12000)return;lastSent.current=now;const payload={deviceToken:token(),deviceName:navigator.userAgent.includes("Mobile")?"Staff mobile phone":"Staff browser device",latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy:pos.coords.accuracy,speed:pos.coords.speed,heading:pos.coords.heading,capturedAt:new Date(pos.timestamp).toISOString()};setLatest(payload);try{await requestJson("/api/staff/gps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});await reload();}catch(e){notify(e instanceof Error?e.message:"GPS save failed.");}}function start(){if(!navigator.geolocation)return notify("This device does not support browser geolocation.");watch.current=navigator.geolocation.watchPosition((p)=>void send(p),async(e)=>{setTracking(false);notify(e.message);await fetch("/api/staff/gps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({event:"DISABLED"})});},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});setTracking(true);}async function stop(){if(watch.current!=null)navigator.geolocation.clearWatch(watch.current);watch.current=null;setTracking(false);await fetch("/api/staff/gps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({event:"DISABLED"})});notify("Live GPS stopped and a GPS-disabled event was recorded.");}useEffect(()=>()=>{if(watch.current!=null)navigator.geolocation.clearWatch(watch.current);},[]);const points: MapPoint[]=data.liveLocations.filter((r)=>r.latitude!=null&&r.longitude!=null).map((r):MapPoint=>({latitude:Number(r.latitude),longitude:Number(r.longitude),label:String(r.owner?.name||r.name||"Live location"),subtitle:`${label(r.owner?.role)} • ${r.speedKph?Math.round(r.speedKph)+" km/h":"Stationary"}`,capturedAt:r.lastSeenAt?String(r.lastSeenAt):undefined,type:r.owner?.role==="BROKER"?"broker":"staff"}));return <Section title="Live Locations" subtitle="Uses browser location permission and stores real GPS pings in MySQL." icon="location"><div className={styles.gpsToolbar}><button className={styles.primary} onClick={tracking?()=>void stop():start}>{tracking?<><Icon name="x"/>Stop Live GPS</>:<><Icon name="location"/>Start Live GPS</>}</button><span className={tracking?styles.online:styles.offline}>{tracking?"Sharing live location":"GPS not sharing"}</span>{latest&&<small>{Number(latest.latitude).toFixed(6)}, {Number(latest.longitude).toFixed(6)}</small>}</div><div className={styles.mapGrid}><Card title="Your operational map" subtitle="Your device and assigned broker devices"><LiveMap points={points}/></Card><Card title="Device status" subtitle="Only your device and assigned brokers are visible"><div className={styles.deviceList}>{data.liveLocations.map((r)=><article key={r.id}><Avatar person={r.owner}/><div><strong>{r.owner?.name||r.name}</strong><span>{r.latitude?.toFixed?.(5)}, {r.longitude?.toFixed?.(5)}</span><small>{date(r.lastSeenAt,true)} • {Math.round(Number(r.speedKph||0))} km/h</small></div><Status value={r.status}/></article>)}</div></Card></div><div className={styles.note}>Location access works on <b>localhost</b> during development and on an <b>HTTPS</b> domain after deployment.</div></Section>}
 
-function TravelPage({data}:{data:DashboardData}){const pings=arr<any>(data.devices?.[0]?.pings).slice().reverse();const points=pings.map((r)=>({latitude:Number(r.latitude),longitude:Number(r.longitude),label:"Travel point",subtitle:`${Math.round(Number(r.speedKph||0))} km/h`,capturedAt:r.capturedAt,type:"history" as const}));return <Section title="Travel History" subtitle="Recorded route, movement times, speed and accuracy." icon="route"><div className={styles.mapGrid}><Card title="Recorded route" subtitle={`${pings.length} GPS points`}><LiveMap points={points.slice(-1)} history={points}/></Card><Card title="Travel records" subtitle="Newest GPS records"><div className={styles.travelList}>{pings.slice().reverse().slice(0,40).map((r)=><article key={r.id}><Icon name="location"/><div><strong>{Number(r.latitude).toFixed(6)}, {Number(r.longitude).toFixed(6)}</strong><span>{date(r.capturedAt,true)}</span></div><b>{Math.round(Number(r.speedKph||0))} km/h</b></article>)}</div></Card></div></Section>}
+function TravelPage({data}:{data:DashboardData}){const pings=arr<any>(data.devices?.[0]?.pings).slice().reverse();const points: MapPoint[]=pings.map((r):MapPoint=>({latitude:Number(r.latitude),longitude:Number(r.longitude),label:"Travel point",subtitle:`${Math.round(Number(r.speedKph||0))} km/h`,capturedAt:r.capturedAt?String(r.capturedAt):undefined,type:"history"}));return <Section title="Travel History" subtitle="Recorded route, movement times, speed and accuracy." icon="route"><div className={styles.mapGrid}><Card title="Recorded route" subtitle={`${pings.length} GPS points`}><LiveMap points={points.slice(-1)} history={points}/></Card><Card title="Travel records" subtitle="Newest GPS records"><div className={styles.travelList}>{pings.slice().reverse().slice(0,40).map((r)=><article key={r.id}><Icon name="location"/><div><strong>{Number(r.latitude).toFixed(6)}, {Number(r.longitude).toFixed(6)}</strong><span>{date(r.capturedAt,true)}</span></div><b>{Math.round(Number(r.speedKph||0))} km/h</b></article>)}</div></Card></div></Section>}
 
 function GpsAlertsPage({data}:{data:DashboardData}){return <Section title="GPS Alerts" subtitle="GPS disabled, offline, assigned-region, overspeed and idle-time alerts." icon="alert"><div className={styles.alertGrid}>{data.gpsAlerts.map((r)=><article key={r.id}><span><Icon name="alert"/></span><div><strong>{r.title}</strong><p>{r.message}</p><small>{date(r.createdAt,true)} {r.latitude!=null?`• ${Number(r.latitude).toFixed(5)}, ${Number(r.longitude).toFixed(5)}`:""}</small></div><Status value={r.status}/></article>)}{!data.gpsAlerts.length&&<Empty text="No GPS alerts have been recorded."/>}</div></Section>}
 
@@ -490,7 +847,13 @@ function ProfilePage({data,busy,action,upload,notify}:CommonProps){
     setUploading(true);
     try{
       const url=await upload(file,"profile");
-      await action("UPDATE_PROFILE_IMAGE",{profileImageUrl:url});
+      const updated=await action(
+        "UPDATE_PROFILE_IMAGE",
+        {profileImageUrl:url},
+      );
+      if(updated){
+        notify("Profile image updated successfully.");
+      }
     }catch(error){
       notify(error instanceof Error?error.message:"Profile upload failed.");
     }finally{
@@ -614,7 +977,7 @@ function PeriodFilter({period,setPeriod,anchor,setAnchor}:{period:string;setPeri
 function LineChart({rows}:{rows:any[]}){const safe=rows.length?rows:[{label:"No data",received:0,issued:0,collections:0,deposited:0}];const max=Math.max(1,...safe.flatMap((r)=>[r.received,r.issued,r.collections,r.deposited].map(Number)));const width=760,height=250,pad=28;function points(key:string){return safe.map((r,i)=>`${pad+(i*(width-pad*2))/Math.max(1,safe.length-1)},${height-pad-(Number(r[key]||0)/max)*(height-pad*2)}`).join(" ");}return <div className={styles.chart}><div className={styles.chartLegend}><span><i className={styles.greenDot}/>Received</span><span><i className={styles.purpleDot}/>Issued</span><span><i className={styles.goldDot}/>Collections</span><span><i className={styles.redDot}/>Returned/Banked</span></div><svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">{[0,1,2,3,4].map((n)=><line key={n} x1={pad} y1={pad+n*(height-pad*2)/4} x2={width-pad} y2={pad+n*(height-pad*2)/4} className={styles.gridLine}/>)}<polyline points={points("received")} className={styles.lineReceived}/><polyline points={points("issued")} className={styles.lineIssued}/><polyline points={points("collections")} className={styles.lineCollection}/><polyline points={points("deposited")} className={styles.lineDeposited}/></svg><div className={styles.chartLabels}>{safe.map((r,i)=><span key={`${r.key||r.label}-${i}`}>{r.label||r.key}</span>)}</div></div>}
 function Donut({percent,value}:{percent:number;value:string}){const p=Math.max(0,Math.min(100,percent));return <div className={styles.donutWrap}><div className={styles.donut} style={{background:`conic-gradient(#0d9b70 0 ${p}%, #dc4e68 ${p}% 100%)`}}><span><small>Total Deposits</small><strong>{value}</strong><em>{Math.round(p)}% verified</em></span></div></div>}
 function PerformanceBars({rows}:{rows:any[]}){const safe=rows.slice().reverse().slice(-12);return <div className={styles.bars}>{safe.map((r)=><article key={`${r.year}-${r.month}`}><div><span style={{height:`${Math.max(3,Number(r.score||0))}%`}}/></div><b>{r.score}</b><small>{String(r.month).padStart(2,"0")}/{String(r.year).slice(-2)}</small></article>)}{!safe.length&&<Empty text="Performance history will appear after monthly calculations."/>}</div>}
-function BrokerTable({rows}:{rows:any[]}){return <div className={styles.brokerRows}>{rows.map((r)=><article key={r.broker.id}><Avatar person={r.broker}/><div><strong>{r.broker.name}</strong><span>{r.broker.email}</span><small>{r.location?`${Number(r.location.latitude).toFixed(4)}, ${Number(r.location.longitude).toFixed(4)}`:r.broker.assignedRegion||"No live location"}</small></div><b>{r.timesServed} times</b><em>{money(r.totalFloat)}</em></article>)}{!rows.length&&<Empty text="No broker service activity in this period."/>}</div>}
+function BrokerTable({rows}:{rows:any[]}){return <div className={styles.brokerRows}>{rows.map((r)=>{const broker=r.brokerCustomer||r.broker||{};return <article key={broker.id||r.brokerCustomerId||r.brokerId||r.id}><Avatar person={broker}/><div><strong>{brokerDisplayName(broker)}</strong><span>{brokerDisplayMeta(broker)}</span><small>{r.location?`${Number(r.location.latitude).toFixed(4)}, ${Number(r.location.longitude).toFixed(4)}`:broker.location||broker.region||broker.address||"No registered location"}</small></div><b>{r.timesServed||r.visits||0} times</b><em>{money(r.totalFloat||r.amount||0)}</em></article>})}{!rows.length&&<Empty text="No broker service activity in this period."/>}</div>}
 function MiniTransactions({rows}:{rows:any[]}){return <div className={styles.miniTransactions}>{rows.map((r)=><article key={r.id}><Avatar person={r.person}/><div><strong>{r.description||r.reference}</strong><span>{r.person?.name||"System"} {r.person?.email?`• ${r.person.email}`:""}</span><small>{date(r.date,true)} • {r.reference}</small></div><b>{money(r.amount)}</b><Status value={r.status}/></article>)}{!rows.length&&<Empty text="No transaction records found."/>}</div>}
 function TransactionTable({rows}:{rows:any[]}){return <div className={styles.tableScroll}><table><thead><tr><th>#</th><th>Date</th><th>User</th><th>Type</th><th>Reference</th><th>Description</th><th>Amount</th><th>Proof</th><th>Status</th><th>Control</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r.id}><td>{i+1}</td><td>{date(r.date,true)}</td><td><div className={styles.personCell}><Avatar person={r.person}/><span><strong>{r.person?.name||"System"}</strong><small>{r.person?.email||"—"}</small></span></div></td><td>{label(r.kind||r.type)}</td><td>{r.reference}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/></td><td>{r.locked?<span className={styles.locked}>Locked</span>:"Pending"}</td></tr>)}</tbody></table></div>}
 function BankCards({rows}:{rows:any[]}){return <div className={styles.bankCards}>{rows.slice(0,12).map((r)=><article key={r.id}><div><strong>{r.referenceNo}</strong><span>{r.bankAccount}</span><small>{date(r.depositDate,true)}</small></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.mismatchReason&&<p>{r.mismatchReason}</p>}</article>)}{!rows.length&&<Empty text="No bank deposits submitted."/>}</div>}

@@ -1128,10 +1128,12 @@ export type UserUpdateOneRequiredWithoutStaffCollectionsRecordedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStaffCollectionsRecordedInput, Prisma.UserUpdateWithoutStaffCollectionsRecordedInput>, Prisma.UserUncheckedUpdateWithoutStaffCollectionsRecordedInput>
 }
 
-export type UserUpdateOneRequiredWithoutBrokerCollectionsNestedInput = {
+export type UserUpdateOneWithoutBrokerCollectionsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutBrokerCollectionsInput, Prisma.UserUncheckedCreateWithoutBrokerCollectionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutBrokerCollectionsInput
   upsert?: Prisma.UserUpsertWithoutBrokerCollectionsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBrokerCollectionsInput, Prisma.UserUpdateWithoutBrokerCollectionsInput>, Prisma.UserUncheckedUpdateWithoutBrokerCollectionsInput>
 }

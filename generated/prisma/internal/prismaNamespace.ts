@@ -400,6 +400,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   Product: 'Product',
   Customer: 'Customer',
+  BrokerCustomer: 'BrokerCustomer',
   ServiceActivity: 'ServiceActivity',
   GpsTracking: 'GpsTracking',
   CompanySetting: 'CompanySetting',
@@ -433,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "branch" | "user" | "subscription" | "financialDay" | "attendance" | "expense" | "bankDeposit" | "floatTransaction" | "staffCollection" | "performanceRecord" | "notification" | "message" | "auditLog" | "product" | "customer" | "serviceActivity" | "gpsTracking" | "companySetting" | "companyExpense" | "companyBankVerification" | "companyBankMessage" | "companyAttendance" | "companyNotification" | "companyGpsDevice" | "companyGpsPing" | "companyAdminSetting" | "companyAuditEvent" | "accountingPeriod" | "gpsAlert" | "notificationDelivery" | "staffBrokerAssignment" | "staffCustomerAssignment" | "staffFile"
+    modelProps: "company" | "branch" | "user" | "subscription" | "financialDay" | "attendance" | "expense" | "bankDeposit" | "floatTransaction" | "staffCollection" | "performanceRecord" | "notification" | "message" | "auditLog" | "product" | "customer" | "brokerCustomer" | "serviceActivity" | "gpsTracking" | "companySetting" | "companyExpense" | "companyBankVerification" | "companyBankMessage" | "companyAttendance" | "companyNotification" | "companyGpsDevice" | "companyGpsPing" | "companyAdminSetting" | "companyAuditEvent" | "accountingPeriod" | "gpsAlert" | "notificationDelivery" | "staffBrokerAssignment" | "staffCustomerAssignment" | "staffFile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1490,6 +1491,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CustomerCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CustomerCountAggregateOutputType> | number
+        }
+      }
+    }
+    BrokerCustomer: {
+      payload: Prisma.$BrokerCustomerPayload<ExtArgs>
+      fields: Prisma.BrokerCustomerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BrokerCustomerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BrokerCustomerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload>
+        }
+        findFirst: {
+          args: Prisma.BrokerCustomerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BrokerCustomerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload>
+        }
+        findMany: {
+          args: Prisma.BrokerCustomerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload>[]
+        }
+        create: {
+          args: Prisma.BrokerCustomerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload>
+        }
+        createMany: {
+          args: Prisma.BrokerCustomerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BrokerCustomerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload>
+        }
+        update: {
+          args: Prisma.BrokerCustomerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload>
+        }
+        deleteMany: {
+          args: Prisma.BrokerCustomerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BrokerCustomerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BrokerCustomerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerCustomerPayload>
+        }
+        aggregate: {
+          args: Prisma.BrokerCustomerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBrokerCustomer>
+        }
+        groupBy: {
+          args: Prisma.BrokerCustomerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrokerCustomerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BrokerCustomerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrokerCustomerCountAggregateOutputType> | number
         }
       }
     }
@@ -2881,6 +2948,7 @@ export const FloatTransactionScalarFieldEnum = {
   fromUserId: 'fromUserId',
   toUserId: 'toUserId',
   approvedById: 'approvedById',
+  brokerCustomerId: 'brokerCustomerId',
   transactionType: 'transactionType',
   referenceNo: 'referenceNo',
   amount: 'amount',
@@ -2906,6 +2974,7 @@ export const StaffCollectionScalarFieldEnum = {
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   reviewedById: 'reviewedById',
   referenceNo: 'referenceNo',
   amount: 'amount',
@@ -3025,11 +3094,37 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
+export const BrokerCustomerScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  code: 'code',
+  name: 'name',
+  businessName: 'businessName',
+  phone: 'phone',
+  alternatePhone: 'alternatePhone',
+  email: 'email',
+  location: 'location',
+  region: 'region',
+  district: 'district',
+  ward: 'ward',
+  address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  status: 'status',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrokerCustomerScalarFieldEnum = (typeof BrokerCustomerScalarFieldEnum)[keyof typeof BrokerCustomerScalarFieldEnum]
+
+
 export const ServiceActivityScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   customerId: 'customerId',
   serviceType: 'serviceType',
   amount: 'amount',
@@ -3358,6 +3453,10 @@ export const StaffFileScalarFieldEnum = {
   storedName: 'storedName',
   mimeType: 'mimeType',
   sizeBytes: 'sizeBytes',
+  originalSizeBytes: 'originalSizeBytes',
+  compressionRatio: 'compressionRatio',
+  compressed: 'compressed',
+  checksumSha256: 'checksumSha256',
   storagePath: 'storagePath',
   createdAt: 'createdAt'
 } as const
@@ -3492,6 +3591,7 @@ export const FloatTransactionOrderByRelevanceFieldEnum = {
   fromUserId: 'fromUserId',
   toUserId: 'toUserId',
   approvedById: 'approvedById',
+  brokerCustomerId: 'brokerCustomerId',
   referenceNo: 'referenceNo',
   purpose: 'purpose',
   receiptUrl: 'receiptUrl',
@@ -3506,6 +3606,7 @@ export const StaffCollectionOrderByRelevanceFieldEnum = {
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   reviewedById: 'reviewedById',
   referenceNo: 'referenceNo',
   description: 'description',
@@ -3589,11 +3690,32 @@ export const CustomerOrderByRelevanceFieldEnum = {
 export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
 
 
+export const BrokerCustomerOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  code: 'code',
+  name: 'name',
+  businessName: 'businessName',
+  phone: 'phone',
+  alternatePhone: 'alternatePhone',
+  email: 'email',
+  location: 'location',
+  region: 'region',
+  district: 'district',
+  ward: 'ward',
+  address: 'address',
+  notes: 'notes'
+} as const
+
+export type BrokerCustomerOrderByRelevanceFieldEnum = (typeof BrokerCustomerOrderByRelevanceFieldEnum)[keyof typeof BrokerCustomerOrderByRelevanceFieldEnum]
+
+
 export const ServiceActivityOrderByRelevanceFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   staffId: 'staffId',
   brokerId: 'brokerId',
+  brokerCustomerId: 'brokerCustomerId',
   customerId: 'customerId',
   serviceType: 'serviceType',
   status: 'status',
@@ -3819,6 +3941,7 @@ export const StaffFileOrderByRelevanceFieldEnum = {
   originalName: 'originalName',
   storedName: 'storedName',
   mimeType: 'mimeType',
+  checksumSha256: 'checksumSha256',
   storagePath: 'storagePath'
 } as const
 
@@ -3954,6 +4077,13 @@ export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'BrokerCustomerStatus'
+ */
+export type EnumBrokerCustomerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BrokerCustomerStatus'>
     
 
 
@@ -4159,6 +4289,7 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   product?: Prisma.ProductOmit
   customer?: Prisma.CustomerOmit
+  brokerCustomer?: Prisma.BrokerCustomerOmit
   serviceActivity?: Prisma.ServiceActivityOmit
   gpsTracking?: Prisma.GpsTrackingOmit
   companySetting?: Prisma.CompanySettingOmit

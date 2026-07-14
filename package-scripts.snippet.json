@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "next dev --webpack",
+    "dev:turbo": "next dev",
+    "clean": "node scripts/clean-next.mjs",
+    "repair": "npm run clean && prisma generate"
+  }
+}

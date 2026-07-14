@@ -43,6 +43,7 @@ export type ServiceActivityMinAggregateOutputType = {
   companyId: string | null
   staffId: string | null
   brokerId: string | null
+  brokerCustomerId: string | null
   customerId: string | null
   serviceType: string | null
   amount: runtime.Decimal | null
@@ -61,6 +62,7 @@ export type ServiceActivityMaxAggregateOutputType = {
   companyId: string | null
   staffId: string | null
   brokerId: string | null
+  brokerCustomerId: string | null
   customerId: string | null
   serviceType: string | null
   amount: runtime.Decimal | null
@@ -79,6 +81,7 @@ export type ServiceActivityCountAggregateOutputType = {
   companyId: number
   staffId: number
   brokerId: number
+  brokerCustomerId: number
   customerId: number
   serviceType: number
   amount: number
@@ -111,6 +114,7 @@ export type ServiceActivityMinAggregateInputType = {
   companyId?: true
   staffId?: true
   brokerId?: true
+  brokerCustomerId?: true
   customerId?: true
   serviceType?: true
   amount?: true
@@ -129,6 +133,7 @@ export type ServiceActivityMaxAggregateInputType = {
   companyId?: true
   staffId?: true
   brokerId?: true
+  brokerCustomerId?: true
   customerId?: true
   serviceType?: true
   amount?: true
@@ -147,6 +152,7 @@ export type ServiceActivityCountAggregateInputType = {
   companyId?: true
   staffId?: true
   brokerId?: true
+  brokerCustomerId?: true
   customerId?: true
   serviceType?: true
   amount?: true
@@ -252,6 +258,7 @@ export type ServiceActivityGroupByOutputType = {
   companyId: string
   staffId: string
   brokerId: string | null
+  brokerCustomerId: string | null
   customerId: string | null
   serviceType: string
   amount: runtime.Decimal
@@ -293,6 +300,7 @@ export type ServiceActivityWhereInput = {
   companyId?: Prisma.StringFilter<"ServiceActivity"> | string
   staffId?: Prisma.StringFilter<"ServiceActivity"> | string
   brokerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
   customerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
   serviceType?: Prisma.StringFilter<"ServiceActivity"> | string
   amount?: Prisma.DecimalFilter<"ServiceActivity"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -307,6 +315,7 @@ export type ServiceActivityWhereInput = {
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   staff?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   broker?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
 }
 
@@ -315,6 +324,7 @@ export type ServiceActivityOrderByWithRelationInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -329,6 +339,7 @@ export type ServiceActivityOrderByWithRelationInput = {
   company?: Prisma.CompanyOrderByWithRelationInput
   staff?: Prisma.UserOrderByWithRelationInput
   broker?: Prisma.UserOrderByWithRelationInput
+  brokerCustomer?: Prisma.BrokerCustomerOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
   _relevance?: Prisma.ServiceActivityOrderByRelevanceInput
 }
@@ -341,6 +352,7 @@ export type ServiceActivityWhereUniqueInput = Prisma.AtLeast<{
   companyId?: Prisma.StringFilter<"ServiceActivity"> | string
   staffId?: Prisma.StringFilter<"ServiceActivity"> | string
   brokerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
   customerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
   serviceType?: Prisma.StringFilter<"ServiceActivity"> | string
   amount?: Prisma.DecimalFilter<"ServiceActivity"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -355,6 +367,7 @@ export type ServiceActivityWhereUniqueInput = Prisma.AtLeast<{
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   staff?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   broker?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
 }, "id">
 
@@ -363,6 +376,7 @@ export type ServiceActivityOrderByWithAggregationInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -389,6 +403,7 @@ export type ServiceActivityScalarWhereWithAggregatesInput = {
   companyId?: Prisma.StringWithAggregatesFilter<"ServiceActivity"> | string
   staffId?: Prisma.StringWithAggregatesFilter<"ServiceActivity"> | string
   brokerId?: Prisma.StringNullableWithAggregatesFilter<"ServiceActivity"> | string | null
+  brokerCustomerId?: Prisma.StringNullableWithAggregatesFilter<"ServiceActivity"> | string | null
   customerId?: Prisma.StringNullableWithAggregatesFilter<"ServiceActivity"> | string | null
   serviceType?: Prisma.StringWithAggregatesFilter<"ServiceActivity"> | string
   amount?: Prisma.DecimalWithAggregatesFilter<"ServiceActivity"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -417,6 +432,7 @@ export type ServiceActivityCreateInput = {
   company: Prisma.CompanyCreateNestedOneWithoutServiceActivitiesInput
   staff: Prisma.UserCreateNestedOneWithoutServicesAsStaffInput
   broker?: Prisma.UserCreateNestedOneWithoutServicesAsBrokerInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutServiceActivitiesInput
   customer?: Prisma.CustomerCreateNestedOneWithoutServiceActivitiesInput
 }
 
@@ -425,6 +441,7 @@ export type ServiceActivityUncheckedCreateInput = {
   companyId: string
   staffId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -453,6 +470,7 @@ export type ServiceActivityUpdateInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutServiceActivitiesNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutServicesAsStaffNestedInput
   broker?: Prisma.UserUpdateOneWithoutServicesAsBrokerNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutServiceActivitiesNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutServiceActivitiesNestedInput
 }
 
@@ -461,6 +479,7 @@ export type ServiceActivityUncheckedUpdateInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -479,6 +498,7 @@ export type ServiceActivityCreateManyInput = {
   companyId: string
   staffId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -511,6 +531,7 @@ export type ServiceActivityUncheckedUpdateManyInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -545,6 +566,7 @@ export type ServiceActivityCountOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   serviceType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -569,6 +591,7 @@ export type ServiceActivityMaxOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   serviceType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -587,6 +610,7 @@ export type ServiceActivityMinOrderByAggregateInput = {
   companyId?: Prisma.SortOrder
   staffId?: Prisma.SortOrder
   brokerId?: Prisma.SortOrder
+  brokerCustomerId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   serviceType?: Prisma.SortOrder
   amount?: Prisma.SortOrder
@@ -774,12 +798,46 @@ export type ServiceActivityUncheckedUpdateManyWithoutCustomerNestedInput = {
   deleteMany?: Prisma.ServiceActivityScalarWhereInput | Prisma.ServiceActivityScalarWhereInput[]
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type ServiceActivityCreateNestedManyWithoutBrokerCustomerInput = {
+  create?: Prisma.XOR<Prisma.ServiceActivityCreateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput> | Prisma.ServiceActivityCreateWithoutBrokerCustomerInput[] | Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput | Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput[]
+  createMany?: Prisma.ServiceActivityCreateManyBrokerCustomerInputEnvelope
+  connect?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+}
+
+export type ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput = {
+  create?: Prisma.XOR<Prisma.ServiceActivityCreateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput> | Prisma.ServiceActivityCreateWithoutBrokerCustomerInput[] | Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput | Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput[]
+  createMany?: Prisma.ServiceActivityCreateManyBrokerCustomerInputEnvelope
+  connect?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+}
+
+export type ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceActivityCreateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput> | Prisma.ServiceActivityCreateWithoutBrokerCustomerInput[] | Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput | Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput[]
+  upsert?: Prisma.ServiceActivityUpsertWithWhereUniqueWithoutBrokerCustomerInput | Prisma.ServiceActivityUpsertWithWhereUniqueWithoutBrokerCustomerInput[]
+  createMany?: Prisma.ServiceActivityCreateManyBrokerCustomerInputEnvelope
+  set?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  disconnect?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  delete?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  connect?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  update?: Prisma.ServiceActivityUpdateWithWhereUniqueWithoutBrokerCustomerInput | Prisma.ServiceActivityUpdateWithWhereUniqueWithoutBrokerCustomerInput[]
+  updateMany?: Prisma.ServiceActivityUpdateManyWithWhereWithoutBrokerCustomerInput | Prisma.ServiceActivityUpdateManyWithWhereWithoutBrokerCustomerInput[]
+  deleteMany?: Prisma.ServiceActivityScalarWhereInput | Prisma.ServiceActivityScalarWhereInput[]
+}
+
+export type ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceActivityCreateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput> | Prisma.ServiceActivityCreateWithoutBrokerCustomerInput[] | Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput[]
+  connectOrCreate?: Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput | Prisma.ServiceActivityCreateOrConnectWithoutBrokerCustomerInput[]
+  upsert?: Prisma.ServiceActivityUpsertWithWhereUniqueWithoutBrokerCustomerInput | Prisma.ServiceActivityUpsertWithWhereUniqueWithoutBrokerCustomerInput[]
+  createMany?: Prisma.ServiceActivityCreateManyBrokerCustomerInputEnvelope
+  set?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  disconnect?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  delete?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  connect?: Prisma.ServiceActivityWhereUniqueInput | Prisma.ServiceActivityWhereUniqueInput[]
+  update?: Prisma.ServiceActivityUpdateWithWhereUniqueWithoutBrokerCustomerInput | Prisma.ServiceActivityUpdateWithWhereUniqueWithoutBrokerCustomerInput[]
+  updateMany?: Prisma.ServiceActivityUpdateManyWithWhereWithoutBrokerCustomerInput | Prisma.ServiceActivityUpdateManyWithWhereWithoutBrokerCustomerInput[]
+  deleteMany?: Prisma.ServiceActivityScalarWhereInput | Prisma.ServiceActivityScalarWhereInput[]
 }
 
 export type ServiceActivityCreateWithoutCompanyInput = {
@@ -796,6 +854,7 @@ export type ServiceActivityCreateWithoutCompanyInput = {
   updatedAt?: Date | string
   staff: Prisma.UserCreateNestedOneWithoutServicesAsStaffInput
   broker?: Prisma.UserCreateNestedOneWithoutServicesAsBrokerInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutServiceActivitiesInput
   customer?: Prisma.CustomerCreateNestedOneWithoutServiceActivitiesInput
 }
 
@@ -803,6 +862,7 @@ export type ServiceActivityUncheckedCreateWithoutCompanyInput = {
   id?: string
   staffId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -850,6 +910,7 @@ export type ServiceActivityScalarWhereInput = {
   companyId?: Prisma.StringFilter<"ServiceActivity"> | string
   staffId?: Prisma.StringFilter<"ServiceActivity"> | string
   brokerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
+  brokerCustomerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
   customerId?: Prisma.StringNullableFilter<"ServiceActivity"> | string | null
   serviceType?: Prisma.StringFilter<"ServiceActivity"> | string
   amount?: Prisma.DecimalFilter<"ServiceActivity"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -877,6 +938,7 @@ export type ServiceActivityCreateWithoutStaffInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutServiceActivitiesInput
   broker?: Prisma.UserCreateNestedOneWithoutServicesAsBrokerInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutServiceActivitiesInput
   customer?: Prisma.CustomerCreateNestedOneWithoutServiceActivitiesInput
 }
 
@@ -884,6 +946,7 @@ export type ServiceActivityUncheckedCreateWithoutStaffInput = {
   id?: string
   companyId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -921,6 +984,7 @@ export type ServiceActivityCreateWithoutBrokerInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutServiceActivitiesInput
   staff: Prisma.UserCreateNestedOneWithoutServicesAsStaffInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutServiceActivitiesInput
   customer?: Prisma.CustomerCreateNestedOneWithoutServiceActivitiesInput
 }
 
@@ -928,6 +992,7 @@ export type ServiceActivityUncheckedCreateWithoutBrokerInput = {
   id?: string
   companyId: string
   staffId: string
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -998,6 +1063,7 @@ export type ServiceActivityCreateWithoutCustomerInput = {
   company: Prisma.CompanyCreateNestedOneWithoutServiceActivitiesInput
   staff: Prisma.UserCreateNestedOneWithoutServicesAsStaffInput
   broker?: Prisma.UserCreateNestedOneWithoutServicesAsBrokerInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutServiceActivitiesInput
 }
 
 export type ServiceActivityUncheckedCreateWithoutCustomerInput = {
@@ -1005,6 +1071,7 @@ export type ServiceActivityUncheckedCreateWithoutCustomerInput = {
   companyId: string
   staffId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
@@ -1043,10 +1110,73 @@ export type ServiceActivityUpdateManyWithWhereWithoutCustomerInput = {
   data: Prisma.XOR<Prisma.ServiceActivityUpdateManyMutationInput, Prisma.ServiceActivityUncheckedUpdateManyWithoutCustomerInput>
 }
 
+export type ServiceActivityCreateWithoutBrokerCustomerInput = {
+  id?: string
+  serviceType: string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: string
+  servedAt?: Date | string
+  latitude?: number | null
+  longitude?: number | null
+  locationName?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutServiceActivitiesInput
+  staff: Prisma.UserCreateNestedOneWithoutServicesAsStaffInput
+  broker?: Prisma.UserCreateNestedOneWithoutServicesAsBrokerInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutServiceActivitiesInput
+}
+
+export type ServiceActivityUncheckedCreateWithoutBrokerCustomerInput = {
+  id?: string
+  companyId: string
+  staffId: string
+  brokerId?: string | null
+  customerId?: string | null
+  serviceType: string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: string
+  servedAt?: Date | string
+  latitude?: number | null
+  longitude?: number | null
+  locationName?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ServiceActivityCreateOrConnectWithoutBrokerCustomerInput = {
+  where: Prisma.ServiceActivityWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceActivityCreateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput>
+}
+
+export type ServiceActivityCreateManyBrokerCustomerInputEnvelope = {
+  data: Prisma.ServiceActivityCreateManyBrokerCustomerInput | Prisma.ServiceActivityCreateManyBrokerCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type ServiceActivityUpsertWithWhereUniqueWithoutBrokerCustomerInput = {
+  where: Prisma.ServiceActivityWhereUniqueInput
+  update: Prisma.XOR<Prisma.ServiceActivityUpdateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedUpdateWithoutBrokerCustomerInput>
+  create: Prisma.XOR<Prisma.ServiceActivityCreateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedCreateWithoutBrokerCustomerInput>
+}
+
+export type ServiceActivityUpdateWithWhereUniqueWithoutBrokerCustomerInput = {
+  where: Prisma.ServiceActivityWhereUniqueInput
+  data: Prisma.XOR<Prisma.ServiceActivityUpdateWithoutBrokerCustomerInput, Prisma.ServiceActivityUncheckedUpdateWithoutBrokerCustomerInput>
+}
+
+export type ServiceActivityUpdateManyWithWhereWithoutBrokerCustomerInput = {
+  where: Prisma.ServiceActivityScalarWhereInput
+  data: Prisma.XOR<Prisma.ServiceActivityUpdateManyMutationInput, Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerInput>
+}
+
 export type ServiceActivityCreateManyCompanyInput = {
   id?: string
   staffId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1074,6 +1204,7 @@ export type ServiceActivityUpdateWithoutCompanyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   staff?: Prisma.UserUpdateOneRequiredWithoutServicesAsStaffNestedInput
   broker?: Prisma.UserUpdateOneWithoutServicesAsBrokerNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutServiceActivitiesNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutServiceActivitiesNestedInput
 }
 
@@ -1081,6 +1212,7 @@ export type ServiceActivityUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1098,6 +1230,7 @@ export type ServiceActivityUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1115,6 +1248,7 @@ export type ServiceActivityCreateManyStaffInput = {
   id?: string
   companyId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1132,6 +1266,7 @@ export type ServiceActivityCreateManyBrokerInput = {
   id?: string
   companyId: string
   staffId: string
+  brokerCustomerId?: string | null
   customerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1159,6 +1294,7 @@ export type ServiceActivityUpdateWithoutStaffInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutServiceActivitiesNestedInput
   broker?: Prisma.UserUpdateOneWithoutServicesAsBrokerNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutServiceActivitiesNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutServiceActivitiesNestedInput
 }
 
@@ -1166,6 +1302,7 @@ export type ServiceActivityUncheckedUpdateWithoutStaffInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1183,6 +1320,7 @@ export type ServiceActivityUncheckedUpdateManyWithoutStaffInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1210,6 +1348,7 @@ export type ServiceActivityUpdateWithoutBrokerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutServiceActivitiesNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutServicesAsStaffNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutServiceActivitiesNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutServiceActivitiesNestedInput
 }
 
@@ -1217,6 +1356,7 @@ export type ServiceActivityUncheckedUpdateWithoutBrokerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1234,6 +1374,7 @@ export type ServiceActivityUncheckedUpdateManyWithoutBrokerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1252,6 +1393,7 @@ export type ServiceActivityCreateManyCustomerInput = {
   companyId: string
   staffId: string
   brokerId?: string | null
+  brokerCustomerId?: string | null
   serviceType: string
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: string
@@ -1279,6 +1421,7 @@ export type ServiceActivityUpdateWithoutCustomerInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutServiceActivitiesNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutServicesAsStaffNestedInput
   broker?: Prisma.UserUpdateOneWithoutServicesAsBrokerNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutServiceActivitiesNestedInput
 }
 
 export type ServiceActivityUncheckedUpdateWithoutCustomerInput = {
@@ -1286,6 +1429,7 @@ export type ServiceActivityUncheckedUpdateWithoutCustomerInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1303,6 +1447,79 @@ export type ServiceActivityUncheckedUpdateManyWithoutCustomerInput = {
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
   staffId?: Prisma.StringFieldUpdateOperationsInput | string
   brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceType?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  servedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  locationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ServiceActivityCreateManyBrokerCustomerInput = {
+  id?: string
+  companyId: string
+  staffId: string
+  brokerId?: string | null
+  customerId?: string | null
+  serviceType: string
+  amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: string
+  servedAt?: Date | string
+  latitude?: number | null
+  longitude?: number | null
+  locationName?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ServiceActivityUpdateWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceType?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  servedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  locationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutServiceActivitiesNestedInput
+  staff?: Prisma.UserUpdateOneRequiredWithoutServicesAsStaffNestedInput
+  broker?: Prisma.UserUpdateOneWithoutServicesAsBrokerNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutServiceActivitiesNestedInput
+}
+
+export type ServiceActivityUncheckedUpdateWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceType?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  servedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  locationName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceType?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1322,6 +1539,7 @@ export type ServiceActivitySelect<ExtArgs extends runtime.Types.Extensions.Inter
   companyId?: boolean
   staffId?: boolean
   brokerId?: boolean
+  brokerCustomerId?: boolean
   customerId?: boolean
   serviceType?: boolean
   amount?: boolean
@@ -1336,6 +1554,7 @@ export type ServiceActivitySelect<ExtArgs extends runtime.Types.Extensions.Inter
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   staff?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   broker?: boolean | Prisma.ServiceActivity$brokerArgs<ExtArgs>
+  brokerCustomer?: boolean | Prisma.ServiceActivity$brokerCustomerArgs<ExtArgs>
   customer?: boolean | Prisma.ServiceActivity$customerArgs<ExtArgs>
 }, ExtArgs["result"]["serviceActivity"]>
 
@@ -1346,6 +1565,7 @@ export type ServiceActivitySelectScalar = {
   companyId?: boolean
   staffId?: boolean
   brokerId?: boolean
+  brokerCustomerId?: boolean
   customerId?: boolean
   serviceType?: boolean
   amount?: boolean
@@ -1359,11 +1579,12 @@ export type ServiceActivitySelectScalar = {
   updatedAt?: boolean
 }
 
-export type ServiceActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "staffId" | "brokerId" | "customerId" | "serviceType" | "amount" | "status" | "servedAt" | "latitude" | "longitude" | "locationName" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceActivity"]>
+export type ServiceActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "staffId" | "brokerId" | "brokerCustomerId" | "customerId" | "serviceType" | "amount" | "status" | "servedAt" | "latitude" | "longitude" | "locationName" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceActivity"]>
 export type ServiceActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   staff?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   broker?: boolean | Prisma.ServiceActivity$brokerArgs<ExtArgs>
+  brokerCustomer?: boolean | Prisma.ServiceActivity$brokerCustomerArgs<ExtArgs>
   customer?: boolean | Prisma.ServiceActivity$customerArgs<ExtArgs>
 }
 
@@ -1373,6 +1594,7 @@ export type $ServiceActivityPayload<ExtArgs extends runtime.Types.Extensions.Int
     company: Prisma.$CompanyPayload<ExtArgs>
     staff: Prisma.$UserPayload<ExtArgs>
     broker: Prisma.$UserPayload<ExtArgs> | null
+    brokerCustomer: Prisma.$BrokerCustomerPayload<ExtArgs> | null
     customer: Prisma.$CustomerPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1380,6 +1602,7 @@ export type $ServiceActivityPayload<ExtArgs extends runtime.Types.Extensions.Int
     companyId: string
     staffId: string
     brokerId: string | null
+    brokerCustomerId: string | null
     customerId: string | null
     serviceType: string
     amount: runtime.Decimal
@@ -1734,6 +1957,7 @@ export interface Prisma__ServiceActivityClient<T, Null = never, ExtArgs extends 
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   staff<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   broker<T extends Prisma.ServiceActivity$brokerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceActivity$brokerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  brokerCustomer<T extends Prisma.ServiceActivity$brokerCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceActivity$brokerCustomerArgs<ExtArgs>>): Prisma.Prisma__BrokerCustomerClient<runtime.Types.Result.GetResult<Prisma.$BrokerCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   customer<T extends Prisma.ServiceActivity$customerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceActivity$customerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1768,6 +1992,7 @@ export interface ServiceActivityFieldRefs {
   readonly companyId: Prisma.FieldRef<"ServiceActivity", 'String'>
   readonly staffId: Prisma.FieldRef<"ServiceActivity", 'String'>
   readonly brokerId: Prisma.FieldRef<"ServiceActivity", 'String'>
+  readonly brokerCustomerId: Prisma.FieldRef<"ServiceActivity", 'String'>
   readonly customerId: Prisma.FieldRef<"ServiceActivity", 'String'>
   readonly serviceType: Prisma.FieldRef<"ServiceActivity", 'String'>
   readonly amount: Prisma.FieldRef<"ServiceActivity", 'Decimal'>
@@ -2143,6 +2368,25 @@ export type ServiceActivity$brokerArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * ServiceActivity.brokerCustomer
+ */
+export type ServiceActivity$brokerCustomerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerCustomer
+   */
+  select?: Prisma.BrokerCustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerCustomer
+   */
+  omit?: Prisma.BrokerCustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerCustomerInclude<ExtArgs> | null
+  where?: Prisma.BrokerCustomerWhereInput
 }
 
 /**

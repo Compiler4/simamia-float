@@ -28,10 +28,14 @@ export type AggregateStaffFile = {
 
 export type StaffFileAvgAggregateOutputType = {
   sizeBytes: number | null
+  originalSizeBytes: number | null
+  compressionRatio: number | null
 }
 
 export type StaffFileSumAggregateOutputType = {
   sizeBytes: number | null
+  originalSizeBytes: number | null
+  compressionRatio: number | null
 }
 
 export type StaffFileMinAggregateOutputType = {
@@ -43,6 +47,10 @@ export type StaffFileMinAggregateOutputType = {
   storedName: string | null
   mimeType: string | null
   sizeBytes: number | null
+  originalSizeBytes: number | null
+  compressionRatio: number | null
+  compressed: boolean | null
+  checksumSha256: string | null
   storagePath: string | null
   createdAt: Date | null
 }
@@ -56,6 +64,10 @@ export type StaffFileMaxAggregateOutputType = {
   storedName: string | null
   mimeType: string | null
   sizeBytes: number | null
+  originalSizeBytes: number | null
+  compressionRatio: number | null
+  compressed: boolean | null
+  checksumSha256: string | null
   storagePath: string | null
   createdAt: Date | null
 }
@@ -69,6 +81,10 @@ export type StaffFileCountAggregateOutputType = {
   storedName: number
   mimeType: number
   sizeBytes: number
+  originalSizeBytes: number
+  compressionRatio: number
+  compressed: number
+  checksumSha256: number
   storagePath: number
   createdAt: number
   _all: number
@@ -77,10 +93,14 @@ export type StaffFileCountAggregateOutputType = {
 
 export type StaffFileAvgAggregateInputType = {
   sizeBytes?: true
+  originalSizeBytes?: true
+  compressionRatio?: true
 }
 
 export type StaffFileSumAggregateInputType = {
   sizeBytes?: true
+  originalSizeBytes?: true
+  compressionRatio?: true
 }
 
 export type StaffFileMinAggregateInputType = {
@@ -92,6 +112,10 @@ export type StaffFileMinAggregateInputType = {
   storedName?: true
   mimeType?: true
   sizeBytes?: true
+  originalSizeBytes?: true
+  compressionRatio?: true
+  compressed?: true
+  checksumSha256?: true
   storagePath?: true
   createdAt?: true
 }
@@ -105,6 +129,10 @@ export type StaffFileMaxAggregateInputType = {
   storedName?: true
   mimeType?: true
   sizeBytes?: true
+  originalSizeBytes?: true
+  compressionRatio?: true
+  compressed?: true
+  checksumSha256?: true
   storagePath?: true
   createdAt?: true
 }
@@ -118,6 +146,10 @@ export type StaffFileCountAggregateInputType = {
   storedName?: true
   mimeType?: true
   sizeBytes?: true
+  originalSizeBytes?: true
+  compressionRatio?: true
+  compressed?: true
+  checksumSha256?: true
   storagePath?: true
   createdAt?: true
   _all?: true
@@ -218,6 +250,10 @@ export type StaffFileGroupByOutputType = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes: number | null
+  compressionRatio: number | null
+  compressed: boolean
+  checksumSha256: string | null
   storagePath: string
   createdAt: Date
   _count: StaffFileCountAggregateOutputType | null
@@ -254,6 +290,10 @@ export type StaffFileWhereInput = {
   storedName?: Prisma.StringFilter<"StaffFile"> | string
   mimeType?: Prisma.StringFilter<"StaffFile"> | string
   sizeBytes?: Prisma.IntFilter<"StaffFile"> | number
+  originalSizeBytes?: Prisma.IntNullableFilter<"StaffFile"> | number | null
+  compressionRatio?: Prisma.FloatNullableFilter<"StaffFile"> | number | null
+  compressed?: Prisma.BoolFilter<"StaffFile"> | boolean
+  checksumSha256?: Prisma.StringNullableFilter<"StaffFile"> | string | null
   storagePath?: Prisma.StringFilter<"StaffFile"> | string
   createdAt?: Prisma.DateTimeFilter<"StaffFile"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -269,6 +309,10 @@ export type StaffFileOrderByWithRelationInput = {
   storedName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
+  originalSizeBytes?: Prisma.SortOrderInput | Prisma.SortOrder
+  compressionRatio?: Prisma.SortOrderInput | Prisma.SortOrder
+  compressed?: Prisma.SortOrder
+  checksumSha256?: Prisma.SortOrderInput | Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -288,6 +332,10 @@ export type StaffFileWhereUniqueInput = Prisma.AtLeast<{
   storedName?: Prisma.StringFilter<"StaffFile"> | string
   mimeType?: Prisma.StringFilter<"StaffFile"> | string
   sizeBytes?: Prisma.IntFilter<"StaffFile"> | number
+  originalSizeBytes?: Prisma.IntNullableFilter<"StaffFile"> | number | null
+  compressionRatio?: Prisma.FloatNullableFilter<"StaffFile"> | number | null
+  compressed?: Prisma.BoolFilter<"StaffFile"> | boolean
+  checksumSha256?: Prisma.StringNullableFilter<"StaffFile"> | string | null
   storagePath?: Prisma.StringFilter<"StaffFile"> | string
   createdAt?: Prisma.DateTimeFilter<"StaffFile"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -303,6 +351,10 @@ export type StaffFileOrderByWithAggregationInput = {
   storedName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
+  originalSizeBytes?: Prisma.SortOrderInput | Prisma.SortOrder
+  compressionRatio?: Prisma.SortOrderInput | Prisma.SortOrder
+  compressed?: Prisma.SortOrder
+  checksumSha256?: Prisma.SortOrderInput | Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.StaffFileCountOrderByAggregateInput
@@ -324,6 +376,10 @@ export type StaffFileScalarWhereWithAggregatesInput = {
   storedName?: Prisma.StringWithAggregatesFilter<"StaffFile"> | string
   mimeType?: Prisma.StringWithAggregatesFilter<"StaffFile"> | string
   sizeBytes?: Prisma.IntWithAggregatesFilter<"StaffFile"> | number
+  originalSizeBytes?: Prisma.IntNullableWithAggregatesFilter<"StaffFile"> | number | null
+  compressionRatio?: Prisma.FloatNullableWithAggregatesFilter<"StaffFile"> | number | null
+  compressed?: Prisma.BoolWithAggregatesFilter<"StaffFile"> | boolean
+  checksumSha256?: Prisma.StringNullableWithAggregatesFilter<"StaffFile"> | string | null
   storagePath?: Prisma.StringWithAggregatesFilter<"StaffFile"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StaffFile"> | Date | string
 }
@@ -335,6 +391,10 @@ export type StaffFileCreateInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffFilesInput
@@ -350,6 +410,10 @@ export type StaffFileUncheckedCreateInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
 }
@@ -361,6 +425,10 @@ export type StaffFileUpdateInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffFilesNestedInput
@@ -376,6 +444,10 @@ export type StaffFileUncheckedUpdateInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -389,6 +461,10 @@ export type StaffFileCreateManyInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
 }
@@ -400,6 +476,10 @@ export type StaffFileUpdateManyMutationInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -413,6 +493,10 @@ export type StaffFileUncheckedUpdateManyInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -442,12 +526,18 @@ export type StaffFileCountOrderByAggregateInput = {
   storedName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
+  originalSizeBytes?: Prisma.SortOrder
+  compressionRatio?: Prisma.SortOrder
+  compressed?: Prisma.SortOrder
+  checksumSha256?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type StaffFileAvgOrderByAggregateInput = {
   sizeBytes?: Prisma.SortOrder
+  originalSizeBytes?: Prisma.SortOrder
+  compressionRatio?: Prisma.SortOrder
 }
 
 export type StaffFileMaxOrderByAggregateInput = {
@@ -459,6 +549,10 @@ export type StaffFileMaxOrderByAggregateInput = {
   storedName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
+  originalSizeBytes?: Prisma.SortOrder
+  compressionRatio?: Prisma.SortOrder
+  compressed?: Prisma.SortOrder
+  checksumSha256?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -472,12 +566,18 @@ export type StaffFileMinOrderByAggregateInput = {
   storedName?: Prisma.SortOrder
   mimeType?: Prisma.SortOrder
   sizeBytes?: Prisma.SortOrder
+  originalSizeBytes?: Prisma.SortOrder
+  compressionRatio?: Prisma.SortOrder
+  compressed?: Prisma.SortOrder
+  checksumSha256?: Prisma.SortOrder
   storagePath?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type StaffFileSumOrderByAggregateInput = {
   sizeBytes?: Prisma.SortOrder
+  originalSizeBytes?: Prisma.SortOrder
+  compressionRatio?: Prisma.SortOrder
 }
 
 export type StaffFileCreateNestedManyWithoutCompanyInput = {
@@ -575,6 +675,10 @@ export type StaffFileCreateWithoutCompanyInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutOwnedStaffFilesInput
@@ -588,6 +692,10 @@ export type StaffFileUncheckedCreateWithoutCompanyInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
 }
@@ -630,6 +738,10 @@ export type StaffFileScalarWhereInput = {
   storedName?: Prisma.StringFilter<"StaffFile"> | string
   mimeType?: Prisma.StringFilter<"StaffFile"> | string
   sizeBytes?: Prisma.IntFilter<"StaffFile"> | number
+  originalSizeBytes?: Prisma.IntNullableFilter<"StaffFile"> | number | null
+  compressionRatio?: Prisma.FloatNullableFilter<"StaffFile"> | number | null
+  compressed?: Prisma.BoolFilter<"StaffFile"> | boolean
+  checksumSha256?: Prisma.StringNullableFilter<"StaffFile"> | string | null
   storagePath?: Prisma.StringFilter<"StaffFile"> | string
   createdAt?: Prisma.DateTimeFilter<"StaffFile"> | Date | string
 }
@@ -641,6 +753,10 @@ export type StaffFileCreateWithoutOwnerInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffFilesInput
@@ -654,6 +770,10 @@ export type StaffFileUncheckedCreateWithoutOwnerInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
 }
@@ -692,6 +812,10 @@ export type StaffFileCreateManyCompanyInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
 }
@@ -703,6 +827,10 @@ export type StaffFileUpdateWithoutCompanyInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedStaffFilesNestedInput
@@ -716,6 +844,10 @@ export type StaffFileUncheckedUpdateWithoutCompanyInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -728,6 +860,10 @@ export type StaffFileUncheckedUpdateManyWithoutCompanyInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -740,6 +876,10 @@ export type StaffFileCreateManyOwnerInput = {
   storedName: string
   mimeType: string
   sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
 }
@@ -751,6 +891,10 @@ export type StaffFileUpdateWithoutOwnerInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffFilesNestedInput
@@ -764,6 +908,10 @@ export type StaffFileUncheckedUpdateWithoutOwnerInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -776,6 +924,10 @@ export type StaffFileUncheckedUpdateManyWithoutOwnerInput = {
   storedName?: Prisma.StringFieldUpdateOperationsInput | string
   mimeType?: Prisma.StringFieldUpdateOperationsInput | string
   sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -791,6 +943,10 @@ export type StaffFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   storedName?: boolean
   mimeType?: boolean
   sizeBytes?: boolean
+  originalSizeBytes?: boolean
+  compressionRatio?: boolean
+  compressed?: boolean
+  checksumSha256?: boolean
   storagePath?: boolean
   createdAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -808,11 +964,15 @@ export type StaffFileSelectScalar = {
   storedName?: boolean
   mimeType?: boolean
   sizeBytes?: boolean
+  originalSizeBytes?: boolean
+  compressionRatio?: boolean
+  compressed?: boolean
+  checksumSha256?: boolean
   storagePath?: boolean
   createdAt?: boolean
 }
 
-export type StaffFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "ownerUserId" | "kind" | "originalName" | "storedName" | "mimeType" | "sizeBytes" | "storagePath" | "createdAt", ExtArgs["result"]["staffFile"]>
+export type StaffFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "ownerUserId" | "kind" | "originalName" | "storedName" | "mimeType" | "sizeBytes" | "originalSizeBytes" | "compressionRatio" | "compressed" | "checksumSha256" | "storagePath" | "createdAt", ExtArgs["result"]["staffFile"]>
 export type StaffFileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -833,6 +993,10 @@ export type $StaffFilePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     storedName: string
     mimeType: string
     sizeBytes: number
+    originalSizeBytes: number | null
+    compressionRatio: number | null
+    compressed: boolean
+    checksumSha256: string | null
     storagePath: string
     createdAt: Date
   }, ExtArgs["result"]["staffFile"]>
@@ -1214,6 +1378,10 @@ export interface StaffFileFieldRefs {
   readonly storedName: Prisma.FieldRef<"StaffFile", 'String'>
   readonly mimeType: Prisma.FieldRef<"StaffFile", 'String'>
   readonly sizeBytes: Prisma.FieldRef<"StaffFile", 'Int'>
+  readonly originalSizeBytes: Prisma.FieldRef<"StaffFile", 'Int'>
+  readonly compressionRatio: Prisma.FieldRef<"StaffFile", 'Float'>
+  readonly compressed: Prisma.FieldRef<"StaffFile", 'Boolean'>
+  readonly checksumSha256: Prisma.FieldRef<"StaffFile", 'String'>
   readonly storagePath: Prisma.FieldRef<"StaffFile", 'String'>
   readonly createdAt: Prisma.FieldRef<"StaffFile", 'DateTime'>
 }

@@ -1,55 +1,83 @@
-# Simamia Float ERP - Step 2 Prisma + MySQL
+# Simamia Accountant Manual Float Assignment
 
-Copy these files into your Next.js project root:
+This package adds a complete Manual Cashflow workspace to the Accountant Portal.
 
-C:\Users\Micha\simamia-float
+## New workflow
 
-## 1. Install packages
+The accountant can:
 
-npm install @prisma/client @prisma/adapter-mariadb dotenv bcryptjs
-npm install -D prisma tsx
+1. Open the financial day.
+2. Open **Manual Cashflow** from the sidebar.
+3. Select an active user whose role is `STAFF`.
+4. Enter the float amount, date, purpose, reference, notes and optional proof.
+5. Save the assignment.
+6. The system creates a `FloatTransaction` with:
+   - `transactionType = ACCOUNTANT_TO_STAFF`
+   - `fromUserId = current accountant`
+   - `toUserId = selected staff`
+   - `status = ISSUED`
+7. The staff officer receives a notification and confirms the float from the Staff Portal.
 
-## 2. Create MySQL database
+The same page keeps the existing manual cash-receipt form and register.
 
-Open phpMyAdmin SQL tab or MySQL terminal and run:
+## Files
 
-CREATE DATABASE IF NOT EXISTS simamia CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```text
+app/accountant/dashboard/AccountantDashboardClient.tsx
+app/accountant/dashboard/AccountantDashboard.module.css
+app/api/accountant/manual-float/route.ts
+```
 
-## 3. Create .env
+## Database
 
-Copy `.env.example` to `.env`.
+No new Prisma model is required. The workflow uses the existing:
 
-For XAMPP default root with empty password:
+```prisma
+model FloatTransaction
+```
 
-DATABASE_URL="mysql://root:@localhost:3306/simamia"
-DATABASE_HOST="localhost"
-DATABASE_PORT="3306"
-DATABASE_USER="root"
-DATABASE_PASSWORD=""
-DATABASE_NAME="simamia"
+The model must contain:
 
-## 4. Add scripts to package.json
+```prisma
+transactionType StaffFloatType
+fromUserId       String?
+toUserId         String?
+referenceNo      String?
+amount           Decimal
+status           FloatStatus
+issuedAt         DateTime?
+```
 
-"db:generate": "prisma generate",
-"db:migrate": "prisma migrate dev",
-"db:seed": "prisma db seed",
-"db:studio": "prisma studio"
+The enum must contain:
 
-## 5. Run commands
+```prisma
+ACCOUNTANT_TO_STAFF
+```
 
-npx prisma migrate dev --name init
-npx prisma generate
-npx prisma db seed
+## Install
+
+Extract this ZIP and run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\INSTALL.ps1
+```
+
+Then:
+
+```powershell
+cd C:\Users\Micha\simamia-float
 npm run dev
+```
 
-Open http://localhost:3000/login
+## Test
 
-## Login credentials
+While signed in as ACCOUNTANT, open:
 
-system_developer / Dev@12345
-super_admin / Super@12345
-company_admin / Admin@12345
-accountant / Accountant@12345
-staff / Staff@12345
-broker / Broker@12345
-gps_manager / Gps@12345
+```text
+http://localhost:3000/api/accountant/manual-float
+```
+
+A GET request returns the current accountant's manual staff-float assignments.
+
+Use the **Manual Cashflow** sidebar page to create a new assignment.

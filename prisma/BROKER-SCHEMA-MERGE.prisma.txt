@@ -1,0 +1,79 @@
+// ============================================================================
+// MERGE THIS INTO THE REAL FILE: prisma/schema.prisma
+// Do not leave it only in this text file.
+// ============================================================================
+
+// Keep your existing generator, but it must generate to this project folder:
+//
+// generator client {
+//   provider = "prisma-client"
+//   output   = "../generated/prisma"
+// }
+//
+// datasource db {
+//   provider = "mysql"
+// }
+
+// Add near your other enums:
+enum BrokerCustomerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// Add inside your existing Company model:
+//
+// brokerCustomers BrokerCustomer[]
+
+// Add inside your existing ServiceActivity model only when service activities
+// must point to these broker records:
+//
+// brokerCustomerId String?
+// brokerCustomer   BrokerCustomer? @relation(
+//   fields: [brokerCustomerId],
+//   references: [id],
+//   onDelete: SetNull
+// )
+//
+// Add this index inside ServiceActivity:
+//
+// @@index([brokerCustomerId])
+
+model BrokerCustomer {
+  id             String               @id @default(cuid())
+  companyId      String
+  code           String
+  name           String
+  businessName   String?
+  phone          String
+  alternatePhone String?
+  email          String?
+  location       String
+  region         String?
+  district       String?
+  ward           String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  status         BrokerCustomerStatus @default(ACTIVE)
+  notes          String?              @db.Text
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  company Company @relation(
+    fields: [companyId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  // Keep this relation only when brokerCustomerId/brokerCustomer were added
+  // to ServiceActivity:
+  serviceActivities ServiceActivity[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, location])
+  @@index([companyId, status])
+  @@index([companyId, phone])
+  @@map("broker_customers")
+}

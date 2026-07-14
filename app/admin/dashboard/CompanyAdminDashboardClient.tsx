@@ -473,21 +473,17 @@ export default function CompanyAdminDashboardClient({ user }: Props) {
         const brokerResult = await requestJson<{
           success: true;
           brokers: BrokerCustomerItem[];
-          setupRequired?: boolean;
-          warning?: string;
+          locations: string[];
+          total: number;
         }>("/api/company-admin/brokers");
 
         brokers = safeArray<BrokerCustomerItem>(brokerResult.brokers);
-        brokerLoadError = safeText(brokerResult.warning);
+        brokerLoadError = "";
       } catch (brokerError) {
         brokerLoadError =
           brokerError instanceof Error
             ? brokerError.message
             : "Could not load broker customers.";
-
-        // The broker directory is optional during dashboard startup.
-        // Do not use console.error here because Next.js development mode
-        // displays caught console errors as a Turbopack error overlay.
       }
 
       setData({
@@ -495,12 +491,6 @@ export default function CompanyAdminDashboardClient({ user }: Props) {
         brokers,
         brokerLoadError,
       });
-
-      if (brokerLoadError) {
-        setToast(
-          "Dashboard loaded, but the broker directory needs database setup.",
-        );
-      }
     } catch (error) {
       setData(null);
       setErrorMessage(
@@ -1623,11 +1613,11 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             <ShieldCheck size={22} />
           </div>
           <section>
-            <strong>Broker database setup is incomplete</strong>
+            <strong>Broker directory could not connect to the database</strong>
             <p>{data.brokerLoadError}</p>
             <small>
-              Run Prisma migration and generation commands, clear .next, then
-              restart the development server.
+              Confirm that BrokerCustomer exists in prisma/schema.prisma, migrate
+              MySQL, regenerate Prisma Client, clear .next and restart the server.
             </small>
           </section>
         </section>
