@@ -276,7 +276,7 @@ export async function ensureAttendanceMissingNotifications(
   return { missing: missing.length };
 }
 
-// ==================== ADDED TO RESOLVE BUILD ERROR ====================
+// ==================== FIXED: Added this function ====================
 export async function ensureDefaultChartOfAccounts(companyId: string) {
   const existing = await (db as any).chartOfAccount?.findFirst({
     where: { companyId },
@@ -298,5 +298,5 @@ export async function ensureDefaultChartOfAccounts(companyId: string) {
     skipDuplicates: true,
   });
 
-  console.log(`Default Chart of Accounts initialized for company: ${companyId}`);
+  console.log(`✅ Default Chart of Accounts initialized for company: ${companyId}`);
 }
