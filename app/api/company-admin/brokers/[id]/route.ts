@@ -267,7 +267,10 @@ export async function PATCH(
       access.error ||
       !access.user
     ) {
-      return access.error;
+      return access.error || NextResponse.json(
+        { success: false, message: "Access denied" },
+        { status: 403 }
+      );
     }
 
     const { id } =
@@ -623,7 +626,10 @@ export async function DELETE(
       access.error ||
       !access.user
     ) {
-      return access.error;
+      return access.error || NextResponse.json(
+        { success: false, message: "Access denied" },
+        { status: 403 }
+      );
     }
 
     const { id } =
