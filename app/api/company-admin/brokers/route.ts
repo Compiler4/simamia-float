@@ -346,11 +346,19 @@ export async function GET(
     const access =
       await requireCompanyAdmin();
 
-    if (
-      access.error ||
-      !access.user
-    ) {
+    // ✅ FIXED: Explicit error handling
+    if (access.error) {
       return access.error;
+    }
+
+    if (!access.user) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Authentication failed.",
+        },
+        { status: 401 },
+      );
     }
 
     const url = new URL(request.url);
@@ -524,11 +532,19 @@ export async function POST(
     const access =
       await requireCompanyAdmin();
 
-    if (
-      access.error ||
-      !access.user
-    ) {
+    // ✅ FIXED: Explicit error handling
+    if (access.error) {
       return access.error;
+    }
+
+    if (!access.user) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Authentication failed.",
+        },
+        { status: 401 },
+      );
     }
 
     let body: Record<
