@@ -320,6 +320,7 @@ export type CompanyGpsDeviceWhereInput = {
   speedKph?: Prisma.FloatNullableFilter<"CompanyGpsDevice"> | number | null
   createdAt?: Prisma.DateTimeFilter<"CompanyGpsDevice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanyGpsDevice"> | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitListRelationFilter
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   pings?: Prisma.CompanyGpsPingListRelationFilter
@@ -343,6 +344,7 @@ export type CompanyGpsDeviceOrderByWithRelationInput = {
   speedKph?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  serviceVisits?: Prisma.BrokerServiceVisitOrderByRelationAggregateInput
   company?: Prisma.CompanyOrderByWithRelationInput
   owner?: Prisma.UserOrderByWithRelationInput
   pings?: Prisma.CompanyGpsPingOrderByRelationAggregateInput
@@ -370,6 +372,7 @@ export type CompanyGpsDeviceWhereUniqueInput = Prisma.AtLeast<{
   speedKph?: Prisma.FloatNullableFilter<"CompanyGpsDevice"> | number | null
   createdAt?: Prisma.DateTimeFilter<"CompanyGpsDevice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanyGpsDevice"> | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitListRelationFilter
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   pings?: Prisma.CompanyGpsPingListRelationFilter
@@ -437,6 +440,7 @@ export type CompanyGpsDeviceCreateInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutDeviceInput
   company: Prisma.CompanyCreateNestedOneWithoutAdminGpsDevicesInput
   owner?: Prisma.UserCreateNestedOneWithoutAdminGpsDevicesInput
   pings?: Prisma.CompanyGpsPingCreateNestedManyWithoutDeviceInput
@@ -460,6 +464,7 @@ export type CompanyGpsDeviceUncheckedCreateInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutDeviceInput
   pings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutDeviceInput
   alerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutDeviceInput
 }
@@ -479,6 +484,7 @@ export type CompanyGpsDeviceUpdateInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutDeviceNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutAdminGpsDevicesNestedInput
   owner?: Prisma.UserUpdateOneWithoutAdminGpsDevicesNestedInput
   pings?: Prisma.CompanyGpsPingUpdateManyWithoutDeviceNestedInput
@@ -502,6 +508,7 @@ export type CompanyGpsDeviceUncheckedUpdateInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutDeviceNestedInput
   pings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutDeviceNestedInput
   alerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutDeviceNestedInput
 }
@@ -748,14 +755,6 @@ export type EnumCompanyGpsDeviceStatusFieldUpdateOperationsInput = {
   set?: $Enums.CompanyGpsDeviceStatus
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type CompanyGpsDeviceCreateNestedOneWithoutPingsInput = {
   create?: Prisma.XOR<Prisma.CompanyGpsDeviceCreateWithoutPingsInput, Prisma.CompanyGpsDeviceUncheckedCreateWithoutPingsInput>
   connectOrCreate?: Prisma.CompanyGpsDeviceCreateOrConnectWithoutPingsInput
@@ -786,6 +785,22 @@ export type CompanyGpsDeviceUpdateOneWithoutAlertsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyGpsDeviceUpdateToOneWithWhereWithoutAlertsInput, Prisma.CompanyGpsDeviceUpdateWithoutAlertsInput>, Prisma.CompanyGpsDeviceUncheckedUpdateWithoutAlertsInput>
 }
 
+export type CompanyGpsDeviceCreateNestedOneWithoutServiceVisitsInput = {
+  create?: Prisma.XOR<Prisma.CompanyGpsDeviceCreateWithoutServiceVisitsInput, Prisma.CompanyGpsDeviceUncheckedCreateWithoutServiceVisitsInput>
+  connectOrCreate?: Prisma.CompanyGpsDeviceCreateOrConnectWithoutServiceVisitsInput
+  connect?: Prisma.CompanyGpsDeviceWhereUniqueInput
+}
+
+export type CompanyGpsDeviceUpdateOneWithoutServiceVisitsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyGpsDeviceCreateWithoutServiceVisitsInput, Prisma.CompanyGpsDeviceUncheckedCreateWithoutServiceVisitsInput>
+  connectOrCreate?: Prisma.CompanyGpsDeviceCreateOrConnectWithoutServiceVisitsInput
+  upsert?: Prisma.CompanyGpsDeviceUpsertWithoutServiceVisitsInput
+  disconnect?: Prisma.CompanyGpsDeviceWhereInput | boolean
+  delete?: Prisma.CompanyGpsDeviceWhereInput | boolean
+  connect?: Prisma.CompanyGpsDeviceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyGpsDeviceUpdateToOneWithWhereWithoutServiceVisitsInput, Prisma.CompanyGpsDeviceUpdateWithoutServiceVisitsInput>, Prisma.CompanyGpsDeviceUncheckedUpdateWithoutServiceVisitsInput>
+}
+
 export type CompanyGpsDeviceCreateWithoutCompanyInput = {
   id?: string
   name: string
@@ -801,6 +816,7 @@ export type CompanyGpsDeviceCreateWithoutCompanyInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutDeviceInput
   owner?: Prisma.UserCreateNestedOneWithoutAdminGpsDevicesInput
   pings?: Prisma.CompanyGpsPingCreateNestedManyWithoutDeviceInput
   alerts?: Prisma.GpsAlertCreateNestedManyWithoutDeviceInput
@@ -822,6 +838,7 @@ export type CompanyGpsDeviceUncheckedCreateWithoutCompanyInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutDeviceInput
   pings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutDeviceInput
   alerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutDeviceInput
 }
@@ -889,6 +906,7 @@ export type CompanyGpsDeviceCreateWithoutOwnerInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutDeviceInput
   company: Prisma.CompanyCreateNestedOneWithoutAdminGpsDevicesInput
   pings?: Prisma.CompanyGpsPingCreateNestedManyWithoutDeviceInput
   alerts?: Prisma.GpsAlertCreateNestedManyWithoutDeviceInput
@@ -910,6 +928,7 @@ export type CompanyGpsDeviceUncheckedCreateWithoutOwnerInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutDeviceInput
   pings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutDeviceInput
   alerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutDeviceInput
 }
@@ -955,6 +974,7 @@ export type CompanyGpsDeviceCreateWithoutPingsInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutDeviceInput
   company: Prisma.CompanyCreateNestedOneWithoutAdminGpsDevicesInput
   owner?: Prisma.UserCreateNestedOneWithoutAdminGpsDevicesInput
   alerts?: Prisma.GpsAlertCreateNestedManyWithoutDeviceInput
@@ -977,6 +997,7 @@ export type CompanyGpsDeviceUncheckedCreateWithoutPingsInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutDeviceInput
   alerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutDeviceInput
 }
 
@@ -1011,6 +1032,7 @@ export type CompanyGpsDeviceUpdateWithoutPingsInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutDeviceNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutAdminGpsDevicesNestedInput
   owner?: Prisma.UserUpdateOneWithoutAdminGpsDevicesNestedInput
   alerts?: Prisma.GpsAlertUpdateManyWithoutDeviceNestedInput
@@ -1033,6 +1055,7 @@ export type CompanyGpsDeviceUncheckedUpdateWithoutPingsInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutDeviceNestedInput
   alerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutDeviceNestedInput
 }
 
@@ -1051,6 +1074,7 @@ export type CompanyGpsDeviceCreateWithoutAlertsInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutDeviceInput
   company: Prisma.CompanyCreateNestedOneWithoutAdminGpsDevicesInput
   owner?: Prisma.UserCreateNestedOneWithoutAdminGpsDevicesInput
   pings?: Prisma.CompanyGpsPingCreateNestedManyWithoutDeviceInput
@@ -1073,6 +1097,7 @@ export type CompanyGpsDeviceUncheckedCreateWithoutAlertsInput = {
   speedKph?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutDeviceInput
   pings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutDeviceInput
 }
 
@@ -1107,6 +1132,7 @@ export type CompanyGpsDeviceUpdateWithoutAlertsInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutDeviceNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutAdminGpsDevicesNestedInput
   owner?: Prisma.UserUpdateOneWithoutAdminGpsDevicesNestedInput
   pings?: Prisma.CompanyGpsPingUpdateManyWithoutDeviceNestedInput
@@ -1129,7 +1155,108 @@ export type CompanyGpsDeviceUncheckedUpdateWithoutAlertsInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutDeviceNestedInput
   pings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutDeviceNestedInput
+}
+
+export type CompanyGpsDeviceCreateWithoutServiceVisitsInput = {
+  id?: string
+  name: string
+  deviceType: string
+  ownerName?: string | null
+  deviceToken: string
+  status?: $Enums.CompanyGpsDeviceStatus
+  lastSeenAt?: Date | string | null
+  lastLatitude?: number | null
+  lastLongitude?: number | null
+  batteryLevel?: number | null
+  gpsAccuracy?: number | null
+  speedKph?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutAdminGpsDevicesInput
+  owner?: Prisma.UserCreateNestedOneWithoutAdminGpsDevicesInput
+  pings?: Prisma.CompanyGpsPingCreateNestedManyWithoutDeviceInput
+  alerts?: Prisma.GpsAlertCreateNestedManyWithoutDeviceInput
+}
+
+export type CompanyGpsDeviceUncheckedCreateWithoutServiceVisitsInput = {
+  id?: string
+  companyId: string
+  name: string
+  deviceType: string
+  ownerUserId?: string | null
+  ownerName?: string | null
+  deviceToken: string
+  status?: $Enums.CompanyGpsDeviceStatus
+  lastSeenAt?: Date | string | null
+  lastLatitude?: number | null
+  lastLongitude?: number | null
+  batteryLevel?: number | null
+  gpsAccuracy?: number | null
+  speedKph?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  pings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutDeviceInput
+  alerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutDeviceInput
+}
+
+export type CompanyGpsDeviceCreateOrConnectWithoutServiceVisitsInput = {
+  where: Prisma.CompanyGpsDeviceWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyGpsDeviceCreateWithoutServiceVisitsInput, Prisma.CompanyGpsDeviceUncheckedCreateWithoutServiceVisitsInput>
+}
+
+export type CompanyGpsDeviceUpsertWithoutServiceVisitsInput = {
+  update: Prisma.XOR<Prisma.CompanyGpsDeviceUpdateWithoutServiceVisitsInput, Prisma.CompanyGpsDeviceUncheckedUpdateWithoutServiceVisitsInput>
+  create: Prisma.XOR<Prisma.CompanyGpsDeviceCreateWithoutServiceVisitsInput, Prisma.CompanyGpsDeviceUncheckedCreateWithoutServiceVisitsInput>
+  where?: Prisma.CompanyGpsDeviceWhereInput
+}
+
+export type CompanyGpsDeviceUpdateToOneWithWhereWithoutServiceVisitsInput = {
+  where?: Prisma.CompanyGpsDeviceWhereInput
+  data: Prisma.XOR<Prisma.CompanyGpsDeviceUpdateWithoutServiceVisitsInput, Prisma.CompanyGpsDeviceUncheckedUpdateWithoutServiceVisitsInput>
+}
+
+export type CompanyGpsDeviceUpdateWithoutServiceVisitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceType?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deviceToken?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCompanyGpsDeviceStatusFieldUpdateOperationsInput | $Enums.CompanyGpsDeviceStatus
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  batteryLevel?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  gpsAccuracy?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutAdminGpsDevicesNestedInput
+  owner?: Prisma.UserUpdateOneWithoutAdminGpsDevicesNestedInput
+  pings?: Prisma.CompanyGpsPingUpdateManyWithoutDeviceNestedInput
+  alerts?: Prisma.GpsAlertUpdateManyWithoutDeviceNestedInput
+}
+
+export type CompanyGpsDeviceUncheckedUpdateWithoutServiceVisitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceType?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deviceToken?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumCompanyGpsDeviceStatusFieldUpdateOperationsInput | $Enums.CompanyGpsDeviceStatus
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  lastLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  batteryLevel?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  gpsAccuracy?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutDeviceNestedInput
+  alerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutDeviceNestedInput
 }
 
 export type CompanyGpsDeviceCreateManyCompanyInput = {
@@ -1165,6 +1292,7 @@ export type CompanyGpsDeviceUpdateWithoutCompanyInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutDeviceNestedInput
   owner?: Prisma.UserUpdateOneWithoutAdminGpsDevicesNestedInput
   pings?: Prisma.CompanyGpsPingUpdateManyWithoutDeviceNestedInput
   alerts?: Prisma.GpsAlertUpdateManyWithoutDeviceNestedInput
@@ -1186,6 +1314,7 @@ export type CompanyGpsDeviceUncheckedUpdateWithoutCompanyInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutDeviceNestedInput
   pings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutDeviceNestedInput
   alerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutDeviceNestedInput
 }
@@ -1241,6 +1370,7 @@ export type CompanyGpsDeviceUpdateWithoutOwnerInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutDeviceNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutAdminGpsDevicesNestedInput
   pings?: Prisma.CompanyGpsPingUpdateManyWithoutDeviceNestedInput
   alerts?: Prisma.GpsAlertUpdateManyWithoutDeviceNestedInput
@@ -1262,6 +1392,7 @@ export type CompanyGpsDeviceUncheckedUpdateWithoutOwnerInput = {
   speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutDeviceNestedInput
   pings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutDeviceNestedInput
   alerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutDeviceNestedInput
 }
@@ -1290,11 +1421,13 @@ export type CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerInput = {
  */
 
 export type CompanyGpsDeviceCountOutputType = {
+  serviceVisits: number
   pings: number
   alerts: number
 }
 
 export type CompanyGpsDeviceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  serviceVisits?: boolean | CompanyGpsDeviceCountOutputTypeCountServiceVisitsArgs
   pings?: boolean | CompanyGpsDeviceCountOutputTypeCountPingsArgs
   alerts?: boolean | CompanyGpsDeviceCountOutputTypeCountAlertsArgs
 }
@@ -1307,6 +1440,13 @@ export type CompanyGpsDeviceCountOutputTypeDefaultArgs<ExtArgs extends runtime.T
    * Select specific fields to fetch from the CompanyGpsDeviceCountOutputType
    */
   select?: Prisma.CompanyGpsDeviceCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CompanyGpsDeviceCountOutputType without action
+ */
+export type CompanyGpsDeviceCountOutputTypeCountServiceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BrokerServiceVisitWhereInput
 }
 
 /**
@@ -1341,6 +1481,7 @@ export type CompanyGpsDeviceSelect<ExtArgs extends runtime.Types.Extensions.Inte
   speedKph?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  serviceVisits?: boolean | Prisma.CompanyGpsDevice$serviceVisitsArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.CompanyGpsDevice$ownerArgs<ExtArgs>
   pings?: boolean | Prisma.CompanyGpsDevice$pingsArgs<ExtArgs>
@@ -1371,6 +1512,7 @@ export type CompanyGpsDeviceSelectScalar = {
 
 export type CompanyGpsDeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "name" | "deviceType" | "ownerUserId" | "ownerName" | "deviceToken" | "status" | "lastSeenAt" | "lastLatitude" | "lastLongitude" | "batteryLevel" | "gpsAccuracy" | "speedKph" | "createdAt" | "updatedAt", ExtArgs["result"]["companyGpsDevice"]>
 export type CompanyGpsDeviceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  serviceVisits?: boolean | Prisma.CompanyGpsDevice$serviceVisitsArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.CompanyGpsDevice$ownerArgs<ExtArgs>
   pings?: boolean | Prisma.CompanyGpsDevice$pingsArgs<ExtArgs>
@@ -1381,6 +1523,7 @@ export type CompanyGpsDeviceInclude<ExtArgs extends runtime.Types.Extensions.Int
 export type $CompanyGpsDevicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CompanyGpsDevice"
   objects: {
+    serviceVisits: Prisma.$BrokerServiceVisitPayload<ExtArgs>[]
     company: Prisma.$CompanyPayload<ExtArgs>
     owner: Prisma.$UserPayload<ExtArgs> | null
     pings: Prisma.$CompanyGpsPingPayload<ExtArgs>[]
@@ -1743,6 +1886,7 @@ readonly fields: CompanyGpsDeviceFieldRefs;
  */
 export interface Prisma__CompanyGpsDeviceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  serviceVisits<T extends Prisma.CompanyGpsDevice$serviceVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyGpsDevice$serviceVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrokerServiceVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   owner<T extends Prisma.CompanyGpsDevice$ownerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyGpsDevice$ownerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   pings<T extends Prisma.CompanyGpsDevice$pingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyGpsDevice$pingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyGpsPingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2137,6 +2281,30 @@ export type CompanyGpsDeviceDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many CompanyGpsDevices to delete.
    */
   limit?: number
+}
+
+/**
+ * CompanyGpsDevice.serviceVisits
+ */
+export type CompanyGpsDevice$serviceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerServiceVisit
+   */
+  select?: Prisma.BrokerServiceVisitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerServiceVisit
+   */
+  omit?: Prisma.BrokerServiceVisitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerServiceVisitInclude<ExtArgs> | null
+  where?: Prisma.BrokerServiceVisitWhereInput
+  orderBy?: Prisma.BrokerServiceVisitOrderByWithRelationInput | Prisma.BrokerServiceVisitOrderByWithRelationInput[]
+  cursor?: Prisma.BrokerServiceVisitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BrokerServiceVisitScalarFieldEnum | Prisma.BrokerServiceVisitScalarFieldEnum[]
 }
 
 /**

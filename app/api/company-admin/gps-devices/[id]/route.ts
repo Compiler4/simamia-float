@@ -1,4 +1,6 @@
+import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
+
 import { prisma } from "@/lib/prisma";
 import {
   createAudit,
@@ -19,26 +21,34 @@ export async function PATCH(
     const body = await request.json();
     const db = prisma as any;
 
-    const existing = await db.companyGpsDevice.findFirst({
-      where: { id, companyId },
-    });
+    const existing = await db.companyGpsDevice.findFirst({ where: { id, companyId } });
     if (!existing) throw new HttpError("GPS device not found.", 404);
 
-    const device = await db.companyGpsDevice.update({
-      where: { id },
-      data: {
-        name: body.name !== undefined ? text(body.name).trim() : undefined,
-        status: body.status !== undefined ? text(body.status) : undefined,
-        ownerUserId:
-          body.ownerUserId !== undefined
-            ? text(body.ownerUserId) || null
-            : undefined,
-        ownerName:
-          body.ownerName !== undefined
-            ? text(body.ownerName).trim() || null
-            : undefined,
-      },
-    });
+    const data: Record<string, unknown> = {};
+    if (body.name !== undefined) {
+      const name = text(body.name).trim();
+      if (!name) throw new HttpError("Device name cannot be empty.", 422);
+      data.name = name;
+    }
+    if (body.status !== undefined) {
+      const status = text(body.status).toUpperCase();
+      if (!new Set(["ACTIVE", "INACTIVE"]).has(status)) {
+        throw new HttpError("Invalid GPS device status.", 422);
+      }
+      data.status = status;
+    }
+    if (body.ownerUserId !== undefined) {
+      const ownerUserId = text(body.ownerUserId).trim();
+      const owner = await db.user.findFirst({ where: { id: ownerUserId, companyId } });
+      if (!owner) throw new HttpError("Assigned user was not found.", 404);
+      data.ownerUserId = owner.id;
+      data.ownerName = owner.name;
+    }
+    if (Boolean(body.rotateToken)) {
+      data.deviceToken = crypto.randomBytes(32).toString("hex");
+    }
+
+    const device = await db.companyGpsDevice.update({ where: { id }, data });
 
     await createAudit({
       companyId,
@@ -47,7 +57,7 @@ export async function PATCH(
       actorRole: user.role,
       action: "UPDATE_GPS_DEVICE",
       module: "GPS",
-      details: `Updated GPS device ${text(existing.name)}.`,
+      details: `Updated GPS device ${existing.name}.`,
     });
 
     return NextResponse.json({ success: true, device });

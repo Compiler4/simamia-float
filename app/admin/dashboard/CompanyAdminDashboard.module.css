@@ -4399,3 +4399,691 @@
   font-size: 9px;
   font-weight: 700;
 }
+
+/* ============================================================
+   SIMAMIA COMPANY ADMIN V2 EXTENSIONS
+   ============================================================ */
+.pageActionGroup,
+.gpsToolbar,
+.approvalToolbar,
+.notificationSummaryStrip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.pageActionGroup button,
+.gpsToolbar button,
+.approvalToolbar button,
+.documentOpenLink {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid #d4e4e7;
+  border-radius: 13px;
+  color: #173941;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pageActionGroup button:last-child,
+.gpsToolbar button:hover,
+.approvalToolbar button:hover,
+.documentOpenLink {
+  border-color: transparent;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  box-shadow: 0 10px 22px rgba(14, 158, 170, 0.18);
+}
+
+.profileAvatar {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 3px solid #fff;
+  border-radius: 14px;
+  color: #08717e;
+  background: linear-gradient(145deg, #dff8fa, #fff);
+  box-shadow: 0 8px 20px rgba(14, 81, 92, 0.16);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.profileAvatarLarge {
+  width: 96px;
+  height: 96px;
+  border-radius: 28px;
+  font-size: 23px;
+}
+
+.profileAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileUploadRow,
+.verticalProfileCard,
+.entityWithAvatar {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.profileUploadRow {
+  grid-column: 1 / -1;
+  padding: 13px;
+  border: 1px dashed #a9cfd4;
+  border-radius: 17px;
+  background: #f1f9fa;
+}
+
+.verticalProfileCard {
+  align-items: flex-start;
+  margin-bottom: 17px;
+  padding: 16px;
+  border-radius: 20px;
+  color: #fff;
+  background: linear-gradient(145deg, #063b48, #0e9eaa);
+}
+
+.verticalProfileCard h3,
+.verticalProfileCard p {
+  margin: 0;
+}
+
+.verticalProfileCard p {
+  margin-top: 5px;
+  color: rgba(255,255,255,.72);
+  font-size: 11px;
+}
+
+.brokerFullLayout {
+  display: grid;
+  grid-template-columns: minmax(360px, .86fr) minmax(0, 1.4fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.formSectionTitle {
+  grid-column: 1 / -1;
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--primary);
+  border-radius: 0 12px 12px 0;
+  color: #0b5964;
+  background: #eaf7f8;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.agentAccountList {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 9px;
+}
+
+.agentAccountRow {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1.1fr 1.2fr auto auto;
+  gap: 8px;
+  align-items: end;
+  padding: 11px;
+  border: 1px solid #dbe8ea;
+  border-radius: 16px;
+  background: #f7fbfb;
+}
+
+.agentAccountRow label,
+.primaryCheck,
+.overrideCheck {
+  display: grid;
+  gap: 6px;
+  color: #48636a;
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.agentAccountRow input,
+.agentAccountRow select {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid #d6e5e8;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.primaryCheck,
+.overrideCheck {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+}
+
+.primaryCheck input,
+.overrideCheck input {
+  width: 17px;
+  height: 17px;
+}
+
+.blockSmall {
+  display: block;
+  margin-top: 4px;
+  color: #7b9197;
+  font-size: 9px;
+}
+
+.networkBadgeList {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.networkBadgeList span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #5a2bc5;
+  background: #eee9ff;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.agentAccountDetails {
+  display: grid;
+  gap: 8px;
+}
+
+.agentAccountDetails > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #dfebed;
+  border-radius: 13px;
+  background: #f7fbfc;
+}
+
+.proofAssessment {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid #bae6d5;
+  border-radius: 15px;
+  color: #0f6246;
+  background: #ecfdf5;
+}
+
+.proofAssessmentDanger {
+  border-color: #fecaca;
+  color: #991b1b;
+  background: #fff1f2;
+}
+
+.documentPreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.documentPreviewGrid article {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #dce8eb;
+  border-radius: 15px;
+  background: #f8fbfc;
+}
+
+.documentPreviewGrid article button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 11px;
+  color: #fff;
+  background: linear-gradient(135deg, #6d35ff, #4d20bd);
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.extractedTextBox {
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid #dce8eb;
+  border-radius: 15px;
+  background: #f6fafb;
+}
+
+.extractedTextBox pre {
+  max-height: 190px;
+  overflow: auto;
+  margin: 9px 0 0;
+  white-space: pre-wrap;
+  color: #486168;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.attendanceQuickCell {
+  display: flex;
+  gap: 5px;
+}
+
+.attendanceQuickCell button {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dbe7e9;
+  border-radius: 9px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.quickPresentActive {
+  color: #fff !important;
+  border-color: #16a34a !important;
+  background: #16a34a !important;
+}
+.quickAbsentActive {
+  color: #fff !important;
+  border-color: #ef4444 !important;
+  background: #ef4444 !important;
+}
+.quickLateActive {
+  color: #fff !important;
+  border-color: #f59e0b !important;
+  background: #f59e0b !important;
+}
+
+.performanceAlertCard,
+.performanceWarning {
+  padding: 14px;
+  border: 1px solid #fde68a;
+  border-radius: 17px;
+  color: #854d0e;
+  background: #fffbeb;
+}
+
+.performanceWarning {
+  color: #991b1b;
+  border-color: #fecaca;
+  background: #fff1f2;
+}
+
+.gpsToolbar {
+  padding: 11px;
+  border: 1px solid #dce8eb;
+  border-radius: 17px;
+  background: #fff;
+}
+
+.mapLegend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 8px 0 12px;
+  color: #536d74;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.mapLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.staffLegendDot,
+.brokerLegendDot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #0e9eaa;
+}
+
+.brokerLegendDot {
+  background: #f59e0b;
+}
+
+.tokenCode {
+  max-width: 250px;
+  display: inline-block;
+  overflow-wrap: anywhere;
+  padding: 6px 8px;
+  border-radius: 9px;
+  color: #07515d;
+  background: #e8f7f8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9px;
+}
+
+.reportPreviewSheet {
+  overflow: hidden;
+  border: 1px solid #d6e4e7;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(22, 67, 76, .1);
+}
+
+.reportPreviewSheet > header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px;
+  color: #fff;
+  background: linear-gradient(135deg, #14532d, #2e7d32);
+}
+
+.reportPreviewSheet h2,
+.reportPreviewSheet p,
+.reportPreviewSheet small,
+.reportPreviewSheet strong {
+  display: block;
+  margin: 0;
+}
+
+.reportPreviewSheet h2 {
+  margin-top: 5px;
+}
+
+.reportPreviewSheet p,
+.reportPreviewSheet small {
+  margin-top: 4px;
+  color: rgba(255,255,255,.75);
+  font-size: 10px;
+}
+
+.reportPreviewSheet > header > div:last-child {
+  text-align: right;
+}
+
+.reportPreviewSheet > header > div:last-child strong {
+  margin-top: 5px;
+  font-size: 22px;
+}
+
+.previewSummaryGrid,
+.thresholdGrid,
+.notificationSummaryStrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
+  padding: 15px;
+}
+
+.thresholdGrid {
+  padding: 18px;
+  border: 1px solid #dce8eb;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.notificationSummaryStrip {
+  padding: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.approvalToolbar {
+  padding: 9px;
+  border: 1px solid #dce8eb;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.approvalReasonInput {
+  width: 240px;
+  min-height: 76px;
+  padding: 9px;
+  border: 1px solid #d7e5e8;
+  border-radius: 11px;
+  resize: vertical;
+  font: inherit;
+  font-size: 10px;
+}
+
+.approvalDecisionView,
+.approvalDecisionEmpty {
+  min-width: 190px;
+  display: grid;
+  gap: 4px;
+}
+
+.approvalDecisionView strong {
+  font-size: 9px;
+}
+
+.approvalDecisionView p,
+.approvalDecisionView small,
+.approvalDecisionEmpty small {
+  margin: 0;
+  color: #6a8086;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(2, 28, 34, .72);
+  backdrop-filter: blur(10px);
+  animation: popupEnter .2s ease both;
+}
+
+.modalCard {
+  width: min(760px, 100%);
+  max-height: 92vh;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 25px;
+  background: #fff;
+  box-shadow: 0 35px 100px rgba(0,0,0,.35);
+}
+
+.modalWide {
+  width: min(1150px, 100%);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  color: #fff;
+  background: linear-gradient(135deg, #063743, #0e9eaa);
+}
+
+.modalHeader h2,
+.modalHeader small {
+  display: block;
+  margin: 0;
+}
+
+.modalHeader small {
+  color: rgba(255,255,255,.7);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+.modalHeader h2 {
+  margin-top: 4px;
+}
+
+.modalHeader button {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 12px;
+  color: #fff;
+  background: rgba(255,255,255,.12);
+  cursor: pointer;
+}
+
+.modalBody {
+  max-height: calc(92vh - 75px);
+  overflow: auto;
+  padding: 18px;
+}
+
+.documentPreviewMeta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+.documentViewer {
+  min-height: 460px;
+  overflow: hidden;
+  border: 1px solid #dce8eb;
+  border-radius: 17px;
+  background: #eef4f5;
+}
+
+.documentViewer img,
+.documentViewer iframe {
+  width: 100%;
+  height: 65vh;
+  min-height: 460px;
+  display: block;
+  border: 0;
+  object-fit: contain;
+}
+
+@media (max-width: 1180px) {
+  .brokerFullLayout { grid-template-columns: 1fr; }
+  .agentAccountRow { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .previewSummaryGrid,
+  .thresholdGrid,
+  .notificationSummaryStrip { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .documentPreviewMeta { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+@media (max-width: 700px) {
+  .agentAccountRow,
+  .previewSummaryGrid,
+  .thresholdGrid,
+  .notificationSummaryStrip,
+  .documentPreviewMeta,
+  .agentAccountDetails > div { grid-template-columns: 1fr; }
+  .pageActionGroup { width: 100%; }
+  .pageActionGroup button { flex: 1; }
+  .reportPreviewSheet > header { align-items: flex-start; flex-direction: column; }
+  .reportPreviewSheet > header > div:last-child { text-align: left; }
+  .modalBackdrop { padding: 7px; }
+  .modalCard { max-height: 98vh; border-radius: 18px; }
+  .modalBody { max-height: calc(98vh - 72px); padding: 12px; }
+  .documentViewer,
+  .documentViewer img,
+  .documentViewer iframe { min-height: 360px; height: 58vh; }
+}
+
+.approvalOverride {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 7px;
+  color: #9a5b09;
+  font-size: 9px;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.approvalOverride input {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  accent-color: #d98a08;
+}
+
+/* V3 live GPS status */
+.liveGpsStatus {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid #b9e5cf;
+  border-radius: 13px;
+  color: #0f5132;
+  background: #ecfdf3;
+  font-size: 10px;
+  font-weight: 900;
+  box-shadow: 0 8px 18px rgba(15, 122, 66, 0.08);
+}
+
+.liveGpsStatus i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5);
+  animation: liveGpsPulse 1.5s infinite;
+}
+
+@keyframes liveGpsPulse {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); }
+  70% { box-shadow: 0 0 0 9px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+
+/* V3 performance profile cards */
+.performanceCardStats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.performanceCardStats > span {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #e1eaed;
+  border-radius: 11px;
+  background: #f7fafb;
+  text-align: left;
+}
+
+.performanceCardStats small,
+.performanceCardStats strong {
+  display: block;
+}
+
+.performanceCardStats small {
+  color: #71868c;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.performanceCardStats strong {
+  margin-top: 4px;
+  overflow: hidden;
+  color: #102c34;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

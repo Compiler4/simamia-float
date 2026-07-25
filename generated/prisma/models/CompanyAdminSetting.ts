@@ -20,8 +20,22 @@ export type CompanyAdminSettingModel = runtime.Types.Result.DefaultSelection<Pri
 
 export type AggregateCompanyAdminSetting = {
   _count: CompanyAdminSettingCountAggregateOutputType | null
+  _avg: CompanyAdminSettingAvgAggregateOutputType | null
+  _sum: CompanyAdminSettingSumAggregateOutputType | null
   _min: CompanyAdminSettingMinAggregateOutputType | null
   _max: CompanyAdminSettingMaxAggregateOutputType | null
+}
+
+export type CompanyAdminSettingAvgAggregateOutputType = {
+  proofGraceMinutes: number | null
+  visitRadiusMeters: number | null
+  minimumPerformanceScore: number | null
+}
+
+export type CompanyAdminSettingSumAggregateOutputType = {
+  proofGraceMinutes: number | null
+  visitRadiusMeters: number | null
+  minimumPerformanceScore: number | null
 }
 
 export type CompanyAdminSettingMinAggregateOutputType = {
@@ -38,6 +52,9 @@ export type CompanyAdminSettingMinAggregateOutputType = {
   accent: string | null
   currency: string | null
   timezone: string | null
+  proofGraceMinutes: number | null
+  visitRadiusMeters: number | null
+  minimumPerformanceScore: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +73,9 @@ export type CompanyAdminSettingMaxAggregateOutputType = {
   accent: string | null
   currency: string | null
   timezone: string | null
+  proofGraceMinutes: number | null
+  visitRadiusMeters: number | null
+  minimumPerformanceScore: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,11 +94,26 @@ export type CompanyAdminSettingCountAggregateOutputType = {
   accent: number
   currency: number
   timezone: number
+  proofGraceMinutes: number
+  visitRadiusMeters: number
+  minimumPerformanceScore: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type CompanyAdminSettingAvgAggregateInputType = {
+  proofGraceMinutes?: true
+  visitRadiusMeters?: true
+  minimumPerformanceScore?: true
+}
+
+export type CompanyAdminSettingSumAggregateInputType = {
+  proofGraceMinutes?: true
+  visitRadiusMeters?: true
+  minimumPerformanceScore?: true
+}
 
 export type CompanyAdminSettingMinAggregateInputType = {
   id?: true
@@ -94,6 +129,9 @@ export type CompanyAdminSettingMinAggregateInputType = {
   accent?: true
   currency?: true
   timezone?: true
+  proofGraceMinutes?: true
+  visitRadiusMeters?: true
+  minimumPerformanceScore?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +150,9 @@ export type CompanyAdminSettingMaxAggregateInputType = {
   accent?: true
   currency?: true
   timezone?: true
+  proofGraceMinutes?: true
+  visitRadiusMeters?: true
+  minimumPerformanceScore?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +171,9 @@ export type CompanyAdminSettingCountAggregateInputType = {
   accent?: true
   currency?: true
   timezone?: true
+  proofGraceMinutes?: true
+  visitRadiusMeters?: true
+  minimumPerformanceScore?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -173,6 +217,18 @@ export type CompanyAdminSettingAggregateArgs<ExtArgs extends runtime.Types.Exten
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CompanyAdminSettingAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CompanyAdminSettingSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CompanyAdminSettingMinAggregateInputType
@@ -203,6 +259,8 @@ export type CompanyAdminSettingGroupByArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   _count?: CompanyAdminSettingCountAggregateInputType | true
+  _avg?: CompanyAdminSettingAvgAggregateInputType
+  _sum?: CompanyAdminSettingSumAggregateInputType
   _min?: CompanyAdminSettingMinAggregateInputType
   _max?: CompanyAdminSettingMaxAggregateInputType
 }
@@ -221,9 +279,14 @@ export type CompanyAdminSettingGroupByOutputType = {
   accent: string
   currency: string
   timezone: string
+  proofGraceMinutes: number
+  visitRadiusMeters: number
+  minimumPerformanceScore: number
   createdAt: Date
   updatedAt: Date
   _count: CompanyAdminSettingCountAggregateOutputType | null
+  _avg: CompanyAdminSettingAvgAggregateOutputType | null
+  _sum: CompanyAdminSettingSumAggregateOutputType | null
   _min: CompanyAdminSettingMinAggregateOutputType | null
   _max: CompanyAdminSettingMaxAggregateOutputType | null
 }
@@ -260,6 +323,9 @@ export type CompanyAdminSettingWhereInput = {
   accent?: Prisma.StringFilter<"CompanyAdminSetting"> | string
   currency?: Prisma.StringFilter<"CompanyAdminSetting"> | string
   timezone?: Prisma.StringFilter<"CompanyAdminSetting"> | string
+  proofGraceMinutes?: Prisma.IntFilter<"CompanyAdminSetting"> | number
+  visitRadiusMeters?: Prisma.IntFilter<"CompanyAdminSetting"> | number
+  minimumPerformanceScore?: Prisma.IntFilter<"CompanyAdminSetting"> | number
   createdAt?: Prisma.DateTimeFilter<"CompanyAdminSetting"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanyAdminSetting"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -279,6 +345,9 @@ export type CompanyAdminSettingOrderByWithRelationInput = {
   accent?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  proofGraceMinutes?: Prisma.SortOrder
+  visitRadiusMeters?: Prisma.SortOrder
+  minimumPerformanceScore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -302,6 +371,9 @@ export type CompanyAdminSettingWhereUniqueInput = Prisma.AtLeast<{
   accent?: Prisma.StringFilter<"CompanyAdminSetting"> | string
   currency?: Prisma.StringFilter<"CompanyAdminSetting"> | string
   timezone?: Prisma.StringFilter<"CompanyAdminSetting"> | string
+  proofGraceMinutes?: Prisma.IntFilter<"CompanyAdminSetting"> | number
+  visitRadiusMeters?: Prisma.IntFilter<"CompanyAdminSetting"> | number
+  minimumPerformanceScore?: Prisma.IntFilter<"CompanyAdminSetting"> | number
   createdAt?: Prisma.DateTimeFilter<"CompanyAdminSetting"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CompanyAdminSetting"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -321,11 +393,16 @@ export type CompanyAdminSettingOrderByWithAggregationInput = {
   accent?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  proofGraceMinutes?: Prisma.SortOrder
+  visitRadiusMeters?: Prisma.SortOrder
+  minimumPerformanceScore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompanyAdminSettingCountOrderByAggregateInput
+  _avg?: Prisma.CompanyAdminSettingAvgOrderByAggregateInput
   _max?: Prisma.CompanyAdminSettingMaxOrderByAggregateInput
   _min?: Prisma.CompanyAdminSettingMinOrderByAggregateInput
+  _sum?: Prisma.CompanyAdminSettingSumOrderByAggregateInput
 }
 
 export type CompanyAdminSettingScalarWhereWithAggregatesInput = {
@@ -345,6 +422,9 @@ export type CompanyAdminSettingScalarWhereWithAggregatesInput = {
   accent?: Prisma.StringWithAggregatesFilter<"CompanyAdminSetting"> | string
   currency?: Prisma.StringWithAggregatesFilter<"CompanyAdminSetting"> | string
   timezone?: Prisma.StringWithAggregatesFilter<"CompanyAdminSetting"> | string
+  proofGraceMinutes?: Prisma.IntWithAggregatesFilter<"CompanyAdminSetting"> | number
+  visitRadiusMeters?: Prisma.IntWithAggregatesFilter<"CompanyAdminSetting"> | number
+  minimumPerformanceScore?: Prisma.IntWithAggregatesFilter<"CompanyAdminSetting"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CompanyAdminSetting"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CompanyAdminSetting"> | Date | string
 }
@@ -362,6 +442,9 @@ export type CompanyAdminSettingCreateInput = {
   accent?: string
   currency?: string
   timezone?: string
+  proofGraceMinutes?: number
+  visitRadiusMeters?: number
+  minimumPerformanceScore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutAdminSettingInput
@@ -381,6 +464,9 @@ export type CompanyAdminSettingUncheckedCreateInput = {
   accent?: string
   currency?: string
   timezone?: string
+  proofGraceMinutes?: number
+  visitRadiusMeters?: number
+  minimumPerformanceScore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -398,6 +484,9 @@ export type CompanyAdminSettingUpdateInput = {
   accent?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  proofGraceMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  visitRadiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  minimumPerformanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutAdminSettingNestedInput
@@ -417,6 +506,9 @@ export type CompanyAdminSettingUncheckedUpdateInput = {
   accent?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  proofGraceMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  visitRadiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  minimumPerformanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -435,6 +527,9 @@ export type CompanyAdminSettingCreateManyInput = {
   accent?: string
   currency?: string
   timezone?: string
+  proofGraceMinutes?: number
+  visitRadiusMeters?: number
+  minimumPerformanceScore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -452,6 +547,9 @@ export type CompanyAdminSettingUpdateManyMutationInput = {
   accent?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  proofGraceMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  visitRadiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  minimumPerformanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -470,6 +568,9 @@ export type CompanyAdminSettingUncheckedUpdateManyInput = {
   accent?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  proofGraceMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  visitRadiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  minimumPerformanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -499,8 +600,17 @@ export type CompanyAdminSettingCountOrderByAggregateInput = {
   accent?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  proofGraceMinutes?: Prisma.SortOrder
+  visitRadiusMeters?: Prisma.SortOrder
+  minimumPerformanceScore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CompanyAdminSettingAvgOrderByAggregateInput = {
+  proofGraceMinutes?: Prisma.SortOrder
+  visitRadiusMeters?: Prisma.SortOrder
+  minimumPerformanceScore?: Prisma.SortOrder
 }
 
 export type CompanyAdminSettingMaxOrderByAggregateInput = {
@@ -517,6 +627,9 @@ export type CompanyAdminSettingMaxOrderByAggregateInput = {
   accent?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  proofGraceMinutes?: Prisma.SortOrder
+  visitRadiusMeters?: Prisma.SortOrder
+  minimumPerformanceScore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -535,8 +648,17 @@ export type CompanyAdminSettingMinOrderByAggregateInput = {
   accent?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  proofGraceMinutes?: Prisma.SortOrder
+  visitRadiusMeters?: Prisma.SortOrder
+  minimumPerformanceScore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CompanyAdminSettingSumOrderByAggregateInput = {
+  proofGraceMinutes?: Prisma.SortOrder
+  visitRadiusMeters?: Prisma.SortOrder
+  minimumPerformanceScore?: Prisma.SortOrder
 }
 
 export type CompanyAdminSettingCreateNestedOneWithoutCompanyInput = {
@@ -584,6 +706,9 @@ export type CompanyAdminSettingCreateWithoutCompanyInput = {
   accent?: string
   currency?: string
   timezone?: string
+  proofGraceMinutes?: number
+  visitRadiusMeters?: number
+  minimumPerformanceScore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -601,6 +726,9 @@ export type CompanyAdminSettingUncheckedCreateWithoutCompanyInput = {
   accent?: string
   currency?: string
   timezone?: string
+  proofGraceMinutes?: number
+  visitRadiusMeters?: number
+  minimumPerformanceScore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -634,6 +762,9 @@ export type CompanyAdminSettingUpdateWithoutCompanyInput = {
   accent?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  proofGraceMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  visitRadiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  minimumPerformanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -651,6 +782,9 @@ export type CompanyAdminSettingUncheckedUpdateWithoutCompanyInput = {
   accent?: Prisma.StringFieldUpdateOperationsInput | string
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  proofGraceMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  visitRadiusMeters?: Prisma.IntFieldUpdateOperationsInput | number
+  minimumPerformanceScore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -671,6 +805,9 @@ export type CompanyAdminSettingSelect<ExtArgs extends runtime.Types.Extensions.I
   accent?: boolean
   currency?: boolean
   timezone?: boolean
+  proofGraceMinutes?: boolean
+  visitRadiusMeters?: boolean
+  minimumPerformanceScore?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -692,11 +829,14 @@ export type CompanyAdminSettingSelectScalar = {
   accent?: boolean
   currency?: boolean
   timezone?: boolean
+  proofGraceMinutes?: boolean
+  visitRadiusMeters?: boolean
+  minimumPerformanceScore?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanyAdminSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "sms" | "email" | "inApp" | "gpsAlerts" | "dayClosingLock" | "attendanceApproval" | "bankMismatchHold" | "lowCashAlert" | "accent" | "currency" | "timezone" | "createdAt" | "updatedAt", ExtArgs["result"]["companyAdminSetting"]>
+export type CompanyAdminSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "sms" | "email" | "inApp" | "gpsAlerts" | "dayClosingLock" | "attendanceApproval" | "bankMismatchHold" | "lowCashAlert" | "accent" | "currency" | "timezone" | "proofGraceMinutes" | "visitRadiusMeters" | "minimumPerformanceScore" | "createdAt" | "updatedAt", ExtArgs["result"]["companyAdminSetting"]>
 export type CompanyAdminSettingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
 }
@@ -720,6 +860,9 @@ export type $CompanyAdminSettingPayload<ExtArgs extends runtime.Types.Extensions
     accent: string
     currency: string
     timezone: string
+    proofGraceMinutes: number
+    visitRadiusMeters: number
+    minimumPerformanceScore: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["companyAdminSetting"]>
@@ -1105,6 +1248,9 @@ export interface CompanyAdminSettingFieldRefs {
   readonly accent: Prisma.FieldRef<"CompanyAdminSetting", 'String'>
   readonly currency: Prisma.FieldRef<"CompanyAdminSetting", 'String'>
   readonly timezone: Prisma.FieldRef<"CompanyAdminSetting", 'String'>
+  readonly proofGraceMinutes: Prisma.FieldRef<"CompanyAdminSetting", 'Int'>
+  readonly visitRadiusMeters: Prisma.FieldRef<"CompanyAdminSetting", 'Int'>
+  readonly minimumPerformanceScore: Prisma.FieldRef<"CompanyAdminSetting", 'Int'>
   readonly createdAt: Prisma.FieldRef<"CompanyAdminSetting", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CompanyAdminSetting", 'DateTime'>
 }

@@ -43,10 +43,20 @@ export type CompanyBankVerificationMinAggregateOutputType = {
   amount: runtime.Decimal | null
   referenceNumber: string | null
   depositDate: Date | null
+  bankName: string | null
+  accountName: string | null
   bankAccount: string | null
   depositSlipUrl: string | null
   bankReceiptUrl: string | null
   bankStatementUrl: string | null
+  senderName: string | null
+  receiverName: string | null
+  transactionDateTime: Date | null
+  proofInspectionStatus: $Enums.ProofInspectionStatus | null
+  proofMissingFields: string | null
+  proofExtractedText: string | null
+  proofAnalyzedAt: Date | null
+  reviewNote: string | null
   status: $Enums.CompanyBankStatus | null
   isSeenByAdmin: boolean | null
   verifiedById: string | null
@@ -65,10 +75,20 @@ export type CompanyBankVerificationMaxAggregateOutputType = {
   amount: runtime.Decimal | null
   referenceNumber: string | null
   depositDate: Date | null
+  bankName: string | null
+  accountName: string | null
   bankAccount: string | null
   depositSlipUrl: string | null
   bankReceiptUrl: string | null
   bankStatementUrl: string | null
+  senderName: string | null
+  receiverName: string | null
+  transactionDateTime: Date | null
+  proofInspectionStatus: $Enums.ProofInspectionStatus | null
+  proofMissingFields: string | null
+  proofExtractedText: string | null
+  proofAnalyzedAt: Date | null
+  reviewNote: string | null
   status: $Enums.CompanyBankStatus | null
   isSeenByAdmin: boolean | null
   verifiedById: string | null
@@ -87,10 +107,20 @@ export type CompanyBankVerificationCountAggregateOutputType = {
   amount: number
   referenceNumber: number
   depositDate: number
+  bankName: number
+  accountName: number
   bankAccount: number
   depositSlipUrl: number
   bankReceiptUrl: number
   bankStatementUrl: number
+  senderName: number
+  receiverName: number
+  transactionDateTime: number
+  proofInspectionStatus: number
+  proofMissingFields: number
+  proofExtractedText: number
+  proofAnalyzedAt: number
+  reviewNote: number
   status: number
   isSeenByAdmin: number
   verifiedById: number
@@ -119,10 +149,20 @@ export type CompanyBankVerificationMinAggregateInputType = {
   amount?: true
   referenceNumber?: true
   depositDate?: true
+  bankName?: true
+  accountName?: true
   bankAccount?: true
   depositSlipUrl?: true
   bankReceiptUrl?: true
   bankStatementUrl?: true
+  senderName?: true
+  receiverName?: true
+  transactionDateTime?: true
+  proofInspectionStatus?: true
+  proofMissingFields?: true
+  proofExtractedText?: true
+  proofAnalyzedAt?: true
+  reviewNote?: true
   status?: true
   isSeenByAdmin?: true
   verifiedById?: true
@@ -141,10 +181,20 @@ export type CompanyBankVerificationMaxAggregateInputType = {
   amount?: true
   referenceNumber?: true
   depositDate?: true
+  bankName?: true
+  accountName?: true
   bankAccount?: true
   depositSlipUrl?: true
   bankReceiptUrl?: true
   bankStatementUrl?: true
+  senderName?: true
+  receiverName?: true
+  transactionDateTime?: true
+  proofInspectionStatus?: true
+  proofMissingFields?: true
+  proofExtractedText?: true
+  proofAnalyzedAt?: true
+  reviewNote?: true
   status?: true
   isSeenByAdmin?: true
   verifiedById?: true
@@ -163,10 +213,20 @@ export type CompanyBankVerificationCountAggregateInputType = {
   amount?: true
   referenceNumber?: true
   depositDate?: true
+  bankName?: true
+  accountName?: true
   bankAccount?: true
   depositSlipUrl?: true
   bankReceiptUrl?: true
   bankStatementUrl?: true
+  senderName?: true
+  receiverName?: true
+  transactionDateTime?: true
+  proofInspectionStatus?: true
+  proofMissingFields?: true
+  proofExtractedText?: true
+  proofAnalyzedAt?: true
+  reviewNote?: true
   status?: true
   isSeenByAdmin?: true
   verifiedById?: true
@@ -272,10 +332,20 @@ export type CompanyBankVerificationGroupByOutputType = {
   amount: runtime.Decimal
   referenceNumber: string
   depositDate: Date
+  bankName: string
+  accountName: string | null
   bankAccount: string
   depositSlipUrl: string | null
   bankReceiptUrl: string | null
   bankStatementUrl: string | null
+  senderName: string | null
+  receiverName: string | null
+  transactionDateTime: Date | null
+  proofInspectionStatus: $Enums.ProofInspectionStatus
+  proofMissingFields: string | null
+  proofExtractedText: string | null
+  proofAnalyzedAt: Date | null
+  reviewNote: string | null
   status: $Enums.CompanyBankStatus
   isSeenByAdmin: boolean
   verifiedById: string | null
@@ -317,10 +387,20 @@ export type CompanyBankVerificationWhereInput = {
   amount?: Prisma.DecimalFilter<"CompanyBankVerification"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFilter<"CompanyBankVerification"> | string
   depositDate?: Prisma.DateTimeFilter<"CompanyBankVerification"> | Date | string
+  bankName?: Prisma.StringFilter<"CompanyBankVerification"> | string
+  accountName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankAccount?: Prisma.StringFilter<"CompanyBankVerification"> | string
   depositSlipUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankReceiptUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankStatementUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  senderName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  receiverName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  transactionDateTime?: Prisma.DateTimeNullableFilter<"CompanyBankVerification"> | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFilter<"CompanyBankVerification"> | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  proofExtractedText?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  proofAnalyzedAt?: Prisma.DateTimeNullableFilter<"CompanyBankVerification"> | Date | string | null
+  reviewNote?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   status?: Prisma.EnumCompanyBankStatusFilter<"CompanyBankVerification"> | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFilter<"CompanyBankVerification"> | boolean
   verifiedById?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
@@ -343,10 +423,20 @@ export type CompanyBankVerificationOrderByWithRelationInput = {
   amount?: Prisma.SortOrder
   referenceNumber?: Prisma.SortOrder
   depositDate?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountName?: Prisma.SortOrderInput | Prisma.SortOrder
   bankAccount?: Prisma.SortOrder
   depositSlipUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   bankReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   bankStatementUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  senderName?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiverName?: Prisma.SortOrderInput | Prisma.SortOrder
+  transactionDateTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofInspectionStatus?: Prisma.SortOrder
+  proofMissingFields?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofExtractedText?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofAnalyzedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewNote?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isSeenByAdmin?: Prisma.SortOrder
   verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -374,10 +464,20 @@ export type CompanyBankVerificationWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.DecimalFilter<"CompanyBankVerification"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFilter<"CompanyBankVerification"> | string
   depositDate?: Prisma.DateTimeFilter<"CompanyBankVerification"> | Date | string
+  bankName?: Prisma.StringFilter<"CompanyBankVerification"> | string
+  accountName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankAccount?: Prisma.StringFilter<"CompanyBankVerification"> | string
   depositSlipUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankReceiptUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankStatementUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  senderName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  receiverName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  transactionDateTime?: Prisma.DateTimeNullableFilter<"CompanyBankVerification"> | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFilter<"CompanyBankVerification"> | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  proofExtractedText?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  proofAnalyzedAt?: Prisma.DateTimeNullableFilter<"CompanyBankVerification"> | Date | string | null
+  reviewNote?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   status?: Prisma.EnumCompanyBankStatusFilter<"CompanyBankVerification"> | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFilter<"CompanyBankVerification"> | boolean
   verifiedById?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
@@ -400,10 +500,20 @@ export type CompanyBankVerificationOrderByWithAggregationInput = {
   amount?: Prisma.SortOrder
   referenceNumber?: Prisma.SortOrder
   depositDate?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountName?: Prisma.SortOrderInput | Prisma.SortOrder
   bankAccount?: Prisma.SortOrder
   depositSlipUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   bankReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   bankStatementUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  senderName?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiverName?: Prisma.SortOrderInput | Prisma.SortOrder
+  transactionDateTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofInspectionStatus?: Prisma.SortOrder
+  proofMissingFields?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofExtractedText?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofAnalyzedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewNote?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isSeenByAdmin?: Prisma.SortOrder
   verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -430,10 +540,20 @@ export type CompanyBankVerificationScalarWhereWithAggregatesInput = {
   amount?: Prisma.DecimalWithAggregatesFilter<"CompanyBankVerification"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringWithAggregatesFilter<"CompanyBankVerification"> | string
   depositDate?: Prisma.DateTimeWithAggregatesFilter<"CompanyBankVerification"> | Date | string
+  bankName?: Prisma.StringWithAggregatesFilter<"CompanyBankVerification"> | string
+  accountName?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
   bankAccount?: Prisma.StringWithAggregatesFilter<"CompanyBankVerification"> | string
   depositSlipUrl?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
   bankReceiptUrl?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
   bankStatementUrl?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
+  senderName?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
+  receiverName?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
+  transactionDateTime?: Prisma.DateTimeNullableWithAggregatesFilter<"CompanyBankVerification"> | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusWithAggregatesFilter<"CompanyBankVerification"> | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
+  proofExtractedText?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
+  proofAnalyzedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CompanyBankVerification"> | Date | string | null
+  reviewNote?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
   status?: Prisma.EnumCompanyBankStatusWithAggregatesFilter<"CompanyBankVerification"> | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolWithAggregatesFilter<"CompanyBankVerification"> | boolean
   verifiedById?: Prisma.StringNullableWithAggregatesFilter<"CompanyBankVerification"> | string | null
@@ -450,10 +570,20 @@ export type CompanyBankVerificationCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedByName?: string | null
@@ -475,10 +605,20 @@ export type CompanyBankVerificationUncheckedCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedById?: string | null
@@ -496,10 +636,20 @@ export type CompanyBankVerificationUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -521,10 +671,20 @@ export type CompanyBankVerificationUncheckedUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -544,10 +704,20 @@ export type CompanyBankVerificationCreateManyInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedById?: string | null
@@ -564,10 +734,20 @@ export type CompanyBankVerificationUpdateManyMutationInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -585,10 +765,20 @@ export type CompanyBankVerificationUncheckedUpdateManyInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -628,10 +818,20 @@ export type CompanyBankVerificationCountOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   referenceNumber?: Prisma.SortOrder
   depositDate?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountName?: Prisma.SortOrder
   bankAccount?: Prisma.SortOrder
   depositSlipUrl?: Prisma.SortOrder
   bankReceiptUrl?: Prisma.SortOrder
   bankStatementUrl?: Prisma.SortOrder
+  senderName?: Prisma.SortOrder
+  receiverName?: Prisma.SortOrder
+  transactionDateTime?: Prisma.SortOrder
+  proofInspectionStatus?: Prisma.SortOrder
+  proofMissingFields?: Prisma.SortOrder
+  proofExtractedText?: Prisma.SortOrder
+  proofAnalyzedAt?: Prisma.SortOrder
+  reviewNote?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isSeenByAdmin?: Prisma.SortOrder
   verifiedById?: Prisma.SortOrder
@@ -654,10 +854,20 @@ export type CompanyBankVerificationMaxOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   referenceNumber?: Prisma.SortOrder
   depositDate?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountName?: Prisma.SortOrder
   bankAccount?: Prisma.SortOrder
   depositSlipUrl?: Prisma.SortOrder
   bankReceiptUrl?: Prisma.SortOrder
   bankStatementUrl?: Prisma.SortOrder
+  senderName?: Prisma.SortOrder
+  receiverName?: Prisma.SortOrder
+  transactionDateTime?: Prisma.SortOrder
+  proofInspectionStatus?: Prisma.SortOrder
+  proofMissingFields?: Prisma.SortOrder
+  proofExtractedText?: Prisma.SortOrder
+  proofAnalyzedAt?: Prisma.SortOrder
+  reviewNote?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isSeenByAdmin?: Prisma.SortOrder
   verifiedById?: Prisma.SortOrder
@@ -676,10 +886,20 @@ export type CompanyBankVerificationMinOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   referenceNumber?: Prisma.SortOrder
   depositDate?: Prisma.SortOrder
+  bankName?: Prisma.SortOrder
+  accountName?: Prisma.SortOrder
   bankAccount?: Prisma.SortOrder
   depositSlipUrl?: Prisma.SortOrder
   bankReceiptUrl?: Prisma.SortOrder
   bankStatementUrl?: Prisma.SortOrder
+  senderName?: Prisma.SortOrder
+  receiverName?: Prisma.SortOrder
+  transactionDateTime?: Prisma.SortOrder
+  proofInspectionStatus?: Prisma.SortOrder
+  proofMissingFields?: Prisma.SortOrder
+  proofExtractedText?: Prisma.SortOrder
+  proofAnalyzedAt?: Prisma.SortOrder
+  reviewNote?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isSeenByAdmin?: Prisma.SortOrder
   verifiedById?: Prisma.SortOrder
@@ -824,6 +1044,10 @@ export type CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInp
   deleteMany?: Prisma.CompanyBankVerificationScalarWhereInput | Prisma.CompanyBankVerificationScalarWhereInput[]
 }
 
+export type EnumProofInspectionStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ProofInspectionStatus
+}
+
 export type EnumCompanyBankStatusFieldUpdateOperationsInput = {
   set?: $Enums.CompanyBankStatus
 }
@@ -849,10 +1073,20 @@ export type CompanyBankVerificationCreateWithoutCompanyInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedByName?: string | null
@@ -872,10 +1106,20 @@ export type CompanyBankVerificationUncheckedCreateWithoutCompanyInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedById?: string | null
@@ -924,10 +1168,20 @@ export type CompanyBankVerificationScalarWhereInput = {
   amount?: Prisma.DecimalFilter<"CompanyBankVerification"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFilter<"CompanyBankVerification"> | string
   depositDate?: Prisma.DateTimeFilter<"CompanyBankVerification"> | Date | string
+  bankName?: Prisma.StringFilter<"CompanyBankVerification"> | string
+  accountName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankAccount?: Prisma.StringFilter<"CompanyBankVerification"> | string
   depositSlipUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankReceiptUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   bankStatementUrl?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  senderName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  receiverName?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  transactionDateTime?: Prisma.DateTimeNullableFilter<"CompanyBankVerification"> | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFilter<"CompanyBankVerification"> | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  proofExtractedText?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
+  proofAnalyzedAt?: Prisma.DateTimeNullableFilter<"CompanyBankVerification"> | Date | string | null
+  reviewNote?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
   status?: Prisma.EnumCompanyBankStatusFilter<"CompanyBankVerification"> | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFilter<"CompanyBankVerification"> | boolean
   verifiedById?: Prisma.StringNullableFilter<"CompanyBankVerification"> | string | null
@@ -944,10 +1198,20 @@ export type CompanyBankVerificationCreateWithoutUploadedByInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedByName?: string | null
@@ -967,10 +1231,20 @@ export type CompanyBankVerificationUncheckedCreateWithoutUploadedByInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedById?: string | null
@@ -998,10 +1272,20 @@ export type CompanyBankVerificationCreateWithoutVerifiedByInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedByName?: string | null
@@ -1022,10 +1306,20 @@ export type CompanyBankVerificationUncheckedCreateWithoutVerifiedByInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedByName?: string | null
@@ -1084,10 +1378,20 @@ export type CompanyBankVerificationCreateWithoutMessagesInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedByName?: string | null
@@ -1108,10 +1412,20 @@ export type CompanyBankVerificationUncheckedCreateWithoutMessagesInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedById?: string | null
@@ -1144,10 +1458,20 @@ export type CompanyBankVerificationUpdateWithoutMessagesInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1168,10 +1492,20 @@ export type CompanyBankVerificationUncheckedUpdateWithoutMessagesInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1189,10 +1523,20 @@ export type CompanyBankVerificationCreateManyCompanyInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedById?: string | null
@@ -1209,10 +1553,20 @@ export type CompanyBankVerificationUpdateWithoutCompanyInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1232,10 +1586,20 @@ export type CompanyBankVerificationUncheckedUpdateWithoutCompanyInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1254,10 +1618,20 @@ export type CompanyBankVerificationUncheckedUpdateManyWithoutCompanyInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1275,10 +1649,20 @@ export type CompanyBankVerificationCreateManyUploadedByInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedById?: string | null
@@ -1297,10 +1681,20 @@ export type CompanyBankVerificationCreateManyVerifiedByInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber: string
   depositDate: Date | string
+  bankName?: string
+  accountName?: string | null
   bankAccount: string
   depositSlipUrl?: string | null
   bankReceiptUrl?: string | null
   bankStatementUrl?: string | null
+  senderName?: string | null
+  receiverName?: string | null
+  transactionDateTime?: Date | string | null
+  proofInspectionStatus?: $Enums.ProofInspectionStatus
+  proofMissingFields?: string | null
+  proofExtractedText?: string | null
+  proofAnalyzedAt?: Date | string | null
+  reviewNote?: string | null
   status?: $Enums.CompanyBankStatus
   isSeenByAdmin?: boolean
   verifiedByName?: string | null
@@ -1316,10 +1710,20 @@ export type CompanyBankVerificationUpdateWithoutUploadedByInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1339,10 +1743,20 @@ export type CompanyBankVerificationUncheckedUpdateWithoutUploadedByInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1361,10 +1775,20 @@ export type CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1381,10 +1805,20 @@ export type CompanyBankVerificationUpdateWithoutVerifiedByInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1405,10 +1839,20 @@ export type CompanyBankVerificationUncheckedUpdateWithoutVerifiedByInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1427,10 +1871,20 @@ export type CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   referenceNumber?: Prisma.StringFieldUpdateOperationsInput | string
   depositDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bankName?: Prisma.StringFieldUpdateOperationsInput | string
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   depositSlipUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bankStatementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofInspectionStatus?: Prisma.EnumProofInspectionStatusFieldUpdateOperationsInput | $Enums.ProofInspectionStatus
+  proofMissingFields?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofExtractedText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofAnalyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumCompanyBankStatusFieldUpdateOperationsInput | $Enums.CompanyBankStatus
   isSeenByAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   verifiedByName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1479,10 +1933,20 @@ export type CompanyBankVerificationSelect<ExtArgs extends runtime.Types.Extensio
   amount?: boolean
   referenceNumber?: boolean
   depositDate?: boolean
+  bankName?: boolean
+  accountName?: boolean
   bankAccount?: boolean
   depositSlipUrl?: boolean
   bankReceiptUrl?: boolean
   bankStatementUrl?: boolean
+  senderName?: boolean
+  receiverName?: boolean
+  transactionDateTime?: boolean
+  proofInspectionStatus?: boolean
+  proofMissingFields?: boolean
+  proofExtractedText?: boolean
+  proofAnalyzedAt?: boolean
+  reviewNote?: boolean
   status?: boolean
   isSeenByAdmin?: boolean
   verifiedById?: boolean
@@ -1508,10 +1972,20 @@ export type CompanyBankVerificationSelectScalar = {
   amount?: boolean
   referenceNumber?: boolean
   depositDate?: boolean
+  bankName?: boolean
+  accountName?: boolean
   bankAccount?: boolean
   depositSlipUrl?: boolean
   bankReceiptUrl?: boolean
   bankStatementUrl?: boolean
+  senderName?: boolean
+  receiverName?: boolean
+  transactionDateTime?: boolean
+  proofInspectionStatus?: boolean
+  proofMissingFields?: boolean
+  proofExtractedText?: boolean
+  proofAnalyzedAt?: boolean
+  reviewNote?: boolean
   status?: boolean
   isSeenByAdmin?: boolean
   verifiedById?: boolean
@@ -1521,7 +1995,7 @@ export type CompanyBankVerificationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CompanyBankVerificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "uploadedById" | "uploadedByName" | "uploadedByRole" | "amount" | "referenceNumber" | "depositDate" | "bankAccount" | "depositSlipUrl" | "bankReceiptUrl" | "bankStatementUrl" | "status" | "isSeenByAdmin" | "verifiedById" | "verifiedByName" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["companyBankVerification"]>
+export type CompanyBankVerificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "uploadedById" | "uploadedByName" | "uploadedByRole" | "amount" | "referenceNumber" | "depositDate" | "bankName" | "accountName" | "bankAccount" | "depositSlipUrl" | "bankReceiptUrl" | "bankStatementUrl" | "senderName" | "receiverName" | "transactionDateTime" | "proofInspectionStatus" | "proofMissingFields" | "proofExtractedText" | "proofAnalyzedAt" | "reviewNote" | "status" | "isSeenByAdmin" | "verifiedById" | "verifiedByName" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["companyBankVerification"]>
 export type CompanyBankVerificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1547,10 +2021,20 @@ export type $CompanyBankVerificationPayload<ExtArgs extends runtime.Types.Extens
     amount: runtime.Decimal
     referenceNumber: string
     depositDate: Date
+    bankName: string
+    accountName: string | null
     bankAccount: string
     depositSlipUrl: string | null
     bankReceiptUrl: string | null
     bankStatementUrl: string | null
+    senderName: string | null
+    receiverName: string | null
+    transactionDateTime: Date | null
+    proofInspectionStatus: $Enums.ProofInspectionStatus
+    proofMissingFields: string | null
+    proofExtractedText: string | null
+    proofAnalyzedAt: Date | null
+    reviewNote: string | null
     status: $Enums.CompanyBankStatus
     isSeenByAdmin: boolean
     verifiedById: string | null
@@ -1939,10 +2423,20 @@ export interface CompanyBankVerificationFieldRefs {
   readonly amount: Prisma.FieldRef<"CompanyBankVerification", 'Decimal'>
   readonly referenceNumber: Prisma.FieldRef<"CompanyBankVerification", 'String'>
   readonly depositDate: Prisma.FieldRef<"CompanyBankVerification", 'DateTime'>
+  readonly bankName: Prisma.FieldRef<"CompanyBankVerification", 'String'>
+  readonly accountName: Prisma.FieldRef<"CompanyBankVerification", 'String'>
   readonly bankAccount: Prisma.FieldRef<"CompanyBankVerification", 'String'>
   readonly depositSlipUrl: Prisma.FieldRef<"CompanyBankVerification", 'String'>
   readonly bankReceiptUrl: Prisma.FieldRef<"CompanyBankVerification", 'String'>
   readonly bankStatementUrl: Prisma.FieldRef<"CompanyBankVerification", 'String'>
+  readonly senderName: Prisma.FieldRef<"CompanyBankVerification", 'String'>
+  readonly receiverName: Prisma.FieldRef<"CompanyBankVerification", 'String'>
+  readonly transactionDateTime: Prisma.FieldRef<"CompanyBankVerification", 'DateTime'>
+  readonly proofInspectionStatus: Prisma.FieldRef<"CompanyBankVerification", 'ProofInspectionStatus'>
+  readonly proofMissingFields: Prisma.FieldRef<"CompanyBankVerification", 'String'>
+  readonly proofExtractedText: Prisma.FieldRef<"CompanyBankVerification", 'String'>
+  readonly proofAnalyzedAt: Prisma.FieldRef<"CompanyBankVerification", 'DateTime'>
+  readonly reviewNote: Prisma.FieldRef<"CompanyBankVerification", 'String'>
   readonly status: Prisma.FieldRef<"CompanyBankVerification", 'CompanyBankStatus'>
   readonly isSeenByAdmin: Prisma.FieldRef<"CompanyBankVerification", 'Boolean'>
   readonly verifiedById: Prisma.FieldRef<"CompanyBankVerification", 'String'>

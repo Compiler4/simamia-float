@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "db:seed:imported-finance": "tsx prisma/seed.ts"
+  },
+  "devDependencies": {
+    "tsx": "latest"
+  }
+}

@@ -1,147 +1,143 @@
-import "dotenv/config";
+import "server-only";
 
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../generated/prisma/client";
 
-type PrismaGlobal = typeof globalThis & {
-  __simamiaStaffPortalPrismaV3?: PrismaClient;
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 };
 
-type MariaDbConfig =
-  ConstructorParameters<typeof PrismaMariaDb>[0];
-
-function required(
-  name: string,
-  value: string | undefined,
-): string {
-  const result = value?.trim();
-
-  if (!result) {
-    throw new Error(
-      `Missing database setting ${name}. Add DATABASE_URL or the DATABASE_* variables to .env.`,
-    );
-  }
-
-  return result;
-}
-
-function positiveNumber(
-  name: string,
+function positiveInteger(
   value: string | undefined,
   fallback: number,
+  variableName: string,
 ): number {
-  if (!value?.trim()) {
+  const cleaned = value?.trim();
+
+  if (!cleaned) {
     return fallback;
   }
 
-  const parsed = Number(value);
+  const parsed = Number(cleaned);
 
-  if (!Number.isFinite(parsed) || parsed <= 0) {
+  if (!Number.isInteger(parsed) || parsed <= 0) {
     throw new Error(
-      `${name} must be a positive number.`,
+      `${variableName} must be a positive integer. Received: ${cleaned}`,
     );
   }
 
   return parsed;
 }
 
-function configFromDatabaseUrl(
-  databaseUrl: string,
-): MariaDbConfig {
-  let url: URL;
-
+function decodeUrlPart(value: string): string {
   try {
-    url = new URL(databaseUrl);
+    return decodeURIComponent(value);
   } catch {
-    throw new Error(
-      "DATABASE_URL is invalid. Use mysql://USER:PASSWORD@HOST:3306/DATABASE.",
-    );
+    return value;
   }
-
-  if (
-    url.protocol !== "mysql:" &&
-    url.protocol !== "mariadb:"
-  ) {
-    throw new Error(
-      "DATABASE_URL must start with mysql:// or mariadb://.",
-    );
-  }
-
-  const database = decodeURIComponent(
-    url.pathname.replace(/^\/+/, ""),
-  );
-
-  return {
-    host: required(
-      "DATABASE_HOST",
-      url.hostname,
-    ),
-    port: positiveNumber(
-      "DATABASE_PORT",
-      url.port,
-      3306,
-    ),
-    user: required(
-      "DATABASE_USER",
-      decodeURIComponent(url.username),
-    ),
-    password: decodeURIComponent(
-      url.password,
-    ),
-    database: required(
-      "DATABASE_NAME",
-      database,
-    ),
-    connectionLimit: positiveNumber(
-      "DATABASE_CONNECTION_LIMIT",
-      process.env.DATABASE_CONNECTION_LIMIT,
-      5,
-    ),
-  };
 }
 
-function getMariaDbConfig(): MariaDbConfig {
-  const databaseUrl =
-    process.env.DATABASE_URL?.trim();
+function adapterFromDatabaseUrl(databaseUrl: string): PrismaMariaDb {
+  let parsed: URL;
 
-  if (databaseUrl) {
-    return configFromDatabaseUrl(
-      databaseUrl,
+  try {
+    parsed = new URL(databaseUrl);
+  } catch {
+    throw new Error(
+      "DATABASE_URL is invalid. Expected a value such as mysql://root:@127.0.0.1:3306/simamia",
     );
   }
 
-  return {
-    host: required(
-      "DATABASE_HOST",
-      process.env.DATABASE_HOST,
-    ),
-    port: positiveNumber(
-      "DATABASE_PORT",
-      process.env.DATABASE_PORT,
+  if (!["mysql:", "mariadb:"].includes(parsed.protocol)) {
+    throw new Error(
+      `DATABASE_URL must use mysql:// or mariadb://. Received ${parsed.protocol}`,
+    );
+  }
+
+  const database = decodeUrlPart(
+    parsed.pathname.replace(/^\/+/, ""),
+  ).trim();
+
+  if (!database) {
+    throw new Error(
+      "DATABASE_URL must include the database name, for example /simamia.",
+    );
+  }
+
+  return new PrismaMariaDb({
+    host: parsed.hostname || "127.0.0.1",
+    port: positiveInteger(
+      parsed.port,
       3306,
+      "DATABASE_URL port",
     ),
-    user: required(
-      "DATABASE_USER",
-      process.env.DATABASE_USER,
-    ),
-    password:
-      process.env.DATABASE_PASSWORD ?? "",
-    database: required(
-      "DATABASE_NAME",
-      process.env.DATABASE_NAME,
-    ),
-    connectionLimit: positiveNumber(
-      "DATABASE_CONNECTION_LIMIT",
+    user: decodeUrlPart(parsed.username) || "root",
+    password: decodeUrlPart(parsed.password),
+    database,
+    connectionLimit: positiveInteger(
       process.env.DATABASE_CONNECTION_LIMIT,
       5,
+      "DATABASE_CONNECTION_LIMIT",
     ),
-  };
+  });
+}
+
+function adapterFromIndividualVariables(): PrismaMariaDb {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  const host =
+    process.env.DATABASE_HOST?.trim() || "127.0.0.1";
+
+  const user =
+    process.env.DATABASE_USER?.trim() || "root";
+
+  const database =
+    process.env.DATABASE_NAME?.trim() || "simamia";
+
+  /*
+   * Local XAMPP normally uses:
+   * host     = 127.0.0.1
+   * user     = root
+   * password = empty
+   * database = simamia
+   *
+   * Production must provide explicit database configuration.
+   */
+  if (
+    isProduction &&
+    (!process.env.DATABASE_HOST?.trim() ||
+      !process.env.DATABASE_USER?.trim() ||
+      !process.env.DATABASE_NAME?.trim())
+  ) {
+    throw new Error(
+      "Production database configuration is incomplete. Provide DATABASE_URL or DATABASE_HOST, DATABASE_USER and DATABASE_NAME.",
+    );
+  }
+
+  return new PrismaMariaDb({
+    host,
+    port: positiveInteger(
+      process.env.DATABASE_PORT,
+      3306,
+      "DATABASE_PORT",
+    ),
+    user,
+    password: process.env.DATABASE_PASSWORD ?? "",
+    database,
+    connectionLimit: positiveInteger(
+      process.env.DATABASE_CONNECTION_LIMIT,
+      5,
+      "DATABASE_CONNECTION_LIMIT",
+    ),
+  });
 }
 
 function createPrismaClient(): PrismaClient {
-  const adapter = new PrismaMariaDb(
-    getMariaDbConfig(),
-  );
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+
+  const adapter = databaseUrl
+    ? adapterFromDatabaseUrl(databaseUrl)
+    : adapterFromIndividualVariables();
 
   return new PrismaClient({
     adapter,
@@ -152,16 +148,11 @@ function createPrismaClient(): PrismaClient {
   });
 }
 
-const prismaGlobal =
-  globalThis as PrismaGlobal;
-
 export const prisma =
-  prismaGlobal.__simamiaStaffPortalPrismaV3 ??
-  createPrismaClient();
+  globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
-  prismaGlobal.__simamiaStaffPortalPrismaV3 =
-    prisma;
+  globalForPrisma.prisma = prisma;
 }
 
 export default prisma;

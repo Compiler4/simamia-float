@@ -85,7 +85,15 @@ export const ModelName = {
   NotificationDelivery: 'NotificationDelivery',
   StaffBrokerAssignment: 'StaffBrokerAssignment',
   StaffCustomerAssignment: 'StaffCustomerAssignment',
-  StaffFile: 'StaffFile'
+  StaffFile: 'StaffFile',
+  DataImportBatch: 'DataImportBatch',
+  ImportedBankStatement: 'ImportedBankStatement',
+  ImportedBankTransaction: 'ImportedBankTransaction',
+  BrokerAgentAccount: 'BrokerAgentAccount',
+  PortalDocument: 'PortalDocument',
+  ApprovalDecision: 'ApprovalDecision',
+  BrokerServiceVisit: 'BrokerServiceVisit',
+  NetworkBalance: 'NetworkBalance'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -148,6 +156,11 @@ export const UserScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt',
   profileImageUrl: 'profileImageUrl',
   assignedRegion: 'assignedRegion',
+  nidaNumber: 'nidaNumber',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  nationality: 'nationality',
+  physicalAddress: 'physicalAddress',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -417,6 +430,11 @@ export const BrokerCustomerScalarFieldEnum = {
   code: 'code',
   name: 'name',
   businessName: 'businessName',
+  title: 'title',
+  firstName: 'firstName',
+  surname: 'surname',
+  tinNumber: 'tinNumber',
+  officialAgentNo: 'officialAgentNo',
   phone: 'phone',
   alternatePhone: 'alternatePhone',
   email: 'email',
@@ -425,10 +443,36 @@ export const BrokerCustomerScalarFieldEnum = {
   district: 'district',
   ward: 'ward',
   address: 'address',
+  postalAddress: 'postalAddress',
+  city: 'city',
+  country: 'country',
+  nationality: 'nationality',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  identityType: 'identityType',
+  identityNumber: 'identityNumber',
+  identityIssuedBy: 'identityIssuedBy',
+  identityOther: 'identityOther',
+  profileImageUrl: 'profileImageUrl',
+  signatureUrl: 'signatureUrl',
+  registrationDate: 'registrationDate',
+  attendedBy: 'attendedBy',
+  attendedSignatureUrl: 'attendedSignatureUrl',
+  attendedDate: 'attendedDate',
+  attendedLocation: 'attendedLocation',
   latitude: 'latitude',
   longitude: 'longitude',
   status: 'status',
   notes: 'notes',
+  importBatchId: 'importBatchId',
+  sourceRowNumber: 'sourceRowNumber',
+  sourceSheetName: 'sourceSheetName',
+  sourceAgentName: 'sourceAgentName',
+  sourceMsisdn: 'sourceMsisdn',
+  sourceAliasCode: 'sourceAliasCode',
+  normalizedName: 'normalizedName',
+  isImported: 'isImported',
+  importedAt: 'importedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -529,10 +573,20 @@ export const CompanyBankVerificationScalarFieldEnum = {
   amount: 'amount',
   referenceNumber: 'referenceNumber',
   depositDate: 'depositDate',
+  bankName: 'bankName',
+  accountName: 'accountName',
   bankAccount: 'bankAccount',
   depositSlipUrl: 'depositSlipUrl',
   bankReceiptUrl: 'bankReceiptUrl',
   bankStatementUrl: 'bankStatementUrl',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  transactionDateTime: 'transactionDateTime',
+  proofInspectionStatus: 'proofInspectionStatus',
+  proofMissingFields: 'proofMissingFields',
+  proofExtractedText: 'proofExtractedText',
+  proofAnalyzedAt: 'proofAnalyzedAt',
+  reviewNote: 'reviewNote',
   status: 'status',
   isSeenByAdmin: 'isSeenByAdmin',
   verifiedById: 'verifiedById',
@@ -647,6 +701,9 @@ export const CompanyAdminSettingScalarFieldEnum = {
   accent: 'accent',
   currency: 'currency',
   timezone: 'timezone',
+  proofGraceMinutes: 'proofGraceMinutes',
+  visitRadiusMeters: 'visitRadiusMeters',
+  minimumPerformanceScore: 'minimumPerformanceScore',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -781,6 +838,194 @@ export const StaffFileScalarFieldEnum = {
 export type StaffFileScalarFieldEnum = (typeof StaffFileScalarFieldEnum)[keyof typeof StaffFileScalarFieldEnum]
 
 
+export const DataImportBatchScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  sourceType: 'sourceType',
+  sourceFileName: 'sourceFileName',
+  sourceSheetName: 'sourceSheetName',
+  sourceChecksum: 'sourceChecksum',
+  status: 'status',
+  totalRows: 'totalRows',
+  importedRows: 'importedRows',
+  skippedRows: 'skippedRows',
+  failedRows: 'failedRows',
+  notes: 'notes',
+  importedAt: 'importedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DataImportBatchScalarFieldEnum = (typeof DataImportBatchScalarFieldEnum)[keyof typeof DataImportBatchScalarFieldEnum]
+
+
+export const ImportedBankStatementScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  importBatchId: 'importBatchId',
+  statementKey: 'statementKey',
+  bankName: 'bankName',
+  accountName: 'accountName',
+  branchName: 'branchName',
+  accountNumber: 'accountNumber',
+  currency: 'currency',
+  periodStart: 'periodStart',
+  periodEnd: 'periodEnd',
+  generatedAt: 'generatedAt',
+  availableBalance: 'availableBalance',
+  totalCredit: 'totalCredit',
+  totalDebit: 'totalDebit',
+  bookBalance: 'bookBalance',
+  clearedBalance: 'clearedBalance',
+  sourceFileName: 'sourceFileName',
+  sourceChecksum: 'sourceChecksum',
+  importedAt: 'importedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImportedBankStatementScalarFieldEnum = (typeof ImportedBankStatementScalarFieldEnum)[keyof typeof ImportedBankStatementScalarFieldEnum]
+
+
+export const ImportedBankTransactionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  statementId: 'statementId',
+  matchedBrokerCustomerId: 'matchedBrokerCustomerId',
+  reference: 'reference',
+  postingDate: 'postingDate',
+  valueDate: 'valueDate',
+  details: 'details',
+  direction: 'direction',
+  debit: 'debit',
+  credit: 'credit',
+  bookBalance: 'bookBalance',
+  transactionType: 'transactionType',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  externalAccountReference: 'externalAccountReference',
+  narration: 'narration',
+  matchStatus: 'matchStatus',
+  matchConfidence: 'matchConfidence',
+  matchNote: 'matchNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImportedBankTransactionScalarFieldEnum = (typeof ImportedBankTransactionScalarFieldEnum)[keyof typeof ImportedBankTransactionScalarFieldEnum]
+
+
+export const BrokerAgentAccountScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  brokerCustomerId: 'brokerCustomerId',
+  network: 'network',
+  simPhoneNumber: 'simPhoneNumber',
+  agentNumber: 'agentNumber',
+  accountName: 'accountName',
+  isPrimary: 'isPrimary',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrokerAgentAccountScalarFieldEnum = (typeof BrokerAgentAccountScalarFieldEnum)[keyof typeof BrokerAgentAccountScalarFieldEnum]
+
+
+export const PortalDocumentScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  uploadedById: 'uploadedById',
+  brokerCustomerId: 'brokerCustomerId',
+  bankVerificationId: 'bankVerificationId',
+  serviceVisitId: 'serviceVisitId',
+  kind: 'kind',
+  originalName: 'originalName',
+  storedName: 'storedName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  originalSizeBytes: 'originalSizeBytes',
+  compressed: 'compressed',
+  checksumSha256: 'checksumSha256',
+  storagePath: 'storagePath',
+  publicUrl: 'publicUrl',
+  extractedText: 'extractedText',
+  proofStatus: 'proofStatus',
+  missingFieldsJson: 'missingFieldsJson',
+  analyzedAt: 'analyzedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PortalDocumentScalarFieldEnum = (typeof PortalDocumentScalarFieldEnum)[keyof typeof PortalDocumentScalarFieldEnum]
+
+
+export const ApprovalDecisionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  itemType: 'itemType',
+  itemId: 'itemId',
+  reviewerId: 'reviewerId',
+  reviewerName: 'reviewerName',
+  reviewerRole: 'reviewerRole',
+  decision: 'decision',
+  reason: 'reason',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ApprovalDecisionScalarFieldEnum = (typeof ApprovalDecisionScalarFieldEnum)[keyof typeof ApprovalDecisionScalarFieldEnum]
+
+
+export const BrokerServiceVisitScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  staffId: 'staffId',
+  brokerCustomerId: 'brokerCustomerId',
+  deviceId: 'deviceId',
+  serviceActivityId: 'serviceActivityId',
+  status: 'status',
+  serviceType: 'serviceType',
+  communicationNote: 'communicationNote',
+  floatAmount: 'floatAmount',
+  cashAmount: 'cashAmount',
+  companyIncome: 'companyIncome',
+  staffLatitude: 'staffLatitude',
+  staffLongitude: 'staffLongitude',
+  brokerLatitude: 'brokerLatitude',
+  brokerLongitude: 'brokerLongitude',
+  distanceMeters: 'distanceMeters',
+  locationMatched: 'locationMatched',
+  startedAt: 'startedAt',
+  arrivedAt: 'arrivedAt',
+  serviceProvidedAt: 'serviceProvidedAt',
+  proofDueAt: 'proofDueAt',
+  proofUploadedAt: 'proofUploadedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrokerServiceVisitScalarFieldEnum = (typeof BrokerServiceVisitScalarFieldEnum)[keyof typeof BrokerServiceVisitScalarFieldEnum]
+
+
+export const NetworkBalanceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  network: 'network',
+  simCardNumber: 'simCardNumber',
+  accountName: 'accountName',
+  floatBalance: 'floatBalance',
+  cashBalance: 'cashBalance',
+  updatedByName: 'updatedByName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NetworkBalanceScalarFieldEnum = (typeof NetworkBalanceScalarFieldEnum)[keyof typeof NetworkBalanceScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -831,7 +1076,10 @@ export const UserOrderByRelevanceFieldEnum = {
   phone: 'phone',
   passwordHash: 'passwordHash',
   profileImageUrl: 'profileImageUrl',
-  assignedRegion: 'assignedRegion'
+  assignedRegion: 'assignedRegion',
+  nidaNumber: 'nidaNumber',
+  nationality: 'nationality',
+  physicalAddress: 'physicalAddress'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -1013,6 +1261,10 @@ export const BrokerCustomerOrderByRelevanceFieldEnum = {
   code: 'code',
   name: 'name',
   businessName: 'businessName',
+  firstName: 'firstName',
+  surname: 'surname',
+  tinNumber: 'tinNumber',
+  officialAgentNo: 'officialAgentNo',
   phone: 'phone',
   alternatePhone: 'alternatePhone',
   email: 'email',
@@ -1021,7 +1273,25 @@ export const BrokerCustomerOrderByRelevanceFieldEnum = {
   district: 'district',
   ward: 'ward',
   address: 'address',
-  notes: 'notes'
+  postalAddress: 'postalAddress',
+  city: 'city',
+  country: 'country',
+  nationality: 'nationality',
+  identityNumber: 'identityNumber',
+  identityIssuedBy: 'identityIssuedBy',
+  identityOther: 'identityOther',
+  profileImageUrl: 'profileImageUrl',
+  signatureUrl: 'signatureUrl',
+  attendedBy: 'attendedBy',
+  attendedSignatureUrl: 'attendedSignatureUrl',
+  attendedLocation: 'attendedLocation',
+  notes: 'notes',
+  importBatchId: 'importBatchId',
+  sourceSheetName: 'sourceSheetName',
+  sourceAgentName: 'sourceAgentName',
+  sourceMsisdn: 'sourceMsisdn',
+  sourceAliasCode: 'sourceAliasCode',
+  normalizedName: 'normalizedName'
 } as const
 
 export type BrokerCustomerOrderByRelevanceFieldEnum = (typeof BrokerCustomerOrderByRelevanceFieldEnum)[keyof typeof BrokerCustomerOrderByRelevanceFieldEnum]
@@ -1093,10 +1363,17 @@ export const CompanyBankVerificationOrderByRelevanceFieldEnum = {
   uploadedByName: 'uploadedByName',
   uploadedByRole: 'uploadedByRole',
   referenceNumber: 'referenceNumber',
+  bankName: 'bankName',
+  accountName: 'accountName',
   bankAccount: 'bankAccount',
   depositSlipUrl: 'depositSlipUrl',
   bankReceiptUrl: 'bankReceiptUrl',
   bankStatementUrl: 'bankStatementUrl',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  proofMissingFields: 'proofMissingFields',
+  proofExtractedText: 'proofExtractedText',
+  reviewNote: 'reviewNote',
   verifiedById: 'verifiedById',
   verifiedByName: 'verifiedByName'
 } as const
@@ -1263,4 +1540,121 @@ export const StaffFileOrderByRelevanceFieldEnum = {
 } as const
 
 export type StaffFileOrderByRelevanceFieldEnum = (typeof StaffFileOrderByRelevanceFieldEnum)[keyof typeof StaffFileOrderByRelevanceFieldEnum]
+
+
+export const DataImportBatchOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  sourceFileName: 'sourceFileName',
+  sourceSheetName: 'sourceSheetName',
+  sourceChecksum: 'sourceChecksum',
+  notes: 'notes'
+} as const
+
+export type DataImportBatchOrderByRelevanceFieldEnum = (typeof DataImportBatchOrderByRelevanceFieldEnum)[keyof typeof DataImportBatchOrderByRelevanceFieldEnum]
+
+
+export const ImportedBankStatementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  importBatchId: 'importBatchId',
+  statementKey: 'statementKey',
+  bankName: 'bankName',
+  accountName: 'accountName',
+  branchName: 'branchName',
+  accountNumber: 'accountNumber',
+  currency: 'currency',
+  sourceFileName: 'sourceFileName',
+  sourceChecksum: 'sourceChecksum'
+} as const
+
+export type ImportedBankStatementOrderByRelevanceFieldEnum = (typeof ImportedBankStatementOrderByRelevanceFieldEnum)[keyof typeof ImportedBankStatementOrderByRelevanceFieldEnum]
+
+
+export const ImportedBankTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  statementId: 'statementId',
+  matchedBrokerCustomerId: 'matchedBrokerCustomerId',
+  reference: 'reference',
+  details: 'details',
+  transactionType: 'transactionType',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  externalAccountReference: 'externalAccountReference',
+  narration: 'narration',
+  matchNote: 'matchNote'
+} as const
+
+export type ImportedBankTransactionOrderByRelevanceFieldEnum = (typeof ImportedBankTransactionOrderByRelevanceFieldEnum)[keyof typeof ImportedBankTransactionOrderByRelevanceFieldEnum]
+
+
+export const BrokerAgentAccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  brokerCustomerId: 'brokerCustomerId',
+  simPhoneNumber: 'simPhoneNumber',
+  agentNumber: 'agentNumber',
+  accountName: 'accountName',
+  status: 'status'
+} as const
+
+export type BrokerAgentAccountOrderByRelevanceFieldEnum = (typeof BrokerAgentAccountOrderByRelevanceFieldEnum)[keyof typeof BrokerAgentAccountOrderByRelevanceFieldEnum]
+
+
+export const PortalDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  uploadedById: 'uploadedById',
+  brokerCustomerId: 'brokerCustomerId',
+  bankVerificationId: 'bankVerificationId',
+  serviceVisitId: 'serviceVisitId',
+  originalName: 'originalName',
+  storedName: 'storedName',
+  mimeType: 'mimeType',
+  checksumSha256: 'checksumSha256',
+  storagePath: 'storagePath',
+  publicUrl: 'publicUrl',
+  extractedText: 'extractedText',
+  missingFieldsJson: 'missingFieldsJson'
+} as const
+
+export type PortalDocumentOrderByRelevanceFieldEnum = (typeof PortalDocumentOrderByRelevanceFieldEnum)[keyof typeof PortalDocumentOrderByRelevanceFieldEnum]
+
+
+export const ApprovalDecisionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  itemId: 'itemId',
+  reviewerId: 'reviewerId',
+  reviewerName: 'reviewerName',
+  reason: 'reason'
+} as const
+
+export type ApprovalDecisionOrderByRelevanceFieldEnum = (typeof ApprovalDecisionOrderByRelevanceFieldEnum)[keyof typeof ApprovalDecisionOrderByRelevanceFieldEnum]
+
+
+export const BrokerServiceVisitOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  staffId: 'staffId',
+  brokerCustomerId: 'brokerCustomerId',
+  deviceId: 'deviceId',
+  serviceActivityId: 'serviceActivityId',
+  serviceType: 'serviceType',
+  communicationNote: 'communicationNote'
+} as const
+
+export type BrokerServiceVisitOrderByRelevanceFieldEnum = (typeof BrokerServiceVisitOrderByRelevanceFieldEnum)[keyof typeof BrokerServiceVisitOrderByRelevanceFieldEnum]
+
+
+export const NetworkBalanceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  simCardNumber: 'simCardNumber',
+  accountName: 'accountName',
+  updatedByName: 'updatedByName'
+} as const
+
+export type NetworkBalanceOrderByRelevanceFieldEnum = (typeof NetworkBalanceOrderByRelevanceFieldEnum)[keyof typeof NetworkBalanceOrderByRelevanceFieldEnum]
 

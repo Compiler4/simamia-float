@@ -418,7 +418,15 @@ export const ModelName = {
   NotificationDelivery: 'NotificationDelivery',
   StaffBrokerAssignment: 'StaffBrokerAssignment',
   StaffCustomerAssignment: 'StaffCustomerAssignment',
-  StaffFile: 'StaffFile'
+  StaffFile: 'StaffFile',
+  DataImportBatch: 'DataImportBatch',
+  ImportedBankStatement: 'ImportedBankStatement',
+  ImportedBankTransaction: 'ImportedBankTransaction',
+  BrokerAgentAccount: 'BrokerAgentAccount',
+  PortalDocument: 'PortalDocument',
+  ApprovalDecision: 'ApprovalDecision',
+  BrokerServiceVisit: 'BrokerServiceVisit',
+  NetworkBalance: 'NetworkBalance'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -434,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "branch" | "user" | "subscription" | "financialDay" | "attendance" | "expense" | "bankDeposit" | "floatTransaction" | "staffCollection" | "performanceRecord" | "notification" | "message" | "auditLog" | "product" | "customer" | "brokerCustomer" | "serviceActivity" | "gpsTracking" | "companySetting" | "companyExpense" | "companyBankVerification" | "companyBankMessage" | "companyAttendance" | "companyNotification" | "companyGpsDevice" | "companyGpsPing" | "companyAdminSetting" | "companyAuditEvent" | "accountingPeriod" | "gpsAlert" | "notificationDelivery" | "staffBrokerAssignment" | "staffCustomerAssignment" | "staffFile"
+    modelProps: "company" | "branch" | "user" | "subscription" | "financialDay" | "attendance" | "expense" | "bankDeposit" | "floatTransaction" | "staffCollection" | "performanceRecord" | "notification" | "message" | "auditLog" | "product" | "customer" | "brokerCustomer" | "serviceActivity" | "gpsTracking" | "companySetting" | "companyExpense" | "companyBankVerification" | "companyBankMessage" | "companyAttendance" | "companyNotification" | "companyGpsDevice" | "companyGpsPing" | "companyAdminSetting" | "companyAuditEvent" | "accountingPeriod" | "gpsAlert" | "notificationDelivery" | "staffBrokerAssignment" | "staffCustomerAssignment" | "staffFile" | "dataImportBatch" | "importedBankStatement" | "importedBankTransaction" | "brokerAgentAccount" | "portalDocument" | "approvalDecision" | "brokerServiceVisit" | "networkBalance"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2748,6 +2756,534 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DataImportBatch: {
+      payload: Prisma.$DataImportBatchPayload<ExtArgs>
+      fields: Prisma.DataImportBatchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DataImportBatchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DataImportBatchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload>
+        }
+        findFirst: {
+          args: Prisma.DataImportBatchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DataImportBatchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload>
+        }
+        findMany: {
+          args: Prisma.DataImportBatchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload>[]
+        }
+        create: {
+          args: Prisma.DataImportBatchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload>
+        }
+        createMany: {
+          args: Prisma.DataImportBatchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.DataImportBatchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload>
+        }
+        update: {
+          args: Prisma.DataImportBatchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload>
+        }
+        deleteMany: {
+          args: Prisma.DataImportBatchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DataImportBatchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.DataImportBatchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DataImportBatchPayload>
+        }
+        aggregate: {
+          args: Prisma.DataImportBatchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDataImportBatch>
+        }
+        groupBy: {
+          args: Prisma.DataImportBatchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DataImportBatchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DataImportBatchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DataImportBatchCountAggregateOutputType> | number
+        }
+      }
+    }
+    ImportedBankStatement: {
+      payload: Prisma.$ImportedBankStatementPayload<ExtArgs>
+      fields: Prisma.ImportedBankStatementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImportedBankStatementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImportedBankStatementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload>
+        }
+        findFirst: {
+          args: Prisma.ImportedBankStatementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImportedBankStatementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload>
+        }
+        findMany: {
+          args: Prisma.ImportedBankStatementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload>[]
+        }
+        create: {
+          args: Prisma.ImportedBankStatementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload>
+        }
+        createMany: {
+          args: Prisma.ImportedBankStatementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ImportedBankStatementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload>
+        }
+        update: {
+          args: Prisma.ImportedBankStatementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImportedBankStatementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImportedBankStatementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ImportedBankStatementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankStatementPayload>
+        }
+        aggregate: {
+          args: Prisma.ImportedBankStatementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImportedBankStatement>
+        }
+        groupBy: {
+          args: Prisma.ImportedBankStatementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportedBankStatementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImportedBankStatementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportedBankStatementCountAggregateOutputType> | number
+        }
+      }
+    }
+    ImportedBankTransaction: {
+      payload: Prisma.$ImportedBankTransactionPayload<ExtArgs>
+      fields: Prisma.ImportedBankTransactionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImportedBankTransactionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImportedBankTransactionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload>
+        }
+        findFirst: {
+          args: Prisma.ImportedBankTransactionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImportedBankTransactionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload>
+        }
+        findMany: {
+          args: Prisma.ImportedBankTransactionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload>[]
+        }
+        create: {
+          args: Prisma.ImportedBankTransactionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload>
+        }
+        createMany: {
+          args: Prisma.ImportedBankTransactionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ImportedBankTransactionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload>
+        }
+        update: {
+          args: Prisma.ImportedBankTransactionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImportedBankTransactionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImportedBankTransactionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ImportedBankTransactionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportedBankTransactionPayload>
+        }
+        aggregate: {
+          args: Prisma.ImportedBankTransactionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImportedBankTransaction>
+        }
+        groupBy: {
+          args: Prisma.ImportedBankTransactionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportedBankTransactionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImportedBankTransactionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportedBankTransactionCountAggregateOutputType> | number
+        }
+      }
+    }
+    BrokerAgentAccount: {
+      payload: Prisma.$BrokerAgentAccountPayload<ExtArgs>
+      fields: Prisma.BrokerAgentAccountFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BrokerAgentAccountFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BrokerAgentAccountFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload>
+        }
+        findFirst: {
+          args: Prisma.BrokerAgentAccountFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BrokerAgentAccountFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload>
+        }
+        findMany: {
+          args: Prisma.BrokerAgentAccountFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload>[]
+        }
+        create: {
+          args: Prisma.BrokerAgentAccountCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload>
+        }
+        createMany: {
+          args: Prisma.BrokerAgentAccountCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BrokerAgentAccountDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload>
+        }
+        update: {
+          args: Prisma.BrokerAgentAccountUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload>
+        }
+        deleteMany: {
+          args: Prisma.BrokerAgentAccountDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BrokerAgentAccountUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BrokerAgentAccountUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerAgentAccountPayload>
+        }
+        aggregate: {
+          args: Prisma.BrokerAgentAccountAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBrokerAgentAccount>
+        }
+        groupBy: {
+          args: Prisma.BrokerAgentAccountGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrokerAgentAccountGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BrokerAgentAccountCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrokerAgentAccountCountAggregateOutputType> | number
+        }
+      }
+    }
+    PortalDocument: {
+      payload: Prisma.$PortalDocumentPayload<ExtArgs>
+      fields: Prisma.PortalDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PortalDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PortalDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.PortalDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PortalDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.PortalDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.PortalDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.PortalDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.PortalDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload>
+        }
+        update: {
+          args: Prisma.PortalDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PortalDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PortalDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.PortalDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PortalDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.PortalDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePortalDocument>
+        }
+        groupBy: {
+          args: Prisma.PortalDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PortalDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PortalDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PortalDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
+    ApprovalDecision: {
+      payload: Prisma.$ApprovalDecisionPayload<ExtArgs>
+      fields: Prisma.ApprovalDecisionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ApprovalDecisionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ApprovalDecisionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload>
+        }
+        findFirst: {
+          args: Prisma.ApprovalDecisionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ApprovalDecisionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload>
+        }
+        findMany: {
+          args: Prisma.ApprovalDecisionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload>[]
+        }
+        create: {
+          args: Prisma.ApprovalDecisionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload>
+        }
+        createMany: {
+          args: Prisma.ApprovalDecisionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.ApprovalDecisionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload>
+        }
+        update: {
+          args: Prisma.ApprovalDecisionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ApprovalDecisionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ApprovalDecisionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.ApprovalDecisionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalDecisionPayload>
+        }
+        aggregate: {
+          args: Prisma.ApprovalDecisionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateApprovalDecision>
+        }
+        groupBy: {
+          args: Prisma.ApprovalDecisionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApprovalDecisionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ApprovalDecisionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApprovalDecisionCountAggregateOutputType> | number
+        }
+      }
+    }
+    BrokerServiceVisit: {
+      payload: Prisma.$BrokerServiceVisitPayload<ExtArgs>
+      fields: Prisma.BrokerServiceVisitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BrokerServiceVisitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BrokerServiceVisitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload>
+        }
+        findFirst: {
+          args: Prisma.BrokerServiceVisitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BrokerServiceVisitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload>
+        }
+        findMany: {
+          args: Prisma.BrokerServiceVisitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload>[]
+        }
+        create: {
+          args: Prisma.BrokerServiceVisitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload>
+        }
+        createMany: {
+          args: Prisma.BrokerServiceVisitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.BrokerServiceVisitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload>
+        }
+        update: {
+          args: Prisma.BrokerServiceVisitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload>
+        }
+        deleteMany: {
+          args: Prisma.BrokerServiceVisitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BrokerServiceVisitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.BrokerServiceVisitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BrokerServiceVisitPayload>
+        }
+        aggregate: {
+          args: Prisma.BrokerServiceVisitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBrokerServiceVisit>
+        }
+        groupBy: {
+          args: Prisma.BrokerServiceVisitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrokerServiceVisitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BrokerServiceVisitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BrokerServiceVisitCountAggregateOutputType> | number
+        }
+      }
+    }
+    NetworkBalance: {
+      payload: Prisma.$NetworkBalancePayload<ExtArgs>
+      fields: Prisma.NetworkBalanceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NetworkBalanceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NetworkBalanceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload>
+        }
+        findFirst: {
+          args: Prisma.NetworkBalanceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NetworkBalanceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload>
+        }
+        findMany: {
+          args: Prisma.NetworkBalanceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload>[]
+        }
+        create: {
+          args: Prisma.NetworkBalanceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload>
+        }
+        createMany: {
+          args: Prisma.NetworkBalanceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.NetworkBalanceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload>
+        }
+        update: {
+          args: Prisma.NetworkBalanceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload>
+        }
+        deleteMany: {
+          args: Prisma.NetworkBalanceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NetworkBalanceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.NetworkBalanceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NetworkBalancePayload>
+        }
+        aggregate: {
+          args: Prisma.NetworkBalanceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNetworkBalance>
+        }
+        groupBy: {
+          args: Prisma.NetworkBalanceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NetworkBalanceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NetworkBalanceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NetworkBalanceCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2831,6 +3367,11 @@ export const UserScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt',
   profileImageUrl: 'profileImageUrl',
   assignedRegion: 'assignedRegion',
+  nidaNumber: 'nidaNumber',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  nationality: 'nationality',
+  physicalAddress: 'physicalAddress',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3100,6 +3641,11 @@ export const BrokerCustomerScalarFieldEnum = {
   code: 'code',
   name: 'name',
   businessName: 'businessName',
+  title: 'title',
+  firstName: 'firstName',
+  surname: 'surname',
+  tinNumber: 'tinNumber',
+  officialAgentNo: 'officialAgentNo',
   phone: 'phone',
   alternatePhone: 'alternatePhone',
   email: 'email',
@@ -3108,10 +3654,36 @@ export const BrokerCustomerScalarFieldEnum = {
   district: 'district',
   ward: 'ward',
   address: 'address',
+  postalAddress: 'postalAddress',
+  city: 'city',
+  country: 'country',
+  nationality: 'nationality',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  identityType: 'identityType',
+  identityNumber: 'identityNumber',
+  identityIssuedBy: 'identityIssuedBy',
+  identityOther: 'identityOther',
+  profileImageUrl: 'profileImageUrl',
+  signatureUrl: 'signatureUrl',
+  registrationDate: 'registrationDate',
+  attendedBy: 'attendedBy',
+  attendedSignatureUrl: 'attendedSignatureUrl',
+  attendedDate: 'attendedDate',
+  attendedLocation: 'attendedLocation',
   latitude: 'latitude',
   longitude: 'longitude',
   status: 'status',
   notes: 'notes',
+  importBatchId: 'importBatchId',
+  sourceRowNumber: 'sourceRowNumber',
+  sourceSheetName: 'sourceSheetName',
+  sourceAgentName: 'sourceAgentName',
+  sourceMsisdn: 'sourceMsisdn',
+  sourceAliasCode: 'sourceAliasCode',
+  normalizedName: 'normalizedName',
+  isImported: 'isImported',
+  importedAt: 'importedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3212,10 +3784,20 @@ export const CompanyBankVerificationScalarFieldEnum = {
   amount: 'amount',
   referenceNumber: 'referenceNumber',
   depositDate: 'depositDate',
+  bankName: 'bankName',
+  accountName: 'accountName',
   bankAccount: 'bankAccount',
   depositSlipUrl: 'depositSlipUrl',
   bankReceiptUrl: 'bankReceiptUrl',
   bankStatementUrl: 'bankStatementUrl',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  transactionDateTime: 'transactionDateTime',
+  proofInspectionStatus: 'proofInspectionStatus',
+  proofMissingFields: 'proofMissingFields',
+  proofExtractedText: 'proofExtractedText',
+  proofAnalyzedAt: 'proofAnalyzedAt',
+  reviewNote: 'reviewNote',
   status: 'status',
   isSeenByAdmin: 'isSeenByAdmin',
   verifiedById: 'verifiedById',
@@ -3330,6 +3912,9 @@ export const CompanyAdminSettingScalarFieldEnum = {
   accent: 'accent',
   currency: 'currency',
   timezone: 'timezone',
+  proofGraceMinutes: 'proofGraceMinutes',
+  visitRadiusMeters: 'visitRadiusMeters',
+  minimumPerformanceScore: 'minimumPerformanceScore',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3464,6 +4049,194 @@ export const StaffFileScalarFieldEnum = {
 export type StaffFileScalarFieldEnum = (typeof StaffFileScalarFieldEnum)[keyof typeof StaffFileScalarFieldEnum]
 
 
+export const DataImportBatchScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  sourceType: 'sourceType',
+  sourceFileName: 'sourceFileName',
+  sourceSheetName: 'sourceSheetName',
+  sourceChecksum: 'sourceChecksum',
+  status: 'status',
+  totalRows: 'totalRows',
+  importedRows: 'importedRows',
+  skippedRows: 'skippedRows',
+  failedRows: 'failedRows',
+  notes: 'notes',
+  importedAt: 'importedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DataImportBatchScalarFieldEnum = (typeof DataImportBatchScalarFieldEnum)[keyof typeof DataImportBatchScalarFieldEnum]
+
+
+export const ImportedBankStatementScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  importBatchId: 'importBatchId',
+  statementKey: 'statementKey',
+  bankName: 'bankName',
+  accountName: 'accountName',
+  branchName: 'branchName',
+  accountNumber: 'accountNumber',
+  currency: 'currency',
+  periodStart: 'periodStart',
+  periodEnd: 'periodEnd',
+  generatedAt: 'generatedAt',
+  availableBalance: 'availableBalance',
+  totalCredit: 'totalCredit',
+  totalDebit: 'totalDebit',
+  bookBalance: 'bookBalance',
+  clearedBalance: 'clearedBalance',
+  sourceFileName: 'sourceFileName',
+  sourceChecksum: 'sourceChecksum',
+  importedAt: 'importedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImportedBankStatementScalarFieldEnum = (typeof ImportedBankStatementScalarFieldEnum)[keyof typeof ImportedBankStatementScalarFieldEnum]
+
+
+export const ImportedBankTransactionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  statementId: 'statementId',
+  matchedBrokerCustomerId: 'matchedBrokerCustomerId',
+  reference: 'reference',
+  postingDate: 'postingDate',
+  valueDate: 'valueDate',
+  details: 'details',
+  direction: 'direction',
+  debit: 'debit',
+  credit: 'credit',
+  bookBalance: 'bookBalance',
+  transactionType: 'transactionType',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  externalAccountReference: 'externalAccountReference',
+  narration: 'narration',
+  matchStatus: 'matchStatus',
+  matchConfidence: 'matchConfidence',
+  matchNote: 'matchNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImportedBankTransactionScalarFieldEnum = (typeof ImportedBankTransactionScalarFieldEnum)[keyof typeof ImportedBankTransactionScalarFieldEnum]
+
+
+export const BrokerAgentAccountScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  brokerCustomerId: 'brokerCustomerId',
+  network: 'network',
+  simPhoneNumber: 'simPhoneNumber',
+  agentNumber: 'agentNumber',
+  accountName: 'accountName',
+  isPrimary: 'isPrimary',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrokerAgentAccountScalarFieldEnum = (typeof BrokerAgentAccountScalarFieldEnum)[keyof typeof BrokerAgentAccountScalarFieldEnum]
+
+
+export const PortalDocumentScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  uploadedById: 'uploadedById',
+  brokerCustomerId: 'brokerCustomerId',
+  bankVerificationId: 'bankVerificationId',
+  serviceVisitId: 'serviceVisitId',
+  kind: 'kind',
+  originalName: 'originalName',
+  storedName: 'storedName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  originalSizeBytes: 'originalSizeBytes',
+  compressed: 'compressed',
+  checksumSha256: 'checksumSha256',
+  storagePath: 'storagePath',
+  publicUrl: 'publicUrl',
+  extractedText: 'extractedText',
+  proofStatus: 'proofStatus',
+  missingFieldsJson: 'missingFieldsJson',
+  analyzedAt: 'analyzedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PortalDocumentScalarFieldEnum = (typeof PortalDocumentScalarFieldEnum)[keyof typeof PortalDocumentScalarFieldEnum]
+
+
+export const ApprovalDecisionScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  itemType: 'itemType',
+  itemId: 'itemId',
+  reviewerId: 'reviewerId',
+  reviewerName: 'reviewerName',
+  reviewerRole: 'reviewerRole',
+  decision: 'decision',
+  reason: 'reason',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ApprovalDecisionScalarFieldEnum = (typeof ApprovalDecisionScalarFieldEnum)[keyof typeof ApprovalDecisionScalarFieldEnum]
+
+
+export const BrokerServiceVisitScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  staffId: 'staffId',
+  brokerCustomerId: 'brokerCustomerId',
+  deviceId: 'deviceId',
+  serviceActivityId: 'serviceActivityId',
+  status: 'status',
+  serviceType: 'serviceType',
+  communicationNote: 'communicationNote',
+  floatAmount: 'floatAmount',
+  cashAmount: 'cashAmount',
+  companyIncome: 'companyIncome',
+  staffLatitude: 'staffLatitude',
+  staffLongitude: 'staffLongitude',
+  brokerLatitude: 'brokerLatitude',
+  brokerLongitude: 'brokerLongitude',
+  distanceMeters: 'distanceMeters',
+  locationMatched: 'locationMatched',
+  startedAt: 'startedAt',
+  arrivedAt: 'arrivedAt',
+  serviceProvidedAt: 'serviceProvidedAt',
+  proofDueAt: 'proofDueAt',
+  proofUploadedAt: 'proofUploadedAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BrokerServiceVisitScalarFieldEnum = (typeof BrokerServiceVisitScalarFieldEnum)[keyof typeof BrokerServiceVisitScalarFieldEnum]
+
+
+export const NetworkBalanceScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  network: 'network',
+  simCardNumber: 'simCardNumber',
+  accountName: 'accountName',
+  floatBalance: 'floatBalance',
+  cashBalance: 'cashBalance',
+  updatedByName: 'updatedByName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NetworkBalanceScalarFieldEnum = (typeof NetworkBalanceScalarFieldEnum)[keyof typeof NetworkBalanceScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3514,7 +4287,10 @@ export const UserOrderByRelevanceFieldEnum = {
   phone: 'phone',
   passwordHash: 'passwordHash',
   profileImageUrl: 'profileImageUrl',
-  assignedRegion: 'assignedRegion'
+  assignedRegion: 'assignedRegion',
+  nidaNumber: 'nidaNumber',
+  nationality: 'nationality',
+  physicalAddress: 'physicalAddress'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -3696,6 +4472,10 @@ export const BrokerCustomerOrderByRelevanceFieldEnum = {
   code: 'code',
   name: 'name',
   businessName: 'businessName',
+  firstName: 'firstName',
+  surname: 'surname',
+  tinNumber: 'tinNumber',
+  officialAgentNo: 'officialAgentNo',
   phone: 'phone',
   alternatePhone: 'alternatePhone',
   email: 'email',
@@ -3704,7 +4484,25 @@ export const BrokerCustomerOrderByRelevanceFieldEnum = {
   district: 'district',
   ward: 'ward',
   address: 'address',
-  notes: 'notes'
+  postalAddress: 'postalAddress',
+  city: 'city',
+  country: 'country',
+  nationality: 'nationality',
+  identityNumber: 'identityNumber',
+  identityIssuedBy: 'identityIssuedBy',
+  identityOther: 'identityOther',
+  profileImageUrl: 'profileImageUrl',
+  signatureUrl: 'signatureUrl',
+  attendedBy: 'attendedBy',
+  attendedSignatureUrl: 'attendedSignatureUrl',
+  attendedLocation: 'attendedLocation',
+  notes: 'notes',
+  importBatchId: 'importBatchId',
+  sourceSheetName: 'sourceSheetName',
+  sourceAgentName: 'sourceAgentName',
+  sourceMsisdn: 'sourceMsisdn',
+  sourceAliasCode: 'sourceAliasCode',
+  normalizedName: 'normalizedName'
 } as const
 
 export type BrokerCustomerOrderByRelevanceFieldEnum = (typeof BrokerCustomerOrderByRelevanceFieldEnum)[keyof typeof BrokerCustomerOrderByRelevanceFieldEnum]
@@ -3776,10 +4574,17 @@ export const CompanyBankVerificationOrderByRelevanceFieldEnum = {
   uploadedByName: 'uploadedByName',
   uploadedByRole: 'uploadedByRole',
   referenceNumber: 'referenceNumber',
+  bankName: 'bankName',
+  accountName: 'accountName',
   bankAccount: 'bankAccount',
   depositSlipUrl: 'depositSlipUrl',
   bankReceiptUrl: 'bankReceiptUrl',
   bankStatementUrl: 'bankStatementUrl',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  proofMissingFields: 'proofMissingFields',
+  proofExtractedText: 'proofExtractedText',
+  reviewNote: 'reviewNote',
   verifiedById: 'verifiedById',
   verifiedByName: 'verifiedByName'
 } as const
@@ -3948,6 +4753,123 @@ export const StaffFileOrderByRelevanceFieldEnum = {
 export type StaffFileOrderByRelevanceFieldEnum = (typeof StaffFileOrderByRelevanceFieldEnum)[keyof typeof StaffFileOrderByRelevanceFieldEnum]
 
 
+export const DataImportBatchOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  sourceFileName: 'sourceFileName',
+  sourceSheetName: 'sourceSheetName',
+  sourceChecksum: 'sourceChecksum',
+  notes: 'notes'
+} as const
+
+export type DataImportBatchOrderByRelevanceFieldEnum = (typeof DataImportBatchOrderByRelevanceFieldEnum)[keyof typeof DataImportBatchOrderByRelevanceFieldEnum]
+
+
+export const ImportedBankStatementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  importBatchId: 'importBatchId',
+  statementKey: 'statementKey',
+  bankName: 'bankName',
+  accountName: 'accountName',
+  branchName: 'branchName',
+  accountNumber: 'accountNumber',
+  currency: 'currency',
+  sourceFileName: 'sourceFileName',
+  sourceChecksum: 'sourceChecksum'
+} as const
+
+export type ImportedBankStatementOrderByRelevanceFieldEnum = (typeof ImportedBankStatementOrderByRelevanceFieldEnum)[keyof typeof ImportedBankStatementOrderByRelevanceFieldEnum]
+
+
+export const ImportedBankTransactionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  statementId: 'statementId',
+  matchedBrokerCustomerId: 'matchedBrokerCustomerId',
+  reference: 'reference',
+  details: 'details',
+  transactionType: 'transactionType',
+  senderName: 'senderName',
+  receiverName: 'receiverName',
+  externalAccountReference: 'externalAccountReference',
+  narration: 'narration',
+  matchNote: 'matchNote'
+} as const
+
+export type ImportedBankTransactionOrderByRelevanceFieldEnum = (typeof ImportedBankTransactionOrderByRelevanceFieldEnum)[keyof typeof ImportedBankTransactionOrderByRelevanceFieldEnum]
+
+
+export const BrokerAgentAccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  brokerCustomerId: 'brokerCustomerId',
+  simPhoneNumber: 'simPhoneNumber',
+  agentNumber: 'agentNumber',
+  accountName: 'accountName',
+  status: 'status'
+} as const
+
+export type BrokerAgentAccountOrderByRelevanceFieldEnum = (typeof BrokerAgentAccountOrderByRelevanceFieldEnum)[keyof typeof BrokerAgentAccountOrderByRelevanceFieldEnum]
+
+
+export const PortalDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  uploadedById: 'uploadedById',
+  brokerCustomerId: 'brokerCustomerId',
+  bankVerificationId: 'bankVerificationId',
+  serviceVisitId: 'serviceVisitId',
+  originalName: 'originalName',
+  storedName: 'storedName',
+  mimeType: 'mimeType',
+  checksumSha256: 'checksumSha256',
+  storagePath: 'storagePath',
+  publicUrl: 'publicUrl',
+  extractedText: 'extractedText',
+  missingFieldsJson: 'missingFieldsJson'
+} as const
+
+export type PortalDocumentOrderByRelevanceFieldEnum = (typeof PortalDocumentOrderByRelevanceFieldEnum)[keyof typeof PortalDocumentOrderByRelevanceFieldEnum]
+
+
+export const ApprovalDecisionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  itemId: 'itemId',
+  reviewerId: 'reviewerId',
+  reviewerName: 'reviewerName',
+  reason: 'reason'
+} as const
+
+export type ApprovalDecisionOrderByRelevanceFieldEnum = (typeof ApprovalDecisionOrderByRelevanceFieldEnum)[keyof typeof ApprovalDecisionOrderByRelevanceFieldEnum]
+
+
+export const BrokerServiceVisitOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  staffId: 'staffId',
+  brokerCustomerId: 'brokerCustomerId',
+  deviceId: 'deviceId',
+  serviceActivityId: 'serviceActivityId',
+  serviceType: 'serviceType',
+  communicationNote: 'communicationNote'
+} as const
+
+export type BrokerServiceVisitOrderByRelevanceFieldEnum = (typeof BrokerServiceVisitOrderByRelevanceFieldEnum)[keyof typeof BrokerServiceVisitOrderByRelevanceFieldEnum]
+
+
+export const NetworkBalanceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  simCardNumber: 'simCardNumber',
+  accountName: 'accountName',
+  updatedByName: 'updatedByName'
+} as const
+
+export type NetworkBalanceOrderByRelevanceFieldEnum = (typeof NetworkBalanceOrderByRelevanceFieldEnum)[keyof typeof NetworkBalanceOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -3993,6 +4915,13 @@ export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'UserStatus'
  */
 export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PortalGender'
+ */
+export type EnumPortalGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PortalGender'>
     
 
 
@@ -4074,6 +5003,20 @@ export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'AgentTitle'
+ */
+export type EnumAgentTitleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgentTitle'>
+    
+
+
+/**
+ * Reference to a field of type 'IdentityType'
+ */
+export type EnumIdentityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdentityType'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -4091,6 +5034,13 @@ export type EnumBrokerCustomerStatusFieldRefInput<$PrismaModel> = FieldRefInputT
  * Reference to a field of type 'CompanyExpenseStatus'
  */
 export type EnumCompanyExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompanyExpenseStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ProofInspectionStatus'
+ */
+export type EnumProofInspectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProofInspectionStatus'>
     
 
 
@@ -4161,6 +5111,69 @@ export type EnumStaffAssignmentStatusFieldRefInput<$PrismaModel> = FieldRefInput
  * Reference to a field of type 'StaffFileKind'
  */
 export type EnumStaffFileKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StaffFileKind'>
+    
+
+
+/**
+ * Reference to a field of type 'ImportedDataSourceType'
+ */
+export type EnumImportedDataSourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImportedDataSourceType'>
+    
+
+
+/**
+ * Reference to a field of type 'ImportBatchStatus'
+ */
+export type EnumImportBatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImportBatchStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BankStatementTransactionDirection'
+ */
+export type EnumBankStatementTransactionDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BankStatementTransactionDirection'>
+    
+
+
+/**
+ * Reference to a field of type 'BankTransactionMatchStatus'
+ */
+export type EnumBankTransactionMatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BankTransactionMatchStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MobileNetwork'
+ */
+export type EnumMobileNetworkFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MobileNetwork'>
+    
+
+
+/**
+ * Reference to a field of type 'PortalDocumentKind'
+ */
+export type EnumPortalDocumentKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PortalDocumentKind'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalItemType'
+ */
+export type EnumApprovalItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalItemType'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalDecisionValue'
+ */
+export type EnumApprovalDecisionValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalDecisionValue'>
+    
+
+
+/**
+ * Reference to a field of type 'BrokerVisitStatus'
+ */
+export type EnumBrokerVisitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BrokerVisitStatus'>
     
 
 /**
@@ -4308,6 +5321,14 @@ export type GlobalOmitConfig = {
   staffBrokerAssignment?: Prisma.StaffBrokerAssignmentOmit
   staffCustomerAssignment?: Prisma.StaffCustomerAssignmentOmit
   staffFile?: Prisma.StaffFileOmit
+  dataImportBatch?: Prisma.DataImportBatchOmit
+  importedBankStatement?: Prisma.ImportedBankStatementOmit
+  importedBankTransaction?: Prisma.ImportedBankTransactionOmit
+  brokerAgentAccount?: Prisma.BrokerAgentAccountOmit
+  portalDocument?: Prisma.PortalDocumentOmit
+  approvalDecision?: Prisma.ApprovalDecisionOmit
+  brokerServiceVisit?: Prisma.BrokerServiceVisitOmit
+  networkBalance?: Prisma.NetworkBalanceOmit
 }
 
 /* Types for Logging */

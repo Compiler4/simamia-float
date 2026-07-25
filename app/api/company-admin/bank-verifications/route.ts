@@ -1,87 +1,91 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { prisma } from "@/lib/prisma";
 import {
   createAudit,
   createNotification,
-  normalizeDate,
   requireCompanyMember,
   routeError,
   text,
-  toNumber,
   HttpError,
 } from "@/lib/company-admin-server";
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     const user = await requireCompanyMember([
       "COMPANY_ADMIN",
       "ACCOUNTANT",
       "STAFF",
-      "BROKER",
     ]);
     const companyId = user.companyId as string;
+    const { id } = await context.params;
     const body = await request.json();
+    const message = text(body.message).trim();
     const db = prisma as any;
 
-    const amount = toNumber(body.amount);
-    const referenceNumber = text(body.referenceNumber).trim();
-    const bankAccount = text(body.bankAccount).trim();
-    const depositDate = normalizeDate(body.depositDate || new Date());
-
-    if (amount <= 0 || !referenceNumber || !bankAccount) {
-      throw new HttpError(
-        "Amount, reference number and bank account are required.",
-        422,
-      );
+    if (message.length < 3) {
+      throw new HttpError("Write a clear bank-review message first.", 422);
     }
 
-    const verification = await db.companyBankVerification.create({
-      data: {
+    const verification = await db.companyBankVerification.findFirst({
+      where: {
+        id,
         companyId,
-        uploadedById: user.id,
-        uploadedByName: user.name,
-        uploadedByRole: user.role,
-        amount,
-        referenceNumber,
-        depositDate,
-        bankAccount,
-        depositSlipUrl: text(body.depositSlipUrl).trim() || null,
-        bankReceiptUrl: text(body.bankReceiptUrl).trim() || null,
-        bankStatementUrl: text(body.bankStatementUrl).trim() || null,
-        status: "PENDING",
-        isSeenByAdmin: false,
+        ...(user.role === "STAFF" ? { uploadedById: user.id } : {}),
       },
     });
 
-    await createNotification({
-      companyId,
-      targetRole: "COMPANY_ADMIN",
-      title: "New bank verification uploaded",
-      message: `${user.name} uploaded bank documents for reference ${referenceNumber}.`,
-      type: "BANK",
-      link: "/admin/dashboard?section=bank",
+    if (!verification) {
+      throw new HttpError("Bank verification record not found.", 404);
+    }
+
+    const created = await db.companyBankMessage.create({
+      data: {
+        verificationId: id,
+        companyId,
+        senderId: user.id,
+        senderName: user.name,
+        senderRole: user.role,
+        message,
+      },
     });
 
+    const isUploader = user.id === verification.uploadedById;
     await createNotification({
       companyId,
-      targetRole: "ACCOUNTANT",
-      title: "Bank record awaiting verification",
-      message: `${user.name} submitted TZS ${amount.toLocaleString()} for review.`,
-      type: "BANK",
-      link: "/dashboard",
+      targetUserId: isUploader ? null : verification.uploadedById,
+      targetRole: isUploader ? "COMPANY_ADMIN" : null,
+      title: "New bank review message",
+      message: `${user.name}: ${message.slice(0, 160)}`,
+      type: "MESSAGE",
+      link: isUploader ? "/admin/dashboard?section=bank" : "/dashboard",
     });
+
+    if (isUploader) {
+      await createNotification({
+        companyId,
+        targetRole: "ACCOUNTANT",
+        title: "Uploader replied to bank review",
+        message: `${user.name}: ${message.slice(0, 160)}`,
+        type: "MESSAGE",
+        link: "/dashboard",
+      });
+    }
 
     await createAudit({
       companyId,
       actorId: user.id,
       actorName: user.name,
       actorRole: user.role,
-      action: "UPLOAD_BANK_VERIFICATION",
+      action: "SEND_BANK_REVIEW_MESSAGE",
       module: "BANK",
-      details: `Reference ${referenceNumber}, TZS ${amount}.`,
+      details: `Reference ${verification.referenceNumber}: ${message.slice(0, 220)}`,
     });
 
-    return NextResponse.json({ success: true, verification });
+    return NextResponse.json({ success: true, message: created });
   } catch (error) {
     return routeError(error);
   }

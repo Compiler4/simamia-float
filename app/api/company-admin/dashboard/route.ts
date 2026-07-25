@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { prisma } from "@/lib/prisma";
 import {
   requireCompanyAdmin,
@@ -21,22 +22,16 @@ const defaultSettings = {
   accent: "TEAL",
   currency: "TZS",
   timezone: "Africa/Dar_es_Salaam",
+  proofGraceMinutes: 30,
+  visitRadiusMeters: 200,
+  minimumPerformanceScore: 60,
 };
 
-async function safeQuery<T>(label: string, task: () => Promise<T>, fallback: T) {
-  try {
-    return await task();
-  } catch (error) {
-    console.warn(`Dashboard query failed: ${label}`, error);
-    return fallback;
-  }
-}
-
-function isoDay(date: Date) {
+function isoDay(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-function lastDays(count: number) {
+function lastDays(count: number): Date[] {
   const result: Date[] = [];
   for (let index = count - 1; index >= 0; index -= 1) {
     const date = new Date();
@@ -47,6 +42,39 @@ function lastDays(count: number) {
   return result;
 }
 
+function number(value: unknown): number {
+  const result = Number(value ?? 0);
+  return Number.isFinite(result) ? result : 0;
+}
+
+function percentage(numerator: number, denominator: number, empty = 100): number {
+  if (denominator <= 0) return empty;
+  return Math.max(0, Math.min(100, (numerator / denominator) * 100));
+}
+
+function round(value: number, digits = 2): number {
+  const factor = 10 ** digits;
+  return Math.round(value * factor) / factor;
+}
+
+function darEsSalaamPeriodStarts(now = new Date()) {
+  const offsetMs = 3 * 60 * 60 * 1000;
+  const shifted = new Date(now.getTime() + offsetMs);
+  const year = shifted.getUTCFullYear();
+  const month = shifted.getUTCMonth();
+  const day = shifted.getUTCDate();
+  const weekday = shifted.getUTCDay();
+  const daysFromMonday = (weekday + 6) % 7;
+  const fromDarMidnight = (value: number) => new Date(value - offsetMs);
+
+  return {
+    day: fromDarMidnight(Date.UTC(year, month, day)),
+    week: fromDarMidnight(Date.UTC(year, month, day - daysFromMonday)),
+    month: fromDarMidnight(Date.UTC(year, month, 1)),
+    year: fromDarMidnight(Date.UTC(year, 0, 1)),
+  };
+}
+
 export async function GET() {
   try {
     const sessionUser = await requireCompanyAdmin();
@@ -54,9 +82,9 @@ export async function GET() {
     const db = prisma as any;
 
     const [
-      companyRaw,
+      company,
       usersRaw,
-      branchesRaw,
+      branches,
       expensesRaw,
       bankRaw,
       attendanceRaw,
@@ -64,333 +92,409 @@ export async function GET() {
       gpsDevicesRaw,
       gpsPingsRaw,
       settingsRaw,
-      auditRaw,
-      customersRaw,
-      serviceActivitiesRaw,
+      activities,
+      customers,
+      servicesRaw,
+      brokersRaw,
+      documentsRaw,
+      approvalsRaw,
+      visitsRaw,
+      floatTransactionsRaw,
+      collectionsRaw,
+      networkBalancesRaw,
+      importedStatementsRaw,
+      importedTransactionsRaw,
     ] = await Promise.all([
-      safeQuery(
-        "company",
-        () => db.company.findUnique({ where: { id: companyId } }),
-        null,
-      ),
-      safeQuery(
-        "users",
-        () =>
-          db.user.findMany({
-            where: {
-              companyId,
-              NOT: {
-                role: {
-                  in: ["SYSTEM_DEVELOPER", "SUPER_ADMIN"],
-                },
-              },
-            },
-            orderBy: { createdAt: "desc" },
-          }),
-        [],
-      ),
-      safeQuery(
-        "branches",
-        () =>
-          db.branch.findMany({
-            where: { companyId },
-            orderBy: { name: "asc" },
-          }),
-        [],
-      ),
-      safeQuery(
-        "expenses",
-        () =>
-          db.companyExpense.findMany({
-            where: { companyId },
-            orderBy: [{ expenseDate: "desc" }, { createdAt: "desc" }],
-            take: 500,
-          }),
-        [],
-      ),
-      safeQuery(
-        "bankVerifications",
-        () =>
-          db.companyBankVerification.findMany({
-            where: { companyId },
-            include: {
-              messages: {
-                orderBy: { createdAt: "asc" },
-              },
-            },
-            orderBy: [{ depositDate: "desc" }, { createdAt: "desc" }],
-            take: 500,
-          }),
-        [],
-      ),
-      safeQuery(
-        "attendance",
-        () =>
-          db.companyAttendance.findMany({
-            where: { companyId },
-            orderBy: [{ attendanceDate: "desc" }, { userName: "asc" }],
-            take: 20000,
-          }),
-        [],
-      ),
-      safeQuery(
-        "notifications",
-        () =>
-          db.companyNotification.findMany({
-            where: {
-              companyId,
-              OR: [
-                { targetUserId: sessionUser.id },
-                { targetRole: "COMPANY_ADMIN" },
-                { targetUserId: null, targetRole: null },
-              ],
-            },
-            orderBy: { createdAt: "desc" },
-            take: 100,
-          }),
-        [],
-      ),
-      safeQuery(
-        "gpsDevices",
-        () =>
-          db.companyGpsDevice.findMany({
-            where: { companyId },
-            orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
-          }),
-        [],
-      ),
-      safeQuery(
-        "gpsPings",
-        () =>
-          db.companyGpsPing.findMany({
-            where: { companyId },
-            orderBy: { capturedAt: "desc" },
-            take: 500,
-          }),
-        [],
-      ),
-      safeQuery(
-        "settings",
-        () =>
-          db.companyAdminSetting.findUnique({
-            where: { companyId },
-          }),
-        null,
-      ),
-      safeQuery(
-        "audit",
-        () =>
-          db.companyAuditEvent.findMany({
-            where: { companyId },
-            orderBy: { createdAt: "desc" },
-            take: 100,
-          }),
-        [],
-      ),
-      safeQuery(
-        "customers",
-        () =>
-          db.customer.findMany({
-            where: { companyId },
-            orderBy: { name: "asc" },
-            take: 10000,
-          }),
-        [],
-      ),
-      safeQuery(
-        "serviceActivities",
-        () =>
-          db.serviceActivity.findMany({
-            where: { companyId },
-            include: {
-              customer: {
-                select: {
-                  id: true,
-                  name: true,
-                  phone: true,
-                  email: true,
-                  region: true,
-                  address: true,
-                  status: true,
-                },
-              },
-              staff: {
-                select: {
-                  id: true,
-                  name: true,
-                  username: true,
-                  email: true,
-                  phone: true,
-                  role: true,
-                  branchId: true,
-                  status: true,
-                },
-              },
-              broker: {
-                select: {
-                  id: true,
-                  name: true,
-                  username: true,
-                  email: true,
-                  phone: true,
-                  role: true,
-                },
-              },
-            },
-            orderBy: [{ servedAt: "desc" }, { createdAt: "desc" }],
-            take: 20000,
-          }),
-        [],
-      ),
+      db.company.findUnique({ where: { id: companyId } }),
+      db.user.findMany({
+        where: {
+          companyId,
+          AND: [
+            { NOT: { role: { in: ["SYSTEM_DEVELOPER", "SUPER_ADMIN"] } } },
+            { NOT: { status: "REMOVED" } },
+          ],
+        },
+        orderBy: [{ role: "asc" }, { name: "asc" }],
+      }),
+      db.branch.findMany({ where: { companyId }, orderBy: { name: "asc" } }),
+      db.companyExpense.findMany({
+        where: { companyId },
+        orderBy: [{ expenseDate: "desc" }, { createdAt: "desc" }],
+        take: 3000,
+      }),
+      db.companyBankVerification.findMany({
+        where: { companyId },
+        include: { messages: { orderBy: { createdAt: "asc" } } },
+        orderBy: [{ depositDate: "desc" }, { createdAt: "desc" }],
+        take: 3000,
+      }),
+      db.companyAttendance.findMany({
+        where: { companyId },
+        orderBy: [{ attendanceDate: "desc" }, { userName: "asc" }],
+        take: 30000,
+      }),
+      db.companyNotification.findMany({
+        where: { companyId },
+        orderBy: { createdAt: "desc" },
+        take: 500,
+      }),
+      db.companyGpsDevice.findMany({
+        where: { companyId },
+        orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
+      }),
+      db.companyGpsPing.findMany({
+        where: { companyId },
+        orderBy: { capturedAt: "desc" },
+        take: 5000,
+      }),
+      db.companyAdminSetting.findUnique({ where: { companyId } }),
+      db.companyAuditEvent.findMany({
+        where: { companyId },
+        orderBy: { createdAt: "desc" },
+        take: 1000,
+      }),
+      db.customer.findMany({ where: { companyId }, orderBy: { name: "asc" } }),
+      db.serviceActivity.findMany({
+        where: { companyId },
+        include: {
+          staff: true,
+          broker: true,
+          brokerCustomer: { include: { agentAccounts: true } },
+          customer: true,
+        },
+        orderBy: [{ servedAt: "desc" }, { createdAt: "desc" }],
+        take: 30000,
+      }),
+      db.brokerCustomer.findMany({
+        where: { companyId },
+        include: { agentAccounts: true },
+        orderBy: [{ status: "asc" }, { name: "asc" }],
+      }),
+      db.portalDocument.findMany({
+        where: { companyId },
+        include: {
+          uploadedBy: {
+            select: { id: true, name: true, email: true, role: true, profileImageUrl: true },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 5000,
+      }),
+      db.approvalDecision.findMany({
+        where: { companyId },
+        orderBy: { decidedAt: "desc" },
+        take: 5000,
+      }),
+      db.brokerServiceVisit.findMany({
+        where: { companyId },
+        include: { staff: true, broker: { include: { agentAccounts: true } }, device: true },
+        orderBy: { startedAt: "desc" },
+        take: 10000,
+      }),
+      db.floatTransaction.findMany({
+        where: { companyId },
+        include: { fromUser: true, toUser: true, brokerCustomer: true },
+        orderBy: { createdAt: "desc" },
+        take: 30000,
+      }),
+      db.staffCollection.findMany({
+        where: { companyId },
+        include: { staff: true, broker: true, brokerCustomer: true },
+        orderBy: { collectionDate: "desc" },
+        take: 30000,
+      }),
+      db.networkBalance.findMany({
+        where: { companyId },
+        orderBy: [{ network: "asc" }, { simCardNumber: "asc" }],
+      }),
+      db.importedBankStatement.findMany({
+        where: { companyId },
+        orderBy: [{ periodEnd: "desc" }, { importedAt: "desc" }],
+        take: 50,
+      }),
+      db.importedBankTransaction.findMany({
+        where: { companyId },
+        orderBy: { postingDate: "desc" },
+        take: 10000,
+      }),
     ]);
 
-    const branches = branchesRaw.map((branch: any) => ({
-      id: text(branch.id),
-      name: text(branch.name) || "Unnamed branch",
-      code: text(branch.code),
-      region: text(branch.region),
-      address: text(branch.address),
-      status: text(branch.status) || "ACTIVE",
-    }));
-
     const branchMap = new Map(
-      branches.map((branch: any) => [branch.id, branch.name]),
+      branches.map((branch: any) => [text(branch.id), text(branch.name)]),
     );
 
-    const users = usersRaw.map((item: any) => ({
-      id: text(item.id),
-      name: text(item.name) || "Unnamed user",
-      username: text(item.username),
-      email: text(item.email),
-      phone: text(item.phone),
-      role: text(item.role),
-      status: text(item.status) || "ACTIVE",
-      branchId: text(item.branchId),
-      branchName:
-        text(item.branchName) ||
-        branchMap.get(text(item.branchId)) ||
-        "No branch",
-      createdAt: item.createdAt,
+    const users = usersRaw.map((user: any) => ({
+      ...user,
+      branchName: branchMap.get(text(user.branchId)) || "No branch",
+      passwordHash: undefined,
+      password: undefined,
     }));
+
+    const documentsByBank = new Map<string, any[]>();
+    const documentsByVisit = new Map<string, any[]>();
+    for (const document of documentsRaw) {
+      if (document.bankVerificationId) {
+        const rows = documentsByBank.get(document.bankVerificationId) || [];
+        rows.push(document);
+        documentsByBank.set(document.bankVerificationId, rows);
+      }
+      if (document.serviceVisitId) {
+        const rows = documentsByVisit.get(document.serviceVisitId) || [];
+        rows.push(document);
+        documentsByVisit.set(document.serviceVisitId, rows);
+      }
+    }
+
+    const approvalsByItem = new Map<string, any[]>();
+    for (const decision of approvalsRaw) {
+      const key = `${decision.itemType}:${decision.itemId}`;
+      const rows = approvalsByItem.get(key) || [];
+      rows.push(decision);
+      approvalsByItem.set(key, rows);
+    }
 
     const expenses = expensesRaw.map((item: any) => ({
       ...item,
       amount: toNumber(item.amount),
+      decisions: approvalsByItem.get(`EXPENSE:${item.id}`) || [],
+      approvalDecisions: approvalsByItem.get(`EXPENSE:${item.id}`) || [],
+      workflowStatus: (() => {
+        const rows = approvalsByItem.get(`EXPENSE:${item.id}`) || [];
+        const admin = rows.find((row: any) => row.reviewerRole === "COMPANY_ADMIN");
+        const accountant = rows.find((row: any) => row.reviewerRole === "ACCOUNTANT");
+        if (admin && accountant && admin.decision !== accountant.decision) return "CONFLICT";
+        if (admin?.decision === "APPROVED" && accountant?.decision === "APPROVED") return "APPROVED";
+        if (rows.some((row: any) => row.decision === "REJECTED")) return "REJECTED";
+        if (rows.length) return "PARTIAL";
+        return "PENDING";
+      })(),
     }));
 
     const bankVerifications = bankRaw.map((item: any) => ({
       ...item,
       amount: toNumber(item.amount),
       messages: Array.isArray(item.messages) ? item.messages : [],
-    }));
-
-    const attendance = attendanceRaw.map((item: any) => ({
-      ...item,
-      attendanceDate: item.attendanceDate,
-    }));
-
-    const notifications = notificationsRaw.map((item: any) => ({
-      ...item,
-      isRead: Boolean(item.isRead),
+      documents: documentsByBank.get(item.id) || [],
+      decisions: approvalsByItem.get(`BANK_VERIFICATION:${item.id}`) || [],
+      approvalDecisions: approvalsByItem.get(`BANK_VERIFICATION:${item.id}`) || [],
+      workflowStatus: (() => {
+        const rows = approvalsByItem.get(`BANK_VERIFICATION:${item.id}`) || [];
+        const admin = rows.find((row: any) => row.reviewerRole === "COMPANY_ADMIN");
+        const accountant = rows.find((row: any) => row.reviewerRole === "ACCOUNTANT");
+        if (admin && accountant && admin.decision !== accountant.decision) return "CONFLICT";
+        if (admin?.decision === "APPROVED" && accountant?.decision === "APPROVED") return "APPROVED";
+        if (rows.some((row: any) => row.decision === "REJECTED")) return "REJECTED";
+        if (rows.length) return "PARTIAL";
+        return "PENDING";
+      })(),
+      missingProofFields: (() => {
+        try {
+          return item.proofMissingFields ? JSON.parse(item.proofMissingFields) : [];
+        } catch {
+          return [];
+        }
+      })(),
     }));
 
     const gpsDevices = gpsDevicesRaw.map((item: any) => ({
       ...item,
-      lastLatitude:
-        item.lastLatitude === null ? null : toNumber(item.lastLatitude),
-      lastLongitude:
-        item.lastLongitude === null ? null : toNumber(item.lastLongitude),
-      gpsAccuracy:
-        item.gpsAccuracy === null ? null : toNumber(item.gpsAccuracy),
-      speedKph: item.speedKph === null ? null : toNumber(item.speedKph),
-      batteryLevel:
-        item.batteryLevel === null ? null : Number(item.batteryLevel),
+      lastLatitude: item.lastLatitude == null ? null : number(item.lastLatitude),
+      lastLongitude: item.lastLongitude == null ? null : number(item.lastLongitude),
+      gpsAccuracy: item.gpsAccuracy == null ? null : number(item.gpsAccuracy),
+      speedKph: item.speedKph == null ? null : number(item.speedKph),
     }));
 
     const gpsPings = gpsPingsRaw.map((item: any) => ({
       ...item,
-      latitude: toNumber(item.latitude),
-      longitude: toNumber(item.longitude),
-      accuracy: item.accuracy === null ? null : toNumber(item.accuracy),
-      speedKph: item.speedKph === null ? null : toNumber(item.speedKph),
+      latitude: number(item.latitude),
+      longitude: number(item.longitude),
+      accuracy: item.accuracy == null ? null : number(item.accuracy),
+      speedKph: item.speedKph == null ? null : number(item.speedKph),
     }));
 
+    const serviceActivities = servicesRaw.map((item: any) => ({
+      ...item,
+      amount: toNumber(item.amount),
+    }));
 
-const customers = customersRaw.map((item: any) => ({
-  id: text(item.id),
-  name: text(item.name) || "Unnamed customer",
-  phone: text(item.phone),
-  email: text(item.email),
-  region: text(item.region),
-  address: text(item.address),
-  status: text(item.status) || "ACTIVE",
-  createdAt: item.createdAt,
-  updatedAt: item.updatedAt,
-}));
+    const brokers = brokersRaw.map((item: any) => ({
+      ...item,
+      latitude: item.latitude == null ? null : number(item.latitude),
+      longitude: item.longitude == null ? null : number(item.longitude),
+      agentAccounts: Array.isArray(item.agentAccounts) ? item.agentAccounts : [],
+    }));
 
-const serviceActivities = serviceActivitiesRaw.map((item: any) => ({
-  id: text(item.id),
-  companyId: text(item.companyId),
-  staffId: text(item.staffId),
-  brokerId: text(item.brokerId),
-  customerId: text(item.customerId),
-  serviceType: text(item.serviceType) || "Service",
-  amount: toNumber(item.amount),
-  status: text(item.status) || "COMPLETED",
-  servedAt: item.servedAt,
-  notes: text(item.notes),
-  createdAt: item.createdAt,
-  updatedAt: item.updatedAt,
-  customer: item.customer
-    ? {
-        ...item.customer,
-        id: text(item.customer.id),
-        name: text(item.customer.name),
-        phone: text(item.customer.phone),
-        email: text(item.customer.email),
-        region: text(item.customer.region),
-        address: text(item.customer.address),
-        status: text(item.customer.status),
-      }
-    : null,
-  staff: item.staff
-    ? {
-        ...item.staff,
-        id: text(item.staff.id),
-        name: text(item.staff.name),
-        username: text(item.staff.username),
-        email: text(item.staff.email),
-        phone: text(item.staff.phone),
-        role: text(item.staff.role),
-        branchId: text(item.staff.branchId),
-        branchName:
-          branchMap.get(text(item.staff.branchId)) || "No branch",
-        status: text(item.staff.status),
-      }
-    : null,
-  broker: item.broker
-    ? {
-        ...item.broker,
-        id: text(item.broker.id),
-        name: text(item.broker.name),
-        username: text(item.broker.username),
-        email: text(item.broker.email),
-        phone: text(item.broker.phone),
-        role: text(item.broker.role),
-      }
-    : null,
-}));
+    const serviceVisits = visitsRaw.map((item: any) => ({
+      ...item,
+      floatAmount: toNumber(item.floatAmount),
+      cashAmount: toNumber(item.cashAmount),
+      companyIncome: toNumber(item.companyIncome),
+      documents: documentsByVisit.get(item.id) || [],
+    }));
+
+    const floatTransactions = floatTransactionsRaw.map((item: any) => ({
+      ...item,
+      amount: toNumber(item.amount),
+      returnedAmount: toNumber(item.returnedAmount),
+    }));
+
+    const staffCollections = collectionsRaw.map((item: any) => ({
+      ...item,
+      amount: toNumber(item.amount),
+    }));
+
+    const networkBalances = networkBalancesRaw.map((item: any) => ({
+      ...item,
+      floatBalance: toNumber(item.floatBalance),
+      cashBalance: toNumber(item.cashBalance),
+    }));
+
+    const importedBankStatements = importedStatementsRaw.map((item: any) => ({
+      ...item,
+      availableBalance: toNumber(item.availableBalance),
+      totalCredit: toNumber(item.totalCredit),
+      totalDebit: toNumber(item.totalDebit),
+      bookBalance: toNumber(item.bookBalance),
+      clearedBalance: toNumber(item.clearedBalance),
+    }));
+
+    const importedBankTransactions = importedTransactionsRaw.map((item: any) => ({
+      ...item,
+      debit: toNumber(item.debit),
+      credit: toNumber(item.credit),
+      bookBalance: toNumber(item.bookBalance),
+    }));
+
+    const attendance = attendanceRaw.map((item: any) => ({ ...item }));
+    const performanceUsers = users.filter((item: any) =>
+      ["STAFF", "ACCOUNTANT"].includes(item.role),
+    );
+    const performanceBase = performanceUsers.map((employee: any) => {
+      const attendanceRows = attendance.filter((row: any) => row.userId === employee.id);
+      const present = attendanceRows.filter((row: any) => row.mark === "PRESENT").length;
+      const late = attendanceRows.filter((row: any) => row.mark === "LATE").length;
+      const absent = attendanceRows.filter((row: any) => row.mark === "ABSENT").length;
+      const leave = attendanceRows.filter((row: any) => row.mark === "LEAVE").length;
+      const holiday = attendanceRows.filter((row: any) => row.mark === "HOLIDAY").length;
+      const working = present + late + absent;
+      const attendanceRate = percentage(present + late, working, 0);
+
+      const issued = floatTransactions
+        .filter((row: any) => row.toUserId === employee.id)
+        .reduce((sum: number, row: any) => sum + number(row.amount), 0);
+      const returnedFromField = floatTransactions
+        .filter((row: any) => row.toUserId === employee.id)
+        .reduce((sum: number, row: any) => sum + number(row.returnedAmount), 0);
+      const returnedTransactions = floatTransactions
+        .filter((row: any) => row.fromUserId === employee.id && row.transactionType === "STAFF_RETURN_TO_ACCOUNTANT")
+        .reduce((sum: number, row: any) => sum + number(row.amount), 0);
+      const returned = Math.max(returnedFromField, returnedTransactions);
+      const outstanding = Math.max(0, issued - returned);
+      const returnRate = percentage(returned, issued, 100);
+
+      const visits = serviceVisits.filter((row: any) => row.staffId === employee.id);
+      const completedVisits = visits.filter((row: any) => row.status === "COMPLETED").length;
+      const lateProof = visits.filter((row: any) => row.status === "LATE_PROOF").length;
+      const proofComplianceRate = percentage(completedVisits, visits.length, 100);
+      const companyIncome = visits.reduce(
+        (sum: number, row: any) => sum + number(row.companyIncome),
+        0,
+      );
+      const serviceValue = serviceActivities
+        .filter((row: any) => row.staffId === employee.id)
+        .reduce((sum: number, row: any) => sum + number(row.amount), 0);
+      const collectionValue = staffCollections
+        .filter((row: any) => row.staffId === employee.id)
+        .reduce((sum: number, row: any) => sum + number(row.amount), 0);
+
+      return {
+        userId: employee.id,
+        userName: employee.name,
+        userRole: employee.role,
+        profileImageUrl: employee.profileImageUrl,
+        present,
+        late,
+        absent,
+        leave,
+        holiday,
+        attendanceRate,
+        totalFloatIssued: issued,
+        totalFloatReturned: returned,
+        outstandingBalance: outstanding,
+        returnRate,
+        visits: visits.length,
+        completedVisits,
+        lateProof,
+        proofComplianceRate,
+        companyIncome,
+        serviceValue,
+        collectionValue,
+      };
+    });
+
+    const maximumIncome = Math.max(1, ...performanceBase.map((row: any) => row.companyIncome));
+    const settings = settingsRaw || defaultSettings;
+    const performanceRows = performanceBase
+      .map((row: any) => {
+        const incomeScore = percentage(row.companyIncome, maximumIncome, 0);
+        const score = Math.round(
+          row.attendanceRate * 0.25 +
+            row.returnRate * 0.3 +
+            row.proofComplianceRate * 0.25 +
+            incomeScore * 0.2,
+        );
+        return {
+          ...row,
+          incomeScore: round(incomeScore),
+          score,
+          rating:
+            score >= 90
+              ? "EXCELLENT"
+              : score >= 75
+                ? "GOOD"
+                : score >= Number(settings.minimumPerformanceScore || 60)
+                  ? "FAIR"
+                  : "NEEDS_ATTENTION",
+          needsAlert: score < Number(settings.minimumPerformanceScore || 60),
+        };
+      })
+      .sort((a: any, b: any) => b.score - a.score);
 
     const totalExpenses = expenses.reduce(
-      (sum: number, item: any) => sum + toNumber(item.amount),
+      (sum: number, item: any) => sum + number(item.amount),
       0,
     );
     const approvedExpenses = expenses
       .filter((item: any) => item.status === "APPROVED")
-      .reduce((sum: number, item: any) => sum + toNumber(item.amount), 0);
+      .reduce((sum: number, item: any) => sum + number(item.amount), 0);
     const totalDeposits = bankVerifications
       .filter((item: any) => item.status === "VERIFIED")
-      .reduce((sum: number, item: any) => sum + toNumber(item.amount), 0);
+      .reduce((sum: number, item: any) => sum + number(item.amount), 0);
+    const totalFloatIssued = floatTransactions.reduce(
+      (sum: number, item: any) => sum + number(item.amount),
+      0,
+    );
+    const totalFloatReturned = floatTransactions.reduce(
+      (sum: number, item: any) => sum + number(item.returnedAmount),
+      0,
+    );
+    const outstandingFloat = Math.max(0, totalFloatIssued - totalFloatReturned);
+    const totalCompanyIncome = serviceVisits.reduce(
+      (sum: number, item: any) => sum + number(item.companyIncome),
+      0,
+    );
+    const periodStarts = darEsSalaamPeriodStarts();
+    const incomeSince = (start: Date) =>
+      serviceVisits
+        .filter((item: any) => {
+          const value = item.serviceProvidedAt || item.startedAt || item.createdAt;
+          return value && new Date(value) >= start;
+        })
+        .reduce((sum: number, item: any) => sum + number(item.companyIncome), 0);
+    const incomeToday = incomeSince(periodStarts.day);
+    const incomeThisWeek = incomeSince(periodStarts.week);
+    const incomeThisMonth = incomeSince(periodStarts.month);
+    const incomeThisYear = incomeSince(periodStarts.year);
 
     const dates = lastDays(14);
     const attendanceIndex = new Map(
@@ -399,34 +503,25 @@ const serviceActivities = serviceActivitiesRaw.map((item: any) => ({
         item,
       ]),
     );
-
-    const attendanceSummary = users.map((user: any) => {
+    const attendanceSummary = performanceUsers.map((employee: any) => {
       const records = dates
-        .map((date) => attendanceIndex.get(`${user.id}:${isoDay(date)}`))
-        .filter(Boolean);
-      const present = records.filter(
-        (record: any) =>
-          record.mark === "PRESENT" || record.mark === "LATE",
+        .map((date) => attendanceIndex.get(`${employee.id}:${isoDay(date)}`))
+        .filter(Boolean) as any[];
+      const attended = records.filter((record) =>
+        ["PRESENT", "LATE"].includes(record.mark),
       ).length;
-      const score = dates.length ? Math.round((present / dates.length) * 100) : 0;
-
+      const score = Math.round(percentage(attended, dates.length, 0));
       return {
-        userId: user.id,
-        userName: user.name,
-        userRole: user.role,
-        present,
-        absent: records.filter((record: any) => record.mark === "ABSENT").length,
-        late: records.filter((record: any) => record.mark === "LATE").length,
-        leave: records.filter((record: any) => record.mark === "LEAVE").length,
+        userId: employee.id,
+        userName: employee.name,
+        userRole: employee.role,
+        profileImageUrl: employee.profileImageUrl,
+        present: records.filter((row) => row.mark === "PRESENT").length,
+        late: records.filter((row) => row.mark === "LATE").length,
+        absent: records.filter((row) => row.mark === "ABSENT").length,
+        leave: records.filter((row) => row.mark === "LEAVE").length,
         score,
-        rating:
-          score >= 90
-            ? "Excellent"
-            : score >= 75
-              ? "Good"
-              : score >= 60
-                ? "Fair"
-                : "Needs attention",
+        rating: score >= 90 ? "EXCELLENT" : score >= 75 ? "GOOD" : score >= 60 ? "FAIR" : "NEEDS_ATTENTION",
       };
     });
 
@@ -438,103 +533,102 @@ const serviceActivities = serviceActivitiesRaw.map((item: any) => ({
             item.status === "VERIFIED" &&
             isoDay(new Date(item.depositDate)) === key,
         )
-        .reduce((sum: number, item: any) => sum + toNumber(item.amount), 0);
-
+        .reduce((sum: number, item: any) => sum + number(item.amount), 0);
       const cashOut = expenses
         .filter(
           (item: any) =>
             item.status === "APPROVED" &&
             isoDay(new Date(item.expenseDate)) === key,
         )
-        .reduce((sum: number, item: any) => sum + toNumber(item.amount), 0);
-
+        .reduce((sum: number, item: any) => sum + number(item.amount), 0);
+      const income = serviceVisits
+        .filter(
+          (item: any) =>
+            item.serviceProvidedAt &&
+            isoDay(new Date(item.serviceProvidedAt)) === key,
+        )
+        .reduce((sum: number, item: any) => sum + number(item.companyIncome), 0);
       return {
         id: key,
         date,
         openingBalance: 0,
-        cashIn,
+        cashIn: cashIn + income,
         cashOut,
-        closingBalance: cashIn - cashOut,
+        closingBalance: cashIn + income - cashOut,
         status: "OPEN",
       };
     });
 
-    const company = {
-      id: companyId,
-      name:
-        text(companyRaw?.name) ||
-        text(sessionUser.companyName) ||
-        "Company Portal",
-      code: text(companyRaw?.code),
-      email: text(companyRaw?.email),
-      phone: text(companyRaw?.phone),
-      address: text(companyRaw?.address),
-      status: text(companyRaw?.status) || "ACTIVE",
-    };
-
-    const unreadNotifications = notifications.filter(
-      (item: any) => !item.isRead,
-    ).length;
-    const activeGpsDevices = gpsDevices.filter(
-      (item: any) => item.status === "ACTIVE",
-    ).length;
-    const offlineGpsDevices = gpsDevices.filter((item: any) => {
-      if (!item.lastSeenAt) return true;
-      return Date.now() - new Date(item.lastSeenAt).getTime() > 10 * 60 * 1000;
-    }).length;
+    const targetedNotifications = notificationsRaw.filter(
+      (item: any) =>
+        (!item.targetUserId && !item.targetRole) ||
+        item.targetUserId === sessionUser.id ||
+        item.targetRole === sessionUser.role,
+    );
 
     return NextResponse.json({
       success: true,
-      company,
+      company: company || {
+        id: companyId,
+        name: sessionUser.companyName || "Company Portal",
+      },
       users,
       branches,
       expenses,
       bankVerifications,
       attendance,
       attendanceSummary,
-      notifications,
+      performanceRows,
+      notifications: targetedNotifications,
+      allNotifications: notificationsRaw,
       gpsDevices,
       gpsPings,
-      settings: settingsRaw ?? defaultSettings,
-      activities: auditRaw,
+      settings,
+      activities,
       financialDays,
       customers,
       serviceActivities,
+      brokers,
+      documents: documentsRaw,
+      approvalDecisions: approvalsRaw,
+      serviceVisits,
+      floatTransactions,
+      staffCollections,
+      networkBalances,
+      importedBankStatements,
+      importedBankTransactions,
       stats: {
         totalUsers: users.length,
         activeUsers: users.filter((item: any) => item.status === "ACTIVE").length,
-        suspendedUsers: users.filter(
-          (item: any) => item.status === "SUSPENDED",
-        ).length,
-        totalBranches: branches.length,
+        totalBrokers: brokers.length,
         totalExpenses,
         approvedExpenses,
-        pendingExpenses: expenses.filter(
-          (item: any) => item.status === "PENDING",
-        ).length,
-        rejectedExpenses: expenses.filter(
-          (item: any) => item.status === "REJECTED",
-        ).length,
+        pendingExpenses: expenses.filter((item: any) => item.status === "PENDING").length,
+        rejectedExpenses: expenses.filter((item: any) => item.status === "REJECTED").length,
         totalDeposits,
-        pendingBankVerifications: bankVerifications.filter(
-          (item: any) => item.status === "PENDING",
+        pendingBankVerifications: bankVerifications.filter((item: any) => item.status === "PENDING").length,
+        bankMismatches: bankVerifications.filter((item: any) =>
+          ["AMOUNT_MISMATCH", "MISSING_RECEIPT", "MISSING_BANK_RECORD", "REJECTED"].includes(item.status),
         ).length,
-        bankMismatches: bankVerifications.filter(
-          (item: any) =>
-            !["PENDING", "VERIFIED"].includes(text(item.status)),
+        insufficientProofs: bankVerifications.filter((item: any) => item.proofInspectionStatus === "INSUFFICIENT").length,
+        netCash: totalDeposits + totalCompanyIncome - approvedExpenses,
+        totalCompanyIncome,
+        incomeToday,
+        incomeThisWeek,
+        incomeThisMonth,
+        incomeThisYear,
+        totalFloatIssued,
+        totalFloatReturned,
+        outstandingFloat,
+        activeGpsDevices: gpsDevices.filter((item: any) => item.status === "ACTIVE").length,
+        offlineGpsDevices: gpsDevices.filter((item: any) =>
+          !item.lastSeenAt || Date.now() - new Date(item.lastSeenAt).getTime() > 10 * 60_000,
         ).length,
-        totalNotifications: notifications.length,
-        unreadNotifications,
-        activeGpsDevices,
-        offlineGpsDevices,
-        gpsAlerts: offlineGpsDevices,
-        netCash: totalDeposits - approvedExpenses,
-        totalCustomers: customers.length,
-        totalServiceActivities: serviceActivities.length,
-        serviceRevenue: serviceActivities.reduce(
-          (sum: number, item: any) => sum + toNumber(item.amount),
-          0,
-        ),
+        unreadNotifications: targetedNotifications.filter((item: any) => !item.isRead).length,
+        overdueProofs: serviceVisits.filter((item: any) => item.status === "LATE_PROOF").length,
+        lowPerformers: performanceRows.filter((item: any) => item.needsAlert).length,
+        lowPerformingStaff: performanceRows.filter((item: any) => item.needsAlert).length,
+        totalServices: serviceActivities.length,
       },
     });
   } catch (error) {

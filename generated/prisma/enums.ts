@@ -246,3 +246,142 @@ export const StaffFileKind = {
 } as const
 
 export type StaffFileKind = (typeof StaffFileKind)[keyof typeof StaffFileKind]
+
+
+export const ImportedDataSourceType = {
+  EXCEL_AGENT_MASTER: 'EXCEL_AGENT_MASTER',
+  BANK_STATEMENT_PDF: 'BANK_STATEMENT_PDF'
+} as const
+
+export type ImportedDataSourceType = (typeof ImportedDataSourceType)[keyof typeof ImportedDataSourceType]
+
+
+export const ImportBatchStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  PARTIAL: 'PARTIAL',
+  FAILED: 'FAILED'
+} as const
+
+export type ImportBatchStatus = (typeof ImportBatchStatus)[keyof typeof ImportBatchStatus]
+
+
+export const BankStatementTransactionDirection = {
+  CREDIT: 'CREDIT',
+  DEBIT: 'DEBIT'
+} as const
+
+export type BankStatementTransactionDirection = (typeof BankStatementTransactionDirection)[keyof typeof BankStatementTransactionDirection]
+
+
+export const BankTransactionMatchStatus = {
+  MATCHED: 'MATCHED',
+  REVIEW_REQUIRED: 'REVIEW_REQUIRED',
+  UNMATCHED: 'UNMATCHED',
+  NOT_APPLICABLE: 'NOT_APPLICABLE'
+} as const
+
+export type BankTransactionMatchStatus = (typeof BankTransactionMatchStatus)[keyof typeof BankTransactionMatchStatus]
+
+
+export const PortalGender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER'
+} as const
+
+export type PortalGender = (typeof PortalGender)[keyof typeof PortalGender]
+
+
+export const AgentTitle = {
+  MR: 'MR',
+  MRS: 'MRS',
+  MS: 'MS'
+} as const
+
+export type AgentTitle = (typeof AgentTitle)[keyof typeof AgentTitle]
+
+
+export const IdentityType = {
+  NIDA: 'NIDA',
+  PASSPORT: 'PASSPORT',
+  DRIVING_LICENCE: 'DRIVING_LICENCE',
+  WORK_ID: 'WORK_ID',
+  VOTER_CARD: 'VOTER_CARD',
+  LOCAL_GOVERNMENT_LETTER: 'LOCAL_GOVERNMENT_LETTER',
+  OTHER: 'OTHER'
+} as const
+
+export type IdentityType = (typeof IdentityType)[keyof typeof IdentityType]
+
+
+export const MobileNetwork = {
+  VODACOM: 'VODACOM',
+  YAS_MIX: 'YAS_MIX',
+  AIRTEL: 'AIRTEL',
+  HALOTEL: 'HALOTEL',
+  OTHER: 'OTHER'
+} as const
+
+export type MobileNetwork = (typeof MobileNetwork)[keyof typeof MobileNetwork]
+
+
+export const ProofInspectionStatus = {
+  PENDING: 'PENDING',
+  CHECKING: 'CHECKING',
+  SUFFICIENT: 'SUFFICIENT',
+  INSUFFICIENT: 'INSUFFICIENT',
+  MANUAL_REVIEW: 'MANUAL_REVIEW',
+  ERROR: 'ERROR'
+} as const
+
+export type ProofInspectionStatus = (typeof ProofInspectionStatus)[keyof typeof ProofInspectionStatus]
+
+
+export const PortalDocumentKind = {
+  PROFILE_IMAGE: 'PROFILE_IMAGE',
+  SMS_SCREENSHOT: 'SMS_SCREENSHOT',
+  BANK_SLIP: 'BANK_SLIP',
+  BANK_RECEIPT: 'BANK_RECEIPT',
+  BANK_STATEMENT: 'BANK_STATEMENT',
+  PDF: 'PDF',
+  DOCUMENT: 'DOCUMENT',
+  IMAGE: 'IMAGE',
+  SERVICE_PROOF: 'SERVICE_PROOF',
+  EXPENSE_RECEIPT: 'EXPENSE_RECEIPT',
+  SIGNATURE: 'SIGNATURE',
+  OTHER: 'OTHER'
+} as const
+
+export type PortalDocumentKind = (typeof PortalDocumentKind)[keyof typeof PortalDocumentKind]
+
+
+export const ApprovalItemType = {
+  EXPENSE: 'EXPENSE',
+  BANK_VERIFICATION: 'BANK_VERIFICATION'
+} as const
+
+export type ApprovalItemType = (typeof ApprovalItemType)[keyof typeof ApprovalItemType]
+
+
+export const ApprovalDecisionValue = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ApprovalDecisionValue = (typeof ApprovalDecisionValue)[keyof typeof ApprovalDecisionValue]
+
+
+export const BrokerVisitStatus = {
+  STARTED: 'STARTED',
+  ARRIVED: 'ARRIVED',
+  SERVICE_RECORDED: 'SERVICE_RECORDED',
+  PROOF_PENDING: 'PROOF_PENDING',
+  COMPLETED: 'COMPLETED',
+  LATE_PROOF: 'LATE_PROOF',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type BrokerVisitStatus = (typeof BrokerVisitStatus)[keyof typeof BrokerVisitStatus]

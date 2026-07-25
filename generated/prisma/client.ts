@@ -216,3 +216,43 @@ export type StaffCustomerAssignment = Prisma.StaffCustomerAssignmentModel
  * 
  */
 export type StaffFile = Prisma.StaffFileModel
+/**
+ * Model DataImportBatch
+ * 
+ */
+export type DataImportBatch = Prisma.DataImportBatchModel
+/**
+ * Model ImportedBankStatement
+ * 
+ */
+export type ImportedBankStatement = Prisma.ImportedBankStatementModel
+/**
+ * Model ImportedBankTransaction
+ * 
+ */
+export type ImportedBankTransaction = Prisma.ImportedBankTransactionModel
+/**
+ * Model BrokerAgentAccount
+ * 
+ */
+export type BrokerAgentAccount = Prisma.BrokerAgentAccountModel
+/**
+ * Model PortalDocument
+ * 
+ */
+export type PortalDocument = Prisma.PortalDocumentModel
+/**
+ * Model ApprovalDecision
+ * 
+ */
+export type ApprovalDecision = Prisma.ApprovalDecisionModel
+/**
+ * Model BrokerServiceVisit
+ * 
+ */
+export type BrokerServiceVisit = Prisma.BrokerServiceVisitModel
+/**
+ * Model NetworkBalance
+ * 
+ */
+export type NetworkBalance = Prisma.NetworkBalanceModel

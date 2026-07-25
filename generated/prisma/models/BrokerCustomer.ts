@@ -29,11 +29,13 @@ export type AggregateBrokerCustomer = {
 export type BrokerCustomerAvgAggregateOutputType = {
   latitude: number | null
   longitude: number | null
+  sourceRowNumber: number | null
 }
 
 export type BrokerCustomerSumAggregateOutputType = {
   latitude: number | null
   longitude: number | null
+  sourceRowNumber: number | null
 }
 
 export type BrokerCustomerMinAggregateOutputType = {
@@ -42,6 +44,11 @@ export type BrokerCustomerMinAggregateOutputType = {
   code: string | null
   name: string | null
   businessName: string | null
+  title: $Enums.AgentTitle | null
+  firstName: string | null
+  surname: string | null
+  tinNumber: string | null
+  officialAgentNo: string | null
   phone: string | null
   alternatePhone: string | null
   email: string | null
@@ -50,10 +57,36 @@ export type BrokerCustomerMinAggregateOutputType = {
   district: string | null
   ward: string | null
   address: string | null
+  postalAddress: string | null
+  city: string | null
+  country: string | null
+  nationality: string | null
+  dateOfBirth: Date | null
+  gender: $Enums.PortalGender | null
+  identityType: $Enums.IdentityType | null
+  identityNumber: string | null
+  identityIssuedBy: string | null
+  identityOther: string | null
+  profileImageUrl: string | null
+  signatureUrl: string | null
+  registrationDate: Date | null
+  attendedBy: string | null
+  attendedSignatureUrl: string | null
+  attendedDate: Date | null
+  attendedLocation: string | null
   latitude: number | null
   longitude: number | null
   status: $Enums.BrokerCustomerStatus | null
   notes: string | null
+  importBatchId: string | null
+  sourceRowNumber: number | null
+  sourceSheetName: string | null
+  sourceAgentName: string | null
+  sourceMsisdn: string | null
+  sourceAliasCode: string | null
+  normalizedName: string | null
+  isImported: boolean | null
+  importedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +97,11 @@ export type BrokerCustomerMaxAggregateOutputType = {
   code: string | null
   name: string | null
   businessName: string | null
+  title: $Enums.AgentTitle | null
+  firstName: string | null
+  surname: string | null
+  tinNumber: string | null
+  officialAgentNo: string | null
   phone: string | null
   alternatePhone: string | null
   email: string | null
@@ -72,10 +110,36 @@ export type BrokerCustomerMaxAggregateOutputType = {
   district: string | null
   ward: string | null
   address: string | null
+  postalAddress: string | null
+  city: string | null
+  country: string | null
+  nationality: string | null
+  dateOfBirth: Date | null
+  gender: $Enums.PortalGender | null
+  identityType: $Enums.IdentityType | null
+  identityNumber: string | null
+  identityIssuedBy: string | null
+  identityOther: string | null
+  profileImageUrl: string | null
+  signatureUrl: string | null
+  registrationDate: Date | null
+  attendedBy: string | null
+  attendedSignatureUrl: string | null
+  attendedDate: Date | null
+  attendedLocation: string | null
   latitude: number | null
   longitude: number | null
   status: $Enums.BrokerCustomerStatus | null
   notes: string | null
+  importBatchId: string | null
+  sourceRowNumber: number | null
+  sourceSheetName: string | null
+  sourceAgentName: string | null
+  sourceMsisdn: string | null
+  sourceAliasCode: string | null
+  normalizedName: string | null
+  isImported: boolean | null
+  importedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -86,6 +150,11 @@ export type BrokerCustomerCountAggregateOutputType = {
   code: number
   name: number
   businessName: number
+  title: number
+  firstName: number
+  surname: number
+  tinNumber: number
+  officialAgentNo: number
   phone: number
   alternatePhone: number
   email: number
@@ -94,10 +163,36 @@ export type BrokerCustomerCountAggregateOutputType = {
   district: number
   ward: number
   address: number
+  postalAddress: number
+  city: number
+  country: number
+  nationality: number
+  dateOfBirth: number
+  gender: number
+  identityType: number
+  identityNumber: number
+  identityIssuedBy: number
+  identityOther: number
+  profileImageUrl: number
+  signatureUrl: number
+  registrationDate: number
+  attendedBy: number
+  attendedSignatureUrl: number
+  attendedDate: number
+  attendedLocation: number
   latitude: number
   longitude: number
   status: number
   notes: number
+  importBatchId: number
+  sourceRowNumber: number
+  sourceSheetName: number
+  sourceAgentName: number
+  sourceMsisdn: number
+  sourceAliasCode: number
+  normalizedName: number
+  isImported: number
+  importedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -107,11 +202,13 @@ export type BrokerCustomerCountAggregateOutputType = {
 export type BrokerCustomerAvgAggregateInputType = {
   latitude?: true
   longitude?: true
+  sourceRowNumber?: true
 }
 
 export type BrokerCustomerSumAggregateInputType = {
   latitude?: true
   longitude?: true
+  sourceRowNumber?: true
 }
 
 export type BrokerCustomerMinAggregateInputType = {
@@ -120,6 +217,11 @@ export type BrokerCustomerMinAggregateInputType = {
   code?: true
   name?: true
   businessName?: true
+  title?: true
+  firstName?: true
+  surname?: true
+  tinNumber?: true
+  officialAgentNo?: true
   phone?: true
   alternatePhone?: true
   email?: true
@@ -128,10 +230,36 @@ export type BrokerCustomerMinAggregateInputType = {
   district?: true
   ward?: true
   address?: true
+  postalAddress?: true
+  city?: true
+  country?: true
+  nationality?: true
+  dateOfBirth?: true
+  gender?: true
+  identityType?: true
+  identityNumber?: true
+  identityIssuedBy?: true
+  identityOther?: true
+  profileImageUrl?: true
+  signatureUrl?: true
+  registrationDate?: true
+  attendedBy?: true
+  attendedSignatureUrl?: true
+  attendedDate?: true
+  attendedLocation?: true
   latitude?: true
   longitude?: true
   status?: true
   notes?: true
+  importBatchId?: true
+  sourceRowNumber?: true
+  sourceSheetName?: true
+  sourceAgentName?: true
+  sourceMsisdn?: true
+  sourceAliasCode?: true
+  normalizedName?: true
+  isImported?: true
+  importedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -142,6 +270,11 @@ export type BrokerCustomerMaxAggregateInputType = {
   code?: true
   name?: true
   businessName?: true
+  title?: true
+  firstName?: true
+  surname?: true
+  tinNumber?: true
+  officialAgentNo?: true
   phone?: true
   alternatePhone?: true
   email?: true
@@ -150,10 +283,36 @@ export type BrokerCustomerMaxAggregateInputType = {
   district?: true
   ward?: true
   address?: true
+  postalAddress?: true
+  city?: true
+  country?: true
+  nationality?: true
+  dateOfBirth?: true
+  gender?: true
+  identityType?: true
+  identityNumber?: true
+  identityIssuedBy?: true
+  identityOther?: true
+  profileImageUrl?: true
+  signatureUrl?: true
+  registrationDate?: true
+  attendedBy?: true
+  attendedSignatureUrl?: true
+  attendedDate?: true
+  attendedLocation?: true
   latitude?: true
   longitude?: true
   status?: true
   notes?: true
+  importBatchId?: true
+  sourceRowNumber?: true
+  sourceSheetName?: true
+  sourceAgentName?: true
+  sourceMsisdn?: true
+  sourceAliasCode?: true
+  normalizedName?: true
+  isImported?: true
+  importedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -164,6 +323,11 @@ export type BrokerCustomerCountAggregateInputType = {
   code?: true
   name?: true
   businessName?: true
+  title?: true
+  firstName?: true
+  surname?: true
+  tinNumber?: true
+  officialAgentNo?: true
   phone?: true
   alternatePhone?: true
   email?: true
@@ -172,10 +336,36 @@ export type BrokerCustomerCountAggregateInputType = {
   district?: true
   ward?: true
   address?: true
+  postalAddress?: true
+  city?: true
+  country?: true
+  nationality?: true
+  dateOfBirth?: true
+  gender?: true
+  identityType?: true
+  identityNumber?: true
+  identityIssuedBy?: true
+  identityOther?: true
+  profileImageUrl?: true
+  signatureUrl?: true
+  registrationDate?: true
+  attendedBy?: true
+  attendedSignatureUrl?: true
+  attendedDate?: true
+  attendedLocation?: true
   latitude?: true
   longitude?: true
   status?: true
   notes?: true
+  importBatchId?: true
+  sourceRowNumber?: true
+  sourceSheetName?: true
+  sourceAgentName?: true
+  sourceMsisdn?: true
+  sourceAliasCode?: true
+  normalizedName?: true
+  isImported?: true
+  importedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -273,6 +463,11 @@ export type BrokerCustomerGroupByOutputType = {
   code: string
   name: string
   businessName: string | null
+  title: $Enums.AgentTitle | null
+  firstName: string | null
+  surname: string | null
+  tinNumber: string | null
+  officialAgentNo: string | null
   phone: string
   alternatePhone: string | null
   email: string | null
@@ -281,10 +476,36 @@ export type BrokerCustomerGroupByOutputType = {
   district: string | null
   ward: string | null
   address: string | null
+  postalAddress: string | null
+  city: string | null
+  country: string | null
+  nationality: string | null
+  dateOfBirth: Date | null
+  gender: $Enums.PortalGender | null
+  identityType: $Enums.IdentityType | null
+  identityNumber: string | null
+  identityIssuedBy: string | null
+  identityOther: string | null
+  profileImageUrl: string | null
+  signatureUrl: string | null
+  registrationDate: Date | null
+  attendedBy: string | null
+  attendedSignatureUrl: string | null
+  attendedDate: Date | null
+  attendedLocation: string | null
   latitude: number | null
   longitude: number | null
   status: $Enums.BrokerCustomerStatus
   notes: string | null
+  importBatchId: string | null
+  sourceRowNumber: number | null
+  sourceSheetName: string | null
+  sourceAgentName: string | null
+  sourceMsisdn: string | null
+  sourceAliasCode: string | null
+  normalizedName: string | null
+  isImported: boolean
+  importedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: BrokerCustomerCountAggregateOutputType | null
@@ -318,6 +539,11 @@ export type BrokerCustomerWhereInput = {
   code?: Prisma.StringFilter<"BrokerCustomer"> | string
   name?: Prisma.StringFilter<"BrokerCustomer"> | string
   businessName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  title?: Prisma.EnumAgentTitleNullableFilter<"BrokerCustomer"> | $Enums.AgentTitle | null
+  firstName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  surname?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  tinNumber?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  officialAgentNo?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   phone?: Prisma.StringFilter<"BrokerCustomer"> | string
   alternatePhone?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   email?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
@@ -326,16 +552,46 @@ export type BrokerCustomerWhereInput = {
   district?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   ward?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   address?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  postalAddress?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  city?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  country?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  nationality?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableFilter<"BrokerCustomer"> | $Enums.PortalGender | null
+  identityType?: Prisma.EnumIdentityTypeNullableFilter<"BrokerCustomer"> | $Enums.IdentityType | null
+  identityNumber?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  identityIssuedBy?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  identityOther?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  profileImageUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  signatureUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  registrationDate?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  attendedBy?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  attendedSignatureUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  attendedDate?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  attendedLocation?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   latitude?: Prisma.FloatNullableFilter<"BrokerCustomer"> | number | null
   longitude?: Prisma.FloatNullableFilter<"BrokerCustomer"> | number | null
   status?: Prisma.EnumBrokerCustomerStatusFilter<"BrokerCustomer"> | $Enums.BrokerCustomerStatus
   notes?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  importBatchId?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceRowNumber?: Prisma.IntNullableFilter<"BrokerCustomer"> | number | null
+  sourceSheetName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceAgentName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceMsisdn?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceAliasCode?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  normalizedName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  isImported?: Prisma.BoolFilter<"BrokerCustomer"> | boolean
+  importedAt?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"BrokerCustomer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BrokerCustomer"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   floatTransactions?: Prisma.FloatTransactionListRelationFilter
   staffCollections?: Prisma.StaffCollectionListRelationFilter
   serviceActivities?: Prisma.ServiceActivityListRelationFilter
+  importBatch?: Prisma.XOR<Prisma.DataImportBatchNullableScalarRelationFilter, Prisma.DataImportBatchWhereInput> | null
+  bankTransactions?: Prisma.ImportedBankTransactionListRelationFilter
+  agentAccounts?: Prisma.BrokerAgentAccountListRelationFilter
+  serviceVisits?: Prisma.BrokerServiceVisitListRelationFilter
 }
 
 export type BrokerCustomerOrderByWithRelationInput = {
@@ -344,6 +600,11 @@ export type BrokerCustomerOrderByWithRelationInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   businessName?: Prisma.SortOrderInput | Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  surname?: Prisma.SortOrderInput | Prisma.SortOrder
+  tinNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  officialAgentNo?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrder
   alternatePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -352,16 +613,46 @@ export type BrokerCustomerOrderByWithRelationInput = {
   district?: Prisma.SortOrderInput | Prisma.SortOrder
   ward?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  postalAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityType?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityIssuedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  signatureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedSignatureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedLocation?: Prisma.SortOrderInput | Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  importBatchId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceRowNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceSheetName?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceAgentName?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceMsisdn?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceAliasCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  normalizedName?: Prisma.SortOrderInput | Prisma.SortOrder
+  isImported?: Prisma.SortOrder
+  importedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
   floatTransactions?: Prisma.FloatTransactionOrderByRelationAggregateInput
   staffCollections?: Prisma.StaffCollectionOrderByRelationAggregateInput
   serviceActivities?: Prisma.ServiceActivityOrderByRelationAggregateInput
+  importBatch?: Prisma.DataImportBatchOrderByWithRelationInput
+  bankTransactions?: Prisma.ImportedBankTransactionOrderByRelationAggregateInput
+  agentAccounts?: Prisma.BrokerAgentAccountOrderByRelationAggregateInput
+  serviceVisits?: Prisma.BrokerServiceVisitOrderByRelationAggregateInput
   _relevance?: Prisma.BrokerCustomerOrderByRelevanceInput
 }
 
@@ -375,6 +666,11 @@ export type BrokerCustomerWhereUniqueInput = Prisma.AtLeast<{
   code?: Prisma.StringFilter<"BrokerCustomer"> | string
   name?: Prisma.StringFilter<"BrokerCustomer"> | string
   businessName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  title?: Prisma.EnumAgentTitleNullableFilter<"BrokerCustomer"> | $Enums.AgentTitle | null
+  firstName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  surname?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  tinNumber?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  officialAgentNo?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   phone?: Prisma.StringFilter<"BrokerCustomer"> | string
   alternatePhone?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   email?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
@@ -383,16 +679,46 @@ export type BrokerCustomerWhereUniqueInput = Prisma.AtLeast<{
   district?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   ward?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   address?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  postalAddress?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  city?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  country?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  nationality?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableFilter<"BrokerCustomer"> | $Enums.PortalGender | null
+  identityType?: Prisma.EnumIdentityTypeNullableFilter<"BrokerCustomer"> | $Enums.IdentityType | null
+  identityNumber?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  identityIssuedBy?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  identityOther?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  profileImageUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  signatureUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  registrationDate?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  attendedBy?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  attendedSignatureUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  attendedDate?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  attendedLocation?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   latitude?: Prisma.FloatNullableFilter<"BrokerCustomer"> | number | null
   longitude?: Prisma.FloatNullableFilter<"BrokerCustomer"> | number | null
   status?: Prisma.EnumBrokerCustomerStatusFilter<"BrokerCustomer"> | $Enums.BrokerCustomerStatus
   notes?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  importBatchId?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceRowNumber?: Prisma.IntNullableFilter<"BrokerCustomer"> | number | null
+  sourceSheetName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceAgentName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceMsisdn?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceAliasCode?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  normalizedName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  isImported?: Prisma.BoolFilter<"BrokerCustomer"> | boolean
+  importedAt?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"BrokerCustomer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BrokerCustomer"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   floatTransactions?: Prisma.FloatTransactionListRelationFilter
   staffCollections?: Prisma.StaffCollectionListRelationFilter
   serviceActivities?: Prisma.ServiceActivityListRelationFilter
+  importBatch?: Prisma.XOR<Prisma.DataImportBatchNullableScalarRelationFilter, Prisma.DataImportBatchWhereInput> | null
+  bankTransactions?: Prisma.ImportedBankTransactionListRelationFilter
+  agentAccounts?: Prisma.BrokerAgentAccountListRelationFilter
+  serviceVisits?: Prisma.BrokerServiceVisitListRelationFilter
 }, "id" | "companyId_code">
 
 export type BrokerCustomerOrderByWithAggregationInput = {
@@ -401,6 +727,11 @@ export type BrokerCustomerOrderByWithAggregationInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   businessName?: Prisma.SortOrderInput | Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  surname?: Prisma.SortOrderInput | Prisma.SortOrder
+  tinNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  officialAgentNo?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrder
   alternatePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -409,10 +740,36 @@ export type BrokerCustomerOrderByWithAggregationInput = {
   district?: Prisma.SortOrderInput | Prisma.SortOrder
   ward?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  postalAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityType?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityIssuedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityOther?: Prisma.SortOrderInput | Prisma.SortOrder
+  profileImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  signatureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedSignatureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  attendedLocation?: Prisma.SortOrderInput | Prisma.SortOrder
   latitude?: Prisma.SortOrderInput | Prisma.SortOrder
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  importBatchId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceRowNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceSheetName?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceAgentName?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceMsisdn?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceAliasCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  normalizedName?: Prisma.SortOrderInput | Prisma.SortOrder
+  isImported?: Prisma.SortOrder
+  importedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BrokerCustomerCountOrderByAggregateInput
@@ -431,6 +788,11 @@ export type BrokerCustomerScalarWhereWithAggregatesInput = {
   code?: Prisma.StringWithAggregatesFilter<"BrokerCustomer"> | string
   name?: Prisma.StringWithAggregatesFilter<"BrokerCustomer"> | string
   businessName?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  title?: Prisma.EnumAgentTitleNullableWithAggregatesFilter<"BrokerCustomer"> | $Enums.AgentTitle | null
+  firstName?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  surname?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  tinNumber?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  officialAgentNo?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
   phone?: Prisma.StringWithAggregatesFilter<"BrokerCustomer"> | string
   alternatePhone?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
@@ -439,10 +801,36 @@ export type BrokerCustomerScalarWhereWithAggregatesInput = {
   district?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
   ward?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  postalAddress?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  city?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  country?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  nationality?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"BrokerCustomer"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableWithAggregatesFilter<"BrokerCustomer"> | $Enums.PortalGender | null
+  identityType?: Prisma.EnumIdentityTypeNullableWithAggregatesFilter<"BrokerCustomer"> | $Enums.IdentityType | null
+  identityNumber?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  identityIssuedBy?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  identityOther?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  profileImageUrl?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  signatureUrl?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  registrationDate?: Prisma.DateTimeNullableWithAggregatesFilter<"BrokerCustomer"> | Date | string | null
+  attendedBy?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  attendedSignatureUrl?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  attendedDate?: Prisma.DateTimeNullableWithAggregatesFilter<"BrokerCustomer"> | Date | string | null
+  attendedLocation?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
   latitude?: Prisma.FloatNullableWithAggregatesFilter<"BrokerCustomer"> | number | null
   longitude?: Prisma.FloatNullableWithAggregatesFilter<"BrokerCustomer"> | number | null
   status?: Prisma.EnumBrokerCustomerStatusWithAggregatesFilter<"BrokerCustomer"> | $Enums.BrokerCustomerStatus
   notes?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  importBatchId?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  sourceRowNumber?: Prisma.IntNullableWithAggregatesFilter<"BrokerCustomer"> | number | null
+  sourceSheetName?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  sourceAgentName?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  sourceMsisdn?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  sourceAliasCode?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  normalizedName?: Prisma.StringNullableWithAggregatesFilter<"BrokerCustomer"> | string | null
+  isImported?: Prisma.BoolWithAggregatesFilter<"BrokerCustomer"> | boolean
+  importedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BrokerCustomer"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BrokerCustomer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BrokerCustomer"> | Date | string
 }
@@ -452,6 +840,11 @@ export type BrokerCustomerCreateInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -460,16 +853,45 @@ export type BrokerCustomerCreateInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
   floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
   staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerUncheckedCreateInput = {
@@ -478,6 +900,11 @@ export type BrokerCustomerUncheckedCreateInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -486,15 +913,44 @@ export type BrokerCustomerUncheckedCreateInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
   staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerUpdateInput = {
@@ -502,6 +958,11 @@ export type BrokerCustomerUpdateInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -510,16 +971,45 @@ export type BrokerCustomerUpdateInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
   floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
   staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerUncheckedUpdateInput = {
@@ -528,6 +1018,11 @@ export type BrokerCustomerUncheckedUpdateInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -536,15 +1031,44 @@ export type BrokerCustomerUncheckedUpdateInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
   staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerCreateManyInput = {
@@ -553,6 +1077,11 @@ export type BrokerCustomerCreateManyInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -561,10 +1090,36 @@ export type BrokerCustomerCreateManyInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -574,6 +1129,11 @@ export type BrokerCustomerUpdateManyMutationInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -582,10 +1142,35 @@ export type BrokerCustomerUpdateManyMutationInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -596,6 +1181,11 @@ export type BrokerCustomerUncheckedUpdateManyInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -604,10 +1194,36 @@ export type BrokerCustomerUncheckedUpdateManyInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -644,6 +1260,11 @@ export type BrokerCustomerCountOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   businessName?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  surname?: Prisma.SortOrder
+  tinNumber?: Prisma.SortOrder
+  officialAgentNo?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   alternatePhone?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -652,10 +1273,36 @@ export type BrokerCustomerCountOrderByAggregateInput = {
   district?: Prisma.SortOrder
   ward?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  postalAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  identityType?: Prisma.SortOrder
+  identityNumber?: Prisma.SortOrder
+  identityIssuedBy?: Prisma.SortOrder
+  identityOther?: Prisma.SortOrder
+  profileImageUrl?: Prisma.SortOrder
+  signatureUrl?: Prisma.SortOrder
+  registrationDate?: Prisma.SortOrder
+  attendedBy?: Prisma.SortOrder
+  attendedSignatureUrl?: Prisma.SortOrder
+  attendedDate?: Prisma.SortOrder
+  attendedLocation?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  importBatchId?: Prisma.SortOrder
+  sourceRowNumber?: Prisma.SortOrder
+  sourceSheetName?: Prisma.SortOrder
+  sourceAgentName?: Prisma.SortOrder
+  sourceMsisdn?: Prisma.SortOrder
+  sourceAliasCode?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
+  isImported?: Prisma.SortOrder
+  importedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -663,6 +1310,7 @@ export type BrokerCustomerCountOrderByAggregateInput = {
 export type BrokerCustomerAvgOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  sourceRowNumber?: Prisma.SortOrder
 }
 
 export type BrokerCustomerMaxOrderByAggregateInput = {
@@ -671,6 +1319,11 @@ export type BrokerCustomerMaxOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   businessName?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  surname?: Prisma.SortOrder
+  tinNumber?: Prisma.SortOrder
+  officialAgentNo?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   alternatePhone?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -679,10 +1332,36 @@ export type BrokerCustomerMaxOrderByAggregateInput = {
   district?: Prisma.SortOrder
   ward?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  postalAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  identityType?: Prisma.SortOrder
+  identityNumber?: Prisma.SortOrder
+  identityIssuedBy?: Prisma.SortOrder
+  identityOther?: Prisma.SortOrder
+  profileImageUrl?: Prisma.SortOrder
+  signatureUrl?: Prisma.SortOrder
+  registrationDate?: Prisma.SortOrder
+  attendedBy?: Prisma.SortOrder
+  attendedSignatureUrl?: Prisma.SortOrder
+  attendedDate?: Prisma.SortOrder
+  attendedLocation?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  importBatchId?: Prisma.SortOrder
+  sourceRowNumber?: Prisma.SortOrder
+  sourceSheetName?: Prisma.SortOrder
+  sourceAgentName?: Prisma.SortOrder
+  sourceMsisdn?: Prisma.SortOrder
+  sourceAliasCode?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
+  isImported?: Prisma.SortOrder
+  importedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -693,6 +1372,11 @@ export type BrokerCustomerMinOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   businessName?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  surname?: Prisma.SortOrder
+  tinNumber?: Prisma.SortOrder
+  officialAgentNo?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   alternatePhone?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -701,10 +1385,36 @@ export type BrokerCustomerMinOrderByAggregateInput = {
   district?: Prisma.SortOrder
   ward?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  postalAddress?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  identityType?: Prisma.SortOrder
+  identityNumber?: Prisma.SortOrder
+  identityIssuedBy?: Prisma.SortOrder
+  identityOther?: Prisma.SortOrder
+  profileImageUrl?: Prisma.SortOrder
+  signatureUrl?: Prisma.SortOrder
+  registrationDate?: Prisma.SortOrder
+  attendedBy?: Prisma.SortOrder
+  attendedSignatureUrl?: Prisma.SortOrder
+  attendedDate?: Prisma.SortOrder
+  attendedLocation?: Prisma.SortOrder
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  importBatchId?: Prisma.SortOrder
+  sourceRowNumber?: Prisma.SortOrder
+  sourceSheetName?: Prisma.SortOrder
+  sourceAgentName?: Prisma.SortOrder
+  sourceMsisdn?: Prisma.SortOrder
+  sourceAliasCode?: Prisma.SortOrder
+  normalizedName?: Prisma.SortOrder
+  isImported?: Prisma.SortOrder
+  importedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -712,6 +1422,12 @@ export type BrokerCustomerMinOrderByAggregateInput = {
 export type BrokerCustomerSumOrderByAggregateInput = {
   latitude?: Prisma.SortOrder
   longitude?: Prisma.SortOrder
+  sourceRowNumber?: Prisma.SortOrder
+}
+
+export type BrokerCustomerScalarRelationFilter = {
+  is?: Prisma.BrokerCustomerWhereInput
+  isNot?: Prisma.BrokerCustomerWhereInput
 }
 
 export type BrokerCustomerCreateNestedManyWithoutCompanyInput = {
@@ -788,6 +1504,14 @@ export type BrokerCustomerUpdateOneWithoutStaffCollectionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BrokerCustomerUpdateToOneWithWhereWithoutStaffCollectionsInput, Prisma.BrokerCustomerUpdateWithoutStaffCollectionsInput>, Prisma.BrokerCustomerUncheckedUpdateWithoutStaffCollectionsInput>
 }
 
+export type NullableEnumAgentTitleFieldUpdateOperationsInput = {
+  set?: $Enums.AgentTitle | null
+}
+
+export type NullableEnumIdentityTypeFieldUpdateOperationsInput = {
+  set?: $Enums.IdentityType | null
+}
+
 export type NullableFloatFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -798,6 +1522,14 @@ export type NullableFloatFieldUpdateOperationsInput = {
 
 export type EnumBrokerCustomerStatusFieldUpdateOperationsInput = {
   set?: $Enums.BrokerCustomerStatus
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type BrokerCustomerCreateNestedOneWithoutServiceActivitiesInput = {
@@ -816,11 +1548,102 @@ export type BrokerCustomerUpdateOneWithoutServiceActivitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BrokerCustomerUpdateToOneWithWhereWithoutServiceActivitiesInput, Prisma.BrokerCustomerUpdateWithoutServiceActivitiesInput>, Prisma.BrokerCustomerUncheckedUpdateWithoutServiceActivitiesInput>
 }
 
+export type BrokerCustomerCreateNestedManyWithoutImportBatchInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput> | Prisma.BrokerCustomerCreateWithoutImportBatchInput[] | Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput[]
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput | Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput[]
+  createMany?: Prisma.BrokerCustomerCreateManyImportBatchInputEnvelope
+  connect?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+}
+
+export type BrokerCustomerUncheckedCreateNestedManyWithoutImportBatchInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput> | Prisma.BrokerCustomerCreateWithoutImportBatchInput[] | Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput[]
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput | Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput[]
+  createMany?: Prisma.BrokerCustomerCreateManyImportBatchInputEnvelope
+  connect?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+}
+
+export type BrokerCustomerUpdateManyWithoutImportBatchNestedInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput> | Prisma.BrokerCustomerCreateWithoutImportBatchInput[] | Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput[]
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput | Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput[]
+  upsert?: Prisma.BrokerCustomerUpsertWithWhereUniqueWithoutImportBatchInput | Prisma.BrokerCustomerUpsertWithWhereUniqueWithoutImportBatchInput[]
+  createMany?: Prisma.BrokerCustomerCreateManyImportBatchInputEnvelope
+  set?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  disconnect?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  delete?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  connect?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  update?: Prisma.BrokerCustomerUpdateWithWhereUniqueWithoutImportBatchInput | Prisma.BrokerCustomerUpdateWithWhereUniqueWithoutImportBatchInput[]
+  updateMany?: Prisma.BrokerCustomerUpdateManyWithWhereWithoutImportBatchInput | Prisma.BrokerCustomerUpdateManyWithWhereWithoutImportBatchInput[]
+  deleteMany?: Prisma.BrokerCustomerScalarWhereInput | Prisma.BrokerCustomerScalarWhereInput[]
+}
+
+export type BrokerCustomerUncheckedUpdateManyWithoutImportBatchNestedInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput> | Prisma.BrokerCustomerCreateWithoutImportBatchInput[] | Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput[]
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput | Prisma.BrokerCustomerCreateOrConnectWithoutImportBatchInput[]
+  upsert?: Prisma.BrokerCustomerUpsertWithWhereUniqueWithoutImportBatchInput | Prisma.BrokerCustomerUpsertWithWhereUniqueWithoutImportBatchInput[]
+  createMany?: Prisma.BrokerCustomerCreateManyImportBatchInputEnvelope
+  set?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  disconnect?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  delete?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  connect?: Prisma.BrokerCustomerWhereUniqueInput | Prisma.BrokerCustomerWhereUniqueInput[]
+  update?: Prisma.BrokerCustomerUpdateWithWhereUniqueWithoutImportBatchInput | Prisma.BrokerCustomerUpdateWithWhereUniqueWithoutImportBatchInput[]
+  updateMany?: Prisma.BrokerCustomerUpdateManyWithWhereWithoutImportBatchInput | Prisma.BrokerCustomerUpdateManyWithWhereWithoutImportBatchInput[]
+  deleteMany?: Prisma.BrokerCustomerScalarWhereInput | Prisma.BrokerCustomerScalarWhereInput[]
+}
+
+export type BrokerCustomerCreateNestedOneWithoutBankTransactionsInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutBankTransactionsInput, Prisma.BrokerCustomerUncheckedCreateWithoutBankTransactionsInput>
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutBankTransactionsInput
+  connect?: Prisma.BrokerCustomerWhereUniqueInput
+}
+
+export type BrokerCustomerUpdateOneWithoutBankTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutBankTransactionsInput, Prisma.BrokerCustomerUncheckedCreateWithoutBankTransactionsInput>
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutBankTransactionsInput
+  upsert?: Prisma.BrokerCustomerUpsertWithoutBankTransactionsInput
+  disconnect?: Prisma.BrokerCustomerWhereInput | boolean
+  delete?: Prisma.BrokerCustomerWhereInput | boolean
+  connect?: Prisma.BrokerCustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BrokerCustomerUpdateToOneWithWhereWithoutBankTransactionsInput, Prisma.BrokerCustomerUpdateWithoutBankTransactionsInput>, Prisma.BrokerCustomerUncheckedUpdateWithoutBankTransactionsInput>
+}
+
+export type BrokerCustomerCreateNestedOneWithoutAgentAccountsInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutAgentAccountsInput, Prisma.BrokerCustomerUncheckedCreateWithoutAgentAccountsInput>
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutAgentAccountsInput
+  connect?: Prisma.BrokerCustomerWhereUniqueInput
+}
+
+export type BrokerCustomerUpdateOneRequiredWithoutAgentAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutAgentAccountsInput, Prisma.BrokerCustomerUncheckedCreateWithoutAgentAccountsInput>
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutAgentAccountsInput
+  upsert?: Prisma.BrokerCustomerUpsertWithoutAgentAccountsInput
+  connect?: Prisma.BrokerCustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BrokerCustomerUpdateToOneWithWhereWithoutAgentAccountsInput, Prisma.BrokerCustomerUpdateWithoutAgentAccountsInput>, Prisma.BrokerCustomerUncheckedUpdateWithoutAgentAccountsInput>
+}
+
+export type BrokerCustomerCreateNestedOneWithoutServiceVisitsInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutServiceVisitsInput, Prisma.BrokerCustomerUncheckedCreateWithoutServiceVisitsInput>
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutServiceVisitsInput
+  connect?: Prisma.BrokerCustomerWhereUniqueInput
+}
+
+export type BrokerCustomerUpdateOneRequiredWithoutServiceVisitsNestedInput = {
+  create?: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutServiceVisitsInput, Prisma.BrokerCustomerUncheckedCreateWithoutServiceVisitsInput>
+  connectOrCreate?: Prisma.BrokerCustomerCreateOrConnectWithoutServiceVisitsInput
+  upsert?: Prisma.BrokerCustomerUpsertWithoutServiceVisitsInput
+  connect?: Prisma.BrokerCustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BrokerCustomerUpdateToOneWithWhereWithoutServiceVisitsInput, Prisma.BrokerCustomerUpdateWithoutServiceVisitsInput>, Prisma.BrokerCustomerUncheckedUpdateWithoutServiceVisitsInput>
+}
+
 export type BrokerCustomerCreateWithoutCompanyInput = {
   id?: string
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -829,15 +1652,44 @@ export type BrokerCustomerCreateWithoutCompanyInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
   staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerUncheckedCreateWithoutCompanyInput = {
@@ -845,6 +1697,11 @@ export type BrokerCustomerUncheckedCreateWithoutCompanyInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -853,15 +1710,44 @@ export type BrokerCustomerUncheckedCreateWithoutCompanyInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
   staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerCreateOrConnectWithoutCompanyInput = {
@@ -899,6 +1785,11 @@ export type BrokerCustomerScalarWhereInput = {
   code?: Prisma.StringFilter<"BrokerCustomer"> | string
   name?: Prisma.StringFilter<"BrokerCustomer"> | string
   businessName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  title?: Prisma.EnumAgentTitleNullableFilter<"BrokerCustomer"> | $Enums.AgentTitle | null
+  firstName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  surname?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  tinNumber?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  officialAgentNo?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   phone?: Prisma.StringFilter<"BrokerCustomer"> | string
   alternatePhone?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   email?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
@@ -907,10 +1798,36 @@ export type BrokerCustomerScalarWhereInput = {
   district?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   ward?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   address?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  postalAddress?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  city?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  country?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  nationality?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableFilter<"BrokerCustomer"> | $Enums.PortalGender | null
+  identityType?: Prisma.EnumIdentityTypeNullableFilter<"BrokerCustomer"> | $Enums.IdentityType | null
+  identityNumber?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  identityIssuedBy?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  identityOther?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  profileImageUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  signatureUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  registrationDate?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  attendedBy?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  attendedSignatureUrl?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  attendedDate?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
+  attendedLocation?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
   latitude?: Prisma.FloatNullableFilter<"BrokerCustomer"> | number | null
   longitude?: Prisma.FloatNullableFilter<"BrokerCustomer"> | number | null
   status?: Prisma.EnumBrokerCustomerStatusFilter<"BrokerCustomer"> | $Enums.BrokerCustomerStatus
   notes?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  importBatchId?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceRowNumber?: Prisma.IntNullableFilter<"BrokerCustomer"> | number | null
+  sourceSheetName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceAgentName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceMsisdn?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  sourceAliasCode?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  normalizedName?: Prisma.StringNullableFilter<"BrokerCustomer"> | string | null
+  isImported?: Prisma.BoolFilter<"BrokerCustomer"> | boolean
+  importedAt?: Prisma.DateTimeNullableFilter<"BrokerCustomer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"BrokerCustomer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BrokerCustomer"> | Date | string
 }
@@ -920,6 +1837,11 @@ export type BrokerCustomerCreateWithoutFloatTransactionsInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -928,15 +1850,44 @@ export type BrokerCustomerCreateWithoutFloatTransactionsInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
   staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerUncheckedCreateWithoutFloatTransactionsInput = {
@@ -945,6 +1896,11 @@ export type BrokerCustomerUncheckedCreateWithoutFloatTransactionsInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -953,14 +1909,43 @@ export type BrokerCustomerUncheckedCreateWithoutFloatTransactionsInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerCreateOrConnectWithoutFloatTransactionsInput = {
@@ -984,6 +1969,11 @@ export type BrokerCustomerUpdateWithoutFloatTransactionsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -992,15 +1982,44 @@ export type BrokerCustomerUpdateWithoutFloatTransactionsInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
   staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerUncheckedUpdateWithoutFloatTransactionsInput = {
@@ -1009,6 +2028,11 @@ export type BrokerCustomerUncheckedUpdateWithoutFloatTransactionsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1017,14 +2041,43 @@ export type BrokerCustomerUncheckedUpdateWithoutFloatTransactionsInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerCreateWithoutStaffCollectionsInput = {
@@ -1032,6 +2085,11 @@ export type BrokerCustomerCreateWithoutStaffCollectionsInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -1040,15 +2098,44 @@ export type BrokerCustomerCreateWithoutStaffCollectionsInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
   floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerUncheckedCreateWithoutStaffCollectionsInput = {
@@ -1057,6 +2144,11 @@ export type BrokerCustomerUncheckedCreateWithoutStaffCollectionsInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -1065,14 +2157,43 @@ export type BrokerCustomerUncheckedCreateWithoutStaffCollectionsInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
   serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerCreateOrConnectWithoutStaffCollectionsInput = {
@@ -1096,6 +2217,11 @@ export type BrokerCustomerUpdateWithoutStaffCollectionsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1104,15 +2230,44 @@ export type BrokerCustomerUpdateWithoutStaffCollectionsInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
   floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerUncheckedUpdateWithoutStaffCollectionsInput = {
@@ -1121,6 +2276,11 @@ export type BrokerCustomerUncheckedUpdateWithoutStaffCollectionsInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1129,14 +2289,43 @@ export type BrokerCustomerUncheckedUpdateWithoutStaffCollectionsInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerCreateWithoutServiceActivitiesInput = {
@@ -1144,6 +2333,11 @@ export type BrokerCustomerCreateWithoutServiceActivitiesInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -1152,15 +2346,44 @@ export type BrokerCustomerCreateWithoutServiceActivitiesInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
   floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
   staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerUncheckedCreateWithoutServiceActivitiesInput = {
@@ -1169,6 +2392,11 @@ export type BrokerCustomerUncheckedCreateWithoutServiceActivitiesInput = {
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -1177,14 +2405,43 @@ export type BrokerCustomerUncheckedCreateWithoutServiceActivitiesInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
   staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
 }
 
 export type BrokerCustomerCreateOrConnectWithoutServiceActivitiesInput = {
@@ -1208,6 +2465,11 @@ export type BrokerCustomerUpdateWithoutServiceActivitiesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1216,15 +2478,44 @@ export type BrokerCustomerUpdateWithoutServiceActivitiesInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
   floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
   staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerUncheckedUpdateWithoutServiceActivitiesInput = {
@@ -1233,6 +2524,11 @@ export type BrokerCustomerUncheckedUpdateWithoutServiceActivitiesInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1241,21 +2537,55 @@ export type BrokerCustomerUncheckedUpdateWithoutServiceActivitiesInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
   staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
 }
 
-export type BrokerCustomerCreateManyCompanyInput = {
+export type BrokerCustomerCreateWithoutImportBatchInput = {
   id?: string
   code: string
   name: string
   businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
   phone: string
   alternatePhone?: string | null
   email?: string | null
@@ -1264,10 +2594,922 @@ export type BrokerCustomerCreateManyCompanyInput = {
   district?: string | null
   ward?: string | null
   address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
   latitude?: number | null
   longitude?: number | null
   status?: $Enums.BrokerCustomerStatus
   notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerUncheckedCreateWithoutImportBatchInput = {
+  id?: string
+  companyId: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerCreateOrConnectWithoutImportBatchInput = {
+  where: Prisma.BrokerCustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput>
+}
+
+export type BrokerCustomerCreateManyImportBatchInputEnvelope = {
+  data: Prisma.BrokerCustomerCreateManyImportBatchInput | Prisma.BrokerCustomerCreateManyImportBatchInput[]
+  skipDuplicates?: boolean
+}
+
+export type BrokerCustomerUpsertWithWhereUniqueWithoutImportBatchInput = {
+  where: Prisma.BrokerCustomerWhereUniqueInput
+  update: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedUpdateWithoutImportBatchInput>
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedCreateWithoutImportBatchInput>
+}
+
+export type BrokerCustomerUpdateWithWhereUniqueWithoutImportBatchInput = {
+  where: Prisma.BrokerCustomerWhereUniqueInput
+  data: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutImportBatchInput, Prisma.BrokerCustomerUncheckedUpdateWithoutImportBatchInput>
+}
+
+export type BrokerCustomerUpdateManyWithWhereWithoutImportBatchInput = {
+  where: Prisma.BrokerCustomerScalarWhereInput
+  data: Prisma.XOR<Prisma.BrokerCustomerUpdateManyMutationInput, Prisma.BrokerCustomerUncheckedUpdateManyWithoutImportBatchInput>
+}
+
+export type BrokerCustomerCreateWithoutBankTransactionsInput = {
+  id?: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerUncheckedCreateWithoutBankTransactionsInput = {
+  id?: string
+  companyId: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerCreateOrConnectWithoutBankTransactionsInput = {
+  where: Prisma.BrokerCustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutBankTransactionsInput, Prisma.BrokerCustomerUncheckedCreateWithoutBankTransactionsInput>
+}
+
+export type BrokerCustomerUpsertWithoutBankTransactionsInput = {
+  update: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutBankTransactionsInput, Prisma.BrokerCustomerUncheckedUpdateWithoutBankTransactionsInput>
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutBankTransactionsInput, Prisma.BrokerCustomerUncheckedCreateWithoutBankTransactionsInput>
+  where?: Prisma.BrokerCustomerWhereInput
+}
+
+export type BrokerCustomerUpdateToOneWithWhereWithoutBankTransactionsInput = {
+  where?: Prisma.BrokerCustomerWhereInput
+  data: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutBankTransactionsInput, Prisma.BrokerCustomerUncheckedUpdateWithoutBankTransactionsInput>
+}
+
+export type BrokerCustomerUpdateWithoutBankTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerUncheckedUpdateWithoutBankTransactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerCreateWithoutAgentAccountsInput = {
+  id?: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  serviceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerUncheckedCreateWithoutAgentAccountsInput = {
+  id?: string
+  companyId: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerCreateOrConnectWithoutAgentAccountsInput = {
+  where: Prisma.BrokerCustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutAgentAccountsInput, Prisma.BrokerCustomerUncheckedCreateWithoutAgentAccountsInput>
+}
+
+export type BrokerCustomerUpsertWithoutAgentAccountsInput = {
+  update: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutAgentAccountsInput, Prisma.BrokerCustomerUncheckedUpdateWithoutAgentAccountsInput>
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutAgentAccountsInput, Prisma.BrokerCustomerUncheckedCreateWithoutAgentAccountsInput>
+  where?: Prisma.BrokerCustomerWhereInput
+}
+
+export type BrokerCustomerUpdateToOneWithWhereWithoutAgentAccountsInput = {
+  where?: Prisma.BrokerCustomerWhereInput
+  data: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutAgentAccountsInput, Prisma.BrokerCustomerUncheckedUpdateWithoutAgentAccountsInput>
+}
+
+export type BrokerCustomerUpdateWithoutAgentAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerUncheckedUpdateWithoutAgentAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerCreateWithoutServiceVisitsInput = {
+  id?: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutBrokerCustomersInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerCustomerInput
+  importBatch?: Prisma.DataImportBatchCreateNestedOneWithoutBrokerCustomersInput
+  bankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerUncheckedCreateWithoutServiceVisitsInput = {
+  id?: string
+  companyId: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerCustomerInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutMatchedBrokerCustomerInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutBrokerInput
+}
+
+export type BrokerCustomerCreateOrConnectWithoutServiceVisitsInput = {
+  where: Prisma.BrokerCustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutServiceVisitsInput, Prisma.BrokerCustomerUncheckedCreateWithoutServiceVisitsInput>
+}
+
+export type BrokerCustomerUpsertWithoutServiceVisitsInput = {
+  update: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutServiceVisitsInput, Prisma.BrokerCustomerUncheckedUpdateWithoutServiceVisitsInput>
+  create: Prisma.XOR<Prisma.BrokerCustomerCreateWithoutServiceVisitsInput, Prisma.BrokerCustomerUncheckedCreateWithoutServiceVisitsInput>
+  where?: Prisma.BrokerCustomerWhereInput
+}
+
+export type BrokerCustomerUpdateToOneWithWhereWithoutServiceVisitsInput = {
+  where?: Prisma.BrokerCustomerWhereInput
+  data: Prisma.XOR<Prisma.BrokerCustomerUpdateWithoutServiceVisitsInput, Prisma.BrokerCustomerUncheckedUpdateWithoutServiceVisitsInput>
+}
+
+export type BrokerCustomerUpdateWithoutServiceVisitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerUncheckedUpdateWithoutServiceVisitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerCreateManyCompanyInput = {
+  id?: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  importBatchId?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1277,6 +3519,11 @@ export type BrokerCustomerUpdateWithoutCompanyInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1285,15 +3532,44 @@ export type BrokerCustomerUpdateWithoutCompanyInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
   staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  importBatch?: Prisma.DataImportBatchUpdateOneWithoutBrokerCustomersNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerUncheckedUpdateWithoutCompanyInput = {
@@ -1301,6 +3577,11 @@ export type BrokerCustomerUncheckedUpdateWithoutCompanyInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1309,15 +3590,44 @@ export type BrokerCustomerUncheckedUpdateWithoutCompanyInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
   staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
   serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
 }
 
 export type BrokerCustomerUncheckedUpdateManyWithoutCompanyInput = {
@@ -1325,6 +3635,11 @@ export type BrokerCustomerUncheckedUpdateManyWithoutCompanyInput = {
   code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1333,10 +3648,256 @@ export type BrokerCustomerUncheckedUpdateManyWithoutCompanyInput = {
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  importBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type BrokerCustomerCreateManyImportBatchInput = {
+  id?: string
+  companyId: string
+  code: string
+  name: string
+  businessName?: string | null
+  title?: $Enums.AgentTitle | null
+  firstName?: string | null
+  surname?: string | null
+  tinNumber?: string | null
+  officialAgentNo?: string | null
+  phone: string
+  alternatePhone?: string | null
+  email?: string | null
+  location: string
+  region?: string | null
+  district?: string | null
+  ward?: string | null
+  address?: string | null
+  postalAddress?: string | null
+  city?: string | null
+  country?: string | null
+  nationality?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  identityType?: $Enums.IdentityType | null
+  identityNumber?: string | null
+  identityIssuedBy?: string | null
+  identityOther?: string | null
+  profileImageUrl?: string | null
+  signatureUrl?: string | null
+  registrationDate?: Date | string | null
+  attendedBy?: string | null
+  attendedSignatureUrl?: string | null
+  attendedDate?: Date | string | null
+  attendedLocation?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  status?: $Enums.BrokerCustomerStatus
+  notes?: string | null
+  sourceRowNumber?: number | null
+  sourceSheetName?: string | null
+  sourceAgentName?: string | null
+  sourceMsisdn?: string | null
+  sourceAliasCode?: string | null
+  normalizedName?: string | null
+  isImported?: boolean
+  importedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type BrokerCustomerUpdateWithoutImportBatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerCustomersNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerUncheckedUpdateWithoutImportBatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerCustomerNestedInput
+  bankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutMatchedBrokerCustomerNestedInput
+  agentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutBrokerNestedInput
+  serviceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutBrokerNestedInput
+}
+
+export type BrokerCustomerUncheckedUpdateManyWithoutImportBatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.NullableEnumAgentTitleFieldUpdateOperationsInput | $Enums.AgentTitle | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tinNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  officialAgentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  alternatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  location?: Prisma.StringFieldUpdateOperationsInput | string
+  region?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  identityType?: Prisma.NullableEnumIdentityTypeFieldUpdateOperationsInput | $Enums.IdentityType | null
+  identityNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityIssuedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityOther?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  signatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedSignatureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendedLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBrokerCustomerStatusFieldUpdateOperationsInput | $Enums.BrokerCustomerStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRowNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceSheetName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAgentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceMsisdn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceAliasCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  normalizedName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isImported?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1350,12 +3911,18 @@ export type BrokerCustomerCountOutputType = {
   floatTransactions: number
   staffCollections: number
   serviceActivities: number
+  bankTransactions: number
+  agentAccounts: number
+  serviceVisits: number
 }
 
 export type BrokerCustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   floatTransactions?: boolean | BrokerCustomerCountOutputTypeCountFloatTransactionsArgs
   staffCollections?: boolean | BrokerCustomerCountOutputTypeCountStaffCollectionsArgs
   serviceActivities?: boolean | BrokerCustomerCountOutputTypeCountServiceActivitiesArgs
+  bankTransactions?: boolean | BrokerCustomerCountOutputTypeCountBankTransactionsArgs
+  agentAccounts?: boolean | BrokerCustomerCountOutputTypeCountAgentAccountsArgs
+  serviceVisits?: boolean | BrokerCustomerCountOutputTypeCountServiceVisitsArgs
 }
 
 /**
@@ -1389,6 +3956,27 @@ export type BrokerCustomerCountOutputTypeCountServiceActivitiesArgs<ExtArgs exte
   where?: Prisma.ServiceActivityWhereInput
 }
 
+/**
+ * BrokerCustomerCountOutputType without action
+ */
+export type BrokerCustomerCountOutputTypeCountBankTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ImportedBankTransactionWhereInput
+}
+
+/**
+ * BrokerCustomerCountOutputType without action
+ */
+export type BrokerCustomerCountOutputTypeCountAgentAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BrokerAgentAccountWhereInput
+}
+
+/**
+ * BrokerCustomerCountOutputType without action
+ */
+export type BrokerCustomerCountOutputTypeCountServiceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BrokerServiceVisitWhereInput
+}
+
 
 export type BrokerCustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1396,6 +3984,11 @@ export type BrokerCustomerSelect<ExtArgs extends runtime.Types.Extensions.Intern
   code?: boolean
   name?: boolean
   businessName?: boolean
+  title?: boolean
+  firstName?: boolean
+  surname?: boolean
+  tinNumber?: boolean
+  officialAgentNo?: boolean
   phone?: boolean
   alternatePhone?: boolean
   email?: boolean
@@ -1404,16 +3997,46 @@ export type BrokerCustomerSelect<ExtArgs extends runtime.Types.Extensions.Intern
   district?: boolean
   ward?: boolean
   address?: boolean
+  postalAddress?: boolean
+  city?: boolean
+  country?: boolean
+  nationality?: boolean
+  dateOfBirth?: boolean
+  gender?: boolean
+  identityType?: boolean
+  identityNumber?: boolean
+  identityIssuedBy?: boolean
+  identityOther?: boolean
+  profileImageUrl?: boolean
+  signatureUrl?: boolean
+  registrationDate?: boolean
+  attendedBy?: boolean
+  attendedSignatureUrl?: boolean
+  attendedDate?: boolean
+  attendedLocation?: boolean
   latitude?: boolean
   longitude?: boolean
   status?: boolean
   notes?: boolean
+  importBatchId?: boolean
+  sourceRowNumber?: boolean
+  sourceSheetName?: boolean
+  sourceAgentName?: boolean
+  sourceMsisdn?: boolean
+  sourceAliasCode?: boolean
+  normalizedName?: boolean
+  isImported?: boolean
+  importedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   floatTransactions?: boolean | Prisma.BrokerCustomer$floatTransactionsArgs<ExtArgs>
   staffCollections?: boolean | Prisma.BrokerCustomer$staffCollectionsArgs<ExtArgs>
   serviceActivities?: boolean | Prisma.BrokerCustomer$serviceActivitiesArgs<ExtArgs>
+  importBatch?: boolean | Prisma.BrokerCustomer$importBatchArgs<ExtArgs>
+  bankTransactions?: boolean | Prisma.BrokerCustomer$bankTransactionsArgs<ExtArgs>
+  agentAccounts?: boolean | Prisma.BrokerCustomer$agentAccountsArgs<ExtArgs>
+  serviceVisits?: boolean | Prisma.BrokerCustomer$serviceVisitsArgs<ExtArgs>
   _count?: boolean | Prisma.BrokerCustomerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["brokerCustomer"]>
 
@@ -1425,6 +4048,11 @@ export type BrokerCustomerSelectScalar = {
   code?: boolean
   name?: boolean
   businessName?: boolean
+  title?: boolean
+  firstName?: boolean
+  surname?: boolean
+  tinNumber?: boolean
+  officialAgentNo?: boolean
   phone?: boolean
   alternatePhone?: boolean
   email?: boolean
@@ -1433,20 +4061,50 @@ export type BrokerCustomerSelectScalar = {
   district?: boolean
   ward?: boolean
   address?: boolean
+  postalAddress?: boolean
+  city?: boolean
+  country?: boolean
+  nationality?: boolean
+  dateOfBirth?: boolean
+  gender?: boolean
+  identityType?: boolean
+  identityNumber?: boolean
+  identityIssuedBy?: boolean
+  identityOther?: boolean
+  profileImageUrl?: boolean
+  signatureUrl?: boolean
+  registrationDate?: boolean
+  attendedBy?: boolean
+  attendedSignatureUrl?: boolean
+  attendedDate?: boolean
+  attendedLocation?: boolean
   latitude?: boolean
   longitude?: boolean
   status?: boolean
   notes?: boolean
+  importBatchId?: boolean
+  sourceRowNumber?: boolean
+  sourceSheetName?: boolean
+  sourceAgentName?: boolean
+  sourceMsisdn?: boolean
+  sourceAliasCode?: boolean
+  normalizedName?: boolean
+  isImported?: boolean
+  importedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BrokerCustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "code" | "name" | "businessName" | "phone" | "alternatePhone" | "email" | "location" | "region" | "district" | "ward" | "address" | "latitude" | "longitude" | "status" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["brokerCustomer"]>
+export type BrokerCustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "code" | "name" | "businessName" | "title" | "firstName" | "surname" | "tinNumber" | "officialAgentNo" | "phone" | "alternatePhone" | "email" | "location" | "region" | "district" | "ward" | "address" | "postalAddress" | "city" | "country" | "nationality" | "dateOfBirth" | "gender" | "identityType" | "identityNumber" | "identityIssuedBy" | "identityOther" | "profileImageUrl" | "signatureUrl" | "registrationDate" | "attendedBy" | "attendedSignatureUrl" | "attendedDate" | "attendedLocation" | "latitude" | "longitude" | "status" | "notes" | "importBatchId" | "sourceRowNumber" | "sourceSheetName" | "sourceAgentName" | "sourceMsisdn" | "sourceAliasCode" | "normalizedName" | "isImported" | "importedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["brokerCustomer"]>
 export type BrokerCustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   floatTransactions?: boolean | Prisma.BrokerCustomer$floatTransactionsArgs<ExtArgs>
   staffCollections?: boolean | Prisma.BrokerCustomer$staffCollectionsArgs<ExtArgs>
   serviceActivities?: boolean | Prisma.BrokerCustomer$serviceActivitiesArgs<ExtArgs>
+  importBatch?: boolean | Prisma.BrokerCustomer$importBatchArgs<ExtArgs>
+  bankTransactions?: boolean | Prisma.BrokerCustomer$bankTransactionsArgs<ExtArgs>
+  agentAccounts?: boolean | Prisma.BrokerCustomer$agentAccountsArgs<ExtArgs>
+  serviceVisits?: boolean | Prisma.BrokerCustomer$serviceVisitsArgs<ExtArgs>
   _count?: boolean | Prisma.BrokerCustomerCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1457,6 +4115,10 @@ export type $BrokerCustomerPayload<ExtArgs extends runtime.Types.Extensions.Inte
     floatTransactions: Prisma.$FloatTransactionPayload<ExtArgs>[]
     staffCollections: Prisma.$StaffCollectionPayload<ExtArgs>[]
     serviceActivities: Prisma.$ServiceActivityPayload<ExtArgs>[]
+    importBatch: Prisma.$DataImportBatchPayload<ExtArgs> | null
+    bankTransactions: Prisma.$ImportedBankTransactionPayload<ExtArgs>[]
+    agentAccounts: Prisma.$BrokerAgentAccountPayload<ExtArgs>[]
+    serviceVisits: Prisma.$BrokerServiceVisitPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1464,6 +4126,11 @@ export type $BrokerCustomerPayload<ExtArgs extends runtime.Types.Extensions.Inte
     code: string
     name: string
     businessName: string | null
+    title: $Enums.AgentTitle | null
+    firstName: string | null
+    surname: string | null
+    tinNumber: string | null
+    officialAgentNo: string | null
     phone: string
     alternatePhone: string | null
     email: string | null
@@ -1472,10 +4139,36 @@ export type $BrokerCustomerPayload<ExtArgs extends runtime.Types.Extensions.Inte
     district: string | null
     ward: string | null
     address: string | null
+    postalAddress: string | null
+    city: string | null
+    country: string | null
+    nationality: string | null
+    dateOfBirth: Date | null
+    gender: $Enums.PortalGender | null
+    identityType: $Enums.IdentityType | null
+    identityNumber: string | null
+    identityIssuedBy: string | null
+    identityOther: string | null
+    profileImageUrl: string | null
+    signatureUrl: string | null
+    registrationDate: Date | null
+    attendedBy: string | null
+    attendedSignatureUrl: string | null
+    attendedDate: Date | null
+    attendedLocation: string | null
     latitude: number | null
     longitude: number | null
     status: $Enums.BrokerCustomerStatus
     notes: string | null
+    importBatchId: string | null
+    sourceRowNumber: number | null
+    sourceSheetName: string | null
+    sourceAgentName: string | null
+    sourceMsisdn: string | null
+    sourceAliasCode: string | null
+    normalizedName: string | null
+    isImported: boolean
+    importedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["brokerCustomer"]>
@@ -1822,6 +4515,10 @@ export interface Prisma__BrokerCustomerClient<T, Null = never, ExtArgs extends r
   floatTransactions<T extends Prisma.BrokerCustomer$floatTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomer$floatTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FloatTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   staffCollections<T extends Prisma.BrokerCustomer$staffCollectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomer$staffCollectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffCollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   serviceActivities<T extends Prisma.BrokerCustomer$serviceActivitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomer$serviceActivitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  importBatch<T extends Prisma.BrokerCustomer$importBatchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomer$importBatchArgs<ExtArgs>>): Prisma.Prisma__DataImportBatchClient<runtime.Types.Result.GetResult<Prisma.$DataImportBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  bankTransactions<T extends Prisma.BrokerCustomer$bankTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomer$bankTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportedBankTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  agentAccounts<T extends Prisma.BrokerCustomer$agentAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomer$agentAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrokerAgentAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  serviceVisits<T extends Prisma.BrokerCustomer$serviceVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomer$serviceVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrokerServiceVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1856,6 +4553,11 @@ export interface BrokerCustomerFieldRefs {
   readonly code: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly name: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly businessName: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly title: Prisma.FieldRef<"BrokerCustomer", 'AgentTitle'>
+  readonly firstName: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly surname: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly tinNumber: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly officialAgentNo: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly phone: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly alternatePhone: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly email: Prisma.FieldRef<"BrokerCustomer", 'String'>
@@ -1864,10 +4566,36 @@ export interface BrokerCustomerFieldRefs {
   readonly district: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly ward: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly address: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly postalAddress: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly city: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly country: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly nationality: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly dateOfBirth: Prisma.FieldRef<"BrokerCustomer", 'DateTime'>
+  readonly gender: Prisma.FieldRef<"BrokerCustomer", 'PortalGender'>
+  readonly identityType: Prisma.FieldRef<"BrokerCustomer", 'IdentityType'>
+  readonly identityNumber: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly identityIssuedBy: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly identityOther: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly profileImageUrl: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly signatureUrl: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly registrationDate: Prisma.FieldRef<"BrokerCustomer", 'DateTime'>
+  readonly attendedBy: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly attendedSignatureUrl: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly attendedDate: Prisma.FieldRef<"BrokerCustomer", 'DateTime'>
+  readonly attendedLocation: Prisma.FieldRef<"BrokerCustomer", 'String'>
   readonly latitude: Prisma.FieldRef<"BrokerCustomer", 'Float'>
   readonly longitude: Prisma.FieldRef<"BrokerCustomer", 'Float'>
   readonly status: Prisma.FieldRef<"BrokerCustomer", 'BrokerCustomerStatus'>
   readonly notes: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly importBatchId: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly sourceRowNumber: Prisma.FieldRef<"BrokerCustomer", 'Int'>
+  readonly sourceSheetName: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly sourceAgentName: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly sourceMsisdn: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly sourceAliasCode: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly normalizedName: Prisma.FieldRef<"BrokerCustomer", 'String'>
+  readonly isImported: Prisma.FieldRef<"BrokerCustomer", 'Boolean'>
+  readonly importedAt: Prisma.FieldRef<"BrokerCustomer", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"BrokerCustomer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BrokerCustomer", 'DateTime'>
 }
@@ -2287,6 +5015,97 @@ export type BrokerCustomer$serviceActivitiesArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.ServiceActivityScalarFieldEnum | Prisma.ServiceActivityScalarFieldEnum[]
+}
+
+/**
+ * BrokerCustomer.importBatch
+ */
+export type BrokerCustomer$importBatchArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DataImportBatch
+   */
+  select?: Prisma.DataImportBatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DataImportBatch
+   */
+  omit?: Prisma.DataImportBatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DataImportBatchInclude<ExtArgs> | null
+  where?: Prisma.DataImportBatchWhereInput
+}
+
+/**
+ * BrokerCustomer.bankTransactions
+ */
+export type BrokerCustomer$bankTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ImportedBankTransaction
+   */
+  select?: Prisma.ImportedBankTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ImportedBankTransaction
+   */
+  omit?: Prisma.ImportedBankTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImportedBankTransactionInclude<ExtArgs> | null
+  where?: Prisma.ImportedBankTransactionWhereInput
+  orderBy?: Prisma.ImportedBankTransactionOrderByWithRelationInput | Prisma.ImportedBankTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.ImportedBankTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ImportedBankTransactionScalarFieldEnum | Prisma.ImportedBankTransactionScalarFieldEnum[]
+}
+
+/**
+ * BrokerCustomer.agentAccounts
+ */
+export type BrokerCustomer$agentAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerAgentAccount
+   */
+  select?: Prisma.BrokerAgentAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerAgentAccount
+   */
+  omit?: Prisma.BrokerAgentAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerAgentAccountInclude<ExtArgs> | null
+  where?: Prisma.BrokerAgentAccountWhereInput
+  orderBy?: Prisma.BrokerAgentAccountOrderByWithRelationInput | Prisma.BrokerAgentAccountOrderByWithRelationInput[]
+  cursor?: Prisma.BrokerAgentAccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BrokerAgentAccountScalarFieldEnum | Prisma.BrokerAgentAccountScalarFieldEnum[]
+}
+
+/**
+ * BrokerCustomer.serviceVisits
+ */
+export type BrokerCustomer$serviceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerServiceVisit
+   */
+  select?: Prisma.BrokerServiceVisitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerServiceVisit
+   */
+  omit?: Prisma.BrokerServiceVisitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerServiceVisitInclude<ExtArgs> | null
+  where?: Prisma.BrokerServiceVisitWhereInput
+  orderBy?: Prisma.BrokerServiceVisitOrderByWithRelationInput | Prisma.BrokerServiceVisitOrderByWithRelationInput[]
+  cursor?: Prisma.BrokerServiceVisitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BrokerServiceVisitScalarFieldEnum | Prisma.BrokerServiceVisitScalarFieldEnum[]
 }
 
 /**

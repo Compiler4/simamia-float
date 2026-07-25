@@ -1,83 +1,34 @@
-# Simamia Accountant Manual Float Assignment
+# Simamia Login Logo and CSS Compatibility Fix
 
-This package adds a complete Manual Cashflow workspace to the Accountant Portal.
+This package fixes:
 
-## New workflow
-
-The accountant can:
-
-1. Open the financial day.
-2. Open **Manual Cashflow** from the sidebar.
-3. Select an active user whose role is `STAFF`.
-4. Enter the float amount, date, purpose, reference, notes and optional proof.
-5. Save the assignment.
-6. The system creates a `FloatTransaction` with:
-   - `transactionType = ACCOUNTANT_TO_STAFF`
-   - `fromUserId = current accountant`
-   - `toUserId = selected staff`
-   - `status = ISSUED`
-7. The staff officer receives a notification and confirms the float from the Staff Portal.
-
-The same page keeps the existing manual cash-receipt form and register.
-
-## Files
-
-```text
-app/accountant/dashboard/AccountantDashboardClient.tsx
-app/accountant/dashboard/AccountantDashboard.module.css
-app/api/accountant/manual-float/route.ts
-```
-
-## Database
-
-No new Prisma model is required. The workflow uses the existing:
-
-```prisma
-model FloatTransaction
-```
-
-The model must contain:
-
-```prisma
-transactionType StaffFloatType
-fromUserId       String?
-toUserId         String?
-referenceNo      String?
-amount           Decimal
-status           FloatStatus
-issuedAt         DateTime?
-```
-
-The enum must contain:
-
-```prisma
-ACCOUNTANT_TO_STAFF
-```
+- Safari `user-select` compatibility by adding `-webkit-user-select`.
+- Chromium/Edge/Samsung `mask-image` compatibility by adding `-webkit-mask-image`.
+- Safari `backdrop-filter` compatibility by adding `-webkit-backdrop-filter`.
+- Firefox warning caused by `min-height: auto`.
+- `/icons/icon-192x192.png` 404 by installing real Simamia logo images.
+- Login page and metadata references to the installed icon files.
+- Your existing `/manifest.webmanifest` keeps working and its icon URLs stop returning 404.
 
 ## Install
 
-Extract this ZIP and run:
+Open PowerShell in this extracted folder:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
-.\INSTALL.ps1
+.\APPLY-LOGIN-LOGO-FIX.ps1 -ProjectPath "C:\Users\Micha\simamia-float"
 ```
 
 Then:
 
 ```powershell
 cd C:\Users\Micha\simamia-float
+npx tsc --noEmit
 npm run dev
 ```
 
-## Test
+Test:
 
-While signed in as ACCOUNTANT, open:
-
-```text
-http://localhost:3000/api/accountant/manual-float
-```
-
-A GET request returns the current accountant's manual staff-float assignments.
-
-Use the **Manual Cashflow** sidebar page to create a new assignment.
+- `http://localhost:3000/icons/icon-192x192.png`
+- `http://localhost:3000/icons/icon-512x512.png`
+- `http://localhost:3000/login`

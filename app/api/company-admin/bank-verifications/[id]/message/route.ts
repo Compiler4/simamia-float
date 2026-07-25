@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { prisma } from "@/lib/prisma";
 import {
+  createAudit,
   createNotification,
   requireCompanyMember,
   routeError,
@@ -13,17 +15,27 @@ export async function POST(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const user = await requireCompanyMember();
+    const user = await requireCompanyMember([
+      "COMPANY_ADMIN",
+      "ACCOUNTANT",
+      "STAFF",
+    ]);
     const companyId = user.companyId as string;
     const { id } = await context.params;
     const body = await request.json();
+    const message = text(body.message).trim();
     const db = prisma as any;
 
-    const message = text(body.message).trim();
-    if (!message) throw new HttpError("Write a message first.", 422);
+    if (message.length < 3) {
+      throw new HttpError("Write a clear bank-review message first.", 422);
+    }
 
     const verification = await db.companyBankVerification.findFirst({
-      where: { id, companyId },
+      where: {
+        id,
+        companyId,
+        ...(user.role === "STAFF" ? { uploadedById: user.id } : {}),
+      },
     });
 
     if (!verification) {
@@ -41,19 +53,36 @@ export async function POST(
       },
     });
 
-    const targetUserId =
-      user.id === verification.uploadedById
-        ? null
-        : verification.uploadedById;
-
+    const isUploader = user.id === verification.uploadedById;
     await createNotification({
       companyId,
-      targetUserId,
-      targetRole: targetUserId ? null : "COMPANY_ADMIN",
+      targetUserId: isUploader ? null : verification.uploadedById,
+      targetRole: isUploader ? "COMPANY_ADMIN" : null,
       title: "New bank review message",
-      message: `${user.name}: ${message.slice(0, 120)}`,
+      message: `${user.name}: ${message.slice(0, 160)}`,
       type: "MESSAGE",
-      link: "/admin/dashboard?section=bank",
+      link: isUploader ? "/admin/dashboard?section=bank" : "/dashboard",
+    });
+
+    if (isUploader) {
+      await createNotification({
+        companyId,
+        targetRole: "ACCOUNTANT",
+        title: "Uploader replied to bank review",
+        message: `${user.name}: ${message.slice(0, 160)}`,
+        type: "MESSAGE",
+        link: "/dashboard",
+      });
+    }
+
+    await createAudit({
+      companyId,
+      actorId: user.id,
+      actorName: user.name,
+      actorRole: user.role,
+      action: "SEND_BANK_REVIEW_MESSAGE",
+      module: "BANK",
+      details: `Reference ${verification.referenceNumber}: ${message.slice(0, 220)}`,
     });
 
     return NextResponse.json({ success: true, message: created });

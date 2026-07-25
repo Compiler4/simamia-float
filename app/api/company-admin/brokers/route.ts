@@ -1,29 +1,46 @@
-import { NextResponse } from "next/server";
+import crypto from "node:crypto";
 
-import { getCurrentUser } from "@/lib/auth";
+import {
+  type NextRequest,
+  NextResponse,
+} from "next/server";
+
 import { prisma } from "@/lib/prisma";
+import {
+  createAudit,
+  HttpError,
+  requireCompanyAdmin,
+  routeError,
+  text,
+} from "@/lib/company-admin-server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const ALLOWED_STATUSES = new Set([
+const ALLOWED_STATUSES = new Set<string>([
   "ACTIVE",
   "INACTIVE",
   "SUSPENDED",
 ]);
 
+type BrokerLocationRow = {
+  location: string | null;
+};
+
 function cleanText(value: unknown): string {
-  return value === null ||
-    value === undefined
-    ? ""
-    : String(value).trim();
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value).trim();
 }
 
 function optionalText(
   value: unknown,
 ): string | null {
-  const text = cleanText(value);
-  return text || null;
+  const cleaned = cleanText(value);
+
+  return cleaned || null;
 }
 
 function optionalNumber(
@@ -37,16 +54,18 @@ function optionalNumber(
     return null;
   }
 
-  const number = Number(value);
+  const numericValue = Number(value);
 
-  return Number.isFinite(number)
-    ? number
-    : null;
+  if (!Number.isFinite(numericValue)) {
+    return null;
+  }
+
+  return numericValue;
 }
 
-function normalizeStatus(
+function normaliseStatus(
   value: unknown,
-) {
+): string {
   const status =
     cleanText(value).toUpperCase() ||
     "ACTIVE";
@@ -56,30 +75,31 @@ function normalizeStatus(
     : "ACTIVE";
 }
 
-function normalizeCode(
+function normaliseCode(
   value: unknown,
 ): string {
   return cleanText(value)
     .toUpperCase()
     .replace(/[^A-Z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 30);
+    .slice(0, 40);
 }
 
-function generatedCode(): string {
+function createBrokerCode(): string {
   const timestamp = Date.now()
     .toString()
     .slice(-8);
 
-  const random = Math.random()
-    .toString(36)
-    .slice(2, 6)
+  const randomPart = crypto
+    .randomUUID()
+    .replaceAll("-", "")
+    .slice(0, 5)
     .toUpperCase();
 
-  return `BRK-${timestamp}-${random}`;
+  return `BRK-${timestamp}-${randomPart}`;
 }
 
-function validEmail(
+function isValidEmail(
   value: string,
 ): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
@@ -87,279 +107,140 @@ function validEmail(
   );
 }
 
-function serializeBroker(item: any) {
+function serialiseBroker(item: any) {
   return {
-    id: String(item.id),
-    companyId: String(item.companyId),
-    code: String(item.code),
-    name: String(item.name),
+    id: text(item.id),
+    companyId: text(item.companyId),
+    code: text(item.code),
+    name: text(item.name),
 
     businessName:
-      item.businessName == null
+      item.businessName === null ||
+      item.businessName === undefined
         ? null
-        : String(item.businessName),
+        : text(item.businessName),
 
-    phone: String(item.phone),
+    phone: text(item.phone),
 
     alternatePhone:
-      item.alternatePhone == null
+      item.alternatePhone === null ||
+      item.alternatePhone === undefined
         ? null
-        : String(item.alternatePhone),
+        : text(item.alternatePhone),
 
     email:
-      item.email == null
+      item.email === null ||
+      item.email === undefined
         ? null
-        : String(item.email),
+        : text(item.email),
 
-    location: String(item.location),
+    location: text(item.location),
 
     region:
-      item.region == null
+      item.region === null ||
+      item.region === undefined
         ? null
-        : String(item.region),
+        : text(item.region),
 
     district:
-      item.district == null
+      item.district === null ||
+      item.district === undefined
         ? null
-        : String(item.district),
+        : text(item.district),
 
     ward:
-      item.ward == null
+      item.ward === null ||
+      item.ward === undefined
         ? null
-        : String(item.ward),
+        : text(item.ward),
 
     address:
-      item.address == null
+      item.address === null ||
+      item.address === undefined
         ? null
-        : String(item.address),
+        : text(item.address),
 
     latitude:
-      item.latitude == null
+      item.latitude === null ||
+      item.latitude === undefined
         ? null
         : Number(item.latitude),
 
     longitude:
-      item.longitude == null
+      item.longitude === null ||
+      item.longitude === undefined
         ? null
         : Number(item.longitude),
 
-    status: String(item.status),
+    status:
+      text(item.status) || "ACTIVE",
 
     notes:
-      item.notes == null
+      item.notes === null ||
+      item.notes === undefined
         ? null
-        : String(item.notes),
+        : text(item.notes),
+
+    isImported: Boolean(item.isImported),
+
+    sourceAgentName:
+      item.sourceAgentName === null ||
+      item.sourceAgentName === undefined
+        ? null
+        : text(item.sourceAgentName),
+
+    sourceMsisdn:
+      item.sourceMsisdn === null ||
+      item.sourceMsisdn === undefined
+        ? null
+        : text(item.sourceMsisdn),
+
+    sourceAliasCode:
+      item.sourceAliasCode === null ||
+      item.sourceAliasCode === undefined
+        ? null
+        : text(item.sourceAliasCode),
+
+    sourceRowNumber:
+      item.sourceRowNumber === null ||
+      item.sourceRowNumber === undefined
+        ? null
+        : Number(item.sourceRowNumber),
+
+    sourceSheetName:
+      item.sourceSheetName === null ||
+      item.sourceSheetName === undefined
+        ? null
+        : text(item.sourceSheetName),
+
+    importedAt:
+      item.importedAt ?? null,
 
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
   };
 }
 
-async function requireCompanyAdmin() {
-  const session =
-    (await getCurrentUser()) as any;
+type SerialisedBroker =
+  ReturnType<typeof serialiseBroker>;
 
-  if (!session) {
-    return {
-      user: null,
-      error: NextResponse.json(
-        {
-          success: false,
-          message:
-            "Authentication is required.",
-        },
-        { status: 401 },
-      ),
-    };
-  }
-
-  if (
-    String(session.role) !==
-    "COMPANY_ADMIN"
-  ) {
-    return {
-      user: null,
-      error: NextResponse.json(
-        {
-          success: false,
-          message:
-            "Only Company Admin can manage broker customers.",
-        },
-        { status: 403 },
-      ),
-    };
-  }
-
-  if (!session.companyId) {
-    return {
-      user: null,
-      error: NextResponse.json(
-        {
-          success: false,
-          message:
-            "Your account is not assigned to a company.",
-        },
-        { status: 403 },
-      ),
-    };
-  }
-
-  return {
-    error: null,
-    user: {
-      ...session,
-      id: String(session.id),
-      companyId: String(
-        session.companyId,
-      ),
-    },
-  };
-}
-
-function prismaErrorDetails(
-  error: unknown,
-) {
-  if (
-    typeof error === "object" &&
-    error !== null
-  ) {
-    const value = error as {
-      code?: unknown;
-      name?: unknown;
-      message?: unknown;
-    };
-
-    return {
-      code:
-        typeof value.code === "string"
-          ? value.code
-          : "",
-      name:
-        typeof value.name === "string"
-          ? value.name
-          : "Error",
-      message:
-        typeof value.message === "string"
-          ? value.message
-          : String(error),
-    };
-  }
-
-  return {
-    code: "",
-    name: "Error",
-    message: String(error),
-  };
-}
-
-function brokerRouteError(
-  error: unknown,
-) {
-  const details =
-    prismaErrorDetails(error);
-
-  if (details.code === "P2021") {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          "The broker_customers database table does not exist.",
-        error:
-          "Run npx prisma migrate dev --name add_broker_customers or npx prisma db push, then run npx prisma generate.",
-      },
-      { status: 503 },
-    );
-  }
-
-  if (details.code === "P2022") {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          "The broker_customers table is missing a required column.",
-        error:
-          "Synchronize prisma/schema.prisma with MySQL and regenerate Prisma Client.",
-      },
-      { status: 503 },
-    );
-  }
-
-  if (details.code === "P2002") {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          "A broker with the same unique value already exists.",
-        error: details.message,
-      },
-      { status: 409 },
-    );
-  }
-
-  if (
-    details.code === "P1001" ||
-    details.code === "P1002"
-  ) {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          "The MariaDB/MySQL server could not be reached.",
-        error: details.message,
-      },
-      { status: 503 },
-    );
-  }
-
-  if (
-    details.message.includes(
-      "Cannot read properties of undefined",
-    )
-  ) {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          "The running Prisma Client does not contain BrokerCustomer.",
-        error:
-          "Replace lib/prisma.ts with the generated/prisma version, stop all Node processes, remove generated/prisma, run npx prisma generate, clear .next, and restart.",
-      },
-      { status: 503 },
-    );
-  }
-
-  return NextResponse.json(
-    {
-      success: false,
-      message:
-        "The broker request could not be completed.",
-      error: details.message,
-    },
-    { status: 500 },
-  );
-}
-
+/**
+ * GET /api/company-admin/brokers
+ *
+ * Loads broker customers belonging to the logged-in
+ * Company Admin's company.
+ */
 export async function GET(
-  request: Request,
-) {
+  request: NextRequest,
+): Promise<Response> {
   try {
-    const access =
+    const sessionUser =
       await requireCompanyAdmin();
 
-    // ✅ FIXED: Explicit error handling
-    if (access.error) {
-      return access.error;
-    }
+    const companyId =
+      sessionUser.companyId as string;
 
-    if (!access.user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Authentication failed.",
-        },
-        { status: 401 },
-      );
-    }
+    const db = prisma as any;
 
     const url = new URL(request.url);
 
@@ -371,13 +252,15 @@ export async function GET(
       url.searchParams.get("location"),
     );
 
-    const requestedStatus =
-      cleanText(
-        url.searchParams.get("status"),
-      ).toUpperCase();
+    const requestedStatus = cleanText(
+      url.searchParams.get("status"),
+    ).toUpperCase();
 
-    const where: any = {
-      companyId: access.user.companyId,
+    const where: Record<
+      string,
+      unknown
+    > = {
+      companyId,
     };
 
     if (location) {
@@ -386,9 +269,7 @@ export async function GET(
 
     if (
       requestedStatus &&
-      ALLOWED_STATUSES.has(
-        requestedStatus,
-      )
+      ALLOWED_STATUSES.has(requestedStatus)
     ) {
       where.status = requestedStatus;
     }
@@ -450,25 +331,44 @@ export async function GET(
             contains: search,
           },
         },
+        {
+          sourceAgentName: {
+            contains: search,
+          },
+        },
+        {
+          sourceMsisdn: {
+            contains: search,
+          },
+        },
+        {
+          sourceAliasCode: {
+            contains: search,
+          },
+        },
       ];
     }
 
     const [
-      brokers,
-      locationRows,
+      brokerRows,
+      rawLocationRows,
     ] = await Promise.all([
-      prisma.brokerCustomer.findMany({
+      db.brokerCustomer.findMany({
         where,
         orderBy: [
-          { location: "asc" },
-          { name: "asc" },
+          {
+            location: "asc",
+          },
+          {
+            name: "asc",
+          },
         ],
+        take: 10_000,
       }),
 
-      prisma.brokerCustomer.findMany({
+      db.brokerCustomer.findMany({
         where: {
-          companyId:
-            access.user.companyId,
+          companyId,
         },
         select: {
           location: true,
@@ -476,76 +376,108 @@ export async function GET(
         orderBy: {
           location: "asc",
         },
+        take: 10_000,
       }),
     ]);
 
-    const locations = Array.from(
-      new Set(
-        locationRows
-          .map((item) =>
-            cleanText(item.location),
-          )
-          .filter(Boolean),
-      ),
-    );
+    const brokers: SerialisedBroker[] =
+      (brokerRows as any[]).map(
+        (item: any) =>
+          serialiseBroker(item),
+      );
 
-    const result =
-      brokers.map(serializeBroker);
+    /*
+     * Explicit string typing fixes:
+     * "'first' is of type 'unknown'"
+     */
+    const locationSet =
+      new Set<string>();
 
-    return NextResponse.json({
-      success: true,
-      brokers: result,
-      locations,
-      total: result.length,
+    const locationRows =
+      rawLocationRows as BrokerLocationRow[];
 
-      summary: {
-        active: result.filter(
-          (item) =>
-            item.status === "ACTIVE",
-        ).length,
+    for (const row of locationRows) {
+      const locationName =
+        cleanText(row.location);
 
-        inactive: result.filter(
-          (item) =>
-            item.status === "INACTIVE",
-        ).length,
+      if (locationName) {
+        locationSet.add(locationName);
+      }
+    }
 
-        suspended: result.filter(
-          (item) =>
-            item.status === "SUSPENDED",
-        ).length,
+    const locations: string[] =
+      Array.from(locationSet).sort(
+        (
+          first: string,
+          second: string,
+        ) =>
+          first.localeCompare(second),
+      );
+
+    const active = brokers.filter(
+      (broker: SerialisedBroker) =>
+        broker.status === "ACTIVE",
+    ).length;
+
+    const inactive = brokers.filter(
+      (broker: SerialisedBroker) =>
+        broker.status === "INACTIVE",
+    ).length;
+
+    const suspended = brokers.filter(
+      (broker: SerialisedBroker) =>
+        broker.status === "SUSPENDED",
+    ).length;
+
+    const imported = brokers.filter(
+      (broker: SerialisedBroker) =>
+        broker.isImported,
+    ).length;
+
+    return NextResponse.json(
+      {
+        success: true,
+        brokers,
+        locations,
+        total: brokers.length,
+        summary: {
+          active,
+          inactive,
+          suspended,
+          imported,
+        },
       },
-    });
+      {
+        status: 200,
+      },
+    );
   } catch (error) {
-    console.warn(
-      "COMPANY_ADMIN_BROKER_GET",
-      prismaErrorDetails(error),
+    console.error(
+      "COMPANY_ADMIN_BROKERS_GET_ERROR:",
+      error,
     );
 
-    return brokerRouteError(error);
+    return routeError(error);
   }
 }
 
+/**
+ * POST /api/company-admin/brokers
+ *
+ * Creates a broker customer belonging to the logged-in
+ * Company Admin's company.
+ */
 export async function POST(
-  request: Request,
-) {
+  request: NextRequest,
+): Promise<Response> {
   try {
-    const access =
+    const sessionUser =
       await requireCompanyAdmin();
 
-    // ✅ FIXED: Explicit error handling
-    if (access.error) {
-      return access.error;
-    }
+    const companyId =
+      sessionUser.companyId as string;
 
-    if (!access.user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Authentication failed.",
-        },
-        { status: 401 },
-      );
-    }
+    const db = prisma as any;
 
     let body: Record<
       string,
@@ -559,13 +491,9 @@ export async function POST(
           unknown
         >;
     } catch {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "The request body must contain valid JSON.",
-        },
-        { status: 400 },
+      throw new HttpError(
+        "The request body must contain valid JSON.",
+        400,
       );
     }
 
@@ -574,6 +502,11 @@ export async function POST(
 
     const phone =
       cleanText(body.phone);
+
+    const alternatePhone =
+      optionalText(
+        body.alternatePhone,
+      );
 
     const location =
       cleanText(body.location);
@@ -584,37 +517,53 @@ export async function POST(
       )?.toLowerCase() ?? null;
 
     const latitude =
-      optionalNumber(body.latitude);
+      optionalNumber(
+        body.latitude,
+      );
 
     const longitude =
-      optionalNumber(body.longitude);
+      optionalNumber(
+        body.longitude,
+      );
 
-    if (
-      !name ||
-      !phone ||
-      !location
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Broker name, phone and location are required.",
-        },
-        { status: 400 },
+    if (!name) {
+      throw new HttpError(
+        "Broker full name is required.",
+        422,
+      );
+    }
+
+    if (!phone) {
+      throw new HttpError(
+        "Broker phone number is required.",
+        422,
+      );
+    }
+
+    if (!location) {
+      throw new HttpError(
+        "Broker location is required.",
+        422,
       );
     }
 
     if (
       email &&
-      !validEmail(email)
+      !isValidEmail(email)
     ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Enter a valid broker email address.",
-        },
-        { status: 400 },
+      throw new HttpError(
+        "Enter a valid broker email address.",
+        422,
+      );
+    }
+
+    if (
+      alternatePhone &&
+      alternatePhone === phone
+    ) {
+      throw new HttpError(
+        "Alternative phone must be different from the primary phone.",
+        422,
       );
     }
 
@@ -625,13 +574,9 @@ export async function POST(
         latitude > 90
       )
     ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Latitude must be between -90 and 90.",
-        },
-        { status: 400 },
+      throw new HttpError(
+        "Latitude must be between -90 and 90.",
+        422,
       );
     }
 
@@ -642,121 +587,126 @@ export async function POST(
         longitude > 180
       )
     ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Longitude must be between -180 and 180.",
-        },
-        { status: 400 },
+      throw new HttpError(
+        "Longitude must be between -180 and 180.",
+        422,
       );
     }
 
+    const phoneNumbers = [
+      phone,
+      alternatePhone,
+    ].filter(
+      (
+        value,
+      ): value is string =>
+        Boolean(value),
+    );
+
     const duplicatePhone =
-      await prisma.brokerCustomer.findFirst({
+      await db.brokerCustomer.findFirst({
         where: {
-          companyId:
-            access.user.companyId,
-          phone,
+          companyId,
+          OR: [
+            {
+              phone: {
+                in: phoneNumbers,
+              },
+            },
+            {
+              alternatePhone: {
+                in: phoneNumbers,
+              },
+            },
+          ],
         },
         select: {
           id: true,
           name: true,
+          phone: true,
+          alternatePhone: true,
         },
       });
 
     if (duplicatePhone) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `Phone ${phone} is already registered for ${duplicatePhone.name}.`,
-        },
-        { status: 409 },
+      throw new HttpError(
+        `One of the supplied phone numbers is already registered for ${cleanText(
+          duplicatePhone.name,
+        )}.`,
+        409,
       );
     }
 
-    const duplicateEmail =
-      email
-        ? await prisma.brokerCustomer.findFirst(
-            {
-              where: {
-                companyId:
-                  access.user.companyId,
-                email,
-              },
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          )
-        : null;
+    if (email) {
+      const duplicateEmail =
+        await db.brokerCustomer.findFirst({
+          where: {
+            companyId,
+            email,
+          },
+          select: {
+            id: true,
+            name: true,
+          },
+        });
 
-    if (duplicateEmail) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `Email ${email} is already registered for ${duplicateEmail.name}.`,
-        },
-        { status: 409 },
-      );
+      if (duplicateEmail) {
+        throw new HttpError(
+          `Email ${email} is already registered for ${cleanText(
+            duplicateEmail.name,
+          )}.`,
+          409,
+        );
+      }
     }
+
+    const suppliedCode =
+      normaliseCode(body.code);
 
     let code =
-      normalizeCode(body.code) ||
-      generatedCode();
+      suppliedCode ||
+      createBrokerCode();
 
     let duplicateCode =
-      await prisma.brokerCustomer.findFirst(
-        {
+      await db.brokerCustomer.findFirst({
+        where: {
+          companyId,
+          code,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+    if (
+      suppliedCode &&
+      duplicateCode
+    ) {
+      throw new HttpError(
+        `Broker code ${code} is already registered.`,
+        409,
+      );
+    }
+
+    while (duplicateCode) {
+      code = createBrokerCode();
+
+      duplicateCode =
+        await db.brokerCustomer.findFirst({
           where: {
-            companyId:
-              access.user.companyId,
+            companyId,
             code,
           },
           select: {
             id: true,
           },
-        },
-      );
-
-    if (
-      cleanText(body.code) &&
-      duplicateCode
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `Broker code ${code} is already in use.`,
-        },
-        { status: 409 },
-      );
-    }
-
-    while (duplicateCode) {
-      code = generatedCode();
-
-      duplicateCode =
-        await prisma.brokerCustomer.findFirst(
-          {
-            where: {
-              companyId:
-                access.user.companyId,
-              code,
-            },
-            select: {
-              id: true,
-            },
-          },
-        );
+        });
     }
 
     const broker =
-      await prisma.brokerCustomer.create({
+      await db.brokerCustomer.create({
         data: {
-          companyId:
-            access.user.companyId,
-
+          companyId,
           code,
           name,
 
@@ -766,17 +716,14 @@ export async function POST(
             ),
 
           phone,
-
-          alternatePhone:
-            optionalText(
-              body.alternatePhone,
-            ),
-
+          alternatePhone,
           email,
           location,
 
           region:
-            optionalText(body.region),
+            optionalText(
+              body.region,
+            ),
 
           district:
             optionalText(
@@ -784,40 +731,66 @@ export async function POST(
             ),
 
           ward:
-            optionalText(body.ward),
+            optionalText(
+              body.ward,
+            ),
 
           address:
-            optionalText(body.address),
+            optionalText(
+              body.address,
+            ),
 
           latitude,
           longitude,
 
           status:
-            normalizeStatus(
+            normaliseStatus(
               body.status,
-            ) as any,
+            ),
 
           notes:
-            optionalText(body.notes),
+            optionalText(
+              body.notes,
+            ),
+
+          isImported: false,
         },
       });
+
+    await createAudit({
+      companyId,
+      actorId:
+        sessionUser.id,
+      actorName:
+        sessionUser.name,
+      actorRole:
+        sessionUser.role,
+      action:
+        "CREATE_BROKER_CUSTOMER",
+      module:
+        "BROKERS",
+      details:
+        `Registered broker ${name} with code ${code}.`,
+    });
 
     return NextResponse.json(
       {
         success: true,
         message:
-          "Broker customer created successfully.",
+          "Broker customer registered successfully.",
         broker:
-          serializeBroker(broker),
+          serialiseBroker(broker),
       },
-      { status: 201 },
+      {
+        status: 201,
+      },
     );
   } catch (error) {
-    console.warn(
-      "COMPANY_ADMIN_BROKER_POST",
-      prismaErrorDetails(error),
+    console.error(
+      "COMPANY_ADMIN_BROKERS_POST_ERROR:",
+      error,
     );
 
-    return brokerRouteError(error);
+    return routeError(error);
   }
 }

@@ -1,93 +1,212 @@
-import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { type NextRequest, NextResponse } from "next/server";
+
+import { createAuthSession, getDashboardPath } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { AUTH_COOKIE, createSessionValue, getDashboardPath } from "@/lib/auth";
 
-export async function POST(request: NextRequest) {
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+type LoginBody = Record<string, unknown>;
+
+function isRecord(value: unknown): value is LoginBody {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function cleanText(value: unknown): string {
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value).trim();
+}
+
+function booleanValue(value: unknown): boolean {
+  if (typeof value === "boolean") {
+    return value;
+  }
+
+  return ["true", "1", "yes", "on"].includes(
+    cleanText(value).toLowerCase(),
+  );
+}
+
+function jsonError(
+  message: string,
+  status: number,
+  details?: Record<string, unknown>,
+): Response {
+  return NextResponse.json(
+    {
+      success: false,
+      ok: false,
+      message,
+      ...(process.env.NODE_ENV === "development" && details
+        ? { details }
+        : {}),
+    },
+    {
+      status,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    },
+  );
+}
+
+async function readBody(request: NextRequest): Promise<LoginBody> {
+  const contentType =
+    request.headers.get("content-type")?.toLowerCase() ?? "";
+
+  if (contentType.includes("application/json")) {
+    const parsed = (await request.json()) as unknown;
+
+    if (!isRecord(parsed)) {
+      throw new Error("The login JSON body must be an object.");
+    }
+
+    return parsed;
+  }
+
+  if (
+    contentType.includes("multipart/form-data") ||
+    contentType.includes("application/x-www-form-urlencoded")
+  ) {
+    const formData = await request.formData();
+    const body: LoginBody = {};
+
+    for (const [key, value] of formData.entries()) {
+      if (typeof value === "string") {
+        body[key] = value;
+      }
+    }
+
+    return body;
+  }
+
+  const rawBody = await request.text();
+
+  if (!rawBody.trim()) {
+    return {};
+  }
+
   try {
-    const body = await request.json();
+    const parsed = JSON.parse(rawBody) as unknown;
 
-    const login = String(body.login || "").trim();
-    const password = String(body.password || "");
+    if (isRecord(parsed)) {
+      return parsed;
+    }
+  } catch {
+    return Object.fromEntries(new URLSearchParams(rawBody).entries());
+  }
 
-    if (!login || !password) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Username/email and password are required.",
-        },
-        { status: 400 }
+  return {};
+}
+
+export async function POST(request: NextRequest): Promise<Response> {
+  try {
+    let body: LoginBody;
+
+    try {
+      body = await readBody(request);
+    } catch (error) {
+      return jsonError(
+        error instanceof Error
+          ? error.message
+          : "The login request is invalid.",
+        400,
       );
     }
+
+    const identifier = cleanText(
+      body.identifier ??
+        body.usernameOrEmail ??
+        body.emailOrUsername ??
+        body.login ??
+        body.email ??
+        body.username,
+    );
+
+    const passwordValue =
+      body.password ?? body.userPassword ?? body.pass;
+
+    const password =
+      passwordValue === null || passwordValue === undefined
+        ? ""
+        : String(passwordValue);
+
+    const rememberMe = booleanValue(body.rememberMe);
+
+    if (!identifier || !password) {
+      return jsonError(
+        "Enter your email or username and password.",
+        422,
+        {
+          receivedFields: Object.keys(body),
+          hasIdentifier: Boolean(identifier),
+          hasPassword: Boolean(password),
+        },
+      );
+    }
+
+    const lowerIdentifier = identifier.toLowerCase();
 
     const user = await prisma.user.findFirst({
       where: {
         OR: [
-          {
-            username: login,
-          },
-          {
-            email: login,
-          },
+          { email: lowerIdentifier },
+          { username: identifier },
+          { username: lowerIdentifier },
         ],
       },
-      select: {
-        id: true,
-        name: true,
-        username: true,
-        email: true,
-        passwordHash: true,
-        role: true,
-        status: true,
-        companyId: true,
+      include: {
         company: {
           select: {
+            id: true,
             name: true,
+            status: true,
           },
         },
       },
     });
 
     if (!user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid username/email or password.",
-        },
-        { status: 401 }
+      return jsonError("Invalid email, username or password.", 401);
+    }
+
+    if (String(user.status).trim().toUpperCase() !== "ACTIVE") {
+      return jsonError("This user account is not active.", 403);
+    }
+
+    if (
+      user.company &&
+      String(user.company.status).trim().toUpperCase() !== "ACTIVE"
+    ) {
+      return jsonError("The company account is not active.", 403);
+    }
+
+    const passwordHash = String(user.passwordHash ?? "");
+
+    if (!/^\$2[aby]\$\d{2}\$/.test(passwordHash)) {
+      console.error("LOGIN_INVALID_PASSWORD_HASH:", {
+        userId: user.id,
+      });
+
+      return jsonError(
+        "The stored account password is invalid. Reset this user's password.",
+        500,
       );
     }
 
-    if (user.status !== "ACTIVE") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Your account is suspended. Contact administrator.",
-        },
-        { status: 403 }
-      );
-    }
+    const passwordMatches = await bcrypt
+      .compare(password, passwordHash)
+      .catch((error) => {
+        console.error("BCRYPT_COMPARE_ERROR:", error);
+        return false;
+      });
 
-    if (!user.passwordHash) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "This account has no password. Run database seed again.",
-        },
-        { status: 500 }
-      );
-    }
-
-    const passwordIsValid = await bcrypt.compare(password, user.passwordHash);
-
-    if (!passwordIsValid) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid username/email or password.",
-        },
-        { status: 401 }
-      );
+    if (!passwordMatches) {
+      return jsonError("Invalid email, username or password.", 401);
     }
 
     await prisma.user.update({
@@ -99,43 +218,39 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const sessionUser = {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      companyId: user.companyId,
-      companyName: user.company?.name ?? null,
-    };
-
-    const response = NextResponse.json({
-      success: true,
-      message: "Login successful.",
-      redirectTo: getDashboardPath(user.role),
-      user: sessionUser,
-    });
-
-    response.cookies.set({
-      name: AUTH_COOKIE,
-      value: createSessionValue(sessionUser),
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 8,
-    });
-
-    return response;
-  } catch (error) {
-    console.error("LOGIN_ERROR:", error);
+    await createAuthSession(String(user.id), rememberMe);
 
     return NextResponse.json(
       {
-        success: false,
-        message: "Login failed. Check database connection and Prisma setup.",
+        success: true,
+        ok: true,
+        message: "Login successful.",
+        redirectTo: getDashboardPath(user.role),
+        rememberMe,
+        user: {
+          id: String(user.id),
+          name: String(user.name),
+          username: String(user.username),
+          email: String(user.email),
+          role: String(user.role),
+          companyId:
+            user.companyId == null ? null : String(user.companyId),
+          companyName: user.company?.name ?? null,
+          profileImageUrl: user.profileImageUrl ?? null,
+        },
       },
-      { status: 500 }
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      },
     );
+  } catch (error) {
+    console.error("AUTH_LOGIN_ERROR:", error);
+
+    return jsonError("Login could not be completed.", 500, {
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 }

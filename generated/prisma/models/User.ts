@@ -38,6 +38,11 @@ export type UserMinAggregateOutputType = {
   lastLoginAt: Date | null
   profileImageUrl: string | null
   assignedRegion: string | null
+  nidaNumber: string | null
+  dateOfBirth: Date | null
+  gender: $Enums.PortalGender | null
+  nationality: string | null
+  physicalAddress: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +61,11 @@ export type UserMaxAggregateOutputType = {
   lastLoginAt: Date | null
   profileImageUrl: string | null
   assignedRegion: string | null
+  nidaNumber: string | null
+  dateOfBirth: Date | null
+  gender: $Enums.PortalGender | null
+  nationality: string | null
+  physicalAddress: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +84,11 @@ export type UserCountAggregateOutputType = {
   lastLoginAt: number
   profileImageUrl: number
   assignedRegion: number
+  nidaNumber: number
+  dateOfBirth: number
+  gender: number
+  nationality: number
+  physicalAddress: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -94,6 +109,11 @@ export type UserMinAggregateInputType = {
   lastLoginAt?: true
   profileImageUrl?: true
   assignedRegion?: true
+  nidaNumber?: true
+  dateOfBirth?: true
+  gender?: true
+  nationality?: true
+  physicalAddress?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +132,11 @@ export type UserMaxAggregateInputType = {
   lastLoginAt?: true
   profileImageUrl?: true
   assignedRegion?: true
+  nidaNumber?: true
+  dateOfBirth?: true
+  gender?: true
+  nationality?: true
+  physicalAddress?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +155,11 @@ export type UserCountAggregateInputType = {
   lastLoginAt?: true
   profileImageUrl?: true
   assignedRegion?: true
+  nidaNumber?: true
+  dateOfBirth?: true
+  gender?: true
+  nationality?: true
+  physicalAddress?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -221,6 +251,11 @@ export type UserGroupByOutputType = {
   lastLoginAt: Date | null
   profileImageUrl: string | null
   assignedRegion: string | null
+  nidaNumber: string | null
+  dateOfBirth: Date | null
+  gender: $Enums.PortalGender | null
+  nationality: string | null
+  physicalAddress: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -260,6 +295,11 @@ export type UserWhereInput = {
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profileImageUrl?: Prisma.StringNullableFilter<"User"> | string | null
   assignedRegion?: Prisma.StringNullableFilter<"User"> | string | null
+  nidaNumber?: Prisma.StringNullableFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableFilter<"User"> | $Enums.PortalGender | null
+  nationality?: Prisma.StringNullableFilter<"User"> | string | null
+  physicalAddress?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
@@ -304,6 +344,9 @@ export type UserWhereInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventListRelationFilter
   accountingPeriodsLocked?: Prisma.AccountingPeriodListRelationFilter
   depositHoldsCleared?: Prisma.BankDepositListRelationFilter
+  uploadedPortalDocuments?: Prisma.PortalDocumentListRelationFilter
+  brokerServiceVisits?: Prisma.BrokerServiceVisitListRelationFilter
+  approvalDecisions?: Prisma.ApprovalDecisionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -320,6 +363,11 @@ export type UserOrderByWithRelationInput = {
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profileImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedRegion?: Prisma.SortOrderInput | Prisma.SortOrder
+  nidaNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
+  physicalAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -364,6 +412,9 @@ export type UserOrderByWithRelationInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventOrderByRelationAggregateInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodOrderByRelationAggregateInput
   depositHoldsCleared?: Prisma.BankDepositOrderByRelationAggregateInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentOrderByRelationAggregateInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitOrderByRelationAggregateInput
+  approvalDecisions?: Prisma.ApprovalDecisionOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -371,6 +422,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   username?: string
   email?: string
+  nidaNumber?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -384,6 +436,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profileImageUrl?: Prisma.StringNullableFilter<"User"> | string | null
   assignedRegion?: Prisma.StringNullableFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableFilter<"User"> | $Enums.PortalGender | null
+  nationality?: Prisma.StringNullableFilter<"User"> | string | null
+  physicalAddress?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
@@ -428,7 +484,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   adminAuditEvents?: Prisma.CompanyAuditEventListRelationFilter
   accountingPeriodsLocked?: Prisma.AccountingPeriodListRelationFilter
   depositHoldsCleared?: Prisma.BankDepositListRelationFilter
-}, "id" | "username" | "email">
+  uploadedPortalDocuments?: Prisma.PortalDocumentListRelationFilter
+  brokerServiceVisits?: Prisma.BrokerServiceVisitListRelationFilter
+  approvalDecisions?: Prisma.ApprovalDecisionListRelationFilter
+}, "id" | "username" | "email" | "nidaNumber">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -444,6 +503,11 @@ export type UserOrderByWithAggregationInput = {
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   profileImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedRegion?: Prisma.SortOrderInput | Prisma.SortOrder
+  nidaNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationality?: Prisma.SortOrderInput | Prisma.SortOrder
+  physicalAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -468,6 +532,11 @@ export type UserScalarWhereWithAggregatesInput = {
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   profileImageUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   assignedRegion?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  nidaNumber?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableWithAggregatesFilter<"User"> | $Enums.PortalGender | null
+  nationality?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  physicalAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -484,6 +553,11 @@ export type UserCreateInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -528,6 +602,9 @@ export type UserCreateInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -544,6 +621,11 @@ export type UserUncheckedCreateInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -586,6 +668,9 @@ export type UserUncheckedCreateInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUpdateInput = {
@@ -600,6 +685,11 @@ export type UserUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -644,6 +734,9 @@ export type UserUpdateInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -660,6 +753,11 @@ export type UserUncheckedUpdateInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -702,6 +800,9 @@ export type UserUncheckedUpdateInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -718,6 +819,11 @@ export type UserCreateManyInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -734,6 +840,11 @@ export type UserUpdateManyMutationInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -752,6 +863,11 @@ export type UserUncheckedUpdateManyInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -786,6 +902,11 @@ export type UserCountOrderByAggregateInput = {
   lastLoginAt?: Prisma.SortOrder
   profileImageUrl?: Prisma.SortOrder
   assignedRegion?: Prisma.SortOrder
+  nidaNumber?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  physicalAddress?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -804,6 +925,11 @@ export type UserMaxOrderByAggregateInput = {
   lastLoginAt?: Prisma.SortOrder
   profileImageUrl?: Prisma.SortOrder
   assignedRegion?: Prisma.SortOrder
+  nidaNumber?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  physicalAddress?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -822,6 +948,11 @@ export type UserMinOrderByAggregateInput = {
   lastLoginAt?: Prisma.SortOrder
   profileImageUrl?: Prisma.SortOrder
   assignedRegion?: Prisma.SortOrder
+  nidaNumber?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  nationality?: Prisma.SortOrder
+  physicalAddress?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -930,6 +1061,10 @@ export type EnumUserStatusFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type NullableEnumPortalGenderFieldUpdateOperationsInput = {
+  set?: $Enums.PortalGender | null
 }
 
 export type UserCreateNestedOneWithoutOpenedFinancialDaysInput = {
@@ -1534,6 +1669,48 @@ export type UserUpdateOneRequiredWithoutOwnedStaffFilesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOwnedStaffFilesInput, Prisma.UserUpdateWithoutOwnedStaffFilesInput>, Prisma.UserUncheckedUpdateWithoutOwnedStaffFilesInput>
 }
 
+export type UserCreateNestedOneWithoutUploadedPortalDocumentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedPortalDocumentsInput, Prisma.UserUncheckedCreateWithoutUploadedPortalDocumentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedPortalDocumentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUploadedPortalDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUploadedPortalDocumentsInput, Prisma.UserUncheckedCreateWithoutUploadedPortalDocumentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUploadedPortalDocumentsInput
+  upsert?: Prisma.UserUpsertWithoutUploadedPortalDocumentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUploadedPortalDocumentsInput, Prisma.UserUpdateWithoutUploadedPortalDocumentsInput>, Prisma.UserUncheckedUpdateWithoutUploadedPortalDocumentsInput>
+}
+
+export type UserCreateNestedOneWithoutApprovalDecisionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovalDecisionsInput, Prisma.UserUncheckedCreateWithoutApprovalDecisionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovalDecisionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutApprovalDecisionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApprovalDecisionsInput, Prisma.UserUncheckedCreateWithoutApprovalDecisionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovalDecisionsInput
+  upsert?: Prisma.UserUpsertWithoutApprovalDecisionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovalDecisionsInput, Prisma.UserUpdateWithoutApprovalDecisionsInput>, Prisma.UserUncheckedUpdateWithoutApprovalDecisionsInput>
+}
+
+export type UserCreateNestedOneWithoutBrokerServiceVisitsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBrokerServiceVisitsInput, Prisma.UserUncheckedCreateWithoutBrokerServiceVisitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBrokerServiceVisitsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBrokerServiceVisitsInput, Prisma.UserUncheckedCreateWithoutBrokerServiceVisitsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBrokerServiceVisitsInput
+  upsert?: Prisma.UserUpsertWithoutBrokerServiceVisitsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBrokerServiceVisitsInput, Prisma.UserUpdateWithoutBrokerServiceVisitsInput>, Prisma.UserUncheckedUpdateWithoutBrokerServiceVisitsInput>
+}
+
 export type UserCreateWithoutCompanyInput = {
   id?: string
   name: string
@@ -1546,6 +1723,11 @@ export type UserCreateWithoutCompanyInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
@@ -1589,6 +1771,9 @@ export type UserCreateWithoutCompanyInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -1604,6 +1789,11 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -1646,6 +1836,9 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -1691,6 +1884,11 @@ export type UserScalarWhereInput = {
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   profileImageUrl?: Prisma.StringNullableFilter<"User"> | string | null
   assignedRegion?: Prisma.StringNullableFilter<"User"> | string | null
+  nidaNumber?: Prisma.StringNullableFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  gender?: Prisma.EnumPortalGenderNullableFilter<"User"> | $Enums.PortalGender | null
+  nationality?: Prisma.StringNullableFilter<"User"> | string | null
+  physicalAddress?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -1707,6 +1905,11 @@ export type UserCreateWithoutBranchInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -1750,6 +1953,9 @@ export type UserCreateWithoutBranchInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutBranchInput = {
@@ -1765,6 +1971,11 @@ export type UserUncheckedCreateWithoutBranchInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -1807,6 +2018,9 @@ export type UserUncheckedCreateWithoutBranchInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutBranchInput = {
@@ -1847,6 +2061,11 @@ export type UserCreateWithoutOpenedFinancialDaysInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -1890,6 +2109,9 @@ export type UserCreateWithoutOpenedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutOpenedFinancialDaysInput = {
@@ -1906,6 +2128,11 @@ export type UserUncheckedCreateWithoutOpenedFinancialDaysInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -1947,6 +2174,9 @@ export type UserUncheckedCreateWithoutOpenedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutOpenedFinancialDaysInput = {
@@ -1966,6 +2196,11 @@ export type UserCreateWithoutClosedFinancialDaysInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -2009,6 +2244,9 @@ export type UserCreateWithoutClosedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutClosedFinancialDaysInput = {
@@ -2025,6 +2263,11 @@ export type UserUncheckedCreateWithoutClosedFinancialDaysInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -2066,6 +2309,9 @@ export type UserUncheckedCreateWithoutClosedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutClosedFinancialDaysInput = {
@@ -2096,6 +2342,11 @@ export type UserUpdateWithoutOpenedFinancialDaysInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -2139,6 +2390,9 @@ export type UserUpdateWithoutOpenedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOpenedFinancialDaysInput = {
@@ -2155,6 +2409,11 @@ export type UserUncheckedUpdateWithoutOpenedFinancialDaysInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -2196,6 +2455,9 @@ export type UserUncheckedUpdateWithoutOpenedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutClosedFinancialDaysInput = {
@@ -2221,6 +2483,11 @@ export type UserUpdateWithoutClosedFinancialDaysInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -2264,6 +2531,9 @@ export type UserUpdateWithoutClosedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutClosedFinancialDaysInput = {
@@ -2280,6 +2550,11 @@ export type UserUncheckedUpdateWithoutClosedFinancialDaysInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -2321,6 +2596,9 @@ export type UserUncheckedUpdateWithoutClosedFinancialDaysInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAttendanceRecordsInput = {
@@ -2335,6 +2613,11 @@ export type UserCreateWithoutAttendanceRecordsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -2378,6 +2661,9 @@ export type UserCreateWithoutAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAttendanceRecordsInput = {
@@ -2394,6 +2680,11 @@ export type UserUncheckedCreateWithoutAttendanceRecordsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
@@ -2435,6 +2726,9 @@ export type UserUncheckedCreateWithoutAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAttendanceRecordsInput = {
@@ -2465,6 +2759,11 @@ export type UserUpdateWithoutAttendanceRecordsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -2508,6 +2807,9 @@ export type UserUpdateWithoutAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttendanceRecordsInput = {
@@ -2524,6 +2826,11 @@ export type UserUncheckedUpdateWithoutAttendanceRecordsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
@@ -2565,6 +2872,9 @@ export type UserUncheckedUpdateWithoutAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutExpensesSubmittedInput = {
@@ -2579,6 +2889,11 @@ export type UserCreateWithoutExpensesSubmittedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -2622,6 +2937,9 @@ export type UserCreateWithoutExpensesSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutExpensesSubmittedInput = {
@@ -2638,6 +2956,11 @@ export type UserUncheckedCreateWithoutExpensesSubmittedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -2679,6 +3002,9 @@ export type UserUncheckedCreateWithoutExpensesSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutExpensesSubmittedInput = {
@@ -2698,6 +3024,11 @@ export type UserCreateWithoutExpensesReviewedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -2741,6 +3072,9 @@ export type UserCreateWithoutExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutExpensesReviewedInput = {
@@ -2757,6 +3091,11 @@ export type UserUncheckedCreateWithoutExpensesReviewedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -2798,6 +3137,9 @@ export type UserUncheckedCreateWithoutExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutExpensesReviewedInput = {
@@ -2828,6 +3170,11 @@ export type UserUpdateWithoutExpensesSubmittedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -2871,6 +3218,9 @@ export type UserUpdateWithoutExpensesSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesSubmittedInput = {
@@ -2887,6 +3237,11 @@ export type UserUncheckedUpdateWithoutExpensesSubmittedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -2928,6 +3283,9 @@ export type UserUncheckedUpdateWithoutExpensesSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutExpensesReviewedInput = {
@@ -2953,6 +3311,11 @@ export type UserUpdateWithoutExpensesReviewedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -2996,6 +3359,9 @@ export type UserUpdateWithoutExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesReviewedInput = {
@@ -3012,6 +3378,11 @@ export type UserUncheckedUpdateWithoutExpensesReviewedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -3053,6 +3424,9 @@ export type UserUncheckedUpdateWithoutExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutDepositsSubmittedInput = {
@@ -3067,6 +3441,11 @@ export type UserCreateWithoutDepositsSubmittedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -3110,6 +3489,9 @@ export type UserCreateWithoutDepositsSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutDepositsSubmittedInput = {
@@ -3126,6 +3508,11 @@ export type UserUncheckedCreateWithoutDepositsSubmittedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -3167,6 +3554,9 @@ export type UserUncheckedCreateWithoutDepositsSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutDepositsSubmittedInput = {
@@ -3186,6 +3576,11 @@ export type UserCreateWithoutDepositsReviewedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -3229,6 +3624,9 @@ export type UserCreateWithoutDepositsReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutDepositsReviewedInput = {
@@ -3245,6 +3643,11 @@ export type UserUncheckedCreateWithoutDepositsReviewedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -3286,6 +3689,9 @@ export type UserUncheckedCreateWithoutDepositsReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutDepositsReviewedInput = {
@@ -3305,6 +3711,11 @@ export type UserCreateWithoutDepositHoldsClearedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -3348,6 +3759,9 @@ export type UserCreateWithoutDepositHoldsClearedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutDepositHoldsClearedInput = {
@@ -3364,6 +3778,11 @@ export type UserUncheckedCreateWithoutDepositHoldsClearedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -3405,6 +3824,9 @@ export type UserUncheckedCreateWithoutDepositHoldsClearedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutDepositHoldsClearedInput = {
@@ -3435,6 +3857,11 @@ export type UserUpdateWithoutDepositsSubmittedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -3478,6 +3905,9 @@ export type UserUpdateWithoutDepositsSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepositsSubmittedInput = {
@@ -3494,6 +3924,11 @@ export type UserUncheckedUpdateWithoutDepositsSubmittedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -3535,6 +3970,9 @@ export type UserUncheckedUpdateWithoutDepositsSubmittedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutDepositsReviewedInput = {
@@ -3560,6 +3998,11 @@ export type UserUpdateWithoutDepositsReviewedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -3603,6 +4046,9 @@ export type UserUpdateWithoutDepositsReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepositsReviewedInput = {
@@ -3619,6 +4065,11 @@ export type UserUncheckedUpdateWithoutDepositsReviewedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -3660,6 +4111,9 @@ export type UserUncheckedUpdateWithoutDepositsReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutDepositHoldsClearedInput = {
@@ -3685,6 +4139,11 @@ export type UserUpdateWithoutDepositHoldsClearedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -3728,6 +4187,9 @@ export type UserUpdateWithoutDepositHoldsClearedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepositHoldsClearedInput = {
@@ -3744,6 +4206,11 @@ export type UserUncheckedUpdateWithoutDepositHoldsClearedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -3785,6 +4252,9 @@ export type UserUncheckedUpdateWithoutDepositHoldsClearedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutFloatSentInput = {
@@ -3799,6 +4269,11 @@ export type UserCreateWithoutFloatSentInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -3842,6 +4317,9 @@ export type UserCreateWithoutFloatSentInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutFloatSentInput = {
@@ -3858,6 +4336,11 @@ export type UserUncheckedCreateWithoutFloatSentInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -3899,6 +4382,9 @@ export type UserUncheckedCreateWithoutFloatSentInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutFloatSentInput = {
@@ -3918,6 +4404,11 @@ export type UserCreateWithoutFloatReceivedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -3961,6 +4452,9 @@ export type UserCreateWithoutFloatReceivedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutFloatReceivedInput = {
@@ -3977,6 +4471,11 @@ export type UserUncheckedCreateWithoutFloatReceivedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -4018,6 +4517,9 @@ export type UserUncheckedCreateWithoutFloatReceivedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutFloatReceivedInput = {
@@ -4037,6 +4539,11 @@ export type UserCreateWithoutFloatsApprovedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -4080,6 +4587,9 @@ export type UserCreateWithoutFloatsApprovedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutFloatsApprovedInput = {
@@ -4096,6 +4606,11 @@ export type UserUncheckedCreateWithoutFloatsApprovedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -4137,6 +4652,9 @@ export type UserUncheckedCreateWithoutFloatsApprovedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutFloatsApprovedInput = {
@@ -4167,6 +4685,11 @@ export type UserUpdateWithoutFloatSentInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -4210,6 +4733,9 @@ export type UserUpdateWithoutFloatSentInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFloatSentInput = {
@@ -4226,6 +4752,11 @@ export type UserUncheckedUpdateWithoutFloatSentInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -4267,6 +4798,9 @@ export type UserUncheckedUpdateWithoutFloatSentInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutFloatReceivedInput = {
@@ -4292,6 +4826,11 @@ export type UserUpdateWithoutFloatReceivedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -4335,6 +4874,9 @@ export type UserUpdateWithoutFloatReceivedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFloatReceivedInput = {
@@ -4351,6 +4893,11 @@ export type UserUncheckedUpdateWithoutFloatReceivedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -4392,6 +4939,9 @@ export type UserUncheckedUpdateWithoutFloatReceivedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutFloatsApprovedInput = {
@@ -4417,6 +4967,11 @@ export type UserUpdateWithoutFloatsApprovedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -4460,6 +5015,9 @@ export type UserUpdateWithoutFloatsApprovedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFloatsApprovedInput = {
@@ -4476,6 +5034,11 @@ export type UserUncheckedUpdateWithoutFloatsApprovedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -4517,6 +5080,9 @@ export type UserUncheckedUpdateWithoutFloatsApprovedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutStaffCollectionsRecordedInput = {
@@ -4531,6 +5097,11 @@ export type UserCreateWithoutStaffCollectionsRecordedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -4574,6 +5145,9 @@ export type UserCreateWithoutStaffCollectionsRecordedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutStaffCollectionsRecordedInput = {
@@ -4590,6 +5164,11 @@ export type UserUncheckedCreateWithoutStaffCollectionsRecordedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -4631,6 +5210,9 @@ export type UserUncheckedCreateWithoutStaffCollectionsRecordedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutStaffCollectionsRecordedInput = {
@@ -4650,6 +5232,11 @@ export type UserCreateWithoutBrokerCollectionsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -4693,6 +5280,9 @@ export type UserCreateWithoutBrokerCollectionsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutBrokerCollectionsInput = {
@@ -4709,6 +5299,11 @@ export type UserUncheckedCreateWithoutBrokerCollectionsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -4750,6 +5345,9 @@ export type UserUncheckedCreateWithoutBrokerCollectionsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutBrokerCollectionsInput = {
@@ -4769,6 +5367,11 @@ export type UserCreateWithoutStaffCollectionsVerifiedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -4812,6 +5415,9 @@ export type UserCreateWithoutStaffCollectionsVerifiedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutStaffCollectionsVerifiedInput = {
@@ -4828,6 +5434,11 @@ export type UserUncheckedCreateWithoutStaffCollectionsVerifiedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -4869,6 +5480,9 @@ export type UserUncheckedCreateWithoutStaffCollectionsVerifiedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutStaffCollectionsVerifiedInput = {
@@ -4899,6 +5513,11 @@ export type UserUpdateWithoutStaffCollectionsRecordedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -4942,6 +5561,9 @@ export type UserUpdateWithoutStaffCollectionsRecordedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStaffCollectionsRecordedInput = {
@@ -4958,6 +5580,11 @@ export type UserUncheckedUpdateWithoutStaffCollectionsRecordedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -4999,6 +5626,9 @@ export type UserUncheckedUpdateWithoutStaffCollectionsRecordedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutBrokerCollectionsInput = {
@@ -5024,6 +5654,11 @@ export type UserUpdateWithoutBrokerCollectionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -5067,6 +5702,9 @@ export type UserUpdateWithoutBrokerCollectionsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBrokerCollectionsInput = {
@@ -5083,6 +5721,11 @@ export type UserUncheckedUpdateWithoutBrokerCollectionsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -5124,6 +5767,9 @@ export type UserUncheckedUpdateWithoutBrokerCollectionsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutStaffCollectionsVerifiedInput = {
@@ -5149,6 +5795,11 @@ export type UserUpdateWithoutStaffCollectionsVerifiedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -5192,6 +5843,9 @@ export type UserUpdateWithoutStaffCollectionsVerifiedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStaffCollectionsVerifiedInput = {
@@ -5208,6 +5862,11 @@ export type UserUncheckedUpdateWithoutStaffCollectionsVerifiedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -5249,6 +5908,9 @@ export type UserUncheckedUpdateWithoutStaffCollectionsVerifiedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutPerformanceRecordsInput = {
@@ -5263,6 +5925,11 @@ export type UserCreateWithoutPerformanceRecordsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -5306,6 +5973,9 @@ export type UserCreateWithoutPerformanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutPerformanceRecordsInput = {
@@ -5322,6 +5992,11 @@ export type UserUncheckedCreateWithoutPerformanceRecordsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -5363,6 +6038,9 @@ export type UserUncheckedCreateWithoutPerformanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutPerformanceRecordsInput = {
@@ -5393,6 +6071,11 @@ export type UserUpdateWithoutPerformanceRecordsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -5436,6 +6119,9 @@ export type UserUpdateWithoutPerformanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPerformanceRecordsInput = {
@@ -5452,6 +6138,11 @@ export type UserUncheckedUpdateWithoutPerformanceRecordsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -5493,6 +6184,9 @@ export type UserUncheckedUpdateWithoutPerformanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -5507,6 +6201,11 @@ export type UserCreateWithoutNotificationsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -5550,6 +6249,9 @@ export type UserCreateWithoutNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -5566,6 +6268,11 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -5607,6 +6314,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -5637,6 +6347,11 @@ export type UserUpdateWithoutNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -5680,6 +6395,9 @@ export type UserUpdateWithoutNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -5696,6 +6414,11 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -5737,6 +6460,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -5751,6 +6477,11 @@ export type UserCreateWithoutSentMessagesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -5794,6 +6525,9 @@ export type UserCreateWithoutSentMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -5810,6 +6544,11 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -5851,6 +6590,9 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -5870,6 +6612,11 @@ export type UserCreateWithoutReceivedMessagesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -5913,6 +6660,9 @@ export type UserCreateWithoutReceivedMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -5929,6 +6679,11 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -5970,6 +6725,9 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -6000,6 +6758,11 @@ export type UserUpdateWithoutSentMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -6043,6 +6806,9 @@ export type UserUpdateWithoutSentMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -6059,6 +6825,11 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -6100,6 +6871,9 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutReceivedMessagesInput = {
@@ -6125,6 +6899,11 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -6168,6 +6947,9 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -6184,6 +6966,11 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -6225,6 +7012,9 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -6239,6 +7029,11 @@ export type UserCreateWithoutAuditLogsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -6282,6 +7077,9 @@ export type UserCreateWithoutAuditLogsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -6298,6 +7096,11 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -6339,6 +7142,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -6369,6 +7175,11 @@ export type UserUpdateWithoutAuditLogsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -6412,6 +7223,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -6428,6 +7242,11 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -6469,6 +7288,9 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutServicesAsStaffInput = {
@@ -6483,6 +7305,11 @@ export type UserCreateWithoutServicesAsStaffInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -6526,6 +7353,9 @@ export type UserCreateWithoutServicesAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutServicesAsStaffInput = {
@@ -6542,6 +7372,11 @@ export type UserUncheckedCreateWithoutServicesAsStaffInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -6583,6 +7418,9 @@ export type UserUncheckedCreateWithoutServicesAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutServicesAsStaffInput = {
@@ -6602,6 +7440,11 @@ export type UserCreateWithoutServicesAsBrokerInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -6645,6 +7488,9 @@ export type UserCreateWithoutServicesAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutServicesAsBrokerInput = {
@@ -6661,6 +7507,11 @@ export type UserUncheckedCreateWithoutServicesAsBrokerInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -6702,6 +7553,9 @@ export type UserUncheckedCreateWithoutServicesAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutServicesAsBrokerInput = {
@@ -6732,6 +7586,11 @@ export type UserUpdateWithoutServicesAsStaffInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -6775,6 +7634,9 @@ export type UserUpdateWithoutServicesAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutServicesAsStaffInput = {
@@ -6791,6 +7653,11 @@ export type UserUncheckedUpdateWithoutServicesAsStaffInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -6832,6 +7699,9 @@ export type UserUncheckedUpdateWithoutServicesAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutServicesAsBrokerInput = {
@@ -6857,6 +7727,11 @@ export type UserUpdateWithoutServicesAsBrokerInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -6900,6 +7775,9 @@ export type UserUpdateWithoutServicesAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutServicesAsBrokerInput = {
@@ -6916,6 +7794,11 @@ export type UserUncheckedUpdateWithoutServicesAsBrokerInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -6957,6 +7840,9 @@ export type UserUncheckedUpdateWithoutServicesAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutGpsTrackingsInput = {
@@ -6971,6 +7857,11 @@ export type UserCreateWithoutGpsTrackingsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -7014,6 +7905,9 @@ export type UserCreateWithoutGpsTrackingsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutGpsTrackingsInput = {
@@ -7030,6 +7924,11 @@ export type UserUncheckedCreateWithoutGpsTrackingsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -7071,6 +7970,9 @@ export type UserUncheckedCreateWithoutGpsTrackingsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutGpsTrackingsInput = {
@@ -7101,6 +8003,11 @@ export type UserUpdateWithoutGpsTrackingsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -7144,6 +8051,9 @@ export type UserUpdateWithoutGpsTrackingsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGpsTrackingsInput = {
@@ -7160,6 +8070,11 @@ export type UserUncheckedUpdateWithoutGpsTrackingsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -7201,6 +8116,9 @@ export type UserUncheckedUpdateWithoutGpsTrackingsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAdminExpensesCreatedInput = {
@@ -7215,6 +8133,11 @@ export type UserCreateWithoutAdminExpensesCreatedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -7258,6 +8181,9 @@ export type UserCreateWithoutAdminExpensesCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminExpensesCreatedInput = {
@@ -7274,6 +8200,11 @@ export type UserUncheckedCreateWithoutAdminExpensesCreatedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -7315,6 +8246,9 @@ export type UserUncheckedCreateWithoutAdminExpensesCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminExpensesCreatedInput = {
@@ -7334,6 +8268,11 @@ export type UserCreateWithoutAdminExpensesReviewedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -7377,6 +8316,9 @@ export type UserCreateWithoutAdminExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminExpensesReviewedInput = {
@@ -7393,6 +8335,11 @@ export type UserUncheckedCreateWithoutAdminExpensesReviewedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -7434,6 +8381,9 @@ export type UserUncheckedCreateWithoutAdminExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminExpensesReviewedInput = {
@@ -7464,6 +8414,11 @@ export type UserUpdateWithoutAdminExpensesCreatedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -7507,6 +8462,9 @@ export type UserUpdateWithoutAdminExpensesCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminExpensesCreatedInput = {
@@ -7523,6 +8481,11 @@ export type UserUncheckedUpdateWithoutAdminExpensesCreatedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -7564,6 +8527,9 @@ export type UserUncheckedUpdateWithoutAdminExpensesCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutAdminExpensesReviewedInput = {
@@ -7589,6 +8555,11 @@ export type UserUpdateWithoutAdminExpensesReviewedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -7632,6 +8603,9 @@ export type UserUpdateWithoutAdminExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminExpensesReviewedInput = {
@@ -7648,6 +8622,11 @@ export type UserUncheckedUpdateWithoutAdminExpensesReviewedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -7689,6 +8668,9 @@ export type UserUncheckedUpdateWithoutAdminExpensesReviewedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAdminBankUploadsInput = {
@@ -7703,6 +8685,11 @@ export type UserCreateWithoutAdminBankUploadsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -7746,6 +8733,9 @@ export type UserCreateWithoutAdminBankUploadsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminBankUploadsInput = {
@@ -7762,6 +8752,11 @@ export type UserUncheckedCreateWithoutAdminBankUploadsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -7803,6 +8798,9 @@ export type UserUncheckedCreateWithoutAdminBankUploadsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminBankUploadsInput = {
@@ -7822,6 +8820,11 @@ export type UserCreateWithoutAdminBankReviewsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -7865,6 +8868,9 @@ export type UserCreateWithoutAdminBankReviewsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminBankReviewsInput = {
@@ -7881,6 +8887,11 @@ export type UserUncheckedCreateWithoutAdminBankReviewsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -7922,6 +8933,9 @@ export type UserUncheckedCreateWithoutAdminBankReviewsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminBankReviewsInput = {
@@ -7952,6 +8966,11 @@ export type UserUpdateWithoutAdminBankUploadsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -7995,6 +9014,9 @@ export type UserUpdateWithoutAdminBankUploadsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminBankUploadsInput = {
@@ -8011,6 +9033,11 @@ export type UserUncheckedUpdateWithoutAdminBankUploadsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -8052,6 +9079,9 @@ export type UserUncheckedUpdateWithoutAdminBankUploadsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutAdminBankReviewsInput = {
@@ -8077,6 +9107,11 @@ export type UserUpdateWithoutAdminBankReviewsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -8120,6 +9155,9 @@ export type UserUpdateWithoutAdminBankReviewsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminBankReviewsInput = {
@@ -8136,6 +9174,11 @@ export type UserUncheckedUpdateWithoutAdminBankReviewsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -8177,6 +9220,9 @@ export type UserUncheckedUpdateWithoutAdminBankReviewsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAdminBankMessagesInput = {
@@ -8191,6 +9237,11 @@ export type UserCreateWithoutAdminBankMessagesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -8234,6 +9285,9 @@ export type UserCreateWithoutAdminBankMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminBankMessagesInput = {
@@ -8250,6 +9304,11 @@ export type UserUncheckedCreateWithoutAdminBankMessagesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -8291,6 +9350,9 @@ export type UserUncheckedCreateWithoutAdminBankMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminBankMessagesInput = {
@@ -8321,6 +9383,11 @@ export type UserUpdateWithoutAdminBankMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -8364,6 +9431,9 @@ export type UserUpdateWithoutAdminBankMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminBankMessagesInput = {
@@ -8380,6 +9450,11 @@ export type UserUncheckedUpdateWithoutAdminBankMessagesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -8421,6 +9496,9 @@ export type UserUncheckedUpdateWithoutAdminBankMessagesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAdminAttendanceRecordsInput = {
@@ -8435,6 +9513,11 @@ export type UserCreateWithoutAdminAttendanceRecordsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -8478,6 +9561,9 @@ export type UserCreateWithoutAdminAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminAttendanceRecordsInput = {
@@ -8494,6 +9580,11 @@ export type UserUncheckedCreateWithoutAdminAttendanceRecordsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -8535,6 +9626,9 @@ export type UserUncheckedCreateWithoutAdminAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminAttendanceRecordsInput = {
@@ -8565,6 +9659,11 @@ export type UserUpdateWithoutAdminAttendanceRecordsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -8608,6 +9707,9 @@ export type UserUpdateWithoutAdminAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminAttendanceRecordsInput = {
@@ -8624,6 +9726,11 @@ export type UserUncheckedUpdateWithoutAdminAttendanceRecordsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -8665,6 +9772,9 @@ export type UserUncheckedUpdateWithoutAdminAttendanceRecordsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAdminNotificationsInput = {
@@ -8679,6 +9789,11 @@ export type UserCreateWithoutAdminNotificationsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -8722,6 +9837,9 @@ export type UserCreateWithoutAdminNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminNotificationsInput = {
@@ -8738,6 +9856,11 @@ export type UserUncheckedCreateWithoutAdminNotificationsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -8779,6 +9902,9 @@ export type UserUncheckedCreateWithoutAdminNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminNotificationsInput = {
@@ -8809,6 +9935,11 @@ export type UserUpdateWithoutAdminNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -8852,6 +9983,9 @@ export type UserUpdateWithoutAdminNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminNotificationsInput = {
@@ -8868,6 +10002,11 @@ export type UserUncheckedUpdateWithoutAdminNotificationsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -8909,6 +10048,9 @@ export type UserUncheckedUpdateWithoutAdminNotificationsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAdminGpsDevicesInput = {
@@ -8923,6 +10065,11 @@ export type UserCreateWithoutAdminGpsDevicesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -8966,6 +10113,9 @@ export type UserCreateWithoutAdminGpsDevicesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminGpsDevicesInput = {
@@ -8982,6 +10132,11 @@ export type UserUncheckedCreateWithoutAdminGpsDevicesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -9023,6 +10178,9 @@ export type UserUncheckedCreateWithoutAdminGpsDevicesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminGpsDevicesInput = {
@@ -9053,6 +10211,11 @@ export type UserUpdateWithoutAdminGpsDevicesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -9096,6 +10259,9 @@ export type UserUpdateWithoutAdminGpsDevicesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminGpsDevicesInput = {
@@ -9112,6 +10278,11 @@ export type UserUncheckedUpdateWithoutAdminGpsDevicesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -9153,6 +10324,9 @@ export type UserUncheckedUpdateWithoutAdminGpsDevicesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAdminAuditEventsInput = {
@@ -9167,6 +10341,11 @@ export type UserCreateWithoutAdminAuditEventsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -9210,6 +10389,9 @@ export type UserCreateWithoutAdminAuditEventsInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAdminAuditEventsInput = {
@@ -9226,6 +10408,11 @@ export type UserUncheckedCreateWithoutAdminAuditEventsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -9267,6 +10454,9 @@ export type UserUncheckedCreateWithoutAdminAuditEventsInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAdminAuditEventsInput = {
@@ -9297,6 +10487,11 @@ export type UserUpdateWithoutAdminAuditEventsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -9340,6 +10535,9 @@ export type UserUpdateWithoutAdminAuditEventsInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminAuditEventsInput = {
@@ -9356,6 +10554,11 @@ export type UserUncheckedUpdateWithoutAdminAuditEventsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -9397,6 +10600,9 @@ export type UserUncheckedUpdateWithoutAdminAuditEventsInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutAccountingPeriodsLockedInput = {
@@ -9411,6 +10617,11 @@ export type UserCreateWithoutAccountingPeriodsLockedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -9454,6 +10665,9 @@ export type UserCreateWithoutAccountingPeriodsLockedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAccountingPeriodsLockedInput = {
@@ -9470,6 +10684,11 @@ export type UserUncheckedCreateWithoutAccountingPeriodsLockedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -9511,6 +10730,9 @@ export type UserUncheckedCreateWithoutAccountingPeriodsLockedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAccountingPeriodsLockedInput = {
@@ -9541,6 +10763,11 @@ export type UserUpdateWithoutAccountingPeriodsLockedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -9584,6 +10811,9 @@ export type UserUpdateWithoutAccountingPeriodsLockedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountingPeriodsLockedInput = {
@@ -9600,6 +10830,11 @@ export type UserUncheckedUpdateWithoutAccountingPeriodsLockedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -9641,6 +10876,9 @@ export type UserUncheckedUpdateWithoutAccountingPeriodsLockedInput = {
   adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutGpsAlertsInput = {
@@ -9655,6 +10893,11 @@ export type UserCreateWithoutGpsAlertsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -9698,6 +10941,9 @@ export type UserCreateWithoutGpsAlertsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutGpsAlertsInput = {
@@ -9714,6 +10960,11 @@ export type UserUncheckedCreateWithoutGpsAlertsInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -9755,6 +11006,9 @@ export type UserUncheckedCreateWithoutGpsAlertsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutGpsAlertsInput = {
@@ -9785,6 +11039,11 @@ export type UserUpdateWithoutGpsAlertsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -9828,6 +11087,9 @@ export type UserUpdateWithoutGpsAlertsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGpsAlertsInput = {
@@ -9844,6 +11106,11 @@ export type UserUncheckedUpdateWithoutGpsAlertsInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -9885,6 +11152,9 @@ export type UserUncheckedUpdateWithoutGpsAlertsInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutNotificationDeliveriesInput = {
@@ -9899,6 +11169,11 @@ export type UserCreateWithoutNotificationDeliveriesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -9942,6 +11217,9 @@ export type UserCreateWithoutNotificationDeliveriesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutNotificationDeliveriesInput = {
@@ -9958,6 +11236,11 @@ export type UserUncheckedCreateWithoutNotificationDeliveriesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -9999,6 +11282,9 @@ export type UserUncheckedCreateWithoutNotificationDeliveriesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutNotificationDeliveriesInput = {
@@ -10029,6 +11315,11 @@ export type UserUpdateWithoutNotificationDeliveriesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -10072,6 +11363,9 @@ export type UserUpdateWithoutNotificationDeliveriesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationDeliveriesInput = {
@@ -10088,6 +11382,11 @@ export type UserUncheckedUpdateWithoutNotificationDeliveriesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -10129,6 +11428,9 @@ export type UserUncheckedUpdateWithoutNotificationDeliveriesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutBrokerAssignmentsAsStaffInput = {
@@ -10143,6 +11445,11 @@ export type UserCreateWithoutBrokerAssignmentsAsStaffInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -10186,6 +11493,9 @@ export type UserCreateWithoutBrokerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutBrokerAssignmentsAsStaffInput = {
@@ -10202,6 +11512,11 @@ export type UserUncheckedCreateWithoutBrokerAssignmentsAsStaffInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -10243,6 +11558,9 @@ export type UserUncheckedCreateWithoutBrokerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutBrokerAssignmentsAsStaffInput = {
@@ -10262,6 +11580,11 @@ export type UserCreateWithoutAssignmentsAsBrokerInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -10305,6 +11628,9 @@ export type UserCreateWithoutAssignmentsAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutAssignmentsAsBrokerInput = {
@@ -10321,6 +11647,11 @@ export type UserUncheckedCreateWithoutAssignmentsAsBrokerInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -10362,6 +11693,9 @@ export type UserUncheckedCreateWithoutAssignmentsAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutAssignmentsAsBrokerInput = {
@@ -10381,6 +11715,11 @@ export type UserCreateWithoutBrokerAssignmentsCreatedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -10424,6 +11763,9 @@ export type UserCreateWithoutBrokerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutBrokerAssignmentsCreatedInput = {
@@ -10440,6 +11782,11 @@ export type UserUncheckedCreateWithoutBrokerAssignmentsCreatedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -10481,6 +11828,9 @@ export type UserUncheckedCreateWithoutBrokerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutBrokerAssignmentsCreatedInput = {
@@ -10511,6 +11861,11 @@ export type UserUpdateWithoutBrokerAssignmentsAsStaffInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -10554,6 +11909,9 @@ export type UserUpdateWithoutBrokerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBrokerAssignmentsAsStaffInput = {
@@ -10570,6 +11928,11 @@ export type UserUncheckedUpdateWithoutBrokerAssignmentsAsStaffInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -10611,6 +11974,9 @@ export type UserUncheckedUpdateWithoutBrokerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutAssignmentsAsBrokerInput = {
@@ -10636,6 +12002,11 @@ export type UserUpdateWithoutAssignmentsAsBrokerInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -10679,6 +12050,9 @@ export type UserUpdateWithoutAssignmentsAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignmentsAsBrokerInput = {
@@ -10695,6 +12069,11 @@ export type UserUncheckedUpdateWithoutAssignmentsAsBrokerInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -10736,6 +12115,9 @@ export type UserUncheckedUpdateWithoutAssignmentsAsBrokerInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutBrokerAssignmentsCreatedInput = {
@@ -10761,6 +12143,11 @@ export type UserUpdateWithoutBrokerAssignmentsCreatedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -10804,6 +12191,9 @@ export type UserUpdateWithoutBrokerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBrokerAssignmentsCreatedInput = {
@@ -10820,6 +12210,11 @@ export type UserUncheckedUpdateWithoutBrokerAssignmentsCreatedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -10861,6 +12256,9 @@ export type UserUncheckedUpdateWithoutBrokerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutCustomerAssignmentsAsStaffInput = {
@@ -10875,6 +12273,11 @@ export type UserCreateWithoutCustomerAssignmentsAsStaffInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -10918,6 +12321,9 @@ export type UserCreateWithoutCustomerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutCustomerAssignmentsAsStaffInput = {
@@ -10934,6 +12340,11 @@ export type UserUncheckedCreateWithoutCustomerAssignmentsAsStaffInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -10975,6 +12386,9 @@ export type UserUncheckedCreateWithoutCustomerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutCustomerAssignmentsAsStaffInput = {
@@ -10994,6 +12408,11 @@ export type UserCreateWithoutCustomerAssignmentsCreatedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -11037,6 +12456,9 @@ export type UserCreateWithoutCustomerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutCustomerAssignmentsCreatedInput = {
@@ -11053,6 +12475,11 @@ export type UserUncheckedCreateWithoutCustomerAssignmentsCreatedInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -11094,6 +12521,9 @@ export type UserUncheckedCreateWithoutCustomerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutCustomerAssignmentsCreatedInput = {
@@ -11124,6 +12554,11 @@ export type UserUpdateWithoutCustomerAssignmentsAsStaffInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -11167,6 +12602,9 @@ export type UserUpdateWithoutCustomerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCustomerAssignmentsAsStaffInput = {
@@ -11183,6 +12621,11 @@ export type UserUncheckedUpdateWithoutCustomerAssignmentsAsStaffInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -11224,6 +12667,9 @@ export type UserUncheckedUpdateWithoutCustomerAssignmentsAsStaffInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUpsertWithoutCustomerAssignmentsCreatedInput = {
@@ -11249,6 +12695,11 @@ export type UserUpdateWithoutCustomerAssignmentsCreatedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -11292,6 +12743,9 @@ export type UserUpdateWithoutCustomerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCustomerAssignmentsCreatedInput = {
@@ -11308,6 +12762,11 @@ export type UserUncheckedUpdateWithoutCustomerAssignmentsCreatedInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -11349,6 +12808,9 @@ export type UserUncheckedUpdateWithoutCustomerAssignmentsCreatedInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutOwnedStaffFilesInput = {
@@ -11363,6 +12825,11 @@ export type UserCreateWithoutOwnedStaffFilesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
@@ -11406,6 +12873,9 @@ export type UserCreateWithoutOwnedStaffFilesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutOwnedStaffFilesInput = {
@@ -11422,6 +12892,11 @@ export type UserUncheckedCreateWithoutOwnedStaffFilesInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
@@ -11463,6 +12938,9 @@ export type UserUncheckedCreateWithoutOwnedStaffFilesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutOwnedStaffFilesInput = {
@@ -11493,6 +12971,11 @@ export type UserUpdateWithoutOwnedStaffFilesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -11536,6 +13019,9 @@ export type UserUpdateWithoutOwnedStaffFilesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedStaffFilesInput = {
@@ -11552,6 +13038,11 @@ export type UserUncheckedUpdateWithoutOwnedStaffFilesInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -11593,6 +13084,837 @@ export type UserUncheckedUpdateWithoutOwnedStaffFilesInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserCreateWithoutUploadedPortalDocumentsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutUploadedPortalDocumentsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutUploadedPortalDocumentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedPortalDocumentsInput, Prisma.UserUncheckedCreateWithoutUploadedPortalDocumentsInput>
+}
+
+export type UserUpsertWithoutUploadedPortalDocumentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUploadedPortalDocumentsInput, Prisma.UserUncheckedUpdateWithoutUploadedPortalDocumentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUploadedPortalDocumentsInput, Prisma.UserUncheckedCreateWithoutUploadedPortalDocumentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUploadedPortalDocumentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUploadedPortalDocumentsInput, Prisma.UserUncheckedUpdateWithoutUploadedPortalDocumentsInput>
+}
+
+export type UserUpdateWithoutUploadedPortalDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUploadedPortalDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserCreateWithoutApprovalDecisionsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+}
+
+export type UserUncheckedCreateWithoutApprovalDecisionsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+}
+
+export type UserCreateOrConnectWithoutApprovalDecisionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovalDecisionsInput, Prisma.UserUncheckedCreateWithoutApprovalDecisionsInput>
+}
+
+export type UserUpsertWithoutApprovalDecisionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApprovalDecisionsInput, Prisma.UserUncheckedUpdateWithoutApprovalDecisionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApprovalDecisionsInput, Prisma.UserUncheckedCreateWithoutApprovalDecisionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApprovalDecisionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApprovalDecisionsInput, Prisma.UserUncheckedUpdateWithoutApprovalDecisionsInput>
+}
+
+export type UserUpdateWithoutApprovalDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApprovalDecisionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+}
+
+export type UserCreateWithoutBrokerServiceVisitsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutBrokerServiceVisitsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutBrokerServiceVisitsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBrokerServiceVisitsInput, Prisma.UserUncheckedCreateWithoutBrokerServiceVisitsInput>
+}
+
+export type UserUpsertWithoutBrokerServiceVisitsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBrokerServiceVisitsInput, Prisma.UserUncheckedUpdateWithoutBrokerServiceVisitsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBrokerServiceVisitsInput, Prisma.UserUncheckedCreateWithoutBrokerServiceVisitsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBrokerServiceVisitsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBrokerServiceVisitsInput, Prisma.UserUncheckedUpdateWithoutBrokerServiceVisitsInput>
+}
+
+export type UserUpdateWithoutBrokerServiceVisitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBrokerServiceVisitsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -11608,6 +13930,11 @@ export type UserCreateManyCompanyInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -11624,6 +13951,11 @@ export type UserUpdateWithoutCompanyInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
@@ -11667,6 +13999,9 @@ export type UserUpdateWithoutCompanyInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -11682,6 +14017,11 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -11724,6 +14064,9 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -11739,6 +14082,11 @@ export type UserUncheckedUpdateManyWithoutCompanyInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -11756,6 +14104,11 @@ export type UserCreateManyBranchInput = {
   lastLoginAt?: Date | string | null
   profileImageUrl?: string | null
   assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -11772,6 +14125,11 @@ export type UserUpdateWithoutBranchInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
@@ -11815,6 +14173,9 @@ export type UserUpdateWithoutBranchInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBranchInput = {
@@ -11830,6 +14191,11 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
@@ -11872,6 +14238,9 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
   accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -11887,6 +14256,11 @@ export type UserUncheckedUpdateManyWithoutBranchInput = {
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -11937,6 +14311,9 @@ export type UserCountOutputType = {
   adminAuditEvents: number
   accountingPeriodsLocked: number
   depositHoldsCleared: number
+  uploadedPortalDocuments: number
+  brokerServiceVisits: number
+  approvalDecisions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -11980,6 +14357,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   adminAuditEvents?: boolean | UserCountOutputTypeCountAdminAuditEventsArgs
   accountingPeriodsLocked?: boolean | UserCountOutputTypeCountAccountingPeriodsLockedArgs
   depositHoldsCleared?: boolean | UserCountOutputTypeCountDepositHoldsClearedArgs
+  uploadedPortalDocuments?: boolean | UserCountOutputTypeCountUploadedPortalDocumentsArgs
+  brokerServiceVisits?: boolean | UserCountOutputTypeCountBrokerServiceVisitsArgs
+  approvalDecisions?: boolean | UserCountOutputTypeCountApprovalDecisionsArgs
 }
 
 /**
@@ -12272,6 +14652,27 @@ export type UserCountOutputTypeCountDepositHoldsClearedArgs<ExtArgs extends runt
   where?: Prisma.BankDepositWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUploadedPortalDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PortalDocumentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBrokerServiceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BrokerServiceVisitWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovalDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApprovalDecisionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -12287,6 +14688,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastLoginAt?: boolean
   profileImageUrl?: boolean
   assignedRegion?: boolean
+  nidaNumber?: boolean
+  dateOfBirth?: boolean
+  gender?: boolean
+  nationality?: boolean
+  physicalAddress?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
@@ -12331,6 +14737,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   adminAuditEvents?: boolean | Prisma.User$adminAuditEventsArgs<ExtArgs>
   accountingPeriodsLocked?: boolean | Prisma.User$accountingPeriodsLockedArgs<ExtArgs>
   depositHoldsCleared?: boolean | Prisma.User$depositHoldsClearedArgs<ExtArgs>
+  uploadedPortalDocuments?: boolean | Prisma.User$uploadedPortalDocumentsArgs<ExtArgs>
+  brokerServiceVisits?: boolean | Prisma.User$brokerServiceVisitsArgs<ExtArgs>
+  approvalDecisions?: boolean | Prisma.User$approvalDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -12350,11 +14759,16 @@ export type UserSelectScalar = {
   lastLoginAt?: boolean
   profileImageUrl?: boolean
   assignedRegion?: boolean
+  nidaNumber?: boolean
+  dateOfBirth?: boolean
+  gender?: boolean
+  nationality?: boolean
+  physicalAddress?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "branchId" | "name" | "username" | "email" | "phone" | "passwordHash" | "role" | "status" | "lastLoginAt" | "profileImageUrl" | "assignedRegion" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "branchId" | "name" | "username" | "email" | "phone" | "passwordHash" | "role" | "status" | "lastLoginAt" | "profileImageUrl" | "assignedRegion" | "nidaNumber" | "dateOfBirth" | "gender" | "nationality" | "physicalAddress" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.User$companyArgs<ExtArgs>
   branch?: boolean | Prisma.User$branchArgs<ExtArgs>
@@ -12398,6 +14812,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   adminAuditEvents?: boolean | Prisma.User$adminAuditEventsArgs<ExtArgs>
   accountingPeriodsLocked?: boolean | Prisma.User$accountingPeriodsLockedArgs<ExtArgs>
   depositHoldsCleared?: boolean | Prisma.User$depositHoldsClearedArgs<ExtArgs>
+  uploadedPortalDocuments?: boolean | Prisma.User$uploadedPortalDocumentsArgs<ExtArgs>
+  brokerServiceVisits?: boolean | Prisma.User$brokerServiceVisitsArgs<ExtArgs>
+  approvalDecisions?: boolean | Prisma.User$approvalDecisionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -12450,6 +14867,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     adminAuditEvents: Prisma.$CompanyAuditEventPayload<ExtArgs>[]
     accountingPeriodsLocked: Prisma.$AccountingPeriodPayload<ExtArgs>[]
     depositHoldsCleared: Prisma.$BankDepositPayload<ExtArgs>[]
+    uploadedPortalDocuments: Prisma.$PortalDocumentPayload<ExtArgs>[]
+    brokerServiceVisits: Prisma.$BrokerServiceVisitPayload<ExtArgs>[]
+    approvalDecisions: Prisma.$ApprovalDecisionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -12465,6 +14885,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lastLoginAt: Date | null
     profileImageUrl: string | null
     assignedRegion: string | null
+    nidaNumber: string | null
+    dateOfBirth: Date | null
+    gender: $Enums.PortalGender | null
+    nationality: string | null
+    physicalAddress: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -12849,6 +15274,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   adminAuditEvents<T extends Prisma.User$adminAuditEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminAuditEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyAuditEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accountingPeriodsLocked<T extends Prisma.User$accountingPeriodsLockedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountingPeriodsLockedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountingPeriodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   depositHoldsCleared<T extends Prisma.User$depositHoldsClearedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$depositHoldsClearedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BankDepositPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  uploadedPortalDocuments<T extends Prisma.User$uploadedPortalDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedPortalDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PortalDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  brokerServiceVisits<T extends Prisma.User$brokerServiceVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$brokerServiceVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrokerServiceVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  approvalDecisions<T extends Prisma.User$approvalDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvalDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12891,6 +15319,11 @@ export interface UserFieldRefs {
   readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly profileImageUrl: Prisma.FieldRef<"User", 'String'>
   readonly assignedRegion: Prisma.FieldRef<"User", 'String'>
+  readonly nidaNumber: Prisma.FieldRef<"User", 'String'>
+  readonly dateOfBirth: Prisma.FieldRef<"User", 'DateTime'>
+  readonly gender: Prisma.FieldRef<"User", 'PortalGender'>
+  readonly nationality: Prisma.FieldRef<"User", 'String'>
+  readonly physicalAddress: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -14236,6 +16669,78 @@ export type User$depositHoldsClearedArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.BankDepositScalarFieldEnum | Prisma.BankDepositScalarFieldEnum[]
+}
+
+/**
+ * User.uploadedPortalDocuments
+ */
+export type User$uploadedPortalDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PortalDocument
+   */
+  select?: Prisma.PortalDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PortalDocument
+   */
+  omit?: Prisma.PortalDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PortalDocumentInclude<ExtArgs> | null
+  where?: Prisma.PortalDocumentWhereInput
+  orderBy?: Prisma.PortalDocumentOrderByWithRelationInput | Prisma.PortalDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.PortalDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PortalDocumentScalarFieldEnum | Prisma.PortalDocumentScalarFieldEnum[]
+}
+
+/**
+ * User.brokerServiceVisits
+ */
+export type User$brokerServiceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerServiceVisit
+   */
+  select?: Prisma.BrokerServiceVisitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BrokerServiceVisit
+   */
+  omit?: Prisma.BrokerServiceVisitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BrokerServiceVisitInclude<ExtArgs> | null
+  where?: Prisma.BrokerServiceVisitWhereInput
+  orderBy?: Prisma.BrokerServiceVisitOrderByWithRelationInput | Prisma.BrokerServiceVisitOrderByWithRelationInput[]
+  cursor?: Prisma.BrokerServiceVisitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BrokerServiceVisitScalarFieldEnum | Prisma.BrokerServiceVisitScalarFieldEnum[]
+}
+
+/**
+ * User.approvalDecisions
+ */
+export type User$approvalDecisionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApprovalDecision
+   */
+  select?: Prisma.ApprovalDecisionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApprovalDecision
+   */
+  omit?: Prisma.ApprovalDecisionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApprovalDecisionInclude<ExtArgs> | null
+  where?: Prisma.ApprovalDecisionWhereInput
+  orderBy?: Prisma.ApprovalDecisionOrderByWithRelationInput | Prisma.ApprovalDecisionOrderByWithRelationInput[]
+  cursor?: Prisma.ApprovalDecisionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApprovalDecisionScalarFieldEnum | Prisma.ApprovalDecisionScalarFieldEnum[]
 }
 
 /**
