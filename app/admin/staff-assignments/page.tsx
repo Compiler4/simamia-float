@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth";
-import StaffAssignmentsClient from "./StaffAssignmentsClient";
+
+export const dynamic = "force-dynamic";
 
 export default async function StaffAssignmentsPage() {
-  const user = (await getCurrentUser()) as any;
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (user.role !== "COMPANY_ADMIN") redirect("/dashboard");
-
-  return <StaffAssignmentsClient />;
+  if (String(user.role).toUpperCase() !== "COMPANY_ADMIN") redirect("/dashboard");
+  if (!user.companyId) redirect("/dashboard");
+  redirect("/admin/control-centre?module=staff-areas");
 }

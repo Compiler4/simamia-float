@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "exceljs": "latest",
+    "pdf-lib": "latest"
+  }
+}

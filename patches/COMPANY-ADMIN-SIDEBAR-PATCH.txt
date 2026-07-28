@@ -1,0 +1,19 @@
+Add this standalone item to the existing Company Admin sidebar:
+
+<button
+  type="button"
+  onClick={() => router.push("/company-admin/accountant-bridge")}
+  title="Accountant Verification Bridge"
+>
+  <span className="material-symbols-rounded">difference</span>
+  <span>Accountant Verification Bridge</span>
+</button>
+
+This page lets Company Admin:
+- record the Company Admin half of expense approval;
+- attach a reference message/file for Staff proof and SMS verification;
+- attach the official bank statement values and file;
+- register or enrol approved fingerprint devices.
+
+Compatibility alias also included:
+/admin/accountant-bridge

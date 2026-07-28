@@ -4,11 +4,14 @@ import { getCurrentUser, getRoleLabel } from "@/lib/auth";
 
 import StaffDashboardClient from "./StaffDashboardClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function StaffDashboardPage() {
-  const user = (await getCurrentUser()) as any;
+  const user = await getCurrentUser();
 
   if (!user) redirect("/login");
-  if (user.role !== "STAFF") redirect("/dashboard");
+  if (String(user.role).toUpperCase() !== "STAFF") redirect("/dashboard");
+  if (!user.companyId) redirect("/dashboard");
 
   return (
     <StaffDashboardClient
@@ -19,7 +22,7 @@ export default async function StaffDashboardPage() {
         email: String(user.email ?? ""),
         role: String(user.role),
         roleLabel: getRoleLabel(user.role),
-        companyId: user.companyId == null ? null : String(user.companyId),
+        companyId: String(user.companyId),
       }}
     />
   );

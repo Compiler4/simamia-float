@@ -416,6 +416,7 @@ export type BrokerServiceVisitWhereInput = {
   staff?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   broker?: Prisma.XOR<Prisma.BrokerCustomerScalarRelationFilter, Prisma.BrokerCustomerWhereInput>
   device?: Prisma.XOR<Prisma.CompanyGpsDeviceNullableScalarRelationFilter, Prisma.CompanyGpsDeviceWhereInput> | null
+  proofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
 }
 
 export type BrokerServiceVisitOrderByWithRelationInput = {
@@ -449,6 +450,7 @@ export type BrokerServiceVisitOrderByWithRelationInput = {
   staff?: Prisma.UserOrderByWithRelationInput
   broker?: Prisma.BrokerCustomerOrderByWithRelationInput
   device?: Prisma.CompanyGpsDeviceOrderByWithRelationInput
+  proofSubmissions?: Prisma.StaffProofSubmissionOrderByRelationAggregateInput
   _relevance?: Prisma.BrokerServiceVisitOrderByRelevanceInput
 }
 
@@ -486,6 +488,7 @@ export type BrokerServiceVisitWhereUniqueInput = Prisma.AtLeast<{
   staff?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   broker?: Prisma.XOR<Prisma.BrokerCustomerScalarRelationFilter, Prisma.BrokerCustomerWhereInput>
   device?: Prisma.XOR<Prisma.CompanyGpsDeviceNullableScalarRelationFilter, Prisma.CompanyGpsDeviceWhereInput> | null
+  proofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
 }, "id">
 
 export type BrokerServiceVisitOrderByWithAggregationInput = {
@@ -581,6 +584,7 @@ export type BrokerServiceVisitCreateInput = {
   staff: Prisma.UserCreateNestedOneWithoutBrokerServiceVisitsInput
   broker: Prisma.BrokerCustomerCreateNestedOneWithoutServiceVisitsInput
   device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutServiceVisitsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitUncheckedCreateInput = {
@@ -610,6 +614,7 @@ export type BrokerServiceVisitUncheckedCreateInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitUpdateInput = {
@@ -639,6 +644,7 @@ export type BrokerServiceVisitUpdateInput = {
   staff?: Prisma.UserUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
   broker?: Prisma.BrokerCustomerUpdateOneRequiredWithoutServiceVisitsNestedInput
   device?: Prisma.CompanyGpsDeviceUpdateOneWithoutServiceVisitsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateInput = {
@@ -668,6 +674,7 @@ export type BrokerServiceVisitUncheckedUpdateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitCreateManyInput = {
@@ -878,6 +885,11 @@ export type BrokerServiceVisitSumOrderByAggregateInput = {
   distanceMeters?: Prisma.SortOrder
 }
 
+export type BrokerServiceVisitNullableScalarRelationFilter = {
+  is?: Prisma.BrokerServiceVisitWhereInput | null
+  isNot?: Prisma.BrokerServiceVisitWhereInput | null
+}
+
 export type BrokerServiceVisitCreateNestedManyWithoutCompanyInput = {
   create?: Prisma.XOR<Prisma.BrokerServiceVisitCreateWithoutCompanyInput, Prisma.BrokerServiceVisitUncheckedCreateWithoutCompanyInput> | Prisma.BrokerServiceVisitCreateWithoutCompanyInput[] | Prisma.BrokerServiceVisitUncheckedCreateWithoutCompanyInput[]
   connectOrCreate?: Prisma.BrokerServiceVisitCreateOrConnectWithoutCompanyInput | Prisma.BrokerServiceVisitCreateOrConnectWithoutCompanyInput[]
@@ -1050,6 +1062,22 @@ export type EnumBrokerVisitStatusFieldUpdateOperationsInput = {
   set?: $Enums.BrokerVisitStatus
 }
 
+export type BrokerServiceVisitCreateNestedOneWithoutProofSubmissionsInput = {
+  create?: Prisma.XOR<Prisma.BrokerServiceVisitCreateWithoutProofSubmissionsInput, Prisma.BrokerServiceVisitUncheckedCreateWithoutProofSubmissionsInput>
+  connectOrCreate?: Prisma.BrokerServiceVisitCreateOrConnectWithoutProofSubmissionsInput
+  connect?: Prisma.BrokerServiceVisitWhereUniqueInput
+}
+
+export type BrokerServiceVisitUpdateOneWithoutProofSubmissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.BrokerServiceVisitCreateWithoutProofSubmissionsInput, Prisma.BrokerServiceVisitUncheckedCreateWithoutProofSubmissionsInput>
+  connectOrCreate?: Prisma.BrokerServiceVisitCreateOrConnectWithoutProofSubmissionsInput
+  upsert?: Prisma.BrokerServiceVisitUpsertWithoutProofSubmissionsInput
+  disconnect?: Prisma.BrokerServiceVisitWhereInput | boolean
+  delete?: Prisma.BrokerServiceVisitWhereInput | boolean
+  connect?: Prisma.BrokerServiceVisitWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BrokerServiceVisitUpdateToOneWithWhereWithoutProofSubmissionsInput, Prisma.BrokerServiceVisitUpdateWithoutProofSubmissionsInput>, Prisma.BrokerServiceVisitUncheckedUpdateWithoutProofSubmissionsInput>
+}
+
 export type BrokerServiceVisitCreateWithoutCompanyInput = {
   id?: string
   serviceActivityId?: string | null
@@ -1076,6 +1104,7 @@ export type BrokerServiceVisitCreateWithoutCompanyInput = {
   staff: Prisma.UserCreateNestedOneWithoutBrokerServiceVisitsInput
   broker: Prisma.BrokerCustomerCreateNestedOneWithoutServiceVisitsInput
   device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutServiceVisitsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitUncheckedCreateWithoutCompanyInput = {
@@ -1104,6 +1133,7 @@ export type BrokerServiceVisitUncheckedCreateWithoutCompanyInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitCreateOrConnectWithoutCompanyInput = {
@@ -1190,6 +1220,7 @@ export type BrokerServiceVisitCreateWithoutStaffInput = {
   company: Prisma.CompanyCreateNestedOneWithoutBrokerServiceVisitsInput
   broker: Prisma.BrokerCustomerCreateNestedOneWithoutServiceVisitsInput
   device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutServiceVisitsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitUncheckedCreateWithoutStaffInput = {
@@ -1218,6 +1249,7 @@ export type BrokerServiceVisitUncheckedCreateWithoutStaffInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitCreateOrConnectWithoutStaffInput = {
@@ -1272,6 +1304,7 @@ export type BrokerServiceVisitCreateWithoutBrokerInput = {
   company: Prisma.CompanyCreateNestedOneWithoutBrokerServiceVisitsInput
   staff: Prisma.UserCreateNestedOneWithoutBrokerServiceVisitsInput
   device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutServiceVisitsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitUncheckedCreateWithoutBrokerInput = {
@@ -1300,6 +1333,7 @@ export type BrokerServiceVisitUncheckedCreateWithoutBrokerInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitCreateOrConnectWithoutBrokerInput = {
@@ -1354,6 +1388,7 @@ export type BrokerServiceVisitCreateWithoutDeviceInput = {
   company: Prisma.CompanyCreateNestedOneWithoutBrokerServiceVisitsInput
   staff: Prisma.UserCreateNestedOneWithoutBrokerServiceVisitsInput
   broker: Prisma.BrokerCustomerCreateNestedOneWithoutServiceVisitsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitUncheckedCreateWithoutDeviceInput = {
@@ -1382,6 +1417,7 @@ export type BrokerServiceVisitUncheckedCreateWithoutDeviceInput = {
   completedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutServiceVisitInput
 }
 
 export type BrokerServiceVisitCreateOrConnectWithoutDeviceInput = {
@@ -1408,6 +1444,138 @@ export type BrokerServiceVisitUpdateWithWhereUniqueWithoutDeviceInput = {
 export type BrokerServiceVisitUpdateManyWithWhereWithoutDeviceInput = {
   where: Prisma.BrokerServiceVisitScalarWhereInput
   data: Prisma.XOR<Prisma.BrokerServiceVisitUpdateManyMutationInput, Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutDeviceInput>
+}
+
+export type BrokerServiceVisitCreateWithoutProofSubmissionsInput = {
+  id?: string
+  serviceActivityId?: string | null
+  status?: $Enums.BrokerVisitStatus
+  serviceType?: string | null
+  communicationNote?: string | null
+  floatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  companyIncome?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  staffLatitude?: number | null
+  staffLongitude?: number | null
+  brokerLatitude?: number | null
+  brokerLongitude?: number | null
+  distanceMeters?: number | null
+  locationMatched?: boolean
+  startedAt?: Date | string
+  arrivedAt?: Date | string | null
+  serviceProvidedAt?: Date | string | null
+  proofDueAt?: Date | string | null
+  proofUploadedAt?: Date | string | null
+  completedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutBrokerServiceVisitsInput
+  staff: Prisma.UserCreateNestedOneWithoutBrokerServiceVisitsInput
+  broker: Prisma.BrokerCustomerCreateNestedOneWithoutServiceVisitsInput
+  device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutServiceVisitsInput
+}
+
+export type BrokerServiceVisitUncheckedCreateWithoutProofSubmissionsInput = {
+  id?: string
+  companyId: string
+  staffId: string
+  brokerCustomerId: string
+  deviceId?: string | null
+  serviceActivityId?: string | null
+  status?: $Enums.BrokerVisitStatus
+  serviceType?: string | null
+  communicationNote?: string | null
+  floatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  companyIncome?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  staffLatitude?: number | null
+  staffLongitude?: number | null
+  brokerLatitude?: number | null
+  brokerLongitude?: number | null
+  distanceMeters?: number | null
+  locationMatched?: boolean
+  startedAt?: Date | string
+  arrivedAt?: Date | string | null
+  serviceProvidedAt?: Date | string | null
+  proofDueAt?: Date | string | null
+  proofUploadedAt?: Date | string | null
+  completedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type BrokerServiceVisitCreateOrConnectWithoutProofSubmissionsInput = {
+  where: Prisma.BrokerServiceVisitWhereUniqueInput
+  create: Prisma.XOR<Prisma.BrokerServiceVisitCreateWithoutProofSubmissionsInput, Prisma.BrokerServiceVisitUncheckedCreateWithoutProofSubmissionsInput>
+}
+
+export type BrokerServiceVisitUpsertWithoutProofSubmissionsInput = {
+  update: Prisma.XOR<Prisma.BrokerServiceVisitUpdateWithoutProofSubmissionsInput, Prisma.BrokerServiceVisitUncheckedUpdateWithoutProofSubmissionsInput>
+  create: Prisma.XOR<Prisma.BrokerServiceVisitCreateWithoutProofSubmissionsInput, Prisma.BrokerServiceVisitUncheckedCreateWithoutProofSubmissionsInput>
+  where?: Prisma.BrokerServiceVisitWhereInput
+}
+
+export type BrokerServiceVisitUpdateToOneWithWhereWithoutProofSubmissionsInput = {
+  where?: Prisma.BrokerServiceVisitWhereInput
+  data: Prisma.XOR<Prisma.BrokerServiceVisitUpdateWithoutProofSubmissionsInput, Prisma.BrokerServiceVisitUncheckedUpdateWithoutProofSubmissionsInput>
+}
+
+export type BrokerServiceVisitUpdateWithoutProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceActivityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBrokerVisitStatusFieldUpdateOperationsInput | $Enums.BrokerVisitStatus
+  serviceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communicationNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  companyIncome?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  staffLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  staffLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  brokerLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  brokerLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  distanceMeters?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  locationMatched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  serviceProvidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofDueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
+  staff?: Prisma.UserUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
+  broker?: Prisma.BrokerCustomerUpdateOneRequiredWithoutServiceVisitsNestedInput
+  device?: Prisma.CompanyGpsDeviceUpdateOneWithoutServiceVisitsNestedInput
+}
+
+export type BrokerServiceVisitUncheckedUpdateWithoutProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  staffId?: Prisma.StringFieldUpdateOperationsInput | string
+  brokerCustomerId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceActivityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBrokerVisitStatusFieldUpdateOperationsInput | $Enums.BrokerVisitStatus
+  serviceType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communicationNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floatAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  cashAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  companyIncome?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  staffLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  staffLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  brokerLatitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  brokerLongitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  distanceMeters?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  locationMatched?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  arrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  serviceProvidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofDueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  proofUploadedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BrokerServiceVisitCreateManyCompanyInput = {
@@ -1464,6 +1632,7 @@ export type BrokerServiceVisitUpdateWithoutCompanyInput = {
   staff?: Prisma.UserUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
   broker?: Prisma.BrokerCustomerUpdateOneRequiredWithoutServiceVisitsNestedInput
   device?: Prisma.CompanyGpsDeviceUpdateOneWithoutServiceVisitsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateWithoutCompanyInput = {
@@ -1492,6 +1661,7 @@ export type BrokerServiceVisitUncheckedUpdateWithoutCompanyInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateManyWithoutCompanyInput = {
@@ -1576,6 +1746,7 @@ export type BrokerServiceVisitUpdateWithoutStaffInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
   broker?: Prisma.BrokerCustomerUpdateOneRequiredWithoutServiceVisitsNestedInput
   device?: Prisma.CompanyGpsDeviceUpdateOneWithoutServiceVisitsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateWithoutStaffInput = {
@@ -1604,6 +1775,7 @@ export type BrokerServiceVisitUncheckedUpdateWithoutStaffInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateManyWithoutStaffInput = {
@@ -1688,6 +1860,7 @@ export type BrokerServiceVisitUpdateWithoutBrokerInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
   device?: Prisma.CompanyGpsDeviceUpdateOneWithoutServiceVisitsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateWithoutBrokerInput = {
@@ -1716,6 +1889,7 @@ export type BrokerServiceVisitUncheckedUpdateWithoutBrokerInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateManyWithoutBrokerInput = {
@@ -1800,6 +1974,7 @@ export type BrokerServiceVisitUpdateWithoutDeviceInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
   staff?: Prisma.UserUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput
   broker?: Prisma.BrokerCustomerUpdateOneRequiredWithoutServiceVisitsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateWithoutDeviceInput = {
@@ -1828,6 +2003,7 @@ export type BrokerServiceVisitUncheckedUpdateWithoutDeviceInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutServiceVisitNestedInput
 }
 
 export type BrokerServiceVisitUncheckedUpdateManyWithoutDeviceInput = {
@@ -1858,6 +2034,35 @@ export type BrokerServiceVisitUncheckedUpdateManyWithoutDeviceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type BrokerServiceVisitCountOutputType
+ */
+
+export type BrokerServiceVisitCountOutputType = {
+  proofSubmissions: number
+}
+
+export type BrokerServiceVisitCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  proofSubmissions?: boolean | BrokerServiceVisitCountOutputTypeCountProofSubmissionsArgs
+}
+
+/**
+ * BrokerServiceVisitCountOutputType without action
+ */
+export type BrokerServiceVisitCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BrokerServiceVisitCountOutputType
+   */
+  select?: Prisma.BrokerServiceVisitCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * BrokerServiceVisitCountOutputType without action
+ */
+export type BrokerServiceVisitCountOutputTypeCountProofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffProofSubmissionWhereInput
+}
 
 
 export type BrokerServiceVisitSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1891,6 +2096,8 @@ export type BrokerServiceVisitSelect<ExtArgs extends runtime.Types.Extensions.In
   staff?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   broker?: boolean | Prisma.BrokerCustomerDefaultArgs<ExtArgs>
   device?: boolean | Prisma.BrokerServiceVisit$deviceArgs<ExtArgs>
+  proofSubmissions?: boolean | Prisma.BrokerServiceVisit$proofSubmissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.BrokerServiceVisitCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["brokerServiceVisit"]>
 
 
@@ -1930,6 +2137,8 @@ export type BrokerServiceVisitInclude<ExtArgs extends runtime.Types.Extensions.I
   staff?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   broker?: boolean | Prisma.BrokerCustomerDefaultArgs<ExtArgs>
   device?: boolean | Prisma.BrokerServiceVisit$deviceArgs<ExtArgs>
+  proofSubmissions?: boolean | Prisma.BrokerServiceVisit$proofSubmissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.BrokerServiceVisitCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $BrokerServiceVisitPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1939,6 +2148,7 @@ export type $BrokerServiceVisitPayload<ExtArgs extends runtime.Types.Extensions.
     staff: Prisma.$UserPayload<ExtArgs>
     broker: Prisma.$BrokerCustomerPayload<ExtArgs>
     device: Prisma.$CompanyGpsDevicePayload<ExtArgs> | null
+    proofSubmissions: Prisma.$StaffProofSubmissionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2311,6 +2521,7 @@ export interface Prisma__BrokerServiceVisitClient<T, Null = never, ExtArgs exten
   staff<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   broker<T extends Prisma.BrokerCustomerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerCustomerDefaultArgs<ExtArgs>>): Prisma.Prisma__BrokerCustomerClient<runtime.Types.Result.GetResult<Prisma.$BrokerCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   device<T extends Prisma.BrokerServiceVisit$deviceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerServiceVisit$deviceArgs<ExtArgs>>): Prisma.Prisma__CompanyGpsDeviceClient<runtime.Types.Result.GetResult<Prisma.$CompanyGpsDevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  proofSubmissions<T extends Prisma.BrokerServiceVisit$proofSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BrokerServiceVisit$proofSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffProofSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2730,6 +2941,30 @@ export type BrokerServiceVisit$deviceArgs<ExtArgs extends runtime.Types.Extensio
    */
   include?: Prisma.CompanyGpsDeviceInclude<ExtArgs> | null
   where?: Prisma.CompanyGpsDeviceWhereInput
+}
+
+/**
+ * BrokerServiceVisit.proofSubmissions
+ */
+export type BrokerServiceVisit$proofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffProofSubmission
+   */
+  select?: Prisma.StaffProofSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffProofSubmission
+   */
+  omit?: Prisma.StaffProofSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffProofSubmissionInclude<ExtArgs> | null
+  where?: Prisma.StaffProofSubmissionWhereInput
+  orderBy?: Prisma.StaffProofSubmissionOrderByWithRelationInput | Prisma.StaffProofSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.StaffProofSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffProofSubmissionScalarFieldEnum | Prisma.StaffProofSubmissionScalarFieldEnum[]
 }
 
 /**

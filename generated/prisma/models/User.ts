@@ -347,6 +347,15 @@ export type UserWhereInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentListRelationFilter
   brokerServiceVisits?: Prisma.BrokerServiceVisitListRelationFilter
   approvalDecisions?: Prisma.ApprovalDecisionListRelationFilter
+  assignedNetworkLines?: Prisma.StaffNetworkLineListRelationFilter
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptListRelationFilter
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptListRelationFilter
+  submittedProofs?: Prisma.StaffProofSubmissionListRelationFilter
+  verifiedProofs?: Prisma.StaffProofSubmissionListRelationFilter
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentListRelationFilter
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentListRelationFilter
+  staffWorkAreas?: Prisma.StaffWorkAreaListRelationFilter
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -415,6 +424,15 @@ export type UserOrderByWithRelationInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentOrderByRelationAggregateInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitOrderByRelationAggregateInput
   approvalDecisions?: Prisma.ApprovalDecisionOrderByRelationAggregateInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineOrderByRelationAggregateInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptOrderByRelationAggregateInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptOrderByRelationAggregateInput
+  submittedProofs?: Prisma.StaffProofSubmissionOrderByRelationAggregateInput
+  verifiedProofs?: Prisma.StaffProofSubmissionOrderByRelationAggregateInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentOrderByRelationAggregateInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentOrderByRelationAggregateInput
+  staffWorkAreas?: Prisma.StaffWorkAreaOrderByRelationAggregateInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -487,6 +505,15 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   uploadedPortalDocuments?: Prisma.PortalDocumentListRelationFilter
   brokerServiceVisits?: Prisma.BrokerServiceVisitListRelationFilter
   approvalDecisions?: Prisma.ApprovalDecisionListRelationFilter
+  assignedNetworkLines?: Prisma.StaffNetworkLineListRelationFilter
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptListRelationFilter
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptListRelationFilter
+  submittedProofs?: Prisma.StaffProofSubmissionListRelationFilter
+  verifiedProofs?: Prisma.StaffProofSubmissionListRelationFilter
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentListRelationFilter
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentListRelationFilter
+  staffWorkAreas?: Prisma.StaffWorkAreaListRelationFilter
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaListRelationFilter
 }, "id" | "username" | "email" | "nidaNumber">
 
 export type UserOrderByWithAggregationInput = {
@@ -605,6 +632,15 @@ export type UserCreateInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -671,6 +707,15 @@ export type UserUncheckedCreateInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUpdateInput = {
@@ -737,6 +782,15 @@ export type UserUpdateInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -803,6 +857,15 @@ export type UserUncheckedUpdateInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1711,6 +1774,138 @@ export type UserUpdateOneRequiredWithoutBrokerServiceVisitsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBrokerServiceVisitsInput, Prisma.UserUpdateWithoutBrokerServiceVisitsInput>, Prisma.UserUncheckedUpdateWithoutBrokerServiceVisitsInput>
 }
 
+export type UserCreateNestedOneWithoutAssignedNetworkLinesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedNetworkLinesInput, Prisma.UserUncheckedCreateWithoutAssignedNetworkLinesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedNetworkLinesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAssignedNetworkLinesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedNetworkLinesInput, Prisma.UserUncheckedCreateWithoutAssignedNetworkLinesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedNetworkLinesInput
+  upsert?: Prisma.UserUpsertWithoutAssignedNetworkLinesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignedNetworkLinesInput, Prisma.UserUpdateWithoutAssignedNetworkLinesInput>, Prisma.UserUncheckedUpdateWithoutAssignedNetworkLinesInput>
+}
+
+export type UserCreateNestedOneWithoutReceivedFundingReceiptsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutReceivedFundingReceiptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedFundingReceiptsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutIssuedFundingReceiptsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutIssuedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutIssuedFundingReceiptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIssuedFundingReceiptsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReceivedFundingReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutReceivedFundingReceiptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedFundingReceiptsInput
+  upsert?: Prisma.UserUpsertWithoutReceivedFundingReceiptsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedFundingReceiptsInput, Prisma.UserUpdateWithoutReceivedFundingReceiptsInput>, Prisma.UserUncheckedUpdateWithoutReceivedFundingReceiptsInput>
+}
+
+export type UserUpdateOneRequiredWithoutIssuedFundingReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutIssuedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutIssuedFundingReceiptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutIssuedFundingReceiptsInput
+  upsert?: Prisma.UserUpsertWithoutIssuedFundingReceiptsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutIssuedFundingReceiptsInput, Prisma.UserUpdateWithoutIssuedFundingReceiptsInput>, Prisma.UserUncheckedUpdateWithoutIssuedFundingReceiptsInput>
+}
+
+export type UserCreateNestedOneWithoutSubmittedProofsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubmittedProofsInput, Prisma.UserUncheckedCreateWithoutSubmittedProofsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubmittedProofsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutVerifiedProofsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVerifiedProofsInput, Prisma.UserUncheckedCreateWithoutVerifiedProofsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVerifiedProofsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSubmittedProofsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSubmittedProofsInput, Prisma.UserUncheckedCreateWithoutSubmittedProofsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubmittedProofsInput
+  upsert?: Prisma.UserUpsertWithoutSubmittedProofsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubmittedProofsInput, Prisma.UserUpdateWithoutSubmittedProofsInput>, Prisma.UserUncheckedUpdateWithoutSubmittedProofsInput>
+}
+
+export type UserUpdateOneWithoutVerifiedProofsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVerifiedProofsInput, Prisma.UserUncheckedCreateWithoutVerifiedProofsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVerifiedProofsInput
+  upsert?: Prisma.UserUpsertWithoutVerifiedProofsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVerifiedProofsInput, Prisma.UserUpdateWithoutVerifiedProofsInput>, Prisma.UserUncheckedUpdateWithoutVerifiedProofsInput>
+}
+
+export type UserCreateNestedOneWithoutBrokerCustomerAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBrokerCustomerAssignmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutBrokerCustomerAssignmentsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBrokerCustomerAssignmentsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBrokerCustomerAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBrokerCustomerAssignmentsInput
+  upsert?: Prisma.UserUpsertWithoutBrokerCustomerAssignmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBrokerCustomerAssignmentsInput, Prisma.UserUpdateWithoutBrokerCustomerAssignmentsInput>, Prisma.UserUncheckedUpdateWithoutBrokerCustomerAssignmentsInput>
+}
+
+export type UserUpdateOneWithoutBrokerCustomerAssignmentsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBrokerCustomerAssignmentsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutBrokerCustomerAssignmentsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBrokerCustomerAssignmentsCreatedInput, Prisma.UserUpdateWithoutBrokerCustomerAssignmentsCreatedInput>, Prisma.UserUncheckedUpdateWithoutBrokerCustomerAssignmentsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutStaffWorkAreasInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStaffWorkAreasInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutStaffWorkAreasCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasCreatedInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStaffWorkAreasCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStaffWorkAreasNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStaffWorkAreasInput
+  upsert?: Prisma.UserUpsertWithoutStaffWorkAreasInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStaffWorkAreasInput, Prisma.UserUpdateWithoutStaffWorkAreasInput>, Prisma.UserUncheckedUpdateWithoutStaffWorkAreasInput>
+}
+
+export type UserUpdateOneWithoutStaffWorkAreasCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasCreatedInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStaffWorkAreasCreatedInput
+  upsert?: Prisma.UserUpsertWithoutStaffWorkAreasCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStaffWorkAreasCreatedInput, Prisma.UserUpdateWithoutStaffWorkAreasCreatedInput>, Prisma.UserUncheckedUpdateWithoutStaffWorkAreasCreatedInput>
+}
+
 export type UserCreateWithoutCompanyInput = {
   id?: string
   name: string
@@ -1774,6 +1969,15 @@ export type UserCreateWithoutCompanyInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutCompanyInput = {
@@ -1839,6 +2043,15 @@ export type UserUncheckedCreateWithoutCompanyInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutCompanyInput = {
@@ -1956,6 +2169,15 @@ export type UserCreateWithoutBranchInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutBranchInput = {
@@ -2021,6 +2243,15 @@ export type UserUncheckedCreateWithoutBranchInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutBranchInput = {
@@ -2112,6 +2343,15 @@ export type UserCreateWithoutOpenedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutOpenedFinancialDaysInput = {
@@ -2177,6 +2417,15 @@ export type UserUncheckedCreateWithoutOpenedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutOpenedFinancialDaysInput = {
@@ -2247,6 +2496,15 @@ export type UserCreateWithoutClosedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutClosedFinancialDaysInput = {
@@ -2312,6 +2570,15 @@ export type UserUncheckedCreateWithoutClosedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutClosedFinancialDaysInput = {
@@ -2393,6 +2660,15 @@ export type UserUpdateWithoutOpenedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOpenedFinancialDaysInput = {
@@ -2458,6 +2734,15 @@ export type UserUncheckedUpdateWithoutOpenedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutClosedFinancialDaysInput = {
@@ -2534,6 +2819,15 @@ export type UserUpdateWithoutClosedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutClosedFinancialDaysInput = {
@@ -2599,6 +2893,15 @@ export type UserUncheckedUpdateWithoutClosedFinancialDaysInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAttendanceRecordsInput = {
@@ -2664,6 +2967,15 @@ export type UserCreateWithoutAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAttendanceRecordsInput = {
@@ -2729,6 +3041,15 @@ export type UserUncheckedCreateWithoutAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAttendanceRecordsInput = {
@@ -2810,6 +3131,15 @@ export type UserUpdateWithoutAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttendanceRecordsInput = {
@@ -2875,6 +3205,15 @@ export type UserUncheckedUpdateWithoutAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutExpensesSubmittedInput = {
@@ -2940,6 +3279,15 @@ export type UserCreateWithoutExpensesSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutExpensesSubmittedInput = {
@@ -3005,6 +3353,15 @@ export type UserUncheckedCreateWithoutExpensesSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutExpensesSubmittedInput = {
@@ -3075,6 +3432,15 @@ export type UserCreateWithoutExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutExpensesReviewedInput = {
@@ -3140,6 +3506,15 @@ export type UserUncheckedCreateWithoutExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutExpensesReviewedInput = {
@@ -3221,6 +3596,15 @@ export type UserUpdateWithoutExpensesSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesSubmittedInput = {
@@ -3286,6 +3670,15 @@ export type UserUncheckedUpdateWithoutExpensesSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutExpensesReviewedInput = {
@@ -3362,6 +3755,15 @@ export type UserUpdateWithoutExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExpensesReviewedInput = {
@@ -3427,6 +3829,15 @@ export type UserUncheckedUpdateWithoutExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutDepositsSubmittedInput = {
@@ -3492,6 +3903,15 @@ export type UserCreateWithoutDepositsSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutDepositsSubmittedInput = {
@@ -3557,6 +3977,15 @@ export type UserUncheckedCreateWithoutDepositsSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutDepositsSubmittedInput = {
@@ -3627,6 +4056,15 @@ export type UserCreateWithoutDepositsReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutDepositsReviewedInput = {
@@ -3692,6 +4130,15 @@ export type UserUncheckedCreateWithoutDepositsReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutDepositsReviewedInput = {
@@ -3762,6 +4209,15 @@ export type UserCreateWithoutDepositHoldsClearedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutDepositHoldsClearedInput = {
@@ -3827,6 +4283,15 @@ export type UserUncheckedCreateWithoutDepositHoldsClearedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutDepositHoldsClearedInput = {
@@ -3908,6 +4373,15 @@ export type UserUpdateWithoutDepositsSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepositsSubmittedInput = {
@@ -3973,6 +4447,15 @@ export type UserUncheckedUpdateWithoutDepositsSubmittedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutDepositsReviewedInput = {
@@ -4049,6 +4532,15 @@ export type UserUpdateWithoutDepositsReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepositsReviewedInput = {
@@ -4114,6 +4606,15 @@ export type UserUncheckedUpdateWithoutDepositsReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutDepositHoldsClearedInput = {
@@ -4190,6 +4691,15 @@ export type UserUpdateWithoutDepositHoldsClearedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepositHoldsClearedInput = {
@@ -4255,6 +4765,15 @@ export type UserUncheckedUpdateWithoutDepositHoldsClearedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutFloatSentInput = {
@@ -4320,6 +4839,15 @@ export type UserCreateWithoutFloatSentInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutFloatSentInput = {
@@ -4385,6 +4913,15 @@ export type UserUncheckedCreateWithoutFloatSentInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutFloatSentInput = {
@@ -4455,6 +4992,15 @@ export type UserCreateWithoutFloatReceivedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutFloatReceivedInput = {
@@ -4520,6 +5066,15 @@ export type UserUncheckedCreateWithoutFloatReceivedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutFloatReceivedInput = {
@@ -4590,6 +5145,15 @@ export type UserCreateWithoutFloatsApprovedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutFloatsApprovedInput = {
@@ -4655,6 +5219,15 @@ export type UserUncheckedCreateWithoutFloatsApprovedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutFloatsApprovedInput = {
@@ -4736,6 +5309,15 @@ export type UserUpdateWithoutFloatSentInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFloatSentInput = {
@@ -4801,6 +5383,15 @@ export type UserUncheckedUpdateWithoutFloatSentInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutFloatReceivedInput = {
@@ -4877,6 +5468,15 @@ export type UserUpdateWithoutFloatReceivedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFloatReceivedInput = {
@@ -4942,6 +5542,15 @@ export type UserUncheckedUpdateWithoutFloatReceivedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutFloatsApprovedInput = {
@@ -5018,6 +5627,15 @@ export type UserUpdateWithoutFloatsApprovedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFloatsApprovedInput = {
@@ -5083,6 +5701,15 @@ export type UserUncheckedUpdateWithoutFloatsApprovedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutStaffCollectionsRecordedInput = {
@@ -5148,6 +5775,15 @@ export type UserCreateWithoutStaffCollectionsRecordedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutStaffCollectionsRecordedInput = {
@@ -5213,6 +5849,15 @@ export type UserUncheckedCreateWithoutStaffCollectionsRecordedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutStaffCollectionsRecordedInput = {
@@ -5283,6 +5928,15 @@ export type UserCreateWithoutBrokerCollectionsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutBrokerCollectionsInput = {
@@ -5348,6 +6002,15 @@ export type UserUncheckedCreateWithoutBrokerCollectionsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutBrokerCollectionsInput = {
@@ -5418,6 +6081,15 @@ export type UserCreateWithoutStaffCollectionsVerifiedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutStaffCollectionsVerifiedInput = {
@@ -5483,6 +6155,15 @@ export type UserUncheckedCreateWithoutStaffCollectionsVerifiedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutStaffCollectionsVerifiedInput = {
@@ -5564,6 +6245,15 @@ export type UserUpdateWithoutStaffCollectionsRecordedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStaffCollectionsRecordedInput = {
@@ -5629,6 +6319,15 @@ export type UserUncheckedUpdateWithoutStaffCollectionsRecordedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutBrokerCollectionsInput = {
@@ -5705,6 +6404,15 @@ export type UserUpdateWithoutBrokerCollectionsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBrokerCollectionsInput = {
@@ -5770,6 +6478,15 @@ export type UserUncheckedUpdateWithoutBrokerCollectionsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutStaffCollectionsVerifiedInput = {
@@ -5846,6 +6563,15 @@ export type UserUpdateWithoutStaffCollectionsVerifiedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStaffCollectionsVerifiedInput = {
@@ -5911,6 +6637,15 @@ export type UserUncheckedUpdateWithoutStaffCollectionsVerifiedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutPerformanceRecordsInput = {
@@ -5976,6 +6711,15 @@ export type UserCreateWithoutPerformanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutPerformanceRecordsInput = {
@@ -6041,6 +6785,15 @@ export type UserUncheckedCreateWithoutPerformanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutPerformanceRecordsInput = {
@@ -6122,6 +6875,15 @@ export type UserUpdateWithoutPerformanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPerformanceRecordsInput = {
@@ -6187,6 +6949,15 @@ export type UserUncheckedUpdateWithoutPerformanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -6252,6 +7023,15 @@ export type UserCreateWithoutNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -6317,6 +7097,15 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -6398,6 +7187,15 @@ export type UserUpdateWithoutNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -6463,6 +7261,15 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -6528,6 +7335,15 @@ export type UserCreateWithoutSentMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -6593,6 +7409,15 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -6663,6 +7488,15 @@ export type UserCreateWithoutReceivedMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -6728,6 +7562,15 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -6809,6 +7652,15 @@ export type UserUpdateWithoutSentMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -6874,6 +7726,15 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutReceivedMessagesInput = {
@@ -6950,6 +7811,15 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -7015,6 +7885,15 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -7080,6 +7959,15 @@ export type UserCreateWithoutAuditLogsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -7145,6 +8033,15 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -7226,6 +8123,15 @@ export type UserUpdateWithoutAuditLogsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -7291,6 +8197,15 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutServicesAsStaffInput = {
@@ -7356,6 +8271,15 @@ export type UserCreateWithoutServicesAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutServicesAsStaffInput = {
@@ -7421,6 +8345,15 @@ export type UserUncheckedCreateWithoutServicesAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutServicesAsStaffInput = {
@@ -7491,6 +8424,15 @@ export type UserCreateWithoutServicesAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutServicesAsBrokerInput = {
@@ -7556,6 +8498,15 @@ export type UserUncheckedCreateWithoutServicesAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutServicesAsBrokerInput = {
@@ -7637,6 +8588,15 @@ export type UserUpdateWithoutServicesAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutServicesAsStaffInput = {
@@ -7702,6 +8662,15 @@ export type UserUncheckedUpdateWithoutServicesAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutServicesAsBrokerInput = {
@@ -7778,6 +8747,15 @@ export type UserUpdateWithoutServicesAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutServicesAsBrokerInput = {
@@ -7843,6 +8821,15 @@ export type UserUncheckedUpdateWithoutServicesAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutGpsTrackingsInput = {
@@ -7908,6 +8895,15 @@ export type UserCreateWithoutGpsTrackingsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutGpsTrackingsInput = {
@@ -7973,6 +8969,15 @@ export type UserUncheckedCreateWithoutGpsTrackingsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutGpsTrackingsInput = {
@@ -8054,6 +9059,15 @@ export type UserUpdateWithoutGpsTrackingsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGpsTrackingsInput = {
@@ -8119,6 +9133,15 @@ export type UserUncheckedUpdateWithoutGpsTrackingsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAdminExpensesCreatedInput = {
@@ -8184,6 +9207,15 @@ export type UserCreateWithoutAdminExpensesCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminExpensesCreatedInput = {
@@ -8249,6 +9281,15 @@ export type UserUncheckedCreateWithoutAdminExpensesCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminExpensesCreatedInput = {
@@ -8319,6 +9360,15 @@ export type UserCreateWithoutAdminExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminExpensesReviewedInput = {
@@ -8384,6 +9434,15 @@ export type UserUncheckedCreateWithoutAdminExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminExpensesReviewedInput = {
@@ -8465,6 +9524,15 @@ export type UserUpdateWithoutAdminExpensesCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminExpensesCreatedInput = {
@@ -8530,6 +9598,15 @@ export type UserUncheckedUpdateWithoutAdminExpensesCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutAdminExpensesReviewedInput = {
@@ -8606,6 +9683,15 @@ export type UserUpdateWithoutAdminExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminExpensesReviewedInput = {
@@ -8671,6 +9757,15 @@ export type UserUncheckedUpdateWithoutAdminExpensesReviewedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAdminBankUploadsInput = {
@@ -8736,6 +9831,15 @@ export type UserCreateWithoutAdminBankUploadsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminBankUploadsInput = {
@@ -8801,6 +9905,15 @@ export type UserUncheckedCreateWithoutAdminBankUploadsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminBankUploadsInput = {
@@ -8871,6 +9984,15 @@ export type UserCreateWithoutAdminBankReviewsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminBankReviewsInput = {
@@ -8936,6 +10058,15 @@ export type UserUncheckedCreateWithoutAdminBankReviewsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminBankReviewsInput = {
@@ -9017,6 +10148,15 @@ export type UserUpdateWithoutAdminBankUploadsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminBankUploadsInput = {
@@ -9082,6 +10222,15 @@ export type UserUncheckedUpdateWithoutAdminBankUploadsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutAdminBankReviewsInput = {
@@ -9158,6 +10307,15 @@ export type UserUpdateWithoutAdminBankReviewsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminBankReviewsInput = {
@@ -9223,6 +10381,15 @@ export type UserUncheckedUpdateWithoutAdminBankReviewsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAdminBankMessagesInput = {
@@ -9288,6 +10455,15 @@ export type UserCreateWithoutAdminBankMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminBankMessagesInput = {
@@ -9353,6 +10529,15 @@ export type UserUncheckedCreateWithoutAdminBankMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminBankMessagesInput = {
@@ -9434,6 +10619,15 @@ export type UserUpdateWithoutAdminBankMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminBankMessagesInput = {
@@ -9499,6 +10693,15 @@ export type UserUncheckedUpdateWithoutAdminBankMessagesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAdminAttendanceRecordsInput = {
@@ -9564,6 +10767,15 @@ export type UserCreateWithoutAdminAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminAttendanceRecordsInput = {
@@ -9629,6 +10841,15 @@ export type UserUncheckedCreateWithoutAdminAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminAttendanceRecordsInput = {
@@ -9710,6 +10931,15 @@ export type UserUpdateWithoutAdminAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminAttendanceRecordsInput = {
@@ -9775,6 +11005,15 @@ export type UserUncheckedUpdateWithoutAdminAttendanceRecordsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAdminNotificationsInput = {
@@ -9840,6 +11079,15 @@ export type UserCreateWithoutAdminNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminNotificationsInput = {
@@ -9905,6 +11153,15 @@ export type UserUncheckedCreateWithoutAdminNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminNotificationsInput = {
@@ -9986,6 +11243,15 @@ export type UserUpdateWithoutAdminNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminNotificationsInput = {
@@ -10051,6 +11317,15 @@ export type UserUncheckedUpdateWithoutAdminNotificationsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAdminGpsDevicesInput = {
@@ -10116,6 +11391,15 @@ export type UserCreateWithoutAdminGpsDevicesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminGpsDevicesInput = {
@@ -10181,6 +11465,15 @@ export type UserUncheckedCreateWithoutAdminGpsDevicesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminGpsDevicesInput = {
@@ -10262,6 +11555,15 @@ export type UserUpdateWithoutAdminGpsDevicesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminGpsDevicesInput = {
@@ -10327,6 +11629,15 @@ export type UserUncheckedUpdateWithoutAdminGpsDevicesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAdminAuditEventsInput = {
@@ -10392,6 +11703,15 @@ export type UserCreateWithoutAdminAuditEventsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminAuditEventsInput = {
@@ -10457,6 +11777,15 @@ export type UserUncheckedCreateWithoutAdminAuditEventsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminAuditEventsInput = {
@@ -10538,6 +11867,15 @@ export type UserUpdateWithoutAdminAuditEventsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminAuditEventsInput = {
@@ -10603,6 +11941,15 @@ export type UserUncheckedUpdateWithoutAdminAuditEventsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutAccountingPeriodsLockedInput = {
@@ -10668,6 +12015,15 @@ export type UserCreateWithoutAccountingPeriodsLockedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAccountingPeriodsLockedInput = {
@@ -10733,6 +12089,15 @@ export type UserUncheckedCreateWithoutAccountingPeriodsLockedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAccountingPeriodsLockedInput = {
@@ -10814,6 +12179,15 @@ export type UserUpdateWithoutAccountingPeriodsLockedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountingPeriodsLockedInput = {
@@ -10879,6 +12253,15 @@ export type UserUncheckedUpdateWithoutAccountingPeriodsLockedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutGpsAlertsInput = {
@@ -10944,6 +12327,15 @@ export type UserCreateWithoutGpsAlertsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutGpsAlertsInput = {
@@ -11009,6 +12401,15 @@ export type UserUncheckedCreateWithoutGpsAlertsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutGpsAlertsInput = {
@@ -11090,6 +12491,15 @@ export type UserUpdateWithoutGpsAlertsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGpsAlertsInput = {
@@ -11155,6 +12565,15 @@ export type UserUncheckedUpdateWithoutGpsAlertsInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutNotificationDeliveriesInput = {
@@ -11220,6 +12639,15 @@ export type UserCreateWithoutNotificationDeliveriesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationDeliveriesInput = {
@@ -11285,6 +12713,15 @@ export type UserUncheckedCreateWithoutNotificationDeliveriesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationDeliveriesInput = {
@@ -11366,6 +12803,15 @@ export type UserUpdateWithoutNotificationDeliveriesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationDeliveriesInput = {
@@ -11431,6 +12877,15 @@ export type UserUncheckedUpdateWithoutNotificationDeliveriesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutBrokerAssignmentsAsStaffInput = {
@@ -11496,6 +12951,15 @@ export type UserCreateWithoutBrokerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutBrokerAssignmentsAsStaffInput = {
@@ -11561,6 +13025,15 @@ export type UserUncheckedCreateWithoutBrokerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutBrokerAssignmentsAsStaffInput = {
@@ -11631,6 +13104,15 @@ export type UserCreateWithoutAssignmentsAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutAssignmentsAsBrokerInput = {
@@ -11696,6 +13178,15 @@ export type UserUncheckedCreateWithoutAssignmentsAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutAssignmentsAsBrokerInput = {
@@ -11766,6 +13257,15 @@ export type UserCreateWithoutBrokerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutBrokerAssignmentsCreatedInput = {
@@ -11831,6 +13331,15 @@ export type UserUncheckedCreateWithoutBrokerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutBrokerAssignmentsCreatedInput = {
@@ -11912,6 +13421,15 @@ export type UserUpdateWithoutBrokerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBrokerAssignmentsAsStaffInput = {
@@ -11977,6 +13495,15 @@ export type UserUncheckedUpdateWithoutBrokerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutAssignmentsAsBrokerInput = {
@@ -12053,6 +13580,15 @@ export type UserUpdateWithoutAssignmentsAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignmentsAsBrokerInput = {
@@ -12118,6 +13654,15 @@ export type UserUncheckedUpdateWithoutAssignmentsAsBrokerInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutBrokerAssignmentsCreatedInput = {
@@ -12194,6 +13739,15 @@ export type UserUpdateWithoutBrokerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBrokerAssignmentsCreatedInput = {
@@ -12259,6 +13813,15 @@ export type UserUncheckedUpdateWithoutBrokerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutCustomerAssignmentsAsStaffInput = {
@@ -12324,6 +13887,15 @@ export type UserCreateWithoutCustomerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutCustomerAssignmentsAsStaffInput = {
@@ -12389,6 +13961,15 @@ export type UserUncheckedCreateWithoutCustomerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutCustomerAssignmentsAsStaffInput = {
@@ -12459,6 +14040,15 @@ export type UserCreateWithoutCustomerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutCustomerAssignmentsCreatedInput = {
@@ -12524,6 +14114,15 @@ export type UserUncheckedCreateWithoutCustomerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutCustomerAssignmentsCreatedInput = {
@@ -12605,6 +14204,15 @@ export type UserUpdateWithoutCustomerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCustomerAssignmentsAsStaffInput = {
@@ -12670,6 +14278,15 @@ export type UserUncheckedUpdateWithoutCustomerAssignmentsAsStaffInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUpsertWithoutCustomerAssignmentsCreatedInput = {
@@ -12746,6 +14363,15 @@ export type UserUpdateWithoutCustomerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCustomerAssignmentsCreatedInput = {
@@ -12811,6 +14437,15 @@ export type UserUncheckedUpdateWithoutCustomerAssignmentsCreatedInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutOwnedStaffFilesInput = {
@@ -12876,6 +14511,15 @@ export type UserCreateWithoutOwnedStaffFilesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutOwnedStaffFilesInput = {
@@ -12941,6 +14585,15 @@ export type UserUncheckedCreateWithoutOwnedStaffFilesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutOwnedStaffFilesInput = {
@@ -13022,6 +14675,15 @@ export type UserUpdateWithoutOwnedStaffFilesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedStaffFilesInput = {
@@ -13087,6 +14749,15 @@ export type UserUncheckedUpdateWithoutOwnedStaffFilesInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutUploadedPortalDocumentsInput = {
@@ -13152,6 +14823,15 @@ export type UserCreateWithoutUploadedPortalDocumentsInput = {
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutUploadedPortalDocumentsInput = {
@@ -13217,6 +14897,15 @@ export type UserUncheckedCreateWithoutUploadedPortalDocumentsInput = {
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutUploadedPortalDocumentsInput = {
@@ -13298,6 +14987,15 @@ export type UserUpdateWithoutUploadedPortalDocumentsInput = {
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUploadedPortalDocumentsInput = {
@@ -13363,6 +15061,15 @@ export type UserUncheckedUpdateWithoutUploadedPortalDocumentsInput = {
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutApprovalDecisionsInput = {
@@ -13428,6 +15135,15 @@ export type UserCreateWithoutApprovalDecisionsInput = {
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutApprovalDecisionsInput = {
@@ -13493,6 +15209,15 @@ export type UserUncheckedCreateWithoutApprovalDecisionsInput = {
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutApprovalDecisionsInput = {
@@ -13574,6 +15299,15 @@ export type UserUpdateWithoutApprovalDecisionsInput = {
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovalDecisionsInput = {
@@ -13639,6 +15373,15 @@ export type UserUncheckedUpdateWithoutApprovalDecisionsInput = {
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserCreateWithoutBrokerServiceVisitsInput = {
@@ -13704,6 +15447,15 @@ export type UserCreateWithoutBrokerServiceVisitsInput = {
   depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
   uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserUncheckedCreateWithoutBrokerServiceVisitsInput = {
@@ -13769,6 +15521,15 @@ export type UserUncheckedCreateWithoutBrokerServiceVisitsInput = {
   depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
 }
 
 export type UserCreateOrConnectWithoutBrokerServiceVisitsInput = {
@@ -13850,6 +15611,15 @@ export type UserUpdateWithoutBrokerServiceVisitsInput = {
   depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBrokerServiceVisitsInput = {
@@ -13915,6 +15685,2823 @@ export type UserUncheckedUpdateWithoutBrokerServiceVisitsInput = {
   depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserCreateWithoutAssignedNetworkLinesInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutAssignedNetworkLinesInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutAssignedNetworkLinesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedNetworkLinesInput, Prisma.UserUncheckedCreateWithoutAssignedNetworkLinesInput>
+}
+
+export type UserUpsertWithoutAssignedNetworkLinesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAssignedNetworkLinesInput, Prisma.UserUncheckedUpdateWithoutAssignedNetworkLinesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssignedNetworkLinesInput, Prisma.UserUncheckedCreateWithoutAssignedNetworkLinesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAssignedNetworkLinesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAssignedNetworkLinesInput, Prisma.UserUncheckedUpdateWithoutAssignedNetworkLinesInput>
+}
+
+export type UserUpdateWithoutAssignedNetworkLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAssignedNetworkLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserCreateWithoutReceivedFundingReceiptsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutReceivedFundingReceiptsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutReceivedFundingReceiptsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutReceivedFundingReceiptsInput>
+}
+
+export type UserCreateWithoutIssuedFundingReceiptsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutIssuedFundingReceiptsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutIssuedFundingReceiptsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutIssuedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutIssuedFundingReceiptsInput>
+}
+
+export type UserUpsertWithoutReceivedFundingReceiptsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivedFundingReceiptsInput, Prisma.UserUncheckedUpdateWithoutReceivedFundingReceiptsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutReceivedFundingReceiptsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReceivedFundingReceiptsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivedFundingReceiptsInput, Prisma.UserUncheckedUpdateWithoutReceivedFundingReceiptsInput>
+}
+
+export type UserUpdateWithoutReceivedFundingReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReceivedFundingReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUpsertWithoutIssuedFundingReceiptsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutIssuedFundingReceiptsInput, Prisma.UserUncheckedUpdateWithoutIssuedFundingReceiptsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutIssuedFundingReceiptsInput, Prisma.UserUncheckedCreateWithoutIssuedFundingReceiptsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutIssuedFundingReceiptsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutIssuedFundingReceiptsInput, Prisma.UserUncheckedUpdateWithoutIssuedFundingReceiptsInput>
+}
+
+export type UserUpdateWithoutIssuedFundingReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutIssuedFundingReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserCreateWithoutSubmittedProofsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutSubmittedProofsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutSubmittedProofsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubmittedProofsInput, Prisma.UserUncheckedCreateWithoutSubmittedProofsInput>
+}
+
+export type UserCreateWithoutVerifiedProofsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutVerifiedProofsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutVerifiedProofsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVerifiedProofsInput, Prisma.UserUncheckedCreateWithoutVerifiedProofsInput>
+}
+
+export type UserUpsertWithoutSubmittedProofsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSubmittedProofsInput, Prisma.UserUncheckedUpdateWithoutSubmittedProofsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSubmittedProofsInput, Prisma.UserUncheckedCreateWithoutSubmittedProofsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSubmittedProofsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSubmittedProofsInput, Prisma.UserUncheckedUpdateWithoutSubmittedProofsInput>
+}
+
+export type UserUpdateWithoutSubmittedProofsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSubmittedProofsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUpsertWithoutVerifiedProofsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVerifiedProofsInput, Prisma.UserUncheckedUpdateWithoutVerifiedProofsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVerifiedProofsInput, Prisma.UserUncheckedCreateWithoutVerifiedProofsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVerifiedProofsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVerifiedProofsInput, Prisma.UserUncheckedUpdateWithoutVerifiedProofsInput>
+}
+
+export type UserUpdateWithoutVerifiedProofsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVerifiedProofsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserCreateWithoutBrokerCustomerAssignmentsInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutBrokerCustomerAssignmentsInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutBrokerCustomerAssignmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+}
+
+export type UserCreateWithoutBrokerCustomerAssignmentsCreatedInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutBrokerCustomerAssignmentsCreatedInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutBrokerCustomerAssignmentsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsCreatedInput>
+}
+
+export type UserUpsertWithoutBrokerCustomerAssignmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBrokerCustomerAssignmentsInput, Prisma.UserUncheckedUpdateWithoutBrokerCustomerAssignmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBrokerCustomerAssignmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBrokerCustomerAssignmentsInput, Prisma.UserUncheckedUpdateWithoutBrokerCustomerAssignmentsInput>
+}
+
+export type UserUpdateWithoutBrokerCustomerAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBrokerCustomerAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUpsertWithoutBrokerCustomerAssignmentsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBrokerCustomerAssignmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutBrokerCustomerAssignmentsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBrokerCustomerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutBrokerCustomerAssignmentsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBrokerCustomerAssignmentsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBrokerCustomerAssignmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutBrokerCustomerAssignmentsCreatedInput>
+}
+
+export type UserUpdateWithoutBrokerCustomerAssignmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBrokerCustomerAssignmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserCreateWithoutStaffWorkAreasInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserUncheckedCreateWithoutStaffWorkAreasInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutAssignedByInput
+}
+
+export type UserCreateOrConnectWithoutStaffWorkAreasInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasInput>
+}
+
+export type UserCreateWithoutStaffWorkAreasCreatedInput = {
+  id?: string
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company?: Prisma.CompanyCreateNestedOneWithoutUsersInput
+  branch?: Prisma.BranchCreateNestedOneWithoutUsersInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutStaffInput
+}
+
+export type UserUncheckedCreateWithoutStaffWorkAreasCreatedInput = {
+  id?: string
+  companyId?: string | null
+  branchId?: string | null
+  name: string
+  username: string
+  email: string
+  phone?: string | null
+  passwordHash: string
+  role: $Enums.Role
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  profileImageUrl?: string | null
+  assignedRegion?: string | null
+  nidaNumber?: string | null
+  dateOfBirth?: Date | string | null
+  gender?: $Enums.PortalGender | null
+  nationality?: string | null
+  physicalAddress?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutUserInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutStaffInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutBrokerInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutOpenedByInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutClosedByInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedCreateNestedManyWithoutStaffInput
+  depositsReviewed?: Prisma.BankDepositUncheckedCreateNestedManyWithoutAccountantInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  expensesReviewed?: Prisma.ExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  floatSent?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutFromUserInput
+  floatReceived?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutToUserInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutApprovedByInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutStaffInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutBrokerInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutReviewedByInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutUserInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutUserInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutBrokerInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutOwnerInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutReviewedByInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutUploadedByInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutVerifiedByInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutSenderInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutUserInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutTargetUserInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutOwnerInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutActorInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutLockedByInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedCreateNestedManyWithoutHoldClearedByInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutStaffInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutReviewerInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutStaffInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutStaffInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutAccountantInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutStaffInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutVerifiedByInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutStaffInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutStaffInput
+}
+
+export type UserCreateOrConnectWithoutStaffWorkAreasCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasCreatedInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasCreatedInput>
+}
+
+export type UserUpsertWithoutStaffWorkAreasInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStaffWorkAreasInput, Prisma.UserUncheckedUpdateWithoutStaffWorkAreasInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStaffWorkAreasInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStaffWorkAreasInput, Prisma.UserUncheckedUpdateWithoutStaffWorkAreasInput>
+}
+
+export type UserUpdateWithoutStaffWorkAreasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStaffWorkAreasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
+}
+
+export type UserUpsertWithoutStaffWorkAreasCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStaffWorkAreasCreatedInput, Prisma.UserUncheckedUpdateWithoutStaffWorkAreasCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStaffWorkAreasCreatedInput, Prisma.UserUncheckedCreateWithoutStaffWorkAreasCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStaffWorkAreasCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStaffWorkAreasCreatedInput, Prisma.UserUncheckedUpdateWithoutStaffWorkAreasCreatedInput>
+}
+
+export type UserUpdateWithoutStaffWorkAreasCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneWithoutUsersNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStaffWorkAreasCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  branchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedRegion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nidaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gender?: Prisma.NullableEnumPortalGenderFieldUpdateOperationsInput | $Enums.PortalGender | null
+  nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  physicalAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutUserNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  servicesAsStaff?: Prisma.ServiceActivityUncheckedUpdateManyWithoutStaffNestedInput
+  servicesAsBroker?: Prisma.ServiceActivityUncheckedUpdateManyWithoutBrokerNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  openedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutOpenedByNestedInput
+  closedFinancialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutClosedByNestedInput
+  depositsSubmitted?: Prisma.BankDepositUncheckedUpdateManyWithoutStaffNestedInput
+  depositsReviewed?: Prisma.BankDepositUncheckedUpdateManyWithoutAccountantNestedInput
+  expensesSubmitted?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  expensesReviewed?: Prisma.ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  floatSent?: Prisma.FloatTransactionUncheckedUpdateManyWithoutFromUserNestedInput
+  floatReceived?: Prisma.FloatTransactionUncheckedUpdateManyWithoutToUserNestedInput
+  floatsApproved?: Prisma.FloatTransactionUncheckedUpdateManyWithoutApprovedByNestedInput
+  staffCollectionsRecorded?: Prisma.StaffCollectionUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutBrokerNestedInput
+  staffCollectionsVerified?: Prisma.StaffCollectionUncheckedUpdateManyWithoutReviewedByNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutUserNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutUserNestedInput
+  brokerAssignmentsAsStaff?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  assignmentsAsBroker?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutBrokerNestedInput
+  brokerAssignmentsCreated?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  customerAssignmentsAsStaff?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  customerAssignmentsCreated?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  ownedStaffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutOwnerNestedInput
+  adminExpensesCreated?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+  adminExpensesReviewed?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutReviewedByNestedInput
+  adminBankUploads?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutUploadedByNestedInput
+  adminBankReviews?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutVerifiedByNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutSenderNestedInput
+  adminAttendanceRecords?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutTargetUserNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutOwnerNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  accountingPeriodsLocked?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutLockedByNestedInput
+  depositHoldsCleared?: Prisma.BankDepositUncheckedUpdateManyWithoutHoldClearedByNestedInput
+  uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
 }
 
 export type UserCreateManyCompanyInput = {
@@ -14002,6 +18589,15 @@ export type UserUpdateWithoutCompanyInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -14067,6 +18663,15 @@ export type UserUncheckedUpdateWithoutCompanyInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -14176,6 +18781,15 @@ export type UserUpdateWithoutBranchInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBranchInput = {
@@ -14241,6 +18855,15 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   uploadedPortalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutStaffNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutReviewerNestedInput
+  assignedNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutStaffNestedInput
+  receivedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutStaffNestedInput
+  issuedFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutAccountantNestedInput
+  submittedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutStaffNestedInput
+  verifiedProofs?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutVerifiedByNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutStaffNestedInput
+  brokerCustomerAssignmentsCreated?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutStaffNestedInput
+  staffWorkAreasCreated?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutAssignedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -14314,6 +18937,15 @@ export type UserCountOutputType = {
   uploadedPortalDocuments: number
   brokerServiceVisits: number
   approvalDecisions: number
+  assignedNetworkLines: number
+  receivedFundingReceipts: number
+  issuedFundingReceipts: number
+  submittedProofs: number
+  verifiedProofs: number
+  brokerCustomerAssignments: number
+  brokerCustomerAssignmentsCreated: number
+  staffWorkAreas: number
+  staffWorkAreasCreated: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -14360,6 +18992,15 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   uploadedPortalDocuments?: boolean | UserCountOutputTypeCountUploadedPortalDocumentsArgs
   brokerServiceVisits?: boolean | UserCountOutputTypeCountBrokerServiceVisitsArgs
   approvalDecisions?: boolean | UserCountOutputTypeCountApprovalDecisionsArgs
+  assignedNetworkLines?: boolean | UserCountOutputTypeCountAssignedNetworkLinesArgs
+  receivedFundingReceipts?: boolean | UserCountOutputTypeCountReceivedFundingReceiptsArgs
+  issuedFundingReceipts?: boolean | UserCountOutputTypeCountIssuedFundingReceiptsArgs
+  submittedProofs?: boolean | UserCountOutputTypeCountSubmittedProofsArgs
+  verifiedProofs?: boolean | UserCountOutputTypeCountVerifiedProofsArgs
+  brokerCustomerAssignments?: boolean | UserCountOutputTypeCountBrokerCustomerAssignmentsArgs
+  brokerCustomerAssignmentsCreated?: boolean | UserCountOutputTypeCountBrokerCustomerAssignmentsCreatedArgs
+  staffWorkAreas?: boolean | UserCountOutputTypeCountStaffWorkAreasArgs
+  staffWorkAreasCreated?: boolean | UserCountOutputTypeCountStaffWorkAreasCreatedArgs
 }
 
 /**
@@ -14673,6 +19314,69 @@ export type UserCountOutputTypeCountApprovalDecisionsArgs<ExtArgs extends runtim
   where?: Prisma.ApprovalDecisionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAssignedNetworkLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffNetworkLineWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReceivedFundingReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffFundingReceiptWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountIssuedFundingReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffFundingReceiptWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSubmittedProofsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffProofSubmissionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountVerifiedProofsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffProofSubmissionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBrokerCustomerAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffBrokerCustomerAssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBrokerCustomerAssignmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffBrokerCustomerAssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStaffWorkAreasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffWorkAreaWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStaffWorkAreasCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffWorkAreaWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -14740,6 +19444,15 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   uploadedPortalDocuments?: boolean | Prisma.User$uploadedPortalDocumentsArgs<ExtArgs>
   brokerServiceVisits?: boolean | Prisma.User$brokerServiceVisitsArgs<ExtArgs>
   approvalDecisions?: boolean | Prisma.User$approvalDecisionsArgs<ExtArgs>
+  assignedNetworkLines?: boolean | Prisma.User$assignedNetworkLinesArgs<ExtArgs>
+  receivedFundingReceipts?: boolean | Prisma.User$receivedFundingReceiptsArgs<ExtArgs>
+  issuedFundingReceipts?: boolean | Prisma.User$issuedFundingReceiptsArgs<ExtArgs>
+  submittedProofs?: boolean | Prisma.User$submittedProofsArgs<ExtArgs>
+  verifiedProofs?: boolean | Prisma.User$verifiedProofsArgs<ExtArgs>
+  brokerCustomerAssignments?: boolean | Prisma.User$brokerCustomerAssignmentsArgs<ExtArgs>
+  brokerCustomerAssignmentsCreated?: boolean | Prisma.User$brokerCustomerAssignmentsCreatedArgs<ExtArgs>
+  staffWorkAreas?: boolean | Prisma.User$staffWorkAreasArgs<ExtArgs>
+  staffWorkAreasCreated?: boolean | Prisma.User$staffWorkAreasCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -14815,6 +19528,15 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   uploadedPortalDocuments?: boolean | Prisma.User$uploadedPortalDocumentsArgs<ExtArgs>
   brokerServiceVisits?: boolean | Prisma.User$brokerServiceVisitsArgs<ExtArgs>
   approvalDecisions?: boolean | Prisma.User$approvalDecisionsArgs<ExtArgs>
+  assignedNetworkLines?: boolean | Prisma.User$assignedNetworkLinesArgs<ExtArgs>
+  receivedFundingReceipts?: boolean | Prisma.User$receivedFundingReceiptsArgs<ExtArgs>
+  issuedFundingReceipts?: boolean | Prisma.User$issuedFundingReceiptsArgs<ExtArgs>
+  submittedProofs?: boolean | Prisma.User$submittedProofsArgs<ExtArgs>
+  verifiedProofs?: boolean | Prisma.User$verifiedProofsArgs<ExtArgs>
+  brokerCustomerAssignments?: boolean | Prisma.User$brokerCustomerAssignmentsArgs<ExtArgs>
+  brokerCustomerAssignmentsCreated?: boolean | Prisma.User$brokerCustomerAssignmentsCreatedArgs<ExtArgs>
+  staffWorkAreas?: boolean | Prisma.User$staffWorkAreasArgs<ExtArgs>
+  staffWorkAreasCreated?: boolean | Prisma.User$staffWorkAreasCreatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -14870,6 +19592,15 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     uploadedPortalDocuments: Prisma.$PortalDocumentPayload<ExtArgs>[]
     brokerServiceVisits: Prisma.$BrokerServiceVisitPayload<ExtArgs>[]
     approvalDecisions: Prisma.$ApprovalDecisionPayload<ExtArgs>[]
+    assignedNetworkLines: Prisma.$StaffNetworkLinePayload<ExtArgs>[]
+    receivedFundingReceipts: Prisma.$StaffFundingReceiptPayload<ExtArgs>[]
+    issuedFundingReceipts: Prisma.$StaffFundingReceiptPayload<ExtArgs>[]
+    submittedProofs: Prisma.$StaffProofSubmissionPayload<ExtArgs>[]
+    verifiedProofs: Prisma.$StaffProofSubmissionPayload<ExtArgs>[]
+    brokerCustomerAssignments: Prisma.$StaffBrokerCustomerAssignmentPayload<ExtArgs>[]
+    brokerCustomerAssignmentsCreated: Prisma.$StaffBrokerCustomerAssignmentPayload<ExtArgs>[]
+    staffWorkAreas: Prisma.$StaffWorkAreaPayload<ExtArgs>[]
+    staffWorkAreasCreated: Prisma.$StaffWorkAreaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -15277,6 +20008,15 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   uploadedPortalDocuments<T extends Prisma.User$uploadedPortalDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$uploadedPortalDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PortalDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   brokerServiceVisits<T extends Prisma.User$brokerServiceVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$brokerServiceVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrokerServiceVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvalDecisions<T extends Prisma.User$approvalDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvalDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignedNetworkLines<T extends Prisma.User$assignedNetworkLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedNetworkLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffNetworkLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivedFundingReceipts<T extends Prisma.User$receivedFundingReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedFundingReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffFundingReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  issuedFundingReceipts<T extends Prisma.User$issuedFundingReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$issuedFundingReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffFundingReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  submittedProofs<T extends Prisma.User$submittedProofsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$submittedProofsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffProofSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  verifiedProofs<T extends Prisma.User$verifiedProofsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$verifiedProofsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffProofSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  brokerCustomerAssignments<T extends Prisma.User$brokerCustomerAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$brokerCustomerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffBrokerCustomerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  brokerCustomerAssignmentsCreated<T extends Prisma.User$brokerCustomerAssignmentsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$brokerCustomerAssignmentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffBrokerCustomerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  staffWorkAreas<T extends Prisma.User$staffWorkAreasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$staffWorkAreasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffWorkAreaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  staffWorkAreasCreated<T extends Prisma.User$staffWorkAreasCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$staffWorkAreasCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffWorkAreaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16741,6 +21481,222 @@ export type User$approvalDecisionsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ApprovalDecisionScalarFieldEnum | Prisma.ApprovalDecisionScalarFieldEnum[]
+}
+
+/**
+ * User.assignedNetworkLines
+ */
+export type User$assignedNetworkLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffNetworkLine
+   */
+  select?: Prisma.StaffNetworkLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffNetworkLine
+   */
+  omit?: Prisma.StaffNetworkLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffNetworkLineInclude<ExtArgs> | null
+  where?: Prisma.StaffNetworkLineWhereInput
+  orderBy?: Prisma.StaffNetworkLineOrderByWithRelationInput | Prisma.StaffNetworkLineOrderByWithRelationInput[]
+  cursor?: Prisma.StaffNetworkLineWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffNetworkLineScalarFieldEnum | Prisma.StaffNetworkLineScalarFieldEnum[]
+}
+
+/**
+ * User.receivedFundingReceipts
+ */
+export type User$receivedFundingReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffFundingReceipt
+   */
+  select?: Prisma.StaffFundingReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffFundingReceipt
+   */
+  omit?: Prisma.StaffFundingReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffFundingReceiptInclude<ExtArgs> | null
+  where?: Prisma.StaffFundingReceiptWhereInput
+  orderBy?: Prisma.StaffFundingReceiptOrderByWithRelationInput | Prisma.StaffFundingReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.StaffFundingReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffFundingReceiptScalarFieldEnum | Prisma.StaffFundingReceiptScalarFieldEnum[]
+}
+
+/**
+ * User.issuedFundingReceipts
+ */
+export type User$issuedFundingReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffFundingReceipt
+   */
+  select?: Prisma.StaffFundingReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffFundingReceipt
+   */
+  omit?: Prisma.StaffFundingReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffFundingReceiptInclude<ExtArgs> | null
+  where?: Prisma.StaffFundingReceiptWhereInput
+  orderBy?: Prisma.StaffFundingReceiptOrderByWithRelationInput | Prisma.StaffFundingReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.StaffFundingReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffFundingReceiptScalarFieldEnum | Prisma.StaffFundingReceiptScalarFieldEnum[]
+}
+
+/**
+ * User.submittedProofs
+ */
+export type User$submittedProofsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffProofSubmission
+   */
+  select?: Prisma.StaffProofSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffProofSubmission
+   */
+  omit?: Prisma.StaffProofSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffProofSubmissionInclude<ExtArgs> | null
+  where?: Prisma.StaffProofSubmissionWhereInput
+  orderBy?: Prisma.StaffProofSubmissionOrderByWithRelationInput | Prisma.StaffProofSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.StaffProofSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffProofSubmissionScalarFieldEnum | Prisma.StaffProofSubmissionScalarFieldEnum[]
+}
+
+/**
+ * User.verifiedProofs
+ */
+export type User$verifiedProofsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffProofSubmission
+   */
+  select?: Prisma.StaffProofSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffProofSubmission
+   */
+  omit?: Prisma.StaffProofSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffProofSubmissionInclude<ExtArgs> | null
+  where?: Prisma.StaffProofSubmissionWhereInput
+  orderBy?: Prisma.StaffProofSubmissionOrderByWithRelationInput | Prisma.StaffProofSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.StaffProofSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffProofSubmissionScalarFieldEnum | Prisma.StaffProofSubmissionScalarFieldEnum[]
+}
+
+/**
+ * User.brokerCustomerAssignments
+ */
+export type User$brokerCustomerAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffBrokerCustomerAssignment
+   */
+  select?: Prisma.StaffBrokerCustomerAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffBrokerCustomerAssignment
+   */
+  omit?: Prisma.StaffBrokerCustomerAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffBrokerCustomerAssignmentInclude<ExtArgs> | null
+  where?: Prisma.StaffBrokerCustomerAssignmentWhereInput
+  orderBy?: Prisma.StaffBrokerCustomerAssignmentOrderByWithRelationInput | Prisma.StaffBrokerCustomerAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.StaffBrokerCustomerAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffBrokerCustomerAssignmentScalarFieldEnum | Prisma.StaffBrokerCustomerAssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.brokerCustomerAssignmentsCreated
+ */
+export type User$brokerCustomerAssignmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffBrokerCustomerAssignment
+   */
+  select?: Prisma.StaffBrokerCustomerAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffBrokerCustomerAssignment
+   */
+  omit?: Prisma.StaffBrokerCustomerAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffBrokerCustomerAssignmentInclude<ExtArgs> | null
+  where?: Prisma.StaffBrokerCustomerAssignmentWhereInput
+  orderBy?: Prisma.StaffBrokerCustomerAssignmentOrderByWithRelationInput | Prisma.StaffBrokerCustomerAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.StaffBrokerCustomerAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffBrokerCustomerAssignmentScalarFieldEnum | Prisma.StaffBrokerCustomerAssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.staffWorkAreas
+ */
+export type User$staffWorkAreasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffWorkArea
+   */
+  select?: Prisma.StaffWorkAreaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffWorkArea
+   */
+  omit?: Prisma.StaffWorkAreaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffWorkAreaInclude<ExtArgs> | null
+  where?: Prisma.StaffWorkAreaWhereInput
+  orderBy?: Prisma.StaffWorkAreaOrderByWithRelationInput | Prisma.StaffWorkAreaOrderByWithRelationInput[]
+  cursor?: Prisma.StaffWorkAreaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffWorkAreaScalarFieldEnum | Prisma.StaffWorkAreaScalarFieldEnum[]
+}
+
+/**
+ * User.staffWorkAreasCreated
+ */
+export type User$staffWorkAreasCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffWorkArea
+   */
+  select?: Prisma.StaffWorkAreaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffWorkArea
+   */
+  omit?: Prisma.StaffWorkAreaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffWorkAreaInclude<ExtArgs> | null
+  where?: Prisma.StaffWorkAreaWhereInput
+  orderBy?: Prisma.StaffWorkAreaOrderByWithRelationInput | Prisma.StaffWorkAreaOrderByWithRelationInput[]
+  cursor?: Prisma.StaffWorkAreaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffWorkAreaScalarFieldEnum | Prisma.StaffWorkAreaScalarFieldEnum[]
 }
 
 /**

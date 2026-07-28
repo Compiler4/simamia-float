@@ -316,6 +316,7 @@
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.75);
   box-shadow: 0 18px 50px rgba(38, 83, 68, 0.1);
+  -webkit-backdrop-filter: blur(22px);
   backdrop-filter: blur(22px);
 }
 
@@ -1012,7 +1013,7 @@
   overflow-x: auto;
 }
 
-table {
+.tableScroll table {
   width: 100%;
   min-width: 940px;
   border-collapse: collapse;
@@ -1022,8 +1023,8 @@ table {
   min-width: 1250px;
 }
 
-th,
-td {
+.tableScroll th,
+.tableScroll td {
   padding: 12px 13px;
   border-bottom: 1px solid #e7efeb;
   text-align: left;
@@ -1031,7 +1032,7 @@ td {
   font-size: 9px;
 }
 
-th {
+.tableScroll th {
   color: white;
   background: linear-gradient(135deg, #0d8d67, #087052);
   font-size: 8px;
@@ -1040,23 +1041,23 @@ th {
   text-transform: uppercase;
 }
 
-th:first-child {
+.tableScroll th:first-child {
   border-radius: 12px 0 0 0;
 }
 
-th:last-child {
+.tableScroll th:last-child {
   border-radius: 0 12px 0 0;
 }
 
-tbody tr {
+.tableScroll tbody tr {
   transition: 0.17s ease;
 }
 
-tbody tr:hover {
+.tableScroll tbody tr:hover {
   background: #f2faf6;
 }
 
-td > small {
+.tableScroll td > small {
   display: block;
   margin-top: 4px;
   color: var(--muted);

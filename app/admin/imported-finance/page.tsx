@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { getCurrentUser, getRoleLabel } from "@/lib/auth";
-
 import ImportedFinanceClient from "./ImportedFinanceClient";
 
 const ALLOWED_ROLES = new Set([
@@ -11,12 +10,19 @@ const ALLOWED_ROLES = new Set([
   "ACCOUNTANT",
 ]);
 
+export const dynamic = "force-dynamic";
+
 export default async function ImportedFinancePage() {
   const user = (await getCurrentUser()) as any;
-
   if (!user) redirect("/login");
-  if (!ALLOWED_ROLES.has(String(user.role))) redirect("/dashboard");
+
+  const role = String(user.role).toUpperCase();
+  if (!ALLOWED_ROLES.has(role)) redirect("/dashboard");
   if (!user.companyId) redirect("/dashboard");
+
+  if (role === "COMPANY_ADMIN") {
+    redirect("/admin/control-centre?module=finance");
+  }
 
   return (
     <ImportedFinanceClient
@@ -28,9 +34,7 @@ export default async function ImportedFinancePage() {
         roleLabel: getRoleLabel(user.role),
         companyId: String(user.companyId),
         profileImageUrl:
-          user.profileImageUrl == null
-            ? null
-            : String(user.profileImageUrl),
+          user.profileImageUrl == null ? null : String(user.profileImageUrl),
       }}
     />
   );

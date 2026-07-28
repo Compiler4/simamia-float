@@ -10,6 +10,7 @@ import {
 import {
   requireStaff,
 } from "@/lib/staff/permissions";
+import { requireAssignedBroker } from "@/lib/staff/operations-v4";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -348,26 +349,14 @@ async function uniqueReference(
 
 async function requireBroker(
   companyId: string,
+  staffId: string,
   id: string,
 ) {
-  const broker =
-    await prisma.brokerCustomer.findFirst(
-      {
-        where: {
-          id,
-          companyId,
-          status: "ACTIVE",
-        },
-      },
-    );
-
-  if (!broker) {
-    throw new Error(
-      "BROKER_NOT_FOUND",
-    );
-  }
-
-  return broker;
+  return requireAssignedBroker(
+    companyId,
+    staffId,
+    id,
+  );
 }
 
 async function requireCustomer(
@@ -754,6 +743,10 @@ function actionError(
       404,
       "The selected active broker was not found in your company.",
     ],
+    BROKER_NOT_ASSIGNED: [
+      403,
+      "The selected broker is not assigned to your staff service area.",
+    ],
     CUSTOMER_NOT_FOUND: [
       404,
       "The selected active customer was not found in your company.",
@@ -1029,6 +1022,7 @@ export async function POST(
       const broker =
         await requireBroker(
           session.companyId,
+          session.id,
           requiredText(
             body.brokerCustomerId ??
               body.brokerId,
@@ -1189,6 +1183,7 @@ export async function POST(
       const broker =
         await requireBroker(
           session.companyId,
+          session.id,
           requiredText(
             body.brokerCustomerId ??
               body.brokerId,
@@ -1788,6 +1783,7 @@ export async function POST(
         brokerCustomerId
           ? await requireBroker(
               session.companyId,
+              session.id,
               brokerCustomerId,
             )
           : null;

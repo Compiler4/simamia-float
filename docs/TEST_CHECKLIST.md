@@ -1,45 +1,70 @@
-# Simamia Company Admin V3 test checklist
+# Staff Operations V4 test checklist
 
 ## Installation
 
-- [ ] Extract outside the existing project.
-- [ ] Run `APPLY-V3.ps1 -ProjectPath "C:\Users\Micha\simamia-float"`.
-- [ ] Confirm a `_simamia_v3_backup_<timestamp>` directory was created.
-- [ ] Confirm `npm run` lists `dev`, `build`, `start`, `typecheck` and import scripts.
-- [ ] Confirm `npm run typecheck` reports no errors.
-- [ ] Confirm `npm run build` succeeds.
+- [ ] `npm install` completes.
+- [ ] `npx prisma validate` completes.
+- [ ] `npx prisma db push` completes without a destructive-change warning.
+- [ ] `npx prisma generate` completes.
+- [ ] `npm run typecheck` completes.
+- [ ] `npm run dev` starts.
 
-## Database and import
+## Admin/accountant setup
 
-- [ ] Confirm no database reset was performed.
-- [ ] Run `npm run import:all -- COMPANY_CODE`.
-- [ ] Confirm the import batch shows 2,273 agent rows.
-- [ ] Confirm broker records retain name, MSISDN, alias and source-row metadata.
-- [ ] Confirm imported agent network is `OTHER` until manually reviewed.
-- [ ] Confirm the CRDB statement account is `0150959326500`.
-- [ ] Confirm statement credit, debit and balance totals match the source PDF.
-- [ ] Re-run import and confirm no duplicate references or agent codes are created.
+- [ ] Open `/admin/staff-operations` as Company Admin.
+- [ ] Open `/accountant/staff-operations` as Accountant.
+- [ ] Register two or more network lines for one staff member.
+- [ ] Assign at least two active brokers to that staff member.
+- [ ] Issue float only, cash only and float + cash records.
 
-## Performance
+## Staff funding
 
-- [ ] Open Staff Performance.
-- [ ] Confirm every Staff/Accountant card shows profile photo/initials.
-- [ ] Confirm score, attendance, return rate, services and company income appear.
-- [ ] Confirm below-target users show a warning.
+- [ ] Staff sees only their network lines.
+- [ ] Staff can confirm multiple receipts on the same date.
+- [ ] Line balances increment only after confirmation.
+- [ ] Daily funding totals match confirmed receipts.
 
-## GPS
+## Broker and service security
 
-- [ ] Open GPS Tracking and keep the tab visible.
-- [ ] Send new pings from a registered device.
-- [ ] Confirm the marker changes within approximately 10 seconds.
-- [ ] Confirm the last-refresh time changes.
-- [ ] Confirm staff and broker markers remain visually distinct.
+- [ ] Staff sees only explicitly assigned brokers or assigned-region fallback brokers.
+- [ ] Search works with one/two starting letters and multiple words.
+- [ ] Issuing float to an unassigned broker returns 403.
+- [ ] Recording service for an unassigned broker returns 403.
+- [ ] Updating service changes the broker map location.
 
-## Bank proof and report
+## Proofs and documents
 
-- [ ] Submit bank proof with bank name and account details.
-- [ ] Confirm records are grouped by bank/account in the grand report.
-- [ ] Confirm PDF proofs are appended page-by-page.
-- [ ] Confirm JPG/PNG proofs are fitted to pages.
-- [ ] Confirm unsupported documents receive reference pages.
-- [ ] Confirm page numbers and bank/account summaries are correct.
+- [ ] JPG/PNG/WEBP/PDF uploads complete.
+- [ ] A copied SMS can populate reference, sender, receiver and amount.
+- [ ] Missing proof/SMS content is rejected.
+- [ ] Duplicate reference is rejected.
+- [ ] Proof starts as PENDING.
+- [ ] Accountant/Company Admin can verify/reject.
+- [ ] Staff receives the result notification.
+- [ ] Staff cannot open another staff member's file.
+- [ ] Weekly folder totals and document counts are correct.
+
+## Expenses
+
+- [ ] OTHER category requires a custom category.
+- [ ] Reimbursement, advance and direct-payment requests save.
+- [ ] Expense remains PENDING until review.
+- [ ] Accountant/Company Admin can approve/reject.
+
+## GPS and attendance
+
+- [ ] Location permission request appears after staff login.
+- [ ] Staff device location reaches `/api/staff/gps`.
+- [ ] Staff map pointer is green and broker pointer is purple.
+- [ ] Travel route is dotted.
+- [ ] Travel distance increases after real movement.
+- [ ] Morning check-in and evening check-out appear read-only.
+- [ ] Unserved broker reminder works.
+
+## Reports
+
+- [ ] DAY, WEEK, MONTH and YEAR filters change records.
+- [ ] PDF includes only the logged-in staff member.
+- [ ] CSV opens correctly in Excel.
+- [ ] Grand PDF appends supported private proofs.
+- [ ] Browser print opens from the PDF.

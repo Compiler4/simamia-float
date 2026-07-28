@@ -12,6 +12,8 @@ import {
 import { useRouter } from "next/navigation";
 
 import LiveMap from "./LiveMap";
+import StaffAdvancedOperations from "./StaffAdvancedOperations";
+import StaffLocationTracker from "./StaffLocationTracker";
 import styles from "./StaffDashboard.module.css";
 
 type Props = {
@@ -148,6 +150,25 @@ type DashboardData = {
 
 type UploadClientKind = "receipt" | "profile" | "proof" | "expense" | "bank" | "other";
 
+
+type UnreadCommunicationItem = {
+  id: string;
+  kind: "NOTIFICATION" | "MESSAGE";
+  title: string;
+  message: string;
+  type: string;
+  isRead: boolean;
+  createdAt: string;
+};
+
+type UnreadSummary = {
+  success: true;
+  total: number;
+  notifications: number;
+  messages: number;
+  items: UnreadCommunicationItem[];
+};
+
 type IconName =
   | "grid" | "wallet" | "receive" | "confirm" | "send" | "collection" | "return"
   | "accountant" | "bank" | "upload" | "verify" | "expense" | "visit" | "transactions"
@@ -176,13 +197,6 @@ const nav: Array<{ page: PageKey; group: string; icon: IconName }> = [
   { page: "Profile", group: "Account", icon: "user" },
 ];
 
-const topTabs: Array<{ label: string; page: PageKey }> = [
-  { label: "Dashboard", page: "Dashboard" },
-  { label: "Operations", page: "Float Operations" },
-  { label: "Analytics", page: "Own Performance" },
-  { label: "Finance", page: "Bank Verification" },
-  { label: "Documents", page: "Reports" },
-];
 
 function Icon({ name, size = 19 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, ReactNode> = {
@@ -495,10 +509,28 @@ export default function StaffDashboardClient({ user }: Props) {
   const [search, setSearch] = useState("");
   const [period, setPeriod] = useState("DAY");
   const [anchor, setAnchor] = useState(today());
+  const [unreadSummary, setUnreadSummary] = useState<UnreadSummary>({
+    success: true,
+    total: 0,
+    notifications: 0,
+    messages: 0,
+    items: [],
+  });
 
-  const unread = arr<any>(data?.notifications).filter((item) => !item.isRead).length;
+  const unread = unreadSummary.total;
 
-  useEffect(() => { void load(true); }, []);
+  useEffect(() => {
+    void load(true);
+    void loadUnread();
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      void loadUnread();
+    }, 15_000);
+
+    return () => window.clearInterval(timer);
+  }, []);
   useEffect(() => {
     if (page === "Reports" || page === "Own Performance" || page === "My Transactions") void load(false);
   }, [period, anchor]);
@@ -508,19 +540,116 @@ export default function StaffDashboardClient({ user }: Props) {
     return () => window.clearTimeout(id);
   }, [toast]);
 
+  async function loadUnread() {
+    try {
+      const result = await requestJson<UnreadSummary>(
+        "/api/staff/unread-count",
+      );
+
+      setUnreadSummary(result);
+    } catch (readError) {
+      console.warn("UNREAD_COMMUNICATION_COUNT_FAILED:", readError);
+    }
+  }
+
+  async function markCommunicationRead(
+    kind: "NOTIFICATION" | "MESSAGE",
+    id: string,
+  ) {
+    try {
+      await requestJson("/api/staff/unread-count", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "MARK_READ",
+          kind,
+          id,
+        }),
+      });
+
+      await load(false);
+      await loadUnread();
+      return true;
+    } catch (readError) {
+      setToast(
+        readError instanceof Error
+          ? readError.message
+          : "The item could not be marked as read.",
+      );
+      return false;
+    }
+  }
+
+  async function markAllCommunicationRead() {
+    try {
+      await requestJson("/api/staff/unread-count", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "MARK_ALL_READ",
+        }),
+      });
+
+      await loadUnread();
+      await load(false);
+      setToast("All notifications and direct messages are marked as read.");
+      return true;
+    } catch (readError) {
+      setToast(
+        readError instanceof Error
+          ? readError.message
+          : "Unread items could not be updated.",
+      );
+      return false;
+    }
+  }
+
   async function load(show = false) {
     if (show) setLoading(true);
     setError("");
 
     try {
-      const [dashboard, directory] = await Promise.all([
+      const [dashboard, directory, verifiedAttendance] = await Promise.all([
         requestJson<DashboardData>(
           `/api/staff/dashboard?period=${period}&date=${anchor}`,
         ),
         requestJson<DirectoryResponse>(
           "/api/staff/directory",
         ),
+        requestJson<{ attendance: any[] }>(
+          `/api/staff/operations?period=${period}&anchor=${anchor}`,
+        ).catch(() => ({ attendance: [] })),
       ]);
+
+      const verifiedRows = arr<any>(verifiedAttendance.attendance);
+      const attendedDays = verifiedRows.filter((row) =>
+        ["PRESENT", "LATE"].includes(String(row.status)),
+      ).length;
+      const missedDays = verifiedRows.filter(
+        (row) => String(row.status) === "ABSENT",
+      ).length;
+      const countedDays = attendedDays + missedDays;
+      const attendanceRate = countedDays
+        ? Number(((attendedDays / countedDays) * 100).toFixed(2))
+        : 0;
+
+      dashboard.attendance = verifiedRows;
+      dashboard.attendanceSummary = {
+        requiredDays: countedDays,
+        attendedDays,
+        missedDays,
+        rate: attendanceRate,
+        period,
+        rule: "Attendance counts only after accountant verification.",
+      };
+      dashboard.stats = {
+        ...dashboard.stats,
+        attendanceRate,
+      };
 
       setData(
         mergeRegisteredDirectory(
@@ -528,6 +657,7 @@ export default function StaffDashboardClient({ user }: Props) {
           directory,
         ),
       );
+      void loadUnread();
     } catch (e) {
       setError(
         e instanceof Error
@@ -622,6 +752,7 @@ export default function StaffDashboardClient({ user }: Props) {
 
   return (
     <main className={`${styles.shell} ${collapsed ? styles.collapsed : ""}`}>
+      <StaffLocationTracker />
       <button className={`${styles.backdrop} ${mobileOpen ? styles.backdropVisible : ""}`} onClick={() => setMobileOpen(false)} aria-label="Close menu" />
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.logo}><span><Icon name="wallet" size={24}/></span><div><strong>Simamia Float</strong><small>Staff Officer Portal</small></div><em>LIVE</em></div>
@@ -638,7 +769,6 @@ export default function StaffDashboardClient({ user }: Props) {
       </aside>
 
       <section className={styles.workspace}>
-        <div className={styles.topTabs}>{topTabs.map((item) => <button key={item.label} className={page === item.page ? styles.activeTopTab : ""} onClick={() => open(item.page)}>{item.label}</button>)}</div>
         <header className={styles.topbar}>
           <button className={styles.mobileMenu} onClick={() => setMobileOpen(true)}><Icon name="menu"/></button>
           <div className={styles.heading}><small>{data?.company?.name || "Float operations"}</small><h1>{page}</h1></div>
@@ -646,7 +776,16 @@ export default function StaffDashboardClient({ user }: Props) {
           <button className={styles.roundButton} onClick={() => void load(false)} title="Refresh"><Icon name="refresh"/></button>
           <button className={styles.roundButton} onClick={() => setNoticeOpen((v) => !v)} title="Notifications"><Icon name="bell"/>{unread > 0 && <b>{unread}</b>}</button>
           <button className={styles.profileChip} onClick={() => open("Profile")}><Avatar person={data?.staff || user}/><span><strong>{user.name}</strong><small>{user.email}</small></span><Icon name="arrow" size={15}/></button>
-          {noticeOpen && data && <NotificationPopup rows={data.notifications} onRead={(id) => action("MARK_NOTIFICATION_READ", { notificationId: id })} openAll={() => open("Notifications")} />}
+          {noticeOpen && (
+            <NotificationPopup
+              rows={unreadSummary.items}
+              notificationCount={unreadSummary.notifications}
+              messageCount={unreadSummary.messages}
+              onRead={markCommunicationRead}
+              onReadAll={markAllCommunicationRead}
+              openAll={() => open("Notifications")}
+            />
+          )}
         </header>
 
         {toast && <div className={styles.toast}>{toast}</div>}
@@ -666,22 +805,22 @@ function PageContent(props: {
 }) {
   const common = { data: props.data, busy: props.busy, action: props.action, upload: props.upload, notify: props.notify };
   switch (props.page) {
-    case "Receive & Confirm Float": return <ReceiveFloatPage {...common}/>;
-    case "Float Operations": return <FloatOperationsPage {...common}/>;
-    case "Deposit to Accountant": return <ReturnMoneyPage {...common}/>;
-    case "Deposit to Bank": return <BankDepositPage {...common}/>;
-    case "Upload Proof of Payment": return <ProofPage {...common}/>;
-    case "Bank Verification": return <BankStatusPage data={props.data}/>;
-    case "Expense Management": return <ExpensePage {...common}/>;
-    case "Service Visits": return <ServiceVisitPage {...common}/>;
-    case "My Transactions": return <TransactionsPage data={props.data}/>;
-    case "Own Performance": return <PerformancePage data={props.data} period={props.period} setPeriod={props.setPeriod} anchor={props.anchor} setAnchor={props.setAnchor}/>;
-    case "Reports": return <ReportsPage data={props.data} period={props.period} setPeriod={props.setPeriod} anchor={props.anchor} setAnchor={props.setAnchor}/>;
-    case "Attendance": return <AttendancePage data={props.data}/>;
-    case "Live Locations": return <GpsPage data={props.data} notify={props.notify} reload={props.reload}/>;
-    case "Travel History": return <TravelPage data={props.data}/>;
-    case "GPS Alerts": return <GpsAlertsPage data={props.data}/>;
-    case "Notifications": return <NotificationsPage data={props.data} action={props.action}/>;
+    case "Receive & Confirm Float": return <StaffAdvancedOperations initialView="funding"/>;
+    case "Float Operations": return <StaffAdvancedOperations initialView="float"/>;
+    case "Deposit to Accountant": return <StaffAdvancedOperations initialView="settlement"/>;
+    case "Deposit to Bank": return <StaffAdvancedOperations initialView="settlement"/>;
+    case "Upload Proof of Payment": return <StaffAdvancedOperations initialView="proofs"/>;
+    case "Bank Verification": return <StaffAdvancedOperations initialView="documents"/>;
+    case "Expense Management": return <StaffAdvancedOperations initialView="expenses"/>;
+    case "Service Visits": return <StaffAdvancedOperations initialView="services"/>;
+    case "My Transactions": return <StaffAdvancedOperations initialView="transactions"/>;
+    case "Own Performance": return <StaffAdvancedOperations initialView="performance"/>;
+    case "Reports": return <StaffAdvancedOperations initialView="reports"/>;
+    case "Attendance": return <StaffAdvancedOperations initialView="attendance"/>;
+    case "Live Locations": return <StaffAdvancedOperations initialView="gps"/>;
+    case "Travel History": return <StaffAdvancedOperations initialView="travel"/>;
+    case "GPS Alerts": return <StaffAdvancedOperations initialView="alerts"/>;
+    case "Notifications": return <StaffAdvancedOperations initialView="notifications"/>;
     case "Profile": return <ProfilePage {...common}/>;
     default: return <DashboardHome data={props.data} open={props.open}/>;
   }
@@ -982,7 +1121,65 @@ function MiniTransactions({rows}:{rows:any[]}){return <div className={styles.min
 function TransactionTable({rows}:{rows:any[]}){return <div className={styles.tableScroll}><table><thead><tr><th>#</th><th>Date</th><th>User</th><th>Type</th><th>Reference</th><th>Description</th><th>Amount</th><th>Proof</th><th>Status</th><th>Control</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r.id}><td>{i+1}</td><td>{date(r.date,true)}</td><td><div className={styles.personCell}><Avatar person={r.person}/><span><strong>{r.person?.name||"System"}</strong><small>{r.person?.email||"—"}</small></span></div></td><td>{label(r.kind||r.type)}</td><td>{r.reference}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/></td><td>{r.locked?<span className={styles.locked}>Locked</span>:"Pending"}</td></tr>)}</tbody></table></div>}
 function BankCards({rows}:{rows:any[]}){return <div className={styles.bankCards}>{rows.slice(0,12).map((r)=><article key={r.id}><div><strong>{r.referenceNo}</strong><span>{r.bankAccount}</span><small>{date(r.depositDate,true)}</small></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.mismatchReason&&<p>{r.mismatchReason}</p>}</article>)}{!rows.length&&<Empty text="No bank deposits submitted."/>}</div>}
 function Comparison({value}:{value:any}){if(!value)return <span className={styles.waiting}>Waiting</span>;return <div className={styles.checks}>{[["Amount",value.amountMatch],["Reference",value.referenceMatch],["Date",value.dateMatch],["Account",value.accountMatch],["Receipt",value.receiptPresent]].map(([a,b])=><span key={String(a)} className={b?styles.ok:styles.bad}>{b?"✓":"✕"} {a}</span>)}</div>}
-function NotificationPopup({rows,onRead,openAll}:{rows:any[];onRead:(id:string)=>Promise<boolean>;openAll:()=>void}){return <div className={styles.popup}><header><strong>Notifications</strong><button onClick={openAll}>View all</button></header>{rows.slice(0,7).map((r)=><button key={r.id} className={r.isRead?styles.readNotice:""} onClick={()=>!r.isRead&&void onRead(r.id)}><Icon name={r.type==="WARNING"?"alert":"bell"}/><span><strong>{r.title}</strong><small>{r.message}</small></span></button>)}</div>}
+function NotificationPopup({
+  rows,
+  notificationCount,
+  messageCount,
+  onRead,
+  onReadAll,
+  openAll,
+}: {
+  rows: UnreadCommunicationItem[];
+  notificationCount: number;
+  messageCount: number;
+  onRead: (
+    kind: "NOTIFICATION" | "MESSAGE",
+    id: string,
+  ) => Promise<boolean>;
+  onReadAll: () => Promise<boolean>;
+  openAll: () => void;
+}) {
+  return (
+    <div className={styles.popup}>
+      <header>
+        <span>
+          <strong>Unread centre</strong>
+          <small>
+            {notificationCount} notification(s) · {messageCount} message(s)
+          </small>
+        </span>
+        <button type="button" onClick={() => void onReadAll()}>
+          Mark all read
+        </button>
+      </header>
+
+      {rows.slice(0, 8).map((row) => (
+        <button
+          type="button"
+          key={`${row.kind}:${row.id}`}
+          onClick={() => void onRead(row.kind, row.id)}
+        >
+          <Icon name={row.kind === "MESSAGE" ? "transactions" : row.type === "WARNING" ? "alert" : "bell"} />
+          <span>
+            <strong>{row.title}</strong>
+            <small>{row.message}</small>
+            <em>{row.kind === "MESSAGE" ? "Direct message" : "Notification"}</em>
+          </span>
+        </button>
+      ))}
+
+      {!rows.length && (
+        <p className={styles.popupEmpty}>No unread notifications or messages.</p>
+      )}
+
+      <footer>
+        <button type="button" onClick={openAll}>
+          Open notification centre
+        </button>
+      </footer>
+    </div>
+  );
+}
 function Loading(){return <div className={styles.loading}><span/><p>Loading staff operations...</p></div>}
 function ErrorState({text,retry}:{text:string;retry:()=>void}){return <div className={styles.error}><Icon name="alert" size={30}/><h2>Staff dashboard could not load</h2><p>{text}</p><button onClick={retry}>Try again</button></div>}
 function downloadBlob(name:string,content:string,type:string){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();URL.revokeObjectURL(url)}

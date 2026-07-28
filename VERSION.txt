@@ -1,0 +1,4 @@
+Simamia Float ERP — Accountant Control Center V3
+Build date: 2026-07-27
+Package type: Non-destructive Next.js 16 + Prisma 7 integration
+Primary route: /accountant/control-center

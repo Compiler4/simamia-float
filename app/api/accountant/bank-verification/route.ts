@@ -1,105 +1,124 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { getCurrentUser } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { verifyBankDeposit } from "@/lib/staff/bank";
-import { dateAtNoon } from "@/lib/staff/time";
+import { prisma } from "@/lib/prisma";
+import { requirePortalRole } from "@/lib/accountant/auth";
+import { calendarDateInDar, darDate } from "@/lib/accountant/date-range";
+import { createNotification } from "@/lib/accountant/notifications";
+import { getCompanyStaff } from "@/lib/accountant/users";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-async function requireReviewer() {
-  const session = (await getCurrentUser()) as any;
-  if (!session) throw new Error("UNAUTHENTICATED");
-  if (!["ACCOUNTANT", "COMPANY_ADMIN"].includes(String(session.role))) throw new Error("FORBIDDEN");
-  if (!session.companyId) throw new Error("COMPANY_REQUIRED");
-  return {
-    id: String(session.id),
-    name: String(session.name || session.username || "Reviewer"),
-    companyId: String(session.companyId),
-    role: String(session.role),
-  };
+function normalise(value: unknown) {
+  return String(value ?? "").trim().toLowerCase().replace(/\s+/g, " ");
 }
-
-function required(value: unknown, field: string) {
+function requiredText(value: unknown, label: string) {
   const result = String(value ?? "").trim();
-  if (!result) throw new Error(`REQUIRED:${field}`);
+  if (!result) throw new Error(`${label} is required.`);
   return result;
 }
-
-function amount(value: unknown) {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed <= 0) throw new Error("INVALID_AMOUNT");
-  return parsed;
+function optionalText(value: unknown) {
+  const result = String(value ?? "").trim();
+  return result || null;
 }
-
-function errorResponse(error: unknown) {
-  const message = error instanceof Error ? error.message : "UNKNOWN_ERROR";
-  if (message === "UNAUTHENTICATED") return NextResponse.json({ success: false, message: "Please sign in." }, { status: 401 });
-  if (message === "FORBIDDEN") return NextResponse.json({ success: false, message: "Accountant or Company Admin access is required." }, { status: 403 });
-  if (message === "COMPANY_REQUIRED") return NextResponse.json({ success: false, message: "Your account is not attached to a company." }, { status: 403 });
-  if (message === "DEPOSIT_NOT_FOUND") return NextResponse.json({ success: false, message: "Bank deposit not found." }, { status: 404 });
-  if (message === "INVALID_AMOUNT" || message === "INVALID_DATE") return NextResponse.json({ success: false, message: "Enter a valid amount and deposit date." }, { status: 400 });
-  if (message.startsWith("REQUIRED:")) return NextResponse.json({ success: false, message: `${message.split(":")[1]} is required.` }, { status: 400 });
-  console.error("[ACCOUNTANT_BANK_VERIFICATION]", error);
-  return NextResponse.json({ success: false, message: "Bank verification failed." }, { status: 500 });
+function sameDate(left: Date, right: Date) {
+  return calendarDateInDar(left) === calendarDateInDar(right);
 }
 
 export async function GET() {
+  const auth = await requirePortalRole(["ACCOUNTANT"]);
+  if (auth.response || !auth.user) return auth.response!;
   try {
-    const session = await requireReviewer();
-    const deposits = await (db as any).bankDeposit.findMany({
-      where: { companyId: session.companyId },
-      include: {
-        staff: { select: { id: true, name: true, username: true, email: true, profileImageUrl: true } },
-        accountant: { select: { id: true, name: true, email: true } },
-      },
-      orderBy: [{ depositDate: "desc" }, { createdAt: "desc" }],
-      take: 3000,
+    const companyId = String(auth.user.companyId);
+    const staff = await getCompanyStaff(auth.user.companyId);
+    const staffById = new Map(staff.map((row) => [row.id, row]));
+    const deposits = await prisma.accountantBankDeposit.findMany({
+      where: { companyId, staffId: { in: staff.map((row) => row.id) } },
+      orderBy: { createdAt: "desc" },
+      take: 300,
     });
     return NextResponse.json({
       success: true,
-      deposits: deposits.map((item: any) => ({
-        ...item,
-        amount: Number(item.amount),
-        statementAmount: item.statementAmount == null ? null : Number(item.statementAmount),
-        comparison: item.comparisonJson ? JSON.parse(item.comparisonJson) : null,
+      deposits: deposits.map((row: any) => ({
+        ...row,
+        amount: Number(row.amount),
+        statementAmount: row.statementAmount == null ? null : Number(row.statementAmount),
+        staff: staffById.get(row.staffId) ?? null,
       })),
     });
   } catch (error) {
-    return errorResponse(error);
+    return NextResponse.json({ success: false, message: error instanceof Error ? error.message : "Could not load deposits." }, { status: 500 });
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const auth = await requirePortalRole(["ACCOUNTANT"]);
+  if (auth.response || !auth.user) return auth.response!;
   try {
-    const session = await requireReviewer();
     const body = await request.json();
-    const depositId = required(body.depositId, "depositId");
-    const deposit = await (db as any).bankDeposit.findFirst({ where: { id: depositId, companyId: session.companyId } });
-    if (!deposit) throw new Error("DEPOSIT_NOT_FOUND");
+    const companyId = String(auth.user.companyId);
+    const depositId = requiredText(body.depositId, "Deposit ID");
+    const deposit = await prisma.accountantBankDeposit.findFirst({ where: { id: depositId, companyId } });
+    if (!deposit) throw new Error("Bank deposit was not found.");
+    const packet = await prisma.accountantAdminPacket.findFirst({
+      where: { companyId, targetType: "BANK_DEPOSIT", targetId: depositId },
+      orderBy: { createdAt: "desc" },
+    });
+    const statementAmount = Number(body.statementAmount ?? 0);
+    const statementReference = requiredText(body.statementReference, "Statement reference");
+    const statementDate = darDate(requiredText(body.statementDate, "Statement date"));
+    const statementBankAccount = requiredText(body.statementBankAccount, "Statement bank account");
 
-    await (db as any).bankDeposit.update({
-      where: { id: deposit.id },
-      data: {
-        statementAmount: amount(body.statementAmount),
-        statementReference: required(body.statementReference, "statementReference"),
-        statementDate: dateAtNoon(required(body.statementDate, "statementDate")),
-        statementBankAccount: required(body.statementBankAccount, "statementBankAccount"),
-        bankStatementUrl: String(body.bankStatementUrl || "").trim() || deposit.bankStatementUrl,
-        accountantId: session.id,
-      },
+    let status: string = "VERIFIED";
+    if (!deposit.depositSlipUrl && !deposit.bankReceiptUrl) status = "MISSING_RECEIPT";
+    else if (!packet) status = "MISSING_BANK_RECORD";
+    else if (Number(deposit.amount) !== statementAmount) status = "AMOUNT_MISMATCH";
+    else if (normalise(deposit.referenceNo) !== normalise(statementReference)) status = "REFERENCE_MISMATCH";
+    else if (!sameDate(deposit.depositDate, statementDate)) status = "DATE_MISMATCH";
+    else if (normalise(deposit.bankAccount) !== normalise(statementBankAccount)) status = "ACCOUNT_MISMATCH";
+
+    const reason = status === "VERIFIED"
+      ? "The staff deposit matches the bank statement and Company Admin comparison packet."
+      : `Reconciliation result: ${status.replaceAll("_", " ").toLowerCase()}.`;
+
+    await prisma.$transaction(async (tx: any) => {
+      await tx.accountantBankDeposit.update({
+        where: { id: depositId },
+        data: {
+          statementAmount,
+          statementReference,
+          statementDate,
+          statementBankAccount,
+          bankStatementUrl: optionalText(body.bankStatementUrl),
+          status,
+          reviewReason: reason,
+          reviewedById: String(auth.user!.id),
+          reviewedAt: new Date(),
+        },
+      });
+      if (packet) {
+        await tx.accountantAdminPacket.update({
+          where: { id: packet.id },
+          data: {
+            status: status === "VERIFIED" ? "VERIFIED" : "REJECTED",
+            reviewReason: reason,
+            reviewedById: String(auth.user!.id),
+            reviewedAt: new Date(),
+          },
+        });
+      }
+      await createNotification(tx, {
+        companyId,
+        userId: deposit.staffId,
+        title: status === "VERIFIED" ? "Bank deposit verified" : "Bank deposit needs correction",
+        message: reason,
+        type: status === "VERIFIED" ? "SUCCESS" : "ERROR",
+      });
     });
 
-    const result = await verifyBankDeposit(deposit.id, session.id);
-    return NextResponse.json({
-      success: true,
-      message:
-        result.status === "VERIFIED"
-          ? "The deposit matches the bank record and is verified."
-          : `The comparison detected a financial hold: ${result.comparison.mismatches.join("; ")}`,
-      ...result,
-    });
+    return NextResponse.json({ success: true, message: `Deposit comparison completed: ${status}.` });
   } catch (error) {
-    return errorResponse(error);
+    return NextResponse.json({ success: false, message: error instanceof Error ? error.message : "Verification failed." }, { status: 400 });
   }
 }

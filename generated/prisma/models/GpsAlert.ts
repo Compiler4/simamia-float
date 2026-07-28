@@ -307,6 +307,7 @@ export type GpsAlertWhereInput = {
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   device?: Prisma.XOR<Prisma.CompanyGpsDeviceNullableScalarRelationFilter, Prisma.CompanyGpsDeviceWhereInput> | null
+  proofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
 }
 
 export type GpsAlertOrderByWithRelationInput = {
@@ -328,6 +329,7 @@ export type GpsAlertOrderByWithRelationInput = {
   company?: Prisma.CompanyOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   device?: Prisma.CompanyGpsDeviceOrderByWithRelationInput
+  proofSubmissions?: Prisma.StaffProofSubmissionOrderByRelationAggregateInput
   _relevance?: Prisma.GpsAlertOrderByRelevanceInput
 }
 
@@ -354,6 +356,7 @@ export type GpsAlertWhereUniqueInput = Prisma.AtLeast<{
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   device?: Prisma.XOR<Prisma.CompanyGpsDeviceNullableScalarRelationFilter, Prisma.CompanyGpsDeviceWhereInput> | null
+  proofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
 }, "id" | "companyId_dedupeKey">
 
 export type GpsAlertOrderByWithAggregationInput = {
@@ -416,6 +419,7 @@ export type GpsAlertCreateInput = {
   company: Prisma.CompanyCreateNestedOneWithoutGpsAlertsInput
   user: Prisma.UserCreateNestedOneWithoutGpsAlertsInput
   device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutAlertsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertUncheckedCreateInput = {
@@ -434,6 +438,7 @@ export type GpsAlertUncheckedCreateInput = {
   resolvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertUpdateInput = {
@@ -452,6 +457,7 @@ export type GpsAlertUpdateInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutGpsAlertsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutGpsAlertsNestedInput
   device?: Prisma.CompanyGpsDeviceUpdateOneWithoutAlertsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertUncheckedUpdateInput = {
@@ -470,6 +476,7 @@ export type GpsAlertUncheckedUpdateInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertCreateManyInput = {
@@ -610,6 +617,11 @@ export type GpsAlertSumOrderByAggregateInput = {
   speedKph?: Prisma.SortOrder
 }
 
+export type GpsAlertNullableScalarRelationFilter = {
+  is?: Prisma.GpsAlertWhereInput | null
+  isNot?: Prisma.GpsAlertWhereInput | null
+}
+
 export type GpsAlertCreateNestedManyWithoutCompanyInput = {
   create?: Prisma.XOR<Prisma.GpsAlertCreateWithoutCompanyInput, Prisma.GpsAlertUncheckedCreateWithoutCompanyInput> | Prisma.GpsAlertCreateWithoutCompanyInput[] | Prisma.GpsAlertUncheckedCreateWithoutCompanyInput[]
   connectOrCreate?: Prisma.GpsAlertCreateOrConnectWithoutCompanyInput | Prisma.GpsAlertCreateOrConnectWithoutCompanyInput[]
@@ -744,6 +756,22 @@ export type EnumGpsAlertStatusFieldUpdateOperationsInput = {
   set?: $Enums.GpsAlertStatus
 }
 
+export type GpsAlertCreateNestedOneWithoutProofSubmissionsInput = {
+  create?: Prisma.XOR<Prisma.GpsAlertCreateWithoutProofSubmissionsInput, Prisma.GpsAlertUncheckedCreateWithoutProofSubmissionsInput>
+  connectOrCreate?: Prisma.GpsAlertCreateOrConnectWithoutProofSubmissionsInput
+  connect?: Prisma.GpsAlertWhereUniqueInput
+}
+
+export type GpsAlertUpdateOneWithoutProofSubmissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.GpsAlertCreateWithoutProofSubmissionsInput, Prisma.GpsAlertUncheckedCreateWithoutProofSubmissionsInput>
+  connectOrCreate?: Prisma.GpsAlertCreateOrConnectWithoutProofSubmissionsInput
+  upsert?: Prisma.GpsAlertUpsertWithoutProofSubmissionsInput
+  disconnect?: Prisma.GpsAlertWhereInput | boolean
+  delete?: Prisma.GpsAlertWhereInput | boolean
+  connect?: Prisma.GpsAlertWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GpsAlertUpdateToOneWithWhereWithoutProofSubmissionsInput, Prisma.GpsAlertUpdateWithoutProofSubmissionsInput>, Prisma.GpsAlertUncheckedUpdateWithoutProofSubmissionsInput>
+}
+
 export type GpsAlertCreateWithoutCompanyInput = {
   id?: string
   type: $Enums.GpsAlertType
@@ -759,6 +787,7 @@ export type GpsAlertCreateWithoutCompanyInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutGpsAlertsInput
   device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutAlertsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertUncheckedCreateWithoutCompanyInput = {
@@ -776,6 +805,7 @@ export type GpsAlertUncheckedCreateWithoutCompanyInput = {
   resolvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertCreateOrConnectWithoutCompanyInput = {
@@ -840,6 +870,7 @@ export type GpsAlertCreateWithoutUserInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutGpsAlertsInput
   device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutAlertsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertUncheckedCreateWithoutUserInput = {
@@ -857,6 +888,7 @@ export type GpsAlertUncheckedCreateWithoutUserInput = {
   resolvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertCreateOrConnectWithoutUserInput = {
@@ -900,6 +932,7 @@ export type GpsAlertCreateWithoutDeviceInput = {
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutGpsAlertsInput
   user: Prisma.UserCreateNestedOneWithoutGpsAlertsInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertUncheckedCreateWithoutDeviceInput = {
@@ -917,6 +950,7 @@ export type GpsAlertUncheckedCreateWithoutDeviceInput = {
   resolvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutGpsAlertInput
 }
 
 export type GpsAlertCreateOrConnectWithoutDeviceInput = {
@@ -943,6 +977,94 @@ export type GpsAlertUpdateWithWhereUniqueWithoutDeviceInput = {
 export type GpsAlertUpdateManyWithWhereWithoutDeviceInput = {
   where: Prisma.GpsAlertScalarWhereInput
   data: Prisma.XOR<Prisma.GpsAlertUpdateManyMutationInput, Prisma.GpsAlertUncheckedUpdateManyWithoutDeviceInput>
+}
+
+export type GpsAlertCreateWithoutProofSubmissionsInput = {
+  id?: string
+  type: $Enums.GpsAlertType
+  status?: $Enums.GpsAlertStatus
+  title: string
+  message: string
+  latitude?: number | null
+  longitude?: number | null
+  speedKph?: number | null
+  dedupeKey: string
+  resolvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutGpsAlertsInput
+  user: Prisma.UserCreateNestedOneWithoutGpsAlertsInput
+  device?: Prisma.CompanyGpsDeviceCreateNestedOneWithoutAlertsInput
+}
+
+export type GpsAlertUncheckedCreateWithoutProofSubmissionsInput = {
+  id?: string
+  companyId: string
+  userId: string
+  deviceId?: string | null
+  type: $Enums.GpsAlertType
+  status?: $Enums.GpsAlertStatus
+  title: string
+  message: string
+  latitude?: number | null
+  longitude?: number | null
+  speedKph?: number | null
+  dedupeKey: string
+  resolvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type GpsAlertCreateOrConnectWithoutProofSubmissionsInput = {
+  where: Prisma.GpsAlertWhereUniqueInput
+  create: Prisma.XOR<Prisma.GpsAlertCreateWithoutProofSubmissionsInput, Prisma.GpsAlertUncheckedCreateWithoutProofSubmissionsInput>
+}
+
+export type GpsAlertUpsertWithoutProofSubmissionsInput = {
+  update: Prisma.XOR<Prisma.GpsAlertUpdateWithoutProofSubmissionsInput, Prisma.GpsAlertUncheckedUpdateWithoutProofSubmissionsInput>
+  create: Prisma.XOR<Prisma.GpsAlertCreateWithoutProofSubmissionsInput, Prisma.GpsAlertUncheckedCreateWithoutProofSubmissionsInput>
+  where?: Prisma.GpsAlertWhereInput
+}
+
+export type GpsAlertUpdateToOneWithWhereWithoutProofSubmissionsInput = {
+  where?: Prisma.GpsAlertWhereInput
+  data: Prisma.XOR<Prisma.GpsAlertUpdateWithoutProofSubmissionsInput, Prisma.GpsAlertUncheckedUpdateWithoutProofSubmissionsInput>
+}
+
+export type GpsAlertUpdateWithoutProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumGpsAlertTypeFieldUpdateOperationsInput | $Enums.GpsAlertType
+  status?: Prisma.EnumGpsAlertStatusFieldUpdateOperationsInput | $Enums.GpsAlertStatus
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dedupeKey?: Prisma.StringFieldUpdateOperationsInput | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutGpsAlertsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutGpsAlertsNestedInput
+  device?: Prisma.CompanyGpsDeviceUpdateOneWithoutAlertsNestedInput
+}
+
+export type GpsAlertUncheckedUpdateWithoutProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  deviceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumGpsAlertTypeFieldUpdateOperationsInput | $Enums.GpsAlertType
+  status?: Prisma.EnumGpsAlertStatusFieldUpdateOperationsInput | $Enums.GpsAlertStatus
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  speedKph?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dedupeKey?: Prisma.StringFieldUpdateOperationsInput | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type GpsAlertCreateManyCompanyInput = {
@@ -977,6 +1099,7 @@ export type GpsAlertUpdateWithoutCompanyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutGpsAlertsNestedInput
   device?: Prisma.CompanyGpsDeviceUpdateOneWithoutAlertsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertUncheckedUpdateWithoutCompanyInput = {
@@ -994,6 +1117,7 @@ export type GpsAlertUncheckedUpdateWithoutCompanyInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertUncheckedUpdateManyWithoutCompanyInput = {
@@ -1045,6 +1169,7 @@ export type GpsAlertUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutGpsAlertsNestedInput
   device?: Prisma.CompanyGpsDeviceUpdateOneWithoutAlertsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertUncheckedUpdateWithoutUserInput = {
@@ -1062,6 +1187,7 @@ export type GpsAlertUncheckedUpdateWithoutUserInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertUncheckedUpdateManyWithoutUserInput = {
@@ -1113,6 +1239,7 @@ export type GpsAlertUpdateWithoutDeviceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutGpsAlertsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutGpsAlertsNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertUncheckedUpdateWithoutDeviceInput = {
@@ -1130,6 +1257,7 @@ export type GpsAlertUncheckedUpdateWithoutDeviceInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutGpsAlertNestedInput
 }
 
 export type GpsAlertUncheckedUpdateManyWithoutDeviceInput = {
@@ -1149,6 +1277,35 @@ export type GpsAlertUncheckedUpdateManyWithoutDeviceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type GpsAlertCountOutputType
+ */
+
+export type GpsAlertCountOutputType = {
+  proofSubmissions: number
+}
+
+export type GpsAlertCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  proofSubmissions?: boolean | GpsAlertCountOutputTypeCountProofSubmissionsArgs
+}
+
+/**
+ * GpsAlertCountOutputType without action
+ */
+export type GpsAlertCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GpsAlertCountOutputType
+   */
+  select?: Prisma.GpsAlertCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * GpsAlertCountOutputType without action
+ */
+export type GpsAlertCountOutputTypeCountProofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffProofSubmissionWhereInput
+}
 
 
 export type GpsAlertSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1170,6 +1327,8 @@ export type GpsAlertSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   device?: boolean | Prisma.GpsAlert$deviceArgs<ExtArgs>
+  proofSubmissions?: boolean | Prisma.GpsAlert$proofSubmissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.GpsAlertCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["gpsAlert"]>
 
 
@@ -1197,6 +1356,8 @@ export type GpsAlertInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   device?: boolean | Prisma.GpsAlert$deviceArgs<ExtArgs>
+  proofSubmissions?: boolean | Prisma.GpsAlert$proofSubmissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.GpsAlertCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $GpsAlertPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1205,6 +1366,7 @@ export type $GpsAlertPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     company: Prisma.$CompanyPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
     device: Prisma.$CompanyGpsDevicePayload<ExtArgs> | null
+    proofSubmissions: Prisma.$StaffProofSubmissionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1565,6 +1727,7 @@ export interface Prisma__GpsAlertClient<T, Null = never, ExtArgs extends runtime
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   device<T extends Prisma.GpsAlert$deviceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GpsAlert$deviceArgs<ExtArgs>>): Prisma.Prisma__CompanyGpsDeviceClient<runtime.Types.Result.GetResult<Prisma.$CompanyGpsDevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  proofSubmissions<T extends Prisma.GpsAlert$proofSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GpsAlert$proofSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffProofSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1973,6 +2136,30 @@ export type GpsAlert$deviceArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.CompanyGpsDeviceInclude<ExtArgs> | null
   where?: Prisma.CompanyGpsDeviceWhereInput
+}
+
+/**
+ * GpsAlert.proofSubmissions
+ */
+export type GpsAlert$proofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffProofSubmission
+   */
+  select?: Prisma.StaffProofSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffProofSubmission
+   */
+  omit?: Prisma.StaffProofSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffProofSubmissionInclude<ExtArgs> | null
+  where?: Prisma.StaffProofSubmissionWhereInput
+  orderBy?: Prisma.StaffProofSubmissionOrderByWithRelationInput | Prisma.StaffProofSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.StaffProofSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffProofSubmissionScalarFieldEnum | Prisma.StaffProofSubmissionScalarFieldEnum[]
 }
 
 /**

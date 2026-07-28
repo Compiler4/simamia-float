@@ -256,6 +256,12 @@ export type CompanyWhereInput = {
   approvalDecisions?: Prisma.ApprovalDecisionListRelationFilter
   brokerServiceVisits?: Prisma.BrokerServiceVisitListRelationFilter
   networkBalances?: Prisma.NetworkBalanceListRelationFilter
+  staffNetworkLines?: Prisma.StaffNetworkLineListRelationFilter
+  staffFundingReceipts?: Prisma.StaffFundingReceiptListRelationFilter
+  staffProofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentListRelationFilter
+  staffWorkAreas?: Prisma.StaffWorkAreaListRelationFilter
+  companyBankAccounts?: Prisma.CompanyBankAccountListRelationFilter
 }
 
 export type CompanyOrderByWithRelationInput = {
@@ -310,6 +316,12 @@ export type CompanyOrderByWithRelationInput = {
   approvalDecisions?: Prisma.ApprovalDecisionOrderByRelationAggregateInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitOrderByRelationAggregateInput
   networkBalances?: Prisma.NetworkBalanceOrderByRelationAggregateInput
+  staffNetworkLines?: Prisma.StaffNetworkLineOrderByRelationAggregateInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptOrderByRelationAggregateInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionOrderByRelationAggregateInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentOrderByRelationAggregateInput
+  staffWorkAreas?: Prisma.StaffWorkAreaOrderByRelationAggregateInput
+  companyBankAccounts?: Prisma.CompanyBankAccountOrderByRelationAggregateInput
   _relevance?: Prisma.CompanyOrderByRelevanceInput
 }
 
@@ -368,6 +380,12 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   approvalDecisions?: Prisma.ApprovalDecisionListRelationFilter
   brokerServiceVisits?: Prisma.BrokerServiceVisitListRelationFilter
   networkBalances?: Prisma.NetworkBalanceListRelationFilter
+  staffNetworkLines?: Prisma.StaffNetworkLineListRelationFilter
+  staffFundingReceipts?: Prisma.StaffFundingReceiptListRelationFilter
+  staffProofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentListRelationFilter
+  staffWorkAreas?: Prisma.StaffWorkAreaListRelationFilter
+  companyBankAccounts?: Prisma.CompanyBankAccountListRelationFilter
 }, "id" | "code">
 
 export type CompanyOrderByWithAggregationInput = {
@@ -452,6 +470,12 @@ export type CompanyCreateInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateInput = {
@@ -506,6 +530,12 @@ export type CompanyUncheckedCreateInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUpdateInput = {
@@ -560,6 +590,12 @@ export type CompanyUpdateInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateInput = {
@@ -614,6 +650,12 @@ export type CompanyUncheckedUpdateInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateManyInput = {
@@ -1318,6 +1360,90 @@ export type CompanyUpdateOneRequiredWithoutNetworkBalancesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutNetworkBalancesInput, Prisma.CompanyUpdateWithoutNetworkBalancesInput>, Prisma.CompanyUncheckedUpdateWithoutNetworkBalancesInput>
 }
 
+export type CompanyCreateNestedOneWithoutStaffNetworkLinesInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffNetworkLinesInput, Prisma.CompanyUncheckedCreateWithoutStaffNetworkLinesInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffNetworkLinesInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutStaffNetworkLinesNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffNetworkLinesInput, Prisma.CompanyUncheckedCreateWithoutStaffNetworkLinesInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffNetworkLinesInput
+  upsert?: Prisma.CompanyUpsertWithoutStaffNetworkLinesInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutStaffNetworkLinesInput, Prisma.CompanyUpdateWithoutStaffNetworkLinesInput>, Prisma.CompanyUncheckedUpdateWithoutStaffNetworkLinesInput>
+}
+
+export type CompanyCreateNestedOneWithoutStaffFundingReceiptsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffFundingReceiptsInput, Prisma.CompanyUncheckedCreateWithoutStaffFundingReceiptsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffFundingReceiptsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutStaffFundingReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffFundingReceiptsInput, Prisma.CompanyUncheckedCreateWithoutStaffFundingReceiptsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffFundingReceiptsInput
+  upsert?: Prisma.CompanyUpsertWithoutStaffFundingReceiptsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutStaffFundingReceiptsInput, Prisma.CompanyUpdateWithoutStaffFundingReceiptsInput>, Prisma.CompanyUncheckedUpdateWithoutStaffFundingReceiptsInput>
+}
+
+export type CompanyCreateNestedOneWithoutStaffProofSubmissionsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffProofSubmissionsInput, Prisma.CompanyUncheckedCreateWithoutStaffProofSubmissionsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffProofSubmissionsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutStaffProofSubmissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffProofSubmissionsInput, Prisma.CompanyUncheckedCreateWithoutStaffProofSubmissionsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffProofSubmissionsInput
+  upsert?: Prisma.CompanyUpsertWithoutStaffProofSubmissionsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutStaffProofSubmissionsInput, Prisma.CompanyUpdateWithoutStaffProofSubmissionsInput>, Prisma.CompanyUncheckedUpdateWithoutStaffProofSubmissionsInput>
+}
+
+export type CompanyCreateNestedOneWithoutBrokerCustomerAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomerAssignmentsInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutBrokerCustomerAssignmentsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutBrokerCustomerAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomerAssignmentsInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutBrokerCustomerAssignmentsInput
+  upsert?: Prisma.CompanyUpsertWithoutBrokerCustomerAssignmentsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutBrokerCustomerAssignmentsInput, Prisma.CompanyUpdateWithoutBrokerCustomerAssignmentsInput>, Prisma.CompanyUncheckedUpdateWithoutBrokerCustomerAssignmentsInput>
+}
+
+export type CompanyCreateNestedOneWithoutStaffWorkAreasInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffWorkAreasInput, Prisma.CompanyUncheckedCreateWithoutStaffWorkAreasInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffWorkAreasInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutStaffWorkAreasNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutStaffWorkAreasInput, Prisma.CompanyUncheckedCreateWithoutStaffWorkAreasInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutStaffWorkAreasInput
+  upsert?: Prisma.CompanyUpsertWithoutStaffWorkAreasInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutStaffWorkAreasInput, Prisma.CompanyUpdateWithoutStaffWorkAreasInput>, Prisma.CompanyUncheckedUpdateWithoutStaffWorkAreasInput>
+}
+
+export type CompanyCreateNestedOneWithoutCompanyBankAccountsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCompanyBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutCompanyBankAccountsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCompanyBankAccountsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+}
+
+export type CompanyUpdateOneRequiredWithoutCompanyBankAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutCompanyBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutCompanyBankAccountsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutCompanyBankAccountsInput
+  upsert?: Prisma.CompanyUpsertWithoutCompanyBankAccountsInput
+  connect?: Prisma.CompanyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutCompanyBankAccountsInput, Prisma.CompanyUpdateWithoutCompanyBankAccountsInput>, Prisma.CompanyUncheckedUpdateWithoutCompanyBankAccountsInput>
+}
+
 export type CompanyCreateWithoutBranchesInput = {
   id?: string
   name: string
@@ -1369,6 +1495,12 @@ export type CompanyCreateWithoutBranchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutBranchesInput = {
@@ -1422,6 +1554,12 @@ export type CompanyUncheckedCreateWithoutBranchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutBranchesInput = {
@@ -1491,6 +1629,12 @@ export type CompanyUpdateWithoutBranchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutBranchesInput = {
@@ -1544,6 +1688,12 @@ export type CompanyUncheckedUpdateWithoutBranchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutUsersInput = {
@@ -1597,6 +1747,12 @@ export type CompanyCreateWithoutUsersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -1650,6 +1806,12 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -1719,6 +1881,12 @@ export type CompanyUpdateWithoutUsersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -1772,6 +1940,12 @@ export type CompanyUncheckedUpdateWithoutUsersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutSubscriptionsInput = {
@@ -1825,6 +1999,12 @@ export type CompanyCreateWithoutSubscriptionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
@@ -1878,6 +2058,12 @@ export type CompanyUncheckedCreateWithoutSubscriptionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutSubscriptionsInput = {
@@ -1947,6 +2133,12 @@ export type CompanyUpdateWithoutSubscriptionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
@@ -2000,6 +2192,12 @@ export type CompanyUncheckedUpdateWithoutSubscriptionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutFinancialDaysInput = {
@@ -2053,6 +2251,12 @@ export type CompanyCreateWithoutFinancialDaysInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutFinancialDaysInput = {
@@ -2106,6 +2310,12 @@ export type CompanyUncheckedCreateWithoutFinancialDaysInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutFinancialDaysInput = {
@@ -2175,6 +2385,12 @@ export type CompanyUpdateWithoutFinancialDaysInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutFinancialDaysInput = {
@@ -2228,6 +2444,12 @@ export type CompanyUncheckedUpdateWithoutFinancialDaysInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAttendanceRecordsInput = {
@@ -2281,6 +2503,12 @@ export type CompanyCreateWithoutAttendanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAttendanceRecordsInput = {
@@ -2334,6 +2562,12 @@ export type CompanyUncheckedCreateWithoutAttendanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAttendanceRecordsInput = {
@@ -2403,6 +2637,12 @@ export type CompanyUpdateWithoutAttendanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAttendanceRecordsInput = {
@@ -2456,6 +2696,12 @@ export type CompanyUncheckedUpdateWithoutAttendanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutExpensesInput = {
@@ -2509,6 +2755,12 @@ export type CompanyCreateWithoutExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutExpensesInput = {
@@ -2562,6 +2814,12 @@ export type CompanyUncheckedCreateWithoutExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutExpensesInput = {
@@ -2631,6 +2889,12 @@ export type CompanyUpdateWithoutExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutExpensesInput = {
@@ -2684,6 +2948,12 @@ export type CompanyUncheckedUpdateWithoutExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutBankDepositsInput = {
@@ -2737,6 +3007,12 @@ export type CompanyCreateWithoutBankDepositsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutBankDepositsInput = {
@@ -2790,6 +3066,12 @@ export type CompanyUncheckedCreateWithoutBankDepositsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutBankDepositsInput = {
@@ -2859,6 +3141,12 @@ export type CompanyUpdateWithoutBankDepositsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutBankDepositsInput = {
@@ -2912,6 +3200,12 @@ export type CompanyUncheckedUpdateWithoutBankDepositsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutFloatTransactionsInput = {
@@ -2965,6 +3259,12 @@ export type CompanyCreateWithoutFloatTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutFloatTransactionsInput = {
@@ -3018,6 +3318,12 @@ export type CompanyUncheckedCreateWithoutFloatTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutFloatTransactionsInput = {
@@ -3087,6 +3393,12 @@ export type CompanyUpdateWithoutFloatTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutFloatTransactionsInput = {
@@ -3140,6 +3452,12 @@ export type CompanyUncheckedUpdateWithoutFloatTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutStaffCollectionsInput = {
@@ -3193,6 +3511,12 @@ export type CompanyCreateWithoutStaffCollectionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutStaffCollectionsInput = {
@@ -3246,6 +3570,12 @@ export type CompanyUncheckedCreateWithoutStaffCollectionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutStaffCollectionsInput = {
@@ -3315,6 +3645,12 @@ export type CompanyUpdateWithoutStaffCollectionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutStaffCollectionsInput = {
@@ -3368,6 +3704,12 @@ export type CompanyUncheckedUpdateWithoutStaffCollectionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutPerformanceRecordsInput = {
@@ -3421,6 +3763,12 @@ export type CompanyCreateWithoutPerformanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutPerformanceRecordsInput = {
@@ -3474,6 +3822,12 @@ export type CompanyUncheckedCreateWithoutPerformanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutPerformanceRecordsInput = {
@@ -3543,6 +3897,12 @@ export type CompanyUpdateWithoutPerformanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutPerformanceRecordsInput = {
@@ -3596,6 +3956,12 @@ export type CompanyUncheckedUpdateWithoutPerformanceRecordsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutNotificationsInput = {
@@ -3649,6 +4015,12 @@ export type CompanyCreateWithoutNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutNotificationsInput = {
@@ -3702,6 +4074,12 @@ export type CompanyUncheckedCreateWithoutNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutNotificationsInput = {
@@ -3771,6 +4149,12 @@ export type CompanyUpdateWithoutNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutNotificationsInput = {
@@ -3824,6 +4208,12 @@ export type CompanyUncheckedUpdateWithoutNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutMessagesInput = {
@@ -3877,6 +4267,12 @@ export type CompanyCreateWithoutMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutMessagesInput = {
@@ -3930,6 +4326,12 @@ export type CompanyUncheckedCreateWithoutMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutMessagesInput = {
@@ -3999,6 +4401,12 @@ export type CompanyUpdateWithoutMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutMessagesInput = {
@@ -4052,6 +4460,12 @@ export type CompanyUncheckedUpdateWithoutMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAuditLogsInput = {
@@ -4105,6 +4519,12 @@ export type CompanyCreateWithoutAuditLogsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAuditLogsInput = {
@@ -4158,6 +4578,12 @@ export type CompanyUncheckedCreateWithoutAuditLogsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAuditLogsInput = {
@@ -4227,6 +4653,12 @@ export type CompanyUpdateWithoutAuditLogsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAuditLogsInput = {
@@ -4280,6 +4712,12 @@ export type CompanyUncheckedUpdateWithoutAuditLogsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutProductsInput = {
@@ -4333,6 +4771,12 @@ export type CompanyCreateWithoutProductsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutProductsInput = {
@@ -4386,6 +4830,12 @@ export type CompanyUncheckedCreateWithoutProductsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutProductsInput = {
@@ -4455,6 +4905,12 @@ export type CompanyUpdateWithoutProductsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutProductsInput = {
@@ -4508,6 +4964,12 @@ export type CompanyUncheckedUpdateWithoutProductsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutCustomersInput = {
@@ -4561,6 +5023,12 @@ export type CompanyCreateWithoutCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutCustomersInput = {
@@ -4614,6 +5082,12 @@ export type CompanyUncheckedCreateWithoutCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutCustomersInput = {
@@ -4683,6 +5157,12 @@ export type CompanyUpdateWithoutCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutCustomersInput = {
@@ -4736,6 +5216,12 @@ export type CompanyUncheckedUpdateWithoutCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutBrokerCustomersInput = {
@@ -4789,6 +5275,12 @@ export type CompanyCreateWithoutBrokerCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutBrokerCustomersInput = {
@@ -4842,6 +5334,12 @@ export type CompanyUncheckedCreateWithoutBrokerCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutBrokerCustomersInput = {
@@ -4911,6 +5409,12 @@ export type CompanyUpdateWithoutBrokerCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutBrokerCustomersInput = {
@@ -4964,6 +5468,12 @@ export type CompanyUncheckedUpdateWithoutBrokerCustomersInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutServiceActivitiesInput = {
@@ -5017,6 +5527,12 @@ export type CompanyCreateWithoutServiceActivitiesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutServiceActivitiesInput = {
@@ -5070,6 +5586,12 @@ export type CompanyUncheckedCreateWithoutServiceActivitiesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutServiceActivitiesInput = {
@@ -5139,6 +5661,12 @@ export type CompanyUpdateWithoutServiceActivitiesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutServiceActivitiesInput = {
@@ -5192,6 +5720,12 @@ export type CompanyUncheckedUpdateWithoutServiceActivitiesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutGpsTrackingsInput = {
@@ -5245,6 +5779,12 @@ export type CompanyCreateWithoutGpsTrackingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutGpsTrackingsInput = {
@@ -5298,6 +5838,12 @@ export type CompanyUncheckedCreateWithoutGpsTrackingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutGpsTrackingsInput = {
@@ -5367,6 +5913,12 @@ export type CompanyUpdateWithoutGpsTrackingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutGpsTrackingsInput = {
@@ -5420,6 +5972,12 @@ export type CompanyUncheckedUpdateWithoutGpsTrackingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutCompanySettingsInput = {
@@ -5473,6 +6031,12 @@ export type CompanyCreateWithoutCompanySettingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutCompanySettingsInput = {
@@ -5526,6 +6090,12 @@ export type CompanyUncheckedCreateWithoutCompanySettingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutCompanySettingsInput = {
@@ -5595,6 +6165,12 @@ export type CompanyUpdateWithoutCompanySettingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutCompanySettingsInput = {
@@ -5648,6 +6224,12 @@ export type CompanyUncheckedUpdateWithoutCompanySettingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminExpensesInput = {
@@ -5701,6 +6283,12 @@ export type CompanyCreateWithoutAdminExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminExpensesInput = {
@@ -5754,6 +6342,12 @@ export type CompanyUncheckedCreateWithoutAdminExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminExpensesInput = {
@@ -5823,6 +6417,12 @@ export type CompanyUpdateWithoutAdminExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminExpensesInput = {
@@ -5876,6 +6476,12 @@ export type CompanyUncheckedUpdateWithoutAdminExpensesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminBankVerificationsInput = {
@@ -5929,6 +6535,12 @@ export type CompanyCreateWithoutAdminBankVerificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminBankVerificationsInput = {
@@ -5982,6 +6594,12 @@ export type CompanyUncheckedCreateWithoutAdminBankVerificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminBankVerificationsInput = {
@@ -6051,6 +6669,12 @@ export type CompanyUpdateWithoutAdminBankVerificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminBankVerificationsInput = {
@@ -6104,6 +6728,12 @@ export type CompanyUncheckedUpdateWithoutAdminBankVerificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminBankMessagesInput = {
@@ -6157,6 +6787,12 @@ export type CompanyCreateWithoutAdminBankMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminBankMessagesInput = {
@@ -6210,6 +6846,12 @@ export type CompanyUncheckedCreateWithoutAdminBankMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminBankMessagesInput = {
@@ -6279,6 +6921,12 @@ export type CompanyUpdateWithoutAdminBankMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminBankMessagesInput = {
@@ -6332,6 +6980,12 @@ export type CompanyUncheckedUpdateWithoutAdminBankMessagesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminAttendanceJournalInput = {
@@ -6385,6 +7039,12 @@ export type CompanyCreateWithoutAdminAttendanceJournalInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminAttendanceJournalInput = {
@@ -6438,6 +7098,12 @@ export type CompanyUncheckedCreateWithoutAdminAttendanceJournalInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminAttendanceJournalInput = {
@@ -6507,6 +7173,12 @@ export type CompanyUpdateWithoutAdminAttendanceJournalInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminAttendanceJournalInput = {
@@ -6560,6 +7232,12 @@ export type CompanyUncheckedUpdateWithoutAdminAttendanceJournalInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminNotificationsInput = {
@@ -6613,6 +7291,12 @@ export type CompanyCreateWithoutAdminNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminNotificationsInput = {
@@ -6666,6 +7350,12 @@ export type CompanyUncheckedCreateWithoutAdminNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminNotificationsInput = {
@@ -6735,6 +7425,12 @@ export type CompanyUpdateWithoutAdminNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminNotificationsInput = {
@@ -6788,6 +7484,12 @@ export type CompanyUncheckedUpdateWithoutAdminNotificationsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminGpsDevicesInput = {
@@ -6841,6 +7543,12 @@ export type CompanyCreateWithoutAdminGpsDevicesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminGpsDevicesInput = {
@@ -6894,6 +7602,12 @@ export type CompanyUncheckedCreateWithoutAdminGpsDevicesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminGpsDevicesInput = {
@@ -6963,6 +7677,12 @@ export type CompanyUpdateWithoutAdminGpsDevicesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminGpsDevicesInput = {
@@ -7016,6 +7736,12 @@ export type CompanyUncheckedUpdateWithoutAdminGpsDevicesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminGpsPingsInput = {
@@ -7069,6 +7795,12 @@ export type CompanyCreateWithoutAdminGpsPingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminGpsPingsInput = {
@@ -7122,6 +7854,12 @@ export type CompanyUncheckedCreateWithoutAdminGpsPingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminGpsPingsInput = {
@@ -7191,6 +7929,12 @@ export type CompanyUpdateWithoutAdminGpsPingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminGpsPingsInput = {
@@ -7244,6 +7988,12 @@ export type CompanyUncheckedUpdateWithoutAdminGpsPingsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminSettingInput = {
@@ -7297,6 +8047,12 @@ export type CompanyCreateWithoutAdminSettingInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminSettingInput = {
@@ -7350,6 +8106,12 @@ export type CompanyUncheckedCreateWithoutAdminSettingInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminSettingInput = {
@@ -7419,6 +8181,12 @@ export type CompanyUpdateWithoutAdminSettingInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminSettingInput = {
@@ -7472,6 +8240,12 @@ export type CompanyUncheckedUpdateWithoutAdminSettingInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAdminAuditEventsInput = {
@@ -7525,6 +8299,12 @@ export type CompanyCreateWithoutAdminAuditEventsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAdminAuditEventsInput = {
@@ -7578,6 +8358,12 @@ export type CompanyUncheckedCreateWithoutAdminAuditEventsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAdminAuditEventsInput = {
@@ -7647,6 +8433,12 @@ export type CompanyUpdateWithoutAdminAuditEventsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAdminAuditEventsInput = {
@@ -7700,6 +8492,12 @@ export type CompanyUncheckedUpdateWithoutAdminAuditEventsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutAccountingPeriodsInput = {
@@ -7753,6 +8551,12 @@ export type CompanyCreateWithoutAccountingPeriodsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutAccountingPeriodsInput = {
@@ -7806,6 +8610,12 @@ export type CompanyUncheckedCreateWithoutAccountingPeriodsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutAccountingPeriodsInput = {
@@ -7875,6 +8685,12 @@ export type CompanyUpdateWithoutAccountingPeriodsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutAccountingPeriodsInput = {
@@ -7928,6 +8744,12 @@ export type CompanyUncheckedUpdateWithoutAccountingPeriodsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutGpsAlertsInput = {
@@ -7981,6 +8803,12 @@ export type CompanyCreateWithoutGpsAlertsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutGpsAlertsInput = {
@@ -8034,6 +8862,12 @@ export type CompanyUncheckedCreateWithoutGpsAlertsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutGpsAlertsInput = {
@@ -8103,6 +8937,12 @@ export type CompanyUpdateWithoutGpsAlertsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutGpsAlertsInput = {
@@ -8156,6 +8996,12 @@ export type CompanyUncheckedUpdateWithoutGpsAlertsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutNotificationDeliveriesInput = {
@@ -8209,6 +9055,12 @@ export type CompanyCreateWithoutNotificationDeliveriesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutNotificationDeliveriesInput = {
@@ -8262,6 +9114,12 @@ export type CompanyUncheckedCreateWithoutNotificationDeliveriesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutNotificationDeliveriesInput = {
@@ -8331,6 +9189,12 @@ export type CompanyUpdateWithoutNotificationDeliveriesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutNotificationDeliveriesInput = {
@@ -8384,6 +9248,12 @@ export type CompanyUncheckedUpdateWithoutNotificationDeliveriesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutStaffBrokerAssignmentsInput = {
@@ -8437,6 +9307,12 @@ export type CompanyCreateWithoutStaffBrokerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutStaffBrokerAssignmentsInput = {
@@ -8490,6 +9366,12 @@ export type CompanyUncheckedCreateWithoutStaffBrokerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutStaffBrokerAssignmentsInput = {
@@ -8559,6 +9441,12 @@ export type CompanyUpdateWithoutStaffBrokerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutStaffBrokerAssignmentsInput = {
@@ -8612,6 +9500,12 @@ export type CompanyUncheckedUpdateWithoutStaffBrokerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutStaffCustomerAssignmentsInput = {
@@ -8665,6 +9559,12 @@ export type CompanyCreateWithoutStaffCustomerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutStaffCustomerAssignmentsInput = {
@@ -8718,6 +9618,12 @@ export type CompanyUncheckedCreateWithoutStaffCustomerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutStaffCustomerAssignmentsInput = {
@@ -8787,6 +9693,12 @@ export type CompanyUpdateWithoutStaffCustomerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutStaffCustomerAssignmentsInput = {
@@ -8840,6 +9752,12 @@ export type CompanyUncheckedUpdateWithoutStaffCustomerAssignmentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutStaffFilesInput = {
@@ -8893,6 +9811,12 @@ export type CompanyCreateWithoutStaffFilesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutStaffFilesInput = {
@@ -8946,6 +9870,12 @@ export type CompanyUncheckedCreateWithoutStaffFilesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutStaffFilesInput = {
@@ -9015,6 +9945,12 @@ export type CompanyUpdateWithoutStaffFilesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutStaffFilesInput = {
@@ -9068,6 +10004,12 @@ export type CompanyUncheckedUpdateWithoutStaffFilesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutDataImportBatchesInput = {
@@ -9121,6 +10063,12 @@ export type CompanyCreateWithoutDataImportBatchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutDataImportBatchesInput = {
@@ -9174,6 +10122,12 @@ export type CompanyUncheckedCreateWithoutDataImportBatchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutDataImportBatchesInput = {
@@ -9243,6 +10197,12 @@ export type CompanyUpdateWithoutDataImportBatchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutDataImportBatchesInput = {
@@ -9296,6 +10256,12 @@ export type CompanyUncheckedUpdateWithoutDataImportBatchesInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutImportedBankStatementsInput = {
@@ -9349,6 +10315,12 @@ export type CompanyCreateWithoutImportedBankStatementsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutImportedBankStatementsInput = {
@@ -9402,6 +10374,12 @@ export type CompanyUncheckedCreateWithoutImportedBankStatementsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutImportedBankStatementsInput = {
@@ -9471,6 +10449,12 @@ export type CompanyUpdateWithoutImportedBankStatementsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutImportedBankStatementsInput = {
@@ -9524,6 +10508,12 @@ export type CompanyUncheckedUpdateWithoutImportedBankStatementsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutImportedBankTransactionsInput = {
@@ -9577,6 +10567,12 @@ export type CompanyCreateWithoutImportedBankTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutImportedBankTransactionsInput = {
@@ -9630,6 +10626,12 @@ export type CompanyUncheckedCreateWithoutImportedBankTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutImportedBankTransactionsInput = {
@@ -9699,6 +10701,12 @@ export type CompanyUpdateWithoutImportedBankTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutImportedBankTransactionsInput = {
@@ -9752,6 +10760,12 @@ export type CompanyUncheckedUpdateWithoutImportedBankTransactionsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutBrokerAgentAccountsInput = {
@@ -9805,6 +10819,12 @@ export type CompanyCreateWithoutBrokerAgentAccountsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutBrokerAgentAccountsInput = {
@@ -9858,6 +10878,12 @@ export type CompanyUncheckedCreateWithoutBrokerAgentAccountsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutBrokerAgentAccountsInput = {
@@ -9927,6 +10953,12 @@ export type CompanyUpdateWithoutBrokerAgentAccountsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutBrokerAgentAccountsInput = {
@@ -9980,6 +11012,12 @@ export type CompanyUncheckedUpdateWithoutBrokerAgentAccountsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutPortalDocumentsInput = {
@@ -10033,6 +11071,12 @@ export type CompanyCreateWithoutPortalDocumentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutPortalDocumentsInput = {
@@ -10086,6 +11130,12 @@ export type CompanyUncheckedCreateWithoutPortalDocumentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutPortalDocumentsInput = {
@@ -10155,6 +11205,12 @@ export type CompanyUpdateWithoutPortalDocumentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutPortalDocumentsInput = {
@@ -10208,6 +11264,12 @@ export type CompanyUncheckedUpdateWithoutPortalDocumentsInput = {
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutApprovalDecisionsInput = {
@@ -10261,6 +11323,12 @@ export type CompanyCreateWithoutApprovalDecisionsInput = {
   portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutApprovalDecisionsInput = {
@@ -10314,6 +11382,12 @@ export type CompanyUncheckedCreateWithoutApprovalDecisionsInput = {
   portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutApprovalDecisionsInput = {
@@ -10383,6 +11457,12 @@ export type CompanyUpdateWithoutApprovalDecisionsInput = {
   portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutApprovalDecisionsInput = {
@@ -10436,6 +11516,12 @@ export type CompanyUncheckedUpdateWithoutApprovalDecisionsInput = {
   portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutBrokerServiceVisitsInput = {
@@ -10489,6 +11575,12 @@ export type CompanyCreateWithoutBrokerServiceVisitsInput = {
   portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutBrokerServiceVisitsInput = {
@@ -10542,6 +11634,12 @@ export type CompanyUncheckedCreateWithoutBrokerServiceVisitsInput = {
   portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutBrokerServiceVisitsInput = {
@@ -10611,6 +11709,12 @@ export type CompanyUpdateWithoutBrokerServiceVisitsInput = {
   portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutBrokerServiceVisitsInput = {
@@ -10664,6 +11768,12 @@ export type CompanyUncheckedUpdateWithoutBrokerServiceVisitsInput = {
   portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyCreateWithoutNetworkBalancesInput = {
@@ -10717,6 +11827,12 @@ export type CompanyCreateWithoutNetworkBalancesInput = {
   portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
   approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyUncheckedCreateWithoutNetworkBalancesInput = {
@@ -10770,6 +11886,12 @@ export type CompanyUncheckedCreateWithoutNetworkBalancesInput = {
   portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
 }
 
 export type CompanyCreateOrConnectWithoutNetworkBalancesInput = {
@@ -10839,6 +11961,12 @@ export type CompanyUpdateWithoutNetworkBalancesInput = {
   portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
 }
 
 export type CompanyUncheckedUpdateWithoutNetworkBalancesInput = {
@@ -10892,6 +12020,1524 @@ export type CompanyUncheckedUpdateWithoutNetworkBalancesInput = {
   portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
   approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
   brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutStaffNetworkLinesInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutStaffNetworkLinesInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositUncheckedCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutStaffNetworkLinesInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffNetworkLinesInput, Prisma.CompanyUncheckedCreateWithoutStaffNetworkLinesInput>
+}
+
+export type CompanyUpsertWithoutStaffNetworkLinesInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffNetworkLinesInput, Prisma.CompanyUncheckedUpdateWithoutStaffNetworkLinesInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffNetworkLinesInput, Prisma.CompanyUncheckedCreateWithoutStaffNetworkLinesInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutStaffNetworkLinesInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffNetworkLinesInput, Prisma.CompanyUncheckedUpdateWithoutStaffNetworkLinesInput>
+}
+
+export type CompanyUpdateWithoutStaffNetworkLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutStaffNetworkLinesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUncheckedUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutStaffFundingReceiptsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutStaffFundingReceiptsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositUncheckedCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutStaffFundingReceiptsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffFundingReceiptsInput, Prisma.CompanyUncheckedCreateWithoutStaffFundingReceiptsInput>
+}
+
+export type CompanyUpsertWithoutStaffFundingReceiptsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffFundingReceiptsInput, Prisma.CompanyUncheckedUpdateWithoutStaffFundingReceiptsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffFundingReceiptsInput, Prisma.CompanyUncheckedCreateWithoutStaffFundingReceiptsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutStaffFundingReceiptsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffFundingReceiptsInput, Prisma.CompanyUncheckedUpdateWithoutStaffFundingReceiptsInput>
+}
+
+export type CompanyUpdateWithoutStaffFundingReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutStaffFundingReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUncheckedUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutStaffProofSubmissionsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutStaffProofSubmissionsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositUncheckedCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutStaffProofSubmissionsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffProofSubmissionsInput, Prisma.CompanyUncheckedCreateWithoutStaffProofSubmissionsInput>
+}
+
+export type CompanyUpsertWithoutStaffProofSubmissionsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffProofSubmissionsInput, Prisma.CompanyUncheckedUpdateWithoutStaffProofSubmissionsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffProofSubmissionsInput, Prisma.CompanyUncheckedCreateWithoutStaffProofSubmissionsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutStaffProofSubmissionsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffProofSubmissionsInput, Prisma.CompanyUncheckedUpdateWithoutStaffProofSubmissionsInput>
+}
+
+export type CompanyUpdateWithoutStaffProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutStaffProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUncheckedUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutBrokerCustomerAssignmentsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutBrokerCustomerAssignmentsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositUncheckedCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutBrokerCustomerAssignmentsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomerAssignmentsInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+}
+
+export type CompanyUpsertWithoutBrokerCustomerAssignmentsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutBrokerCustomerAssignmentsInput, Prisma.CompanyUncheckedUpdateWithoutBrokerCustomerAssignmentsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutBrokerCustomerAssignmentsInput, Prisma.CompanyUncheckedCreateWithoutBrokerCustomerAssignmentsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutBrokerCustomerAssignmentsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutBrokerCustomerAssignmentsInput, Prisma.CompanyUncheckedUpdateWithoutBrokerCustomerAssignmentsInput>
+}
+
+export type CompanyUpdateWithoutBrokerCustomerAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutBrokerCustomerAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUncheckedUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutStaffWorkAreasInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutStaffWorkAreasInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositUncheckedCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutStaffWorkAreasInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffWorkAreasInput, Prisma.CompanyUncheckedCreateWithoutStaffWorkAreasInput>
+}
+
+export type CompanyUpsertWithoutStaffWorkAreasInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffWorkAreasInput, Prisma.CompanyUncheckedUpdateWithoutStaffWorkAreasInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutStaffWorkAreasInput, Prisma.CompanyUncheckedCreateWithoutStaffWorkAreasInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutStaffWorkAreasInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutStaffWorkAreasInput, Prisma.CompanyUncheckedUpdateWithoutStaffWorkAreasInput>
+}
+
+export type CompanyUpdateWithoutStaffWorkAreasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutStaffWorkAreasInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUncheckedUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  companyBankAccounts?: Prisma.CompanyBankAccountUncheckedUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyCreateWithoutCompanyBankAccountsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyUncheckedCreateWithoutCompanyBankAccountsInput = {
+  id?: string
+  name: string
+  code: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  status?: $Enums.CompanyStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  branches?: Prisma.BranchUncheckedCreateNestedManyWithoutCompanyInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutCompanyInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutCompanyInput
+  financialDays?: Prisma.FinancialDayUncheckedCreateNestedManyWithoutCompanyInput
+  bankDeposits?: Prisma.BankDepositUncheckedCreateNestedManyWithoutCompanyInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  attendanceRecords?: Prisma.AttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedCreateNestedManyWithoutCompanyInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutCompanyInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutCompanyInput
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutCompanyInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedCreateNestedManyWithoutCompanyInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedCreateNestedManyWithoutCompanyInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedCreateNestedManyWithoutCompanyInput
+  companySettings?: Prisma.CompanySettingUncheckedCreateNestedManyWithoutCompanyInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedCreateNestedManyWithoutCompanyInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedCreateNestedManyWithoutCompanyInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedCreateNestedManyWithoutCompanyInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedCreateNestedManyWithoutCompanyInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedCreateNestedOneWithoutCompanyInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedCreateNestedManyWithoutCompanyInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedCreateNestedManyWithoutCompanyInput
+  staffCollections?: Prisma.StaffCollectionUncheckedCreateNestedManyWithoutCompanyInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedCreateNestedManyWithoutCompanyInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedCreateNestedManyWithoutCompanyInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffFiles?: Prisma.StaffFileUncheckedCreateNestedManyWithoutCompanyInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedCreateNestedManyWithoutCompanyInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedCreateNestedManyWithoutCompanyInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedCreateNestedManyWithoutCompanyInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedCreateNestedManyWithoutCompanyInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedCreateNestedManyWithoutCompanyInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedCreateNestedManyWithoutCompanyInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedCreateNestedManyWithoutCompanyInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutCompanyInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedCreateNestedManyWithoutCompanyInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedCreateNestedManyWithoutCompanyInput
+}
+
+export type CompanyCreateOrConnectWithoutCompanyBankAccountsInput = {
+  where: Prisma.CompanyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCompanyBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutCompanyBankAccountsInput>
+}
+
+export type CompanyUpsertWithoutCompanyBankAccountsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutCompanyBankAccountsInput, Prisma.CompanyUncheckedUpdateWithoutCompanyBankAccountsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutCompanyBankAccountsInput, Prisma.CompanyUncheckedCreateWithoutCompanyBankAccountsInput>
+  where?: Prisma.CompanyWhereInput
+}
+
+export type CompanyUpdateToOneWithWhereWithoutCompanyBankAccountsInput = {
+  where?: Prisma.CompanyWhereInput
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutCompanyBankAccountsInput, Prisma.CompanyUncheckedUpdateWithoutCompanyBankAccountsInput>
+}
+
+export type CompanyUpdateWithoutCompanyBankAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUpdateManyWithoutCompanyNestedInput
+}
+
+export type CompanyUncheckedUpdateWithoutCompanyBankAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  branches?: Prisma.BranchUncheckedUpdateManyWithoutCompanyNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutCompanyNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutCompanyNestedInput
+  financialDays?: Prisma.FinancialDayUncheckedUpdateManyWithoutCompanyNestedInput
+  bankDeposits?: Prisma.BankDepositUncheckedUpdateManyWithoutCompanyNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  floatTransactions?: Prisma.FloatTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  attendanceRecords?: Prisma.AttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  performanceRecords?: Prisma.PerformanceRecordUncheckedUpdateManyWithoutCompanyNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutCompanyNestedInput
+  products?: Prisma.ProductUncheckedUpdateManyWithoutCompanyNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomers?: Prisma.BrokerCustomerUncheckedUpdateManyWithoutCompanyNestedInput
+  serviceActivities?: Prisma.ServiceActivityUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsTrackings?: Prisma.GpsTrackingUncheckedUpdateManyWithoutCompanyNestedInput
+  companySettings?: Prisma.CompanySettingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminExpenses?: Prisma.CompanyExpenseUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankVerifications?: Prisma.CompanyBankVerificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminBankMessages?: Prisma.CompanyBankMessageUncheckedUpdateManyWithoutCompanyNestedInput
+  adminAttendanceJournal?: Prisma.CompanyAttendanceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminNotifications?: Prisma.CompanyNotificationUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsDevices?: Prisma.CompanyGpsDeviceUncheckedUpdateManyWithoutCompanyNestedInput
+  adminGpsPings?: Prisma.CompanyGpsPingUncheckedUpdateManyWithoutCompanyNestedInput
+  adminSetting?: Prisma.CompanyAdminSettingUncheckedUpdateOneWithoutCompanyNestedInput
+  adminAuditEvents?: Prisma.CompanyAuditEventUncheckedUpdateManyWithoutCompanyNestedInput
+  accountingPeriods?: Prisma.AccountingPeriodUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCollections?: Prisma.StaffCollectionUncheckedUpdateManyWithoutCompanyNestedInput
+  gpsAlerts?: Prisma.GpsAlertUncheckedUpdateManyWithoutCompanyNestedInput
+  notificationDeliveries?: Prisma.NotificationDeliveryUncheckedUpdateManyWithoutCompanyNestedInput
+  staffBrokerAssignments?: Prisma.StaffBrokerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffCustomerAssignments?: Prisma.StaffCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFiles?: Prisma.StaffFileUncheckedUpdateManyWithoutCompanyNestedInput
+  dataImportBatches?: Prisma.DataImportBatchUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankStatements?: Prisma.ImportedBankStatementUncheckedUpdateManyWithoutCompanyNestedInput
+  importedBankTransactions?: Prisma.ImportedBankTransactionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerAgentAccounts?: Prisma.BrokerAgentAccountUncheckedUpdateManyWithoutCompanyNestedInput
+  portalDocuments?: Prisma.PortalDocumentUncheckedUpdateManyWithoutCompanyNestedInput
+  approvalDecisions?: Prisma.ApprovalDecisionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerServiceVisits?: Prisma.BrokerServiceVisitUncheckedUpdateManyWithoutCompanyNestedInput
+  networkBalances?: Prisma.NetworkBalanceUncheckedUpdateManyWithoutCompanyNestedInput
+  staffNetworkLines?: Prisma.StaffNetworkLineUncheckedUpdateManyWithoutCompanyNestedInput
+  staffFundingReceipts?: Prisma.StaffFundingReceiptUncheckedUpdateManyWithoutCompanyNestedInput
+  staffProofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutCompanyNestedInput
+  brokerCustomerAssignments?: Prisma.StaffBrokerCustomerAssignmentUncheckedUpdateManyWithoutCompanyNestedInput
+  staffWorkAreas?: Prisma.StaffWorkAreaUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
 
@@ -10941,6 +13587,12 @@ export type CompanyCountOutputType = {
   approvalDecisions: number
   brokerServiceVisits: number
   networkBalances: number
+  staffNetworkLines: number
+  staffFundingReceipts: number
+  staffProofSubmissions: number
+  brokerCustomerAssignments: number
+  staffWorkAreas: number
+  companyBankAccounts: number
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -10985,6 +13637,12 @@ export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   approvalDecisions?: boolean | CompanyCountOutputTypeCountApprovalDecisionsArgs
   brokerServiceVisits?: boolean | CompanyCountOutputTypeCountBrokerServiceVisitsArgs
   networkBalances?: boolean | CompanyCountOutputTypeCountNetworkBalancesArgs
+  staffNetworkLines?: boolean | CompanyCountOutputTypeCountStaffNetworkLinesArgs
+  staffFundingReceipts?: boolean | CompanyCountOutputTypeCountStaffFundingReceiptsArgs
+  staffProofSubmissions?: boolean | CompanyCountOutputTypeCountStaffProofSubmissionsArgs
+  brokerCustomerAssignments?: boolean | CompanyCountOutputTypeCountBrokerCustomerAssignmentsArgs
+  staffWorkAreas?: boolean | CompanyCountOutputTypeCountStaffWorkAreasArgs
+  companyBankAccounts?: boolean | CompanyCountOutputTypeCountCompanyBankAccountsArgs
 }
 
 /**
@@ -11284,6 +13942,48 @@ export type CompanyCountOutputTypeCountNetworkBalancesArgs<ExtArgs extends runti
   where?: Prisma.NetworkBalanceWhereInput
 }
 
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountStaffNetworkLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffNetworkLineWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountStaffFundingReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffFundingReceiptWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountStaffProofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffProofSubmissionWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountBrokerCustomerAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffBrokerCustomerAssignmentWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountStaffWorkAreasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffWorkAreaWhereInput
+}
+
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountCompanyBankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompanyBankAccountWhereInput
+}
+
 
 export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -11337,6 +14037,12 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   approvalDecisions?: boolean | Prisma.Company$approvalDecisionsArgs<ExtArgs>
   brokerServiceVisits?: boolean | Prisma.Company$brokerServiceVisitsArgs<ExtArgs>
   networkBalances?: boolean | Prisma.Company$networkBalancesArgs<ExtArgs>
+  staffNetworkLines?: boolean | Prisma.Company$staffNetworkLinesArgs<ExtArgs>
+  staffFundingReceipts?: boolean | Prisma.Company$staffFundingReceiptsArgs<ExtArgs>
+  staffProofSubmissions?: boolean | Prisma.Company$staffProofSubmissionsArgs<ExtArgs>
+  brokerCustomerAssignments?: boolean | Prisma.Company$brokerCustomerAssignmentsArgs<ExtArgs>
+  staffWorkAreas?: boolean | Prisma.Company$staffWorkAreasArgs<ExtArgs>
+  companyBankAccounts?: boolean | Prisma.Company$companyBankAccountsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
 
@@ -11398,6 +14104,12 @@ export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   approvalDecisions?: boolean | Prisma.Company$approvalDecisionsArgs<ExtArgs>
   brokerServiceVisits?: boolean | Prisma.Company$brokerServiceVisitsArgs<ExtArgs>
   networkBalances?: boolean | Prisma.Company$networkBalancesArgs<ExtArgs>
+  staffNetworkLines?: boolean | Prisma.Company$staffNetworkLinesArgs<ExtArgs>
+  staffFundingReceipts?: boolean | Prisma.Company$staffFundingReceiptsArgs<ExtArgs>
+  staffProofSubmissions?: boolean | Prisma.Company$staffProofSubmissionsArgs<ExtArgs>
+  brokerCustomerAssignments?: boolean | Prisma.Company$brokerCustomerAssignmentsArgs<ExtArgs>
+  staffWorkAreas?: boolean | Prisma.Company$staffWorkAreasArgs<ExtArgs>
+  companyBankAccounts?: boolean | Prisma.Company$companyBankAccountsArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -11452,6 +14164,12 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     approvalDecisions: Prisma.$ApprovalDecisionPayload<ExtArgs>[]
     brokerServiceVisits: Prisma.$BrokerServiceVisitPayload<ExtArgs>[]
     networkBalances: Prisma.$NetworkBalancePayload<ExtArgs>[]
+    staffNetworkLines: Prisma.$StaffNetworkLinePayload<ExtArgs>[]
+    staffFundingReceipts: Prisma.$StaffFundingReceiptPayload<ExtArgs>[]
+    staffProofSubmissions: Prisma.$StaffProofSubmissionPayload<ExtArgs>[]
+    brokerCustomerAssignments: Prisma.$StaffBrokerCustomerAssignmentPayload<ExtArgs>[]
+    staffWorkAreas: Prisma.$StaffWorkAreaPayload<ExtArgs>[]
+    companyBankAccounts: Prisma.$CompanyBankAccountPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -11845,6 +14563,12 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
   approvalDecisions<T extends Prisma.Company$approvalDecisionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$approvalDecisionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApprovalDecisionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   brokerServiceVisits<T extends Prisma.Company$brokerServiceVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$brokerServiceVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrokerServiceVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   networkBalances<T extends Prisma.Company$networkBalancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$networkBalancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NetworkBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  staffNetworkLines<T extends Prisma.Company$staffNetworkLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$staffNetworkLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffNetworkLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  staffFundingReceipts<T extends Prisma.Company$staffFundingReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$staffFundingReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffFundingReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  staffProofSubmissions<T extends Prisma.Company$staffProofSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$staffProofSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffProofSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  brokerCustomerAssignments<T extends Prisma.Company$brokerCustomerAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$brokerCustomerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffBrokerCustomerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  staffWorkAreas<T extends Prisma.Company$staffWorkAreasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$staffWorkAreasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffWorkAreaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  companyBankAccounts<T extends Prisma.Company$companyBankAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$companyBankAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyBankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13231,6 +15955,150 @@ export type Company$networkBalancesArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.NetworkBalanceScalarFieldEnum | Prisma.NetworkBalanceScalarFieldEnum[]
+}
+
+/**
+ * Company.staffNetworkLines
+ */
+export type Company$staffNetworkLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffNetworkLine
+   */
+  select?: Prisma.StaffNetworkLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffNetworkLine
+   */
+  omit?: Prisma.StaffNetworkLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffNetworkLineInclude<ExtArgs> | null
+  where?: Prisma.StaffNetworkLineWhereInput
+  orderBy?: Prisma.StaffNetworkLineOrderByWithRelationInput | Prisma.StaffNetworkLineOrderByWithRelationInput[]
+  cursor?: Prisma.StaffNetworkLineWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffNetworkLineScalarFieldEnum | Prisma.StaffNetworkLineScalarFieldEnum[]
+}
+
+/**
+ * Company.staffFundingReceipts
+ */
+export type Company$staffFundingReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffFundingReceipt
+   */
+  select?: Prisma.StaffFundingReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffFundingReceipt
+   */
+  omit?: Prisma.StaffFundingReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffFundingReceiptInclude<ExtArgs> | null
+  where?: Prisma.StaffFundingReceiptWhereInput
+  orderBy?: Prisma.StaffFundingReceiptOrderByWithRelationInput | Prisma.StaffFundingReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.StaffFundingReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffFundingReceiptScalarFieldEnum | Prisma.StaffFundingReceiptScalarFieldEnum[]
+}
+
+/**
+ * Company.staffProofSubmissions
+ */
+export type Company$staffProofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffProofSubmission
+   */
+  select?: Prisma.StaffProofSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffProofSubmission
+   */
+  omit?: Prisma.StaffProofSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffProofSubmissionInclude<ExtArgs> | null
+  where?: Prisma.StaffProofSubmissionWhereInput
+  orderBy?: Prisma.StaffProofSubmissionOrderByWithRelationInput | Prisma.StaffProofSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.StaffProofSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffProofSubmissionScalarFieldEnum | Prisma.StaffProofSubmissionScalarFieldEnum[]
+}
+
+/**
+ * Company.brokerCustomerAssignments
+ */
+export type Company$brokerCustomerAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffBrokerCustomerAssignment
+   */
+  select?: Prisma.StaffBrokerCustomerAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffBrokerCustomerAssignment
+   */
+  omit?: Prisma.StaffBrokerCustomerAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffBrokerCustomerAssignmentInclude<ExtArgs> | null
+  where?: Prisma.StaffBrokerCustomerAssignmentWhereInput
+  orderBy?: Prisma.StaffBrokerCustomerAssignmentOrderByWithRelationInput | Prisma.StaffBrokerCustomerAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.StaffBrokerCustomerAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffBrokerCustomerAssignmentScalarFieldEnum | Prisma.StaffBrokerCustomerAssignmentScalarFieldEnum[]
+}
+
+/**
+ * Company.staffWorkAreas
+ */
+export type Company$staffWorkAreasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffWorkArea
+   */
+  select?: Prisma.StaffWorkAreaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffWorkArea
+   */
+  omit?: Prisma.StaffWorkAreaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffWorkAreaInclude<ExtArgs> | null
+  where?: Prisma.StaffWorkAreaWhereInput
+  orderBy?: Prisma.StaffWorkAreaOrderByWithRelationInput | Prisma.StaffWorkAreaOrderByWithRelationInput[]
+  cursor?: Prisma.StaffWorkAreaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffWorkAreaScalarFieldEnum | Prisma.StaffWorkAreaScalarFieldEnum[]
+}
+
+/**
+ * Company.companyBankAccounts
+ */
+export type Company$companyBankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompanyBankAccount
+   */
+  select?: Prisma.CompanyBankAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompanyBankAccount
+   */
+  omit?: Prisma.CompanyBankAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompanyBankAccountInclude<ExtArgs> | null
+  where?: Prisma.CompanyBankAccountWhereInput
+  orderBy?: Prisma.CompanyBankAccountOrderByWithRelationInput | Prisma.CompanyBankAccountOrderByWithRelationInput[]
+  cursor?: Prisma.CompanyBankAccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CompanyBankAccountScalarFieldEnum | Prisma.CompanyBankAccountScalarFieldEnum[]
 }
 
 /**

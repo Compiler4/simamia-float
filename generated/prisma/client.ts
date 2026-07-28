@@ -256,3 +256,53 @@ export type BrokerServiceVisit = Prisma.BrokerServiceVisitModel
  * 
  */
 export type NetworkBalance = Prisma.NetworkBalanceModel
+/**
+ * Model StaffNetworkLine
+ * 
+ */
+export type StaffNetworkLine = Prisma.StaffNetworkLineModel
+/**
+ * Model StaffFundingReceipt
+ * 
+ */
+export type StaffFundingReceipt = Prisma.StaffFundingReceiptModel
+/**
+ * Model StaffProofSubmission
+ * 
+ */
+export type StaffProofSubmission = Prisma.StaffProofSubmissionModel
+/**
+ * Model StaffBrokerCustomerAssignment
+ * 
+ */
+export type StaffBrokerCustomerAssignment = Prisma.StaffBrokerCustomerAssignmentModel
+/**
+ * Model StaffWorkArea
+ * 
+ */
+export type StaffWorkArea = Prisma.StaffWorkAreaModel
+/**
+ * Model CompanyBankAccount
+ * 
+ */
+export type CompanyBankAccount = Prisma.CompanyBankAccountModel
+/**
+ * Model AttendanceDevice
+ * 
+ */
+export type AttendanceDevice = Prisma.AttendanceDeviceModel
+/**
+ * Model AttendanceDeviceEnrollment
+ * 
+ */
+export type AttendanceDeviceEnrollment = Prisma.AttendanceDeviceEnrollmentModel
+/**
+ * Model AttendancePunch
+ * 
+ */
+export type AttendancePunch = Prisma.AttendancePunchModel
+/**
+ * Model VerificationPacket
+ * 
+ */
+export type VerificationPacket = Prisma.VerificationPacketModel

@@ -67,6 +67,7 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
+import StaffAreaAssignmentsPanel from "@/components/company-admin/StaffAreaAssignmentsPanel";
 import styles from "./CompanyAdminDashboard.module.css";
 
 type Props = {
@@ -200,6 +201,8 @@ type PageName =
   | "Dashboard"
   | "Manage Users"
   | "Manage Brokers"
+  | "Staff Work Areas"
+  | "Unified Control Centre"
   | "Manage Branches"
   | "Expenses"
   | "Bank Verification"
@@ -355,6 +358,8 @@ const navigation: Array<{
   { page: "Dashboard", icon: LayoutDashboard, section: "Workspace" },
   { page: "Manage Users", icon: Users, section: "Management" },
   { page: "Manage Brokers", icon: UserCheck, section: "Management" },
+  { page: "Staff Work Areas", icon: MapPinned, section: "Management" },
+  { page: "Unified Control Centre", icon: LayoutDashboard, section: "Workspace" },
   { page: "Manage Branches", icon: Building2, section: "Management" },
   { page: "Expenses", icon: ReceiptText, section: "Finance" },
   { page: "Bank Verification", icon: Landmark, section: "Finance" },
@@ -1035,6 +1040,52 @@ function DashboardContent({
 
   if (page === "Manage Users") return <UsersPage {...common} />;
   if (page === "Manage Brokers") return <BrokersPage {...common} />;
+  if (page === "Staff Work Areas") {
+    return <StaffAreaAssignmentsPanel dashboardHref="/admin/dashboard" />;
+  }
+  if (page === "Unified Control Centre") {
+    return (
+      <PageShell
+        icon={LayoutDashboard}
+        title="Unified Company Admin Control Centre"
+        subtitle="Open staff areas, accountant verification, imported finance and staff operations from one combined workspace."
+      >
+        <section
+          style={{
+            padding: 24,
+            border: "1px solid #dce8eb",
+            borderRadius: 22,
+            background: "linear-gradient(135deg, #ffffff, #eefbf7)",
+            boxShadow: "0 18px 42px rgba(6, 79, 67, 0.09)",
+          }}
+        >
+          <h3 style={{ margin: 0 }}>All operational modules in one page</h3>
+          <p style={{ color: "#617871", lineHeight: 1.7 }}>
+            Use the unified page to move between staff-area assignments,
+            accountant bridge controls, imported finance and staff operations
+            without returning to separate routes.
+          </p>
+          <a
+            href="/admin/control-centre?module=staff-areas"
+            style={{
+              minHeight: 45,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "0 16px",
+              borderRadius: 14,
+              color: "white",
+              background: "linear-gradient(135deg, #0e9e77, #08717e)",
+              textDecoration: "none",
+              fontWeight: 900,
+            }}
+          >
+            <LayoutDashboard size={18} /> Open unified control centre
+          </a>
+        </section>
+      </PageShell>
+    );
+  }
   if (page === "Manage Branches") return <BranchesPage {...common} />;
   if (page === "Expenses") return <ExpensesPage {...common} />;
   if (page === "Bank Verification") return <BankVerificationPage {...common} />;

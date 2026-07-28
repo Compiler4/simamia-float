@@ -1,0 +1,37 @@
+.page,
+.page * { box-sizing: border-box; }
+.page { min-height: 100vh; padding: 24px; color: #17372f; background: linear-gradient(135deg,#eaf5f1,#f8faf9); font-family: Inter,system-ui,sans-serif; }
+.hero { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 25px; border-radius: 25px; color: #fff; background: linear-gradient(135deg,#064d41,#0b8d78); box-shadow: 0 20px 45px rgba(6,77,65,.2); }
+.hero small { font-size: 9px; font-weight: 950; letter-spacing: .14em; }
+.hero h1 { margin: 7px 0; font-size: clamp(28px,4vw,43px); }
+.hero p { margin: 0; color: rgba(255,255,255,.75); }
+.hero a { min-height: 42px; display: inline-flex; align-items: center; gap: 7px; padding: 0 14px; border-radius: 13px; color: #075748; background: #fff; text-decoration: none; font-size: 10px; font-weight: 900; }
+.message { margin: 15px 0; padding: 12px 15px; border: 1px solid #bce1d4; border-radius: 14px; color: #075748; background: #eaf8f3; font-size: 10px; font-weight: 900; }
+.toolbar { display: flex; align-items: center; gap: 10px; margin: 16px 0; padding: 12px; border-radius: 17px; background: #fff; box-shadow: 0 12px 30px rgba(28,80,70,.07); }
+.toolbar > div { min-width: 0; flex: 1; display: flex; align-items: center; gap: 8px; color: #60766f; font-size: 9px; font-weight: 800; }
+.toolbar select,.toolbar button { min-height: 39px; padding: 0 11px; border: 1px solid #d5e6df; border-radius: 12px; background: #f7fbf9; font: inherit; font-size: 9px; font-weight: 850; }
+.toolbar button { display: inline-flex; align-items: center; gap: 6px; color: #fff; border: 0; background: #0b8c69; cursor: pointer; }
+.cards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.cards > article { overflow: hidden; border: 1px solid #dceae5; border-radius: 22px; background: #fff; box-shadow: 0 15px 36px rgba(28,80,70,.08); }
+.cards article > header { display: flex; align-items: flex-start; gap: 10px; padding: 16px; border-bottom: 1px solid #e3eee9; }
+.cards article > header > span { width: 42px; height: 42px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 14px; color: #08715d; background: #dff5ed; }
+.cards article > header > div { min-width: 0; flex: 1; }
+.cards article header small,.cards article header h2,.cards article header p { display: block; margin: 0; }
+.cards article header small { color: #08715d; font-size: 8px; font-weight: 950; }
+.cards article header h2 { margin-top: 4px; font-size: 14px; }
+.cards article header p { margin-top: 4px; color: #71837d; font-size: 8px; }
+.cards article header b { padding: 6px 8px; border-radius: 999px; color: #9a6500; background: #fff1bd; font-size: 7px; }
+.cards article header b[data-status="VERIFIED"] { color: #08715d; background: #dcfce7; }
+.cards article header b[data-status="REJECTED"] { color: #b72828; background: #fee2e2; }
+.body { display: grid; gap: 11px; padding: 16px; }
+.body p { margin: 0; color: #50675f; font-size: 10px; line-height: 1.65; }
+.body a { display: inline-flex; align-items: center; gap: 7px; width: fit-content; color: #08715d; font-size: 9px; font-weight: 900; }
+.body textarea { width: 100%; min-height: 90px; padding: 11px; border: 1px solid #d5e6df; border-radius: 13px; outline: 0; background: #f8fcfa; font: inherit; font-size: 9px; resize: vertical; }
+.cards article footer { display: flex; gap: 9px; padding: 0 16px 16px; }
+.cards article footer button { min-height: 40px; display: inline-flex; align-items: center; gap: 7px; padding: 0 13px; border: 0; border-radius: 12px; color: #fff; background: #0b8c69; font-size: 9px; font-weight: 900; cursor: pointer; }
+.cards article footer .reject { background: #c93434; }
+.cards article footer p { margin: 0; color: #60766f; font-size: 9px; }
+.state { min-height: 160px; display: grid; place-items: center; align-content: center; gap: 8px; color: #71837d; font-size: 11px; text-align: center; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media(max-width:850px){.cards{grid-template-columns:1fr}.page{padding:13px}.hero{align-items:flex-start;flex-direction:column}.toolbar{align-items:stretch;flex-direction:column}}

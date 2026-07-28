@@ -1,84 +1,113 @@
-import { NextRequest, NextResponse } from "next/server";
-import crypto from "node:crypto";
-import path from "node:path";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { type NextRequest } from "next/server";
 
+import { db } from "@/lib/db";
 import {
-  AccountantHttpError,
-  accountantRouteError,
+  PortalError,
+  audit,
+  errorResponse,
   requireAccountant,
-} from "@/lib/accountant-server";
+  safeQuery,
+  text,
+} from "@/lib/accountant/portal";
 
-export const runtime = "nodejs";
-
-const allowedTypes = new Set([
-  "application/pdf",
-  "text/csv",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  "image/jpeg",
-  "image/png",
-  "image/webp",
+const prisma = db as any;
+const MAX_BYTES = 10 * 1024 * 1024;
+const ALLOWED = new Map<string, string>([
+  ["image/jpeg", ".jpg"],
+  ["image/png", ".png"],
+  ["image/webp", ".webp"],
+  ["application/pdf", ".pdf"],
+  ["text/csv", ".csv"],
+  ["application/vnd.ms-excel", ".xls"],
+  ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"],
 ]);
 
-function safeExtension(filename: string) {
-  const extension = path.extname(filename).toLowerCase();
-  return /^[.][a-z0-9]{1,8}$/.test(extension) ? extension : "";
+function documentKind(mime: string): string {
+  if (mime.startsWith("image/")) return "IMAGE";
+  if (mime === "application/pdf") return "PDF";
+  return "DOCUMENT";
 }
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
   try {
-    const accountant = await requireAccountant(true);
-    const formData = await request.formData();
-    const file = formData.get("file");
-
+    const context = await requireAccountant();
+    const form = await request.formData();
+    const file = form.get("file");
     if (!(file instanceof File)) {
-      throw new AccountantHttpError(
-        "Choose a bank statement or receipt file.",
-        422,
-      );
+      throw new PortalError("Choose a file to upload.", 422);
     }
-
-    if (!allowedTypes.has(file.type)) {
-      throw new AccountantHttpError(
-        "Only PDF, Excel, CSV, JPG, PNG and WEBP files are allowed.",
+    if (!ALLOWED.has(file.type)) {
+      throw new PortalError(
+        "Unsupported file type. Use JPG, PNG, WebP, PDF, CSV, XLS or XLSX.",
         415,
       );
     }
-
-    if (file.size > 12 * 1024 * 1024) {
-      throw new AccountantHttpError(
-        "The maximum file size is 12 MB.",
-        413,
-      );
+    if (file.size <= 0 || file.size > MAX_BYTES) {
+      throw new PortalError("The file must be between 1 byte and 10 MB.", 413);
     }
 
-    const folder = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      "accounting",
-      accountant.companyId,
+    const bytes = Buffer.from(await file.arrayBuffer());
+    const checksumSha256 = createHash("sha256").update(bytes).digest("hex");
+    const extension = ALLOWED.get(file.type) || path.extname(file.name).toLowerCase();
+    const storedName = `${Date.now()}-${randomUUID()}${extension}`;
+    const relativeDirectory = path.join("uploads", "accountant", context.companyId);
+    const absoluteDirectory = path.join(process.cwd(), "public", relativeDirectory);
+    await mkdir(absoluteDirectory, { recursive: true });
+    const storagePath = path.join(absoluteDirectory, storedName);
+    await writeFile(storagePath, bytes);
+
+    const publicUrl = `/${relativeDirectory.replaceAll(path.sep, "/")}/${storedName}`;
+    const category = text(form.get("category")).trim();
+
+    const document = await safeQuery(
+      "portalDocument.create",
+      () =>
+        prisma.portalDocument.create({
+          data: {
+            companyId: context.companyId,
+            uploadedById: context.accountantId,
+            kind: category === "bank-statements" ? "BANK_STATEMENT" : documentKind(file.type),
+            originalName: file.name,
+            storedName,
+            mimeType: file.type,
+            sizeBytes: file.size,
+            originalSizeBytes: file.size,
+            compressed: false,
+            checksumSha256,
+            storagePath,
+            publicUrl,
+            proofStatus: "PENDING",
+          },
+        }),
+      null,
     );
 
-    await mkdir(folder, { recursive: true });
-
-    const filename = `${Date.now()}-${crypto.randomUUID()}${safeExtension(
-      file.name,
-    )}`;
-    const destination = path.join(folder, filename);
-    const bytes = Buffer.from(await file.arrayBuffer());
-
-    await writeFile(destination, bytes);
-
-    return NextResponse.json({
-      success: true,
-      url: `/uploads/accounting/${accountant.companyId}/${filename}`,
+    await audit(context, "UPLOAD_DOCUMENT", "DOCUMENTS", {
+      documentId: document?.id,
       originalName: file.name,
-      mimeType: file.type,
-      size: file.size,
+      publicUrl,
+      sizeBytes: file.size,
+    });
+
+    return Response.json({
+      success: true,
+      message: "Document uploaded successfully.",
+      url: publicUrl,
+      documentId: document?.id || null,
+      file: {
+        originalName: file.name,
+        mimeType: file.type,
+        sizeBytes: file.size,
+        checksumSha256,
+      },
     });
   } catch (error) {
-    return accountantRouteError(error);
+    return errorResponse(error);
   }
 }

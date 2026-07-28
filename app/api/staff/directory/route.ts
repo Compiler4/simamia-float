@@ -2,234 +2,145 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/staff/permissions";
+import {
+  assignedBrokerCustomers,
+  cleanText,
+  serialize,
+  responseError,
+} from "@/lib/staff/operations-v4";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function cleanText(value: unknown): string {
-  return value === null ||
-    value === undefined
-    ? ""
-    : String(value).trim();
-}
-
-function serializeBroker(item: any) {
-  return {
-    id: String(item.id),
-    companyId: String(item.companyId),
-    code: String(item.code),
-    name: String(item.name),
-    businessName:
-      item.businessName == null
-        ? null
-        : String(item.businessName),
-    phone: String(item.phone),
-    alternatePhone:
-      item.alternatePhone == null
-        ? null
-        : String(item.alternatePhone),
-    email:
-      item.email == null
-        ? null
-        : String(item.email),
-    location: String(item.location),
-    region:
-      item.region == null
-        ? null
-        : String(item.region),
-    district:
-      item.district == null
-        ? null
-        : String(item.district),
-    ward:
-      item.ward == null
-        ? null
-        : String(item.ward),
-    address:
-      item.address == null
-        ? null
-        : String(item.address),
-    latitude:
-      item.latitude == null
-        ? null
-        : Number(item.latitude),
-    longitude:
-      item.longitude == null
-        ? null
-        : Number(item.longitude),
-    status: String(item.status),
-    notes:
-      item.notes == null
-        ? null
-        : String(item.notes),
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-  };
-}
-
-function serializeCustomer(item: any) {
-  return {
-    id: String(item.id),
-    companyId: String(item.companyId),
-    name: String(item.name),
-    phone:
-      item.phone == null
-        ? null
-        : String(item.phone),
-    email:
-      item.email == null
-        ? null
-        : String(item.email),
-    region:
-      item.region == null
-        ? null
-        : String(item.region),
-    address:
-      item.address == null
-        ? null
-        : String(item.address),
-    status: String(item.status),
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-  };
-}
-
-export async function GET(
-  request: Request,
-) {
+export async function GET(request: Request) {
   try {
-    const session =
-      await requireStaff();
-
+    const session = await requireStaff();
+    const db = prisma as any;
     const url = new URL(request.url);
-    const search = cleanText(
-      url.searchParams.get("search"),
+    const search = cleanText(url.searchParams.get("search")).toLowerCase();
+
+    const staff = await db.user.findFirst({
+      where: {
+        id: session.id,
+        companyId: session.companyId,
+        status: "ACTIVE",
+      },
+      select: {
+        assignedRegion: true,
+      },
+    });
+
+    const brokers = await assignedBrokerCustomers(
+      session.companyId,
+      session.id,
     );
 
-    const brokerWhere: any = {
-      companyId: session.companyId,
-      status: "ACTIVE",
-    };
-
-    const customerWhere: any = {
-      companyId: session.companyId,
-      status: "ACTIVE",
-    };
-
-    if (search) {
-      brokerWhere.OR = [
-        { code: { contains: search } },
-        { name: { contains: search } },
-        {
-          businessName: {
-            contains: search,
-          },
+    const explicitCustomerAssignments =
+      await db.staffCustomerAssignment.findMany({
+        where: {
+          companyId: session.companyId,
+          staffId: session.id,
+          status: "ACTIVE",
         },
-        { phone: { contains: search } },
-        { email: { contains: search } },
-        {
-          location: {
-            contains: search,
-          },
+        include: {
+          customer: true,
         },
-        { region: { contains: search } },
-        {
-          district: {
-            contains: search,
-          },
-        },
-        { ward: { contains: search } },
-        { address: { contains: search } },
-      ];
+      });
 
-      customerWhere.OR = [
-        { name: { contains: search } },
-        { phone: { contains: search } },
-        { email: { contains: search } },
-        { region: { contains: search } },
-        { address: { contains: search } },
-      ];
+    let customers = explicitCustomerAssignments.map(
+      (row: any) => row.customer,
+    );
+
+    if (!customers.length && cleanText(staff?.assignedRegion)) {
+      const area = cleanText(staff.assignedRegion);
+      customers = await db.customer.findMany({
+        where: {
+          companyId: session.companyId,
+          status: "ACTIVE",
+          OR: [
+            { region: { contains: area } },
+            { address: { contains: area } },
+          ],
+        },
+        orderBy: [{ region: "asc" }, { name: "asc" }],
+      });
     }
 
-    const [
-      brokers,
-      customers,
-    ] = await Promise.all([
-      prisma.brokerCustomer.findMany({
-        where: brokerWhere,
-        orderBy: [
-          { location: "asc" },
-          { name: "asc" },
-        ],
-      }),
-      prisma.customer.findMany({
-        where: customerWhere,
-        orderBy: [
-          { region: "asc" },
-          { name: "asc" },
-        ],
-      }),
-    ]);
+    function matches(item: any) {
+      if (!search) return true;
+      const terms = search.split(/\s+/).filter(Boolean);
+      const source = Object.values(item)
+        .filter(
+          (value) =>
+            typeof value === "string" ||
+            typeof value === "number",
+        )
+        .join(" ")
+        .toLowerCase();
+      return terms.every((term) => source.includes(term));
+    }
 
-    const brokerLocations =
-      Array.from(
-        new Set(
-          brokers
-            .map((item) =>
-              cleanText(item.location),
-            )
-            .filter(Boolean),
-        ),
-      ).sort((a, b) =>
-        a.localeCompare(b),
-      );
+    const filteredBrokers = brokers.filter(matches);
+    const filteredCustomers = customers.filter(matches);
 
-    const customerRegions =
-      Array.from(
-        new Set(
-          customers
-            .map((item) =>
-              cleanText(item.region),
-            )
-            .filter(Boolean),
-        ),
-      ).sort((a, b) =>
-        a.localeCompare(b),
-      );
+    const brokerLocations = Array.from(
+      new Set<string>(
+        brokers
+          .map((item: any) =>
+            cleanText(
+              item.assignedArea ||
+                item.ward ||
+                item.district ||
+                item.location ||
+                item.region,
+            ),
+          )
+          .filter(Boolean),
+      ),
+    ).sort((first: string, second: string) =>
+      first.localeCompare(second),
+    );
+
+    const customerRegions = Array.from(
+      new Set<string>(
+        customers
+          .map((item: any) => cleanText(item.region))
+          .filter(Boolean),
+      ),
+    ).sort((first: string, second: string) =>
+      first.localeCompare(second),
+    );
 
     return NextResponse.json({
       success: true,
-      brokers:
-        brokers.map(serializeBroker),
-      customers:
-        customers.map(
-          serializeCustomer,
-        ),
+      brokers: serialize(filteredBrokers),
+      customers: serialize(filteredCustomers),
       brokerLocations,
       customerRegions,
       totals: {
-        brokers: brokers.length,
-        customers: customers.length,
+        brokers: filteredBrokers.length,
+        customers: filteredCustomers.length,
       },
+      restrictedToAssignedArea: true,
     });
   } catch (error) {
-    console.error(
-      "STAFF_DIRECTORY_ERROR:",
-      error,
-    );
-
+    console.error("STAFF_DIRECTORY_ERROR:", error);
+    const result = responseError(error);
     return NextResponse.json(
       {
         success: false,
         message:
-          "Could not load the registered broker and customer directory.",
+          result.status === 500
+            ? "Could not load brokers and customers assigned to this staff account."
+            : result.message,
         details:
+          process.env.NODE_ENV === "development" &&
           error instanceof Error
             ? error.message
-            : String(error),
+            : undefined,
       },
-      { status: 500 },
+      { status: result.status },
     );
   }
 }

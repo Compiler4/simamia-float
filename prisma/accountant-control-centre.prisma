@@ -1,0 +1,113 @@
+// Merge this block into prisma/schema.prisma using scripts/apply-accountant-schema-upgrade.mjs.
+// The script also adds the new session fields to the existing Attendance model.
+
+enum AttendanceSession {
+  MORNING
+  EVENING
+}
+
+enum AttendanceDeviceStatus {
+  ACTIVE
+  INACTIVE
+  REVOKED
+}
+
+enum AttendancePunchStatus {
+  ACCEPTED
+  REJECTED
+  REVIEW_REQUIRED
+}
+
+enum VerificationTargetType {
+  STAFF_PROOF
+  BANK_DEPOSIT
+  EXPENSE
+  OTHER
+}
+
+enum VerificationPacketStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model AttendanceDevice {
+  id            String                 @id @default(cuid())
+  companyId     String
+  name          String                 @db.VarChar(191)
+  serialNumber  String                 @db.VarChar(191)
+  location      String?                @db.VarChar(191)
+  vendor        String?                @db.VarChar(120)
+  apiKeyHash    String                 @db.VarChar(64)
+  status        AttendanceDeviceStatus @default(ACTIVE)
+  registeredById String
+  lastSeenAt    DateTime?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@unique([companyId, serialNumber])
+  @@index([companyId, status])
+  @@index([apiKeyHash])
+  @@map("attendance_devices")
+}
+
+model AttendanceDeviceEnrollment {
+  id               String   @id @default(cuid())
+  companyId        String
+  deviceId         String
+  userId           String
+  externalUserCode String   @db.VarChar(191)
+  fingerLabel      String?  @db.VarChar(80)
+  isActive         Boolean  @default(true)
+  enrolledById     String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([deviceId, externalUserCode])
+  @@unique([deviceId, userId])
+  @@index([companyId, userId, isActive])
+  @@map("attendance_device_enrollments")
+}
+
+model AttendancePunch {
+  id               String                 @id @default(cuid())
+  companyId        String
+  deviceId         String
+  enrollmentId     String?
+  userId           String?
+  externalUserCode String                 @db.VarChar(191)
+  session          AttendanceSession
+  occurredAt       DateTime
+  status           AttendancePunchStatus  @default(ACCEPTED)
+  message          String?                @db.Text
+  rawPayloadJson   String?                @db.LongText
+  createdAt        DateTime               @default(now())
+
+  @@index([companyId, occurredAt])
+  @@index([deviceId, occurredAt])
+  @@index([userId, occurredAt])
+  @@map("attendance_punches")
+}
+
+model VerificationPacket {
+  id                    String                   @id @default(cuid())
+  companyId             String
+  targetType            VerificationTargetType
+  targetId              String
+  staffId               String?
+  sentByAdminId         String
+  sentByAdminName       String                   @db.VarChar(191)
+  message               String                   @db.Text
+  attachmentUrl         String?                  @db.VarChar(600)
+  status                VerificationPacketStatus @default(PENDING)
+  reviewedByAccountantId String?
+  reviewReason          String?                  @db.Text
+  reviewedAt            DateTime?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+
+  @@index([companyId, targetType, targetId])
+  @@index([companyId, status, createdAt])
+  @@index([staffId, createdAt])
+  @@map("verification_packets")
+}

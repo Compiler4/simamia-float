@@ -41,6 +41,9 @@ export type ExpenseMinAggregateOutputType = {
   reviewedById: string | null
   expenseDate: Date | null
   category: string | null
+  otherCategory: string | null
+  requestMode: $Enums.ExpenseRequestMode | null
+  requestedAction: string | null
   amount: runtime.Decimal | null
   description: string | null
   receiptUrl: string | null
@@ -58,6 +61,9 @@ export type ExpenseMaxAggregateOutputType = {
   reviewedById: string | null
   expenseDate: Date | null
   category: string | null
+  otherCategory: string | null
+  requestMode: $Enums.ExpenseRequestMode | null
+  requestedAction: string | null
   amount: runtime.Decimal | null
   description: string | null
   receiptUrl: string | null
@@ -75,6 +81,9 @@ export type ExpenseCountAggregateOutputType = {
   reviewedById: number
   expenseDate: number
   category: number
+  otherCategory: number
+  requestMode: number
+  requestedAction: number
   amount: number
   description: number
   receiptUrl: number
@@ -102,6 +111,9 @@ export type ExpenseMinAggregateInputType = {
   reviewedById?: true
   expenseDate?: true
   category?: true
+  otherCategory?: true
+  requestMode?: true
+  requestedAction?: true
   amount?: true
   description?: true
   receiptUrl?: true
@@ -119,6 +131,9 @@ export type ExpenseMaxAggregateInputType = {
   reviewedById?: true
   expenseDate?: true
   category?: true
+  otherCategory?: true
+  requestMode?: true
+  requestedAction?: true
   amount?: true
   description?: true
   receiptUrl?: true
@@ -136,6 +151,9 @@ export type ExpenseCountAggregateInputType = {
   reviewedById?: true
   expenseDate?: true
   category?: true
+  otherCategory?: true
+  requestMode?: true
+  requestedAction?: true
   amount?: true
   description?: true
   receiptUrl?: true
@@ -240,6 +258,9 @@ export type ExpenseGroupByOutputType = {
   reviewedById: string | null
   expenseDate: Date
   category: string
+  otherCategory: string | null
+  requestMode: $Enums.ExpenseRequestMode
+  requestedAction: string | null
   amount: runtime.Decimal
   description: string | null
   receiptUrl: string | null
@@ -280,6 +301,9 @@ export type ExpenseWhereInput = {
   reviewedById?: Prisma.StringNullableFilter<"Expense"> | string | null
   expenseDate?: Prisma.DateTimeFilter<"Expense"> | Date | string
   category?: Prisma.StringFilter<"Expense"> | string
+  otherCategory?: Prisma.StringNullableFilter<"Expense"> | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFilter<"Expense"> | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.StringNullableFilter<"Expense"> | string | null
   amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringNullableFilter<"Expense"> | string | null
   receiptUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -300,6 +324,9 @@ export type ExpenseOrderByWithRelationInput = {
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   expenseDate?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  otherCategory?: Prisma.SortOrderInput | Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  requestedAction?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -324,6 +351,9 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   reviewedById?: Prisma.StringNullableFilter<"Expense"> | string | null
   expenseDate?: Prisma.DateTimeFilter<"Expense"> | Date | string
   category?: Prisma.StringFilter<"Expense"> | string
+  otherCategory?: Prisma.StringNullableFilter<"Expense"> | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFilter<"Expense"> | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.StringNullableFilter<"Expense"> | string | null
   amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringNullableFilter<"Expense"> | string | null
   receiptUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -344,6 +374,9 @@ export type ExpenseOrderByWithAggregationInput = {
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   expenseDate?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  otherCategory?: Prisma.SortOrderInput | Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  requestedAction?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -369,6 +402,9 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   reviewedById?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   expenseDate?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
   category?: Prisma.StringWithAggregatesFilter<"Expense"> | string
+  otherCategory?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeWithAggregatesFilter<"Expense"> | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   amount?: Prisma.DecimalWithAggregatesFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   receiptUrl?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
@@ -383,6 +419,9 @@ export type ExpenseCreateInput = {
   id?: string
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -403,6 +442,9 @@ export type ExpenseUncheckedCreateInput = {
   reviewedById?: string | null
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -417,6 +459,9 @@ export type ExpenseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -437,6 +482,9 @@ export type ExpenseUncheckedUpdateInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -454,6 +502,9 @@ export type ExpenseCreateManyInput = {
   reviewedById?: string | null
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -468,6 +519,9 @@ export type ExpenseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -485,6 +539,9 @@ export type ExpenseUncheckedUpdateManyInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -518,6 +575,9 @@ export type ExpenseCountOrderByAggregateInput = {
   reviewedById?: Prisma.SortOrder
   expenseDate?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  otherCategory?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  requestedAction?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrder
   receiptUrl?: Prisma.SortOrder
@@ -539,6 +599,9 @@ export type ExpenseMaxOrderByAggregateInput = {
   reviewedById?: Prisma.SortOrder
   expenseDate?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  otherCategory?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  requestedAction?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrder
   receiptUrl?: Prisma.SortOrder
@@ -556,6 +619,9 @@ export type ExpenseMinOrderByAggregateInput = {
   reviewedById?: Prisma.SortOrder
   expenseDate?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  otherCategory?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  requestedAction?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrder
   receiptUrl?: Prisma.SortOrder
@@ -696,6 +762,10 @@ export type ExpenseUncheckedUpdateManyWithoutReviewedByNestedInput = {
   deleteMany?: Prisma.ExpenseScalarWhereInput | Prisma.ExpenseScalarWhereInput[]
 }
 
+export type EnumExpenseRequestModeFieldUpdateOperationsInput = {
+  set?: $Enums.ExpenseRequestMode
+}
+
 export type EnumApprovalStatusFieldUpdateOperationsInput = {
   set?: $Enums.ApprovalStatus
 }
@@ -704,6 +774,9 @@ export type ExpenseCreateWithoutCompanyInput = {
   id?: string
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -722,6 +795,9 @@ export type ExpenseUncheckedCreateWithoutCompanyInput = {
   reviewedById?: string | null
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -768,6 +844,9 @@ export type ExpenseScalarWhereInput = {
   reviewedById?: Prisma.StringNullableFilter<"Expense"> | string | null
   expenseDate?: Prisma.DateTimeFilter<"Expense"> | Date | string
   category?: Prisma.StringFilter<"Expense"> | string
+  otherCategory?: Prisma.StringNullableFilter<"Expense"> | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFilter<"Expense"> | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.StringNullableFilter<"Expense"> | string | null
   amount?: Prisma.DecimalFilter<"Expense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.StringNullableFilter<"Expense"> | string | null
   receiptUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
@@ -782,6 +861,9 @@ export type ExpenseCreateWithoutEmployeeInput = {
   id?: string
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -800,6 +882,9 @@ export type ExpenseUncheckedCreateWithoutEmployeeInput = {
   reviewedById?: string | null
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -824,6 +909,9 @@ export type ExpenseCreateWithoutReviewedByInput = {
   id?: string
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -842,6 +930,9 @@ export type ExpenseUncheckedCreateWithoutReviewedByInput = {
   employeeId: string
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -900,6 +991,9 @@ export type ExpenseCreateManyCompanyInput = {
   reviewedById?: string | null
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -914,6 +1008,9 @@ export type ExpenseUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -932,6 +1029,9 @@ export type ExpenseUncheckedUpdateWithoutCompanyInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -948,6 +1048,9 @@ export type ExpenseUncheckedUpdateManyWithoutCompanyInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -964,6 +1067,9 @@ export type ExpenseCreateManyEmployeeInput = {
   reviewedById?: string | null
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -980,6 +1086,9 @@ export type ExpenseCreateManyReviewedByInput = {
   employeeId: string
   expenseDate?: Date | string
   category: string
+  otherCategory?: string | null
+  requestMode?: $Enums.ExpenseRequestMode
+  requestedAction?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: string | null
   receiptUrl?: string | null
@@ -994,6 +1103,9 @@ export type ExpenseUpdateWithoutEmployeeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1012,6 +1124,9 @@ export type ExpenseUncheckedUpdateWithoutEmployeeInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1028,6 +1143,9 @@ export type ExpenseUncheckedUpdateManyWithoutEmployeeInput = {
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1042,6 +1160,9 @@ export type ExpenseUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1060,6 +1181,9 @@ export type ExpenseUncheckedUpdateWithoutReviewedByInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1076,6 +1200,9 @@ export type ExpenseUncheckedUpdateManyWithoutReviewedByInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   expenseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  otherCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestMode?: Prisma.EnumExpenseRequestModeFieldUpdateOperationsInput | $Enums.ExpenseRequestMode
+  requestedAction?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1095,6 +1222,9 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   reviewedById?: boolean
   expenseDate?: boolean
   category?: boolean
+  otherCategory?: boolean
+  requestMode?: boolean
+  requestedAction?: boolean
   amount?: boolean
   description?: boolean
   receiptUrl?: boolean
@@ -1117,6 +1247,9 @@ export type ExpenseSelectScalar = {
   reviewedById?: boolean
   expenseDate?: boolean
   category?: boolean
+  otherCategory?: boolean
+  requestMode?: boolean
+  requestedAction?: boolean
   amount?: boolean
   description?: boolean
   receiptUrl?: boolean
@@ -1127,7 +1260,7 @@ export type ExpenseSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "employeeId" | "reviewedById" | "expenseDate" | "category" | "amount" | "description" | "receiptUrl" | "status" | "reviewNote" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "employeeId" | "reviewedById" | "expenseDate" | "category" | "otherCategory" | "requestMode" | "requestedAction" | "amount" | "description" | "receiptUrl" | "status" | "reviewNote" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   employee?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1148,6 +1281,9 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     reviewedById: string | null
     expenseDate: Date
     category: string
+    otherCategory: string | null
+    requestMode: $Enums.ExpenseRequestMode
+    requestedAction: string | null
     amount: runtime.Decimal
     description: string | null
     receiptUrl: string | null
@@ -1534,6 +1670,9 @@ export interface ExpenseFieldRefs {
   readonly reviewedById: Prisma.FieldRef<"Expense", 'String'>
   readonly expenseDate: Prisma.FieldRef<"Expense", 'DateTime'>
   readonly category: Prisma.FieldRef<"Expense", 'String'>
+  readonly otherCategory: Prisma.FieldRef<"Expense", 'String'>
+  readonly requestMode: Prisma.FieldRef<"Expense", 'ExpenseRequestMode'>
+  readonly requestedAction: Prisma.FieldRef<"Expense", 'String'>
   readonly amount: Prisma.FieldRef<"Expense", 'Decimal'>
   readonly description: Prisma.FieldRef<"Expense", 'String'>
   readonly receiptUrl: Prisma.FieldRef<"Expense", 'String'>

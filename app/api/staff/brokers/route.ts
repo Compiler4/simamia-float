@@ -1,144 +1,162 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+
 import { getCurrentUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-type BrokerDelegate = {
-  findMany: (args: Record<string, unknown>) => Promise<any[]>;
-};
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-function cleanText(value: unknown): string {
+function text(value: unknown): string {
   return value === null || value === undefined ? "" : String(value).trim();
 }
 
-function getBrokerDelegate(): BrokerDelegate | null {
-  const client = prisma as unknown as {
-    brokerCustomer?: BrokerDelegate;
-  };
-
-  return client.brokerCustomer ?? null;
+function normalized(value: unknown): string {
+  return text(value)
+    .toLocaleLowerCase("en")
+    .replace(/[.,/\\_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function serializeBroker(item: any) {
-  return {
-    id: item.id,
-    companyId: item.companyId,
-    code: item.code,
-    name: item.name,
-    businessName: item.businessName,
-    phone: item.phone,
-    alternatePhone: item.alternatePhone,
-    email: item.email,
-    location: item.location,
-    region: item.region,
-    district: item.district,
-    ward: item.ward,
-    address: item.address,
-    latitude:
-      item.latitude === null || item.latitude === undefined
-        ? null
-        : Number(item.latitude),
-    longitude:
-      item.longitude === null || item.longitude === undefined
-        ? null
-        : Number(item.longitude),
-    status: item.status,
-    notes: item.notes,
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-  };
+function values(items: unknown[]): string[] {
+  return items.map(normalized).filter(Boolean);
 }
 
-export async function GET(request: Request) {
+function matches(items: string[], target: unknown): boolean {
+  const needle = normalized(target);
+  if (!needle) return true;
+  return items.some(
+    (item) => item === needle || item.includes(needle) || needle.includes(item),
+  );
+}
+
+function brokerMatchesArea(broker: any, area: any): boolean {
+  return (
+    matches(values([broker.region, broker.city, broker.location]), area.region) &&
+    matches(values([broker.district, broker.location, broker.address]), area.district) &&
+    matches(
+      values([broker.ward, broker.location, broker.address, broker.attendedLocation]),
+      area.ward,
+    ) &&
+    matches(
+      values([broker.ward, broker.location, broker.address, broker.attendedLocation]),
+      area.street,
+    )
+  );
+}
+
+export async function GET() {
   try {
-    const user = await getCurrentUser();
-
-    if (!user) {
+    const session = (await getCurrentUser()) as any;
+    if (!session) {
       return NextResponse.json(
-        { success: false, message: "You are not logged in." },
+        { success: false, message: "Authentication is required." },
         { status: 401 },
       );
     }
 
-    if (!user.companyId) {
+    if (text(session.role).toUpperCase() !== "STAFF" || !session.companyId) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Your account is not assigned to a company.",
-        },
-        { status: 400 },
+        { success: false, message: "Staff access is required." },
+        { status: 403 },
       );
     }
 
-    const brokerModel = getBrokerDelegate();
+    const db = prisma as any;
+    const companyId = text(session.companyId);
+    const staffId = text(session.id);
 
-    if (!brokerModel) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "The broker directory is not ready.",
-          error:
-            "Run the BrokerCustomer Prisma migration, run npx prisma generate, clear .next and restart the server.",
+    const [areas, assignments, brokers] = await Promise.all([
+      db.staffWorkArea.findMany({
+        where: { companyId, staffId, status: "ACTIVE" },
+        orderBy: { startedAt: "asc" },
+      }),
+      db.staffBrokerCustomerAssignment.findMany({
+        where: { companyId, staffId, status: "ACTIVE" },
+        select: { id: true, brokerCustomerId: true, workAreaId: true, assignedArea: true },
+      }),
+      db.brokerCustomer.findMany({
+        where: { companyId, status: "ACTIVE" },
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          businessName: true,
+          phone: true,
+          alternatePhone: true,
+          email: true,
+          location: true,
+          region: true,
+          district: true,
+          ward: true,
+          city: true,
+          address: true,
+          attendedLocation: true,
+          latitude: true,
+          longitude: true,
+          status: true,
         },
-        { status: 503 },
-      );
-    }
+        orderBy: [{ region: "asc" }, { district: "asc" }, { name: "asc" }],
+      }),
+    ]);
 
-    const url = new URL(request.url);
-    const search = cleanText(url.searchParams.get("search"));
-    const location = cleanText(url.searchParams.get("location"));
+    const assignmentByBroker = new Map(
+      assignments.map((item: any) => [text(item.brokerCustomerId), item]),
+    );
 
-    const brokers = await brokerModel.findMany({
-      where: {
-        companyId: user.companyId,
-        status: "ACTIVE",
-        ...(location ? { location: { equals: location } } : {}),
-        ...(search
-          ? {
-              OR: [
-                { code: { contains: search } },
-                { name: { contains: search } },
-                { businessName: { contains: search } },
-                { phone: { contains: search } },
-                { location: { contains: search } },
-                { region: { contains: search } },
-                { district: { contains: search } },
-                { ward: { contains: search } },
-                { address: { contains: search } },
-              ],
-            }
-          : {}),
-      },
-      orderBy: [{ location: "asc" }, { name: "asc" }],
-    });
+    const visible = brokers
+      .filter((broker: any) => {
+        const directlyAssigned = assignmentByBroker.has(text(broker.id));
+        const inAssignedArea = areas.some((area: any) => brokerMatchesArea(broker, area));
+        return directlyAssigned || inAssignedArea;
+      })
+      .map((broker: any) => {
+        const assignment = assignmentByBroker.get(text(broker.id));
+        return {
+          ...broker,
+          directlyAssigned: Boolean(assignment),
+          canOperate: Boolean(assignment),
+          assignmentId: assignment?.id || null,
+          workAreaId: assignment?.workAreaId || null,
+          assignedArea: assignment?.assignedArea || null,
+        };
+      });
 
     const locations = Array.from(
       new Set(
-        brokers.map((broker) => cleanText(broker.location)).filter(Boolean),
+        visible
+          .flatMap((broker: any) => [
+            broker.region,
+            broker.district,
+            broker.ward,
+            broker.location,
+          ])
+          .map(text)
+          .filter(Boolean),
       ),
     ).sort((a, b) => a.localeCompare(b));
 
     return NextResponse.json({
       success: true,
-      brokers: brokers.map(serializeBroker),
+      areas,
+      brokers: visible,
       locations,
-      total: brokers.length,
+      total: visible.length,
+      assignedTotal: visible.filter((item: any) => item.directlyAssigned).length,
     });
   } catch (error) {
-    console.error("STAFF_BROKER_DIRECTORY_ERROR:", error);
-
-    const code = cleanText((error as { code?: unknown })?.code);
-    const detail =
-      code === "P2021"
-        ? "The broker_customers table is missing. Run the Prisma migration and regenerate the client."
-        : error instanceof Error
-          ? error.message
-          : String(error);
-
+    console.error("[STAFF_AREA_BROKERS]", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Could not load the company broker directory.",
-        error: detail,
+        message: "The staff broker directory could not load.",
+        error:
+          process.env.NODE_ENV === "development"
+            ? error instanceof Error
+              ? error.message
+              : String(error)
+            : undefined,
       },
       { status: 500 },
     );

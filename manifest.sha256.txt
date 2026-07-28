@@ -1,0 +1,10 @@
+5fe29b110256763dc4aecc5e9f99639023c3324e7b62b63e0805211c76f127b2  ./APPLY-STAFF-UI-V5.ps1
+4204829a002a33bf22875f8b11c83e804731f99f7c661d601ca7fa8e9e653bb0  ./README.md
+f0adf4c6a9f5a48a814ed28fa16d124d522c1ad8eb4b60048417ddf5b0d27297  ./app/staff/dashboard/LiveMap.tsx
+967f6f07eb1a9be76271417d94b63730b4e6b26a515272a4df41c7b0b2f5889f  ./app/staff/dashboard/StaffAdvancedOperations.module.css
+dd40b8656104ee1bf7caf1427bf87f0b296cf6e5f296384d7bd239a53850fd8e  ./app/staff/dashboard/StaffAdvancedOperations.tsx
+cb31f4b7e08d100c3dea254d4758f1a2b9987dd3f972921157f42e198a1fb1cb  ./app/staff/dashboard/StaffDashboard.module.css
+ea97f4f2ac31d1d79b5e489da974f69d6a89d15cef84c1b76e8c728d52fcd256  ./app/staff/dashboard/StaffDashboardClient.tsx
+ddc8543bc7eb90b2f5f38b4f0dc7cd44a338e1c6184167bb006dbfca542a37ea  ./app/staff/dashboard/StaffLocationTracker.tsx
+ff7cb24ef52554462422b01da16f0f5af54915c2a92d1a4b8361cb98ee839817  ./app/staff/dashboard/page.tsx
+46504b379b01f0d709b598f0b3cdda29507dd6cf041e19332486798f9bc21bb6  ./manifest.sha256.txt

@@ -1,6 +1,4 @@
-import {
-  readFile,
-} from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { getCurrentUser } from "@/lib/auth";
@@ -19,83 +17,83 @@ export async function GET(
   _request: Request,
   context: RouteContext,
 ) {
-  const user =
-    await getCurrentUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     return Response.json(
       {
         success: false,
-        message:
-          "Authentication is required.",
+        message: "Authentication is required.",
       },
       { status: 401 },
     );
   }
 
-  const { id } =
-    await context.params;
-
-  const record =
-    await prisma.staffFile.findUnique(
-      {
-        where: {
-          id,
-        },
-      },
-    );
+  const { id } = await context.params;
+  const record = await prisma.staffFile.findUnique({
+    where: { id },
+  });
 
   if (!record) {
     return Response.json(
       {
         success: false,
-        message:
-          "The requested file was not found.",
+        message: "The requested file was not found.",
       },
       { status: 404 },
     );
   }
 
-  const privileged =
-    [
-      "SYSTEM_DEVELOPER",
-      "SUPER_ADMIN",
-    ].includes(
-      String(user.role),
-    );
+  const role = String(user.role).toUpperCase();
+  const platformPrivileged = [
+    "SYSTEM_DEVELOPER",
+    "SUPER_ADMIN",
+  ].includes(role);
+
+  const companyReviewer = [
+    "COMPANY_ADMIN",
+    "ACCOUNTANT",
+    "GPS_MANAGER",
+  ].includes(role);
 
   const sameCompany =
     Boolean(user.companyId) &&
-    String(user.companyId) ===
-      String(record.companyId);
+    String(user.companyId) === String(record.companyId);
 
-  if (
-    !privileged &&
-    !sameCompany
-  ) {
+  const ownFile =
+    String(record.ownerUserId) === String(user.id);
+
+  /*
+   * Staff/Broker users may preview only their own private files.
+   * Company Admin/Accountant/GPS Manager may review files belonging
+   * to their own company. Platform administrators retain access.
+   */
+  const allowed =
+    platformPrivileged ||
+    ownFile ||
+    (companyReviewer && sameCompany);
+
+  if (!allowed) {
     return Response.json(
       {
         success: false,
-        message:
-          "You cannot access this file.",
+        message: "You cannot access this private staff file.",
       },
       { status: 403 },
     );
   }
 
-  const storageRoot =
-    path.resolve(
-      process.cwd(),
-      "storage",
-      "private",
-      "staff",
-    );
+  const storageRoot = path.resolve(
+    process.cwd(),
+    "storage",
+    "private",
+    "staff",
+  );
 
-  const absolutePath =
-    path.resolve(
-      process.cwd(),
-      record.storagePath,
-    );
+  const absolutePath = path.resolve(
+    process.cwd(),
+    record.storagePath,
+  );
 
   if (
     !absolutePath.startsWith(
@@ -105,31 +103,26 @@ export async function GET(
     return Response.json(
       {
         success: false,
-        message:
-          "The stored file path is invalid.",
+        message: "The stored file path is invalid.",
       },
       { status: 400 },
     );
   }
 
   try {
-    const content =
-      await readFile(
-        absolutePath,
-      );
+    const content = await readFile(absolutePath);
+    const safeName = record.originalName
+      .replaceAll('"', "")
+      .replaceAll("\r", "")
+      .replaceAll("\n", "");
 
     return new Response(content, {
       headers: {
-        "Content-Type":
-          record.mimeType,
-        "Content-Length":
-          String(content.length),
-        "Content-Disposition":
-          `inline; filename="${record.originalName.replaceAll('"', "")}"`,
-        "Cache-Control":
-          "private, max-age=300",
-        "X-Content-Type-Options":
-          "nosniff",
+        "Content-Type": record.mimeType,
+        "Content-Length": String(content.length),
+        "Content-Disposition": `inline; filename="${safeName}"`,
+        "Cache-Control": "private, max-age=120",
+        "X-Content-Type-Options": "nosniff",
       },
     });
   } catch {
@@ -137,7 +130,7 @@ export async function GET(
       {
         success: false,
         message:
-          "The file exists in the database but is missing from storage.",
+          "The file exists in the database but is missing from private storage.",
       },
       { status: 404 },
     );

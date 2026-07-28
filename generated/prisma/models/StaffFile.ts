@@ -298,6 +298,7 @@ export type StaffFileWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"StaffFile"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  proofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
 }
 
 export type StaffFileOrderByWithRelationInput = {
@@ -317,6 +318,7 @@ export type StaffFileOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
   owner?: Prisma.UserOrderByWithRelationInput
+  proofSubmissions?: Prisma.StaffProofSubmissionOrderByRelationAggregateInput
   _relevance?: Prisma.StaffFileOrderByRelevanceInput
 }
 
@@ -340,6 +342,7 @@ export type StaffFileWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"StaffFile"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  proofSubmissions?: Prisma.StaffProofSubmissionListRelationFilter
 }, "id">
 
 export type StaffFileOrderByWithAggregationInput = {
@@ -399,6 +402,7 @@ export type StaffFileCreateInput = {
   createdAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffFilesInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedStaffFilesInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutFileInput
 }
 
 export type StaffFileUncheckedCreateInput = {
@@ -416,6 +420,7 @@ export type StaffFileUncheckedCreateInput = {
   checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutFileInput
 }
 
 export type StaffFileUpdateInput = {
@@ -433,6 +438,7 @@ export type StaffFileUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffFilesNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedStaffFilesNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutFileNestedInput
 }
 
 export type StaffFileUncheckedUpdateInput = {
@@ -450,6 +456,7 @@ export type StaffFileUncheckedUpdateInput = {
   checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutFileNestedInput
 }
 
 export type StaffFileCreateManyInput = {
@@ -580,6 +587,11 @@ export type StaffFileSumOrderByAggregateInput = {
   compressionRatio?: Prisma.SortOrder
 }
 
+export type StaffFileNullableScalarRelationFilter = {
+  is?: Prisma.StaffFileWhereInput | null
+  isNot?: Prisma.StaffFileWhereInput | null
+}
+
 export type StaffFileCreateNestedManyWithoutCompanyInput = {
   create?: Prisma.XOR<Prisma.StaffFileCreateWithoutCompanyInput, Prisma.StaffFileUncheckedCreateWithoutCompanyInput> | Prisma.StaffFileCreateWithoutCompanyInput[] | Prisma.StaffFileUncheckedCreateWithoutCompanyInput[]
   connectOrCreate?: Prisma.StaffFileCreateOrConnectWithoutCompanyInput | Prisma.StaffFileCreateOrConnectWithoutCompanyInput[]
@@ -668,6 +680,22 @@ export type EnumStaffFileKindFieldUpdateOperationsInput = {
   set?: $Enums.StaffFileKind
 }
 
+export type StaffFileCreateNestedOneWithoutProofSubmissionsInput = {
+  create?: Prisma.XOR<Prisma.StaffFileCreateWithoutProofSubmissionsInput, Prisma.StaffFileUncheckedCreateWithoutProofSubmissionsInput>
+  connectOrCreate?: Prisma.StaffFileCreateOrConnectWithoutProofSubmissionsInput
+  connect?: Prisma.StaffFileWhereUniqueInput
+}
+
+export type StaffFileUpdateOneWithoutProofSubmissionsNestedInput = {
+  create?: Prisma.XOR<Prisma.StaffFileCreateWithoutProofSubmissionsInput, Prisma.StaffFileUncheckedCreateWithoutProofSubmissionsInput>
+  connectOrCreate?: Prisma.StaffFileCreateOrConnectWithoutProofSubmissionsInput
+  upsert?: Prisma.StaffFileUpsertWithoutProofSubmissionsInput
+  disconnect?: Prisma.StaffFileWhereInput | boolean
+  delete?: Prisma.StaffFileWhereInput | boolean
+  connect?: Prisma.StaffFileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StaffFileUpdateToOneWithWhereWithoutProofSubmissionsInput, Prisma.StaffFileUpdateWithoutProofSubmissionsInput>, Prisma.StaffFileUncheckedUpdateWithoutProofSubmissionsInput>
+}
+
 export type StaffFileCreateWithoutCompanyInput = {
   id?: string
   kind?: $Enums.StaffFileKind
@@ -682,6 +710,7 @@ export type StaffFileCreateWithoutCompanyInput = {
   storagePath: string
   createdAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutOwnedStaffFilesInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutFileInput
 }
 
 export type StaffFileUncheckedCreateWithoutCompanyInput = {
@@ -698,6 +727,7 @@ export type StaffFileUncheckedCreateWithoutCompanyInput = {
   checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutFileInput
 }
 
 export type StaffFileCreateOrConnectWithoutCompanyInput = {
@@ -760,6 +790,7 @@ export type StaffFileCreateWithoutOwnerInput = {
   storagePath: string
   createdAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutStaffFilesInput
+  proofSubmissions?: Prisma.StaffProofSubmissionCreateNestedManyWithoutFileInput
 }
 
 export type StaffFileUncheckedCreateWithoutOwnerInput = {
@@ -776,6 +807,7 @@ export type StaffFileUncheckedCreateWithoutOwnerInput = {
   checksumSha256?: string | null
   storagePath: string
   createdAt?: Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedCreateNestedManyWithoutFileInput
 }
 
 export type StaffFileCreateOrConnectWithoutOwnerInput = {
@@ -802,6 +834,90 @@ export type StaffFileUpdateWithWhereUniqueWithoutOwnerInput = {
 export type StaffFileUpdateManyWithWhereWithoutOwnerInput = {
   where: Prisma.StaffFileScalarWhereInput
   data: Prisma.XOR<Prisma.StaffFileUpdateManyMutationInput, Prisma.StaffFileUncheckedUpdateManyWithoutOwnerInput>
+}
+
+export type StaffFileCreateWithoutProofSubmissionsInput = {
+  id?: string
+  kind?: $Enums.StaffFileKind
+  originalName: string
+  storedName: string
+  mimeType: string
+  sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
+  storagePath: string
+  createdAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutStaffFilesInput
+  owner: Prisma.UserCreateNestedOneWithoutOwnedStaffFilesInput
+}
+
+export type StaffFileUncheckedCreateWithoutProofSubmissionsInput = {
+  id?: string
+  companyId: string
+  ownerUserId: string
+  kind?: $Enums.StaffFileKind
+  originalName: string
+  storedName: string
+  mimeType: string
+  sizeBytes: number
+  originalSizeBytes?: number | null
+  compressionRatio?: number | null
+  compressed?: boolean
+  checksumSha256?: string | null
+  storagePath: string
+  createdAt?: Date | string
+}
+
+export type StaffFileCreateOrConnectWithoutProofSubmissionsInput = {
+  where: Prisma.StaffFileWhereUniqueInput
+  create: Prisma.XOR<Prisma.StaffFileCreateWithoutProofSubmissionsInput, Prisma.StaffFileUncheckedCreateWithoutProofSubmissionsInput>
+}
+
+export type StaffFileUpsertWithoutProofSubmissionsInput = {
+  update: Prisma.XOR<Prisma.StaffFileUpdateWithoutProofSubmissionsInput, Prisma.StaffFileUncheckedUpdateWithoutProofSubmissionsInput>
+  create: Prisma.XOR<Prisma.StaffFileCreateWithoutProofSubmissionsInput, Prisma.StaffFileUncheckedCreateWithoutProofSubmissionsInput>
+  where?: Prisma.StaffFileWhereInput
+}
+
+export type StaffFileUpdateToOneWithWhereWithoutProofSubmissionsInput = {
+  where?: Prisma.StaffFileWhereInput
+  data: Prisma.XOR<Prisma.StaffFileUpdateWithoutProofSubmissionsInput, Prisma.StaffFileUncheckedUpdateWithoutProofSubmissionsInput>
+}
+
+export type StaffFileUpdateWithoutProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStaffFileKindFieldUpdateOperationsInput | $Enums.StaffFileKind
+  originalName?: Prisma.StringFieldUpdateOperationsInput | string
+  storedName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutStaffFilesNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedStaffFilesNestedInput
+}
+
+export type StaffFileUncheckedUpdateWithoutProofSubmissionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumStaffFileKindFieldUpdateOperationsInput | $Enums.StaffFileKind
+  originalName?: Prisma.StringFieldUpdateOperationsInput | string
+  storedName?: Prisma.StringFieldUpdateOperationsInput | string
+  mimeType?: Prisma.StringFieldUpdateOperationsInput | string
+  sizeBytes?: Prisma.IntFieldUpdateOperationsInput | number
+  originalSizeBytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  compressionRatio?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  compressed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  storagePath?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StaffFileCreateManyCompanyInput = {
@@ -834,6 +950,7 @@ export type StaffFileUpdateWithoutCompanyInput = {
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedStaffFilesNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutFileNestedInput
 }
 
 export type StaffFileUncheckedUpdateWithoutCompanyInput = {
@@ -850,6 +967,7 @@ export type StaffFileUncheckedUpdateWithoutCompanyInput = {
   checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutFileNestedInput
 }
 
 export type StaffFileUncheckedUpdateManyWithoutCompanyInput = {
@@ -898,6 +1016,7 @@ export type StaffFileUpdateWithoutOwnerInput = {
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutStaffFilesNestedInput
+  proofSubmissions?: Prisma.StaffProofSubmissionUpdateManyWithoutFileNestedInput
 }
 
 export type StaffFileUncheckedUpdateWithoutOwnerInput = {
@@ -914,6 +1033,7 @@ export type StaffFileUncheckedUpdateWithoutOwnerInput = {
   checksumSha256?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storagePath?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofSubmissions?: Prisma.StaffProofSubmissionUncheckedUpdateManyWithoutFileNestedInput
 }
 
 export type StaffFileUncheckedUpdateManyWithoutOwnerInput = {
@@ -933,6 +1053,35 @@ export type StaffFileUncheckedUpdateManyWithoutOwnerInput = {
 }
 
 
+/**
+ * Count Type StaffFileCountOutputType
+ */
+
+export type StaffFileCountOutputType = {
+  proofSubmissions: number
+}
+
+export type StaffFileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  proofSubmissions?: boolean | StaffFileCountOutputTypeCountProofSubmissionsArgs
+}
+
+/**
+ * StaffFileCountOutputType without action
+ */
+export type StaffFileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffFileCountOutputType
+   */
+  select?: Prisma.StaffFileCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StaffFileCountOutputType without action
+ */
+export type StaffFileCountOutputTypeCountProofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffProofSubmissionWhereInput
+}
+
 
 export type StaffFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -951,6 +1100,8 @@ export type StaffFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  proofSubmissions?: boolean | Prisma.StaffFile$proofSubmissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.StaffFileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["staffFile"]>
 
 
@@ -976,6 +1127,8 @@ export type StaffFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type StaffFileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  proofSubmissions?: boolean | Prisma.StaffFile$proofSubmissionsArgs<ExtArgs>
+  _count?: boolean | Prisma.StaffFileCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $StaffFilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -983,6 +1136,7 @@ export type $StaffFilePayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
     owner: Prisma.$UserPayload<ExtArgs>
+    proofSubmissions: Prisma.$StaffProofSubmissionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1341,6 +1495,7 @@ export interface Prisma__StaffFileClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  proofSubmissions<T extends Prisma.StaffFile$proofSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StaffFile$proofSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffProofSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1729,6 +1884,30 @@ export type StaffFileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many StaffFiles to delete.
    */
   limit?: number
+}
+
+/**
+ * StaffFile.proofSubmissions
+ */
+export type StaffFile$proofSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffProofSubmission
+   */
+  select?: Prisma.StaffProofSubmissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffProofSubmission
+   */
+  omit?: Prisma.StaffProofSubmissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffProofSubmissionInclude<ExtArgs> | null
+  where?: Prisma.StaffProofSubmissionWhereInput
+  orderBy?: Prisma.StaffProofSubmissionOrderByWithRelationInput | Prisma.StaffProofSubmissionOrderByWithRelationInput[]
+  cursor?: Prisma.StaffProofSubmissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffProofSubmissionScalarFieldEnum | Prisma.StaffProofSubmissionScalarFieldEnum[]
 }
 
 /**

@@ -385,3 +385,106 @@ export const BrokerVisitStatus = {
 } as const
 
 export type BrokerVisitStatus = (typeof BrokerVisitStatus)[keyof typeof BrokerVisitStatus]
+
+
+export const StaffNetworkPurpose = {
+  FLOAT: 'FLOAT',
+  CASH: 'CASH',
+  BOTH: 'BOTH'
+} as const
+
+export type StaffNetworkPurpose = (typeof StaffNetworkPurpose)[keyof typeof StaffNetworkPurpose]
+
+
+export const StaffNetworkLineStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type StaffNetworkLineStatus = (typeof StaffNetworkLineStatus)[keyof typeof StaffNetworkLineStatus]
+
+
+export const StaffFundingReceiptStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type StaffFundingReceiptStatus = (typeof StaffFundingReceiptStatus)[keyof typeof StaffFundingReceiptStatus]
+
+
+export const StaffProofDirection = {
+  ACCOUNTANT_TO_STAFF: 'ACCOUNTANT_TO_STAFF',
+  STAFF_TO_BROKER: 'STAFF_TO_BROKER',
+  BROKER_TO_STAFF: 'BROKER_TO_STAFF',
+  STAFF_TO_ACCOUNTANT: 'STAFF_TO_ACCOUNTANT',
+  STAFF_TO_BANK: 'STAFF_TO_BANK',
+  EXPENSE_PAYMENT: 'EXPENSE_PAYMENT',
+  OTHER: 'OTHER'
+} as const
+
+export type StaffProofDirection = (typeof StaffProofDirection)[keyof typeof StaffProofDirection]
+
+
+export const StaffProofStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type StaffProofStatus = (typeof StaffProofStatus)[keyof typeof StaffProofStatus]
+
+
+export const ExpenseRequestMode = {
+  REIMBURSEMENT: 'REIMBURSEMENT',
+  ADVANCE_REQUEST: 'ADVANCE_REQUEST',
+  DIRECT_PAYMENT_REQUEST: 'DIRECT_PAYMENT_REQUEST'
+} as const
+
+export type ExpenseRequestMode = (typeof ExpenseRequestMode)[keyof typeof ExpenseRequestMode]
+
+
+export const AttendanceSession = {
+  MORNING: 'MORNING',
+  EVENING: 'EVENING'
+} as const
+
+export type AttendanceSession = (typeof AttendanceSession)[keyof typeof AttendanceSession]
+
+
+export const AttendanceDeviceStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  REVOKED: 'REVOKED'
+} as const
+
+export type AttendanceDeviceStatus = (typeof AttendanceDeviceStatus)[keyof typeof AttendanceDeviceStatus]
+
+
+export const AttendancePunchStatus = {
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  REVIEW_REQUIRED: 'REVIEW_REQUIRED'
+} as const
+
+export type AttendancePunchStatus = (typeof AttendancePunchStatus)[keyof typeof AttendancePunchStatus]
+
+
+export const VerificationTargetType = {
+  STAFF_PROOF: 'STAFF_PROOF',
+  BANK_DEPOSIT: 'BANK_DEPOSIT',
+  EXPENSE: 'EXPENSE',
+  OTHER: 'OTHER'
+} as const
+
+export type VerificationTargetType = (typeof VerificationTargetType)[keyof typeof VerificationTargetType]
+
+
+export const VerificationPacketStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type VerificationPacketStatus = (typeof VerificationPacketStatus)[keyof typeof VerificationPacketStatus]

@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-07-26T11:13:05.485234+00:00",
+  "companyCodeDefault": "SIMAMIA",
+  "excel": {
+    "sourceFile": "prisma/data/source/float data_063712.xlsx",
+    "jsonFile": "prisma/data/float-agents.json",
+    "declaredUniqueAgents": 2273,
+    "parsedRows": 2273,
+    "blankNameRows": 1,
+    "duplicatePhoneValues": 0,
+    "duplicateAliasValues": 0,
+    "sha256": "46e660bc3bc9cbcc210a21fe6f619dbbf5660417ff143499101d8e864a0bf629"
+  },
+  "bankStatement": {
+    "sourceFile": "prisma/data/source/accountTransactionHistory (16).pdf",
+    "jsonFile": "prisma/data/bank-statement-2026-07-16-to-17.json",
+    "transactions": 27,
+    "totalCredit": 38369600.0,
+    "totalDebit": 39800000.0,
+    "sha256": "956d62f57fd2f10fe183199386b169c63067a6940ae0fa3d5b4c0cc47f0a1d5e"
+  }
+}

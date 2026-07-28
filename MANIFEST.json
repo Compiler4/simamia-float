@@ -1,147 +1,104 @@
-[
-  {
-    "path": "API-ENDPOINTS.md",
-    "size": 1471,
-    "sha256": "bc5705c90b4eba1cb2177c462bd5e4ba7040f472a0d5a73c73a07c3ff7d92eb5"
-  },
-  {
-    "path": "README.md",
-    "size": 6897,
-    "sha256": "1ad7bd95181462b1c1a6f3cbed86ac73b6e62b87fd4c8a07309dd8e97c85712c"
-  },
-  {
-    "path": "app/admin/dashboard/CompanyAdminDashboard.module.css",
-    "size": 62908,
-    "sha256": "dbfe0448ecdd0b4447c6b860bb7f0d942fd481cb07de3d3e41ad096a9f47b81d"
-  },
-  {
-    "path": "app/admin/dashboard/CompanyAdminDashboardClient.tsx",
-    "size": 119273,
-    "sha256": "bf3129a49e1cf6a0e2b585a76bf7cd122ea23706156cdabe6602458561e16485"
-  },
-  {
-    "path": "app/admin/dashboard/page.tsx",
-    "size": 902,
-    "sha256": "8c0495bdb2a27da121e0fe2b63bff2f7dea63ac31830aede75a4bc7646f7112f"
-  },
-  {
-    "path": "app/api/company-admin/attendance/route.ts",
-    "size": 2887,
-    "sha256": "68b600d8f5e59e315476626570db4bcf78492485b10fef14371162578f4f7aad"
-  },
-  {
-    "path": "app/api/company-admin/bank-verifications/[id]/message/route.ts",
-    "size": 1660,
-    "sha256": "1e23edeaaac529eb7d103baf582df829e96074384659aad8ec69fb5d591be40d"
-  },
-  {
-    "path": "app/api/company-admin/bank-verifications/[id]/route.ts",
-    "size": 2396,
-    "sha256": "f0b31297de76711d4e444030755d720d058fc3b7862a4175fe1a01459a3b4bd0"
-  },
-  {
-    "path": "app/api/company-admin/bank-verifications/route.ts",
-    "size": 2486,
-    "sha256": "ddeea625b466471633f22e8fcb43ec0d9431bd6cc3f50907a1f254d668e519e2"
-  },
-  {
-    "path": "app/api/company-admin/branches/[id]/route.ts",
-    "size": 2662,
-    "sha256": "c764138f403483129a17ce85ba992d9684e720c241a680029b0e0ce0d3c8a70f"
-  },
-  {
-    "path": "app/api/company-admin/branches/route.ts",
-    "size": 1239,
-    "sha256": "ee7043e588544a3b88e822575f9ddb8a030f29a5b9c2c4d8ff3ca8e38492f858"
-  },
-  {
-    "path": "app/api/company-admin/dashboard/route.ts",
-    "size": 11442,
-    "sha256": "9422aae36f007c8e4446cc444d3d5fc9fcb7623893d0833aca8183126f4d13e5"
-  },
-  {
-    "path": "app/api/company-admin/expenses/[id]/route.ts",
-    "size": 1918,
-    "sha256": "71f9c06ba5b2f7d9b98f80b97153726f394183e7480d3f19a0b09651cd9c5aeb"
-  },
-  {
-    "path": "app/api/company-admin/expenses/route.ts",
-    "size": 2301,
-    "sha256": "e5c740587a5c56b6cecf9f6040c7956f01bd101ca37437a2ef69ccb7200e026a"
-  },
-  {
-    "path": "app/api/company-admin/gps-devices/[id]/route.ts",
-    "size": 1587,
-    "sha256": "4c97af8687ce2754f07f7b22cb37bcdbc389d414a323c0d449f1327aa53034e5"
-  },
-  {
-    "path": "app/api/company-admin/gps-devices/route.ts",
-    "size": 1551,
-    "sha256": "0a989e8fbcd0f4d3ae513fbeaa30b468b4fcdc588555edbdadb4b3918c4820cb"
-  },
-  {
-    "path": "app/api/company-admin/notifications/[id]/read/route.ts",
-    "size": 1122,
-    "sha256": "8cef7867440f5dd508d1117b4d86ac52e1954468d5349e7d82b16d6b7e2e5595"
-  },
-  {
-    "path": "app/api/company-admin/notifications/read-all/route.ts",
-    "size": 820,
-    "sha256": "5d6e997e3a3b7d5a909e32a52775c1423706551235ac7435b7a2b9dc8f14a35e"
-  },
-  {
-    "path": "app/api/company-admin/settings/route.ts",
-    "size": 1574,
-    "sha256": "98e32495798e556efe5f70e1dd299d4815ca3e3cb1e28efe088e231e731f0d32"
-  },
-  {
-    "path": "app/api/company-admin/uploads/route.ts",
-    "size": 1964,
-    "sha256": "3a2651df7b9cdb514bed09fa7a9af1229a8db87f465b5022bc50bef76caa429e"
-  },
-  {
-    "path": "app/api/company-admin/users/[id]/route.ts",
-    "size": 3844,
-    "sha256": "68322ecf67e3e5b5ad9b83bfc33dc2c184971149a485ceea526f7d67767b4d1f"
-  },
-  {
-    "path": "app/api/company-admin/users/route.ts",
-    "size": 2167,
-    "sha256": "6585d9f32ecd402a5159f67a8ad4630df6803a782a41ade5bac35ecf54d5c3d5"
-  },
-  {
-    "path": "app/api/gps/ping/route.ts",
-    "size": 2349,
-    "sha256": "e6db34473943a607bf3a6a54ecd71cb990b0d37f5fa7bb4b0f4511adad440e2e"
-  },
-  {
-    "path": "app/device-tracker/DeviceTracker.module.css",
-    "size": 4011,
-    "sha256": "57f78fd8c1dfc4721ddc3af0a87fc5207bb5ab2f27699692d97b893998bff7b9"
-  },
-  {
-    "path": "app/device-tracker/page.tsx",
-    "size": 6345,
-    "sha256": "0f06cfa3cd38dc09bc44d5c71b9ff107f87a05d29867c6d6b29bc16045042675"
-  },
-  {
-    "path": "lib/company-admin-server.ts",
-    "size": 3132,
-    "sha256": "34e5e724874d6a133ebe30248e090de1fd7bb298a4dab9fcfcc3896be642fc85"
-  },
-  {
-    "path": "lib/prisma.ts",
-    "size": 393,
-    "sha256": "fb06bd2b909867137d2b5231104c9e831d1722b7df77774780b438d143109c9d"
-  },
-  {
-    "path": "prisma/company-admin-module.prisma",
-    "size": 5635,
-    "sha256": "d99eefe5dfd8e988b1ac7673eed4d3a23265e01dad51eaf56aae52195bcbb11a"
-  },
-  {
-    "path": "prisma/seed-company-admin.ts",
-    "size": 10466,
-    "sha256": "a17f6019eeea7b15427e0312f0383a63629567f737d1e12e526015ae44e18725"
+{
+  "package": "simamia-staff-ui-v8",
+  "files": [
+    {
+      "path": "APPLY-STAFF-UI-V8.ps1",
+      "size": 2995,
+      "sha256": "1727b56028a5795b4877f1251c4837053d76d7053e81beebadb58f595c4afd11"
+    },
+    {
+      "path": "README.md",
+      "size": 3112,
+      "sha256": "159b8c181114c098e0b56edefb796e185e3875fec093a2621395b9d1d1dd0e3b"
+    },
+    {
+      "path": "app/accountant/staff-attendance/AccountantStaffAttendance.module.css",
+      "size": 6700,
+      "sha256": "ae8beaf8324eeb2e06ddc789674d9307ed363d80d6882c44395c5b08d61d0d51"
+    },
+    {
+      "path": "app/accountant/staff-attendance/AccountantStaffAttendanceClient.tsx",
+      "size": 12310,
+      "sha256": "11d4e5dc334df639d9e626d06430547f42cf91737fb421a08abd448eb90a9cd3"
+    },
+    {
+      "path": "app/accountant/staff-attendance/page.tsx",
+      "size": 702,
+      "sha256": "9baab0ce10ba2a7d2f7098615ab1c27da87bbfa52ec1df4056f076db3a07a5a9"
+    },
+    {
+      "path": "app/api/accountant/staff-attendance/route.ts",
+      "size": 9553,
+      "sha256": "d34b5b64644cfda5d7308319016035399ce6fee279af60def7650f70b8ff4f34"
+    },
+    {
+      "path": "app/api/staff/gps/route.ts",
+      "size": 21623,
+      "sha256": "0ac290c3d3a36e66497991cb5f9ab9dbb42d3968d8beffc03cfc1a5a39c1c489"
+    },
+    {
+      "path": "app/api/staff/operations/report/route.ts",
+      "size": 18998,
+      "sha256": "a7466304bbd48342f79eeae2db47c6b5fa9d5d4e82b98103a7069fb6933a1d7e"
+    },
+    {
+      "path": "app/api/staff/operations/route.ts",
+      "size": 38053,
+      "sha256": "fad8e9efce22801de127c6ab087d46bb4bf5d475aa258c2ad645e325cda90b3e"
+    },
+    {
+      "path": "app/api/staff/unread-count/route.ts",
+      "size": 7344,
+      "sha256": "3df4425bfc01df9a4be2a532dc82076892760e39d62aa70d250828933bc85d82"
+    },
+    {
+      "path": "app/staff/dashboard/LiveMap.tsx",
+      "size": 5706,
+      "sha256": "f0adf4c6a9f5a48a814ed28fa16d124d522c1ad8eb4b60048417ddf5b0d27297"
+    },
+    {
+      "path": "app/staff/dashboard/StaffAdvancedOperations.module.css",
+      "size": 37342,
+      "sha256": "b9502ae423bb482ccad735a18cab1793c00eb4cf9dddb90a7150038c531649e2"
+    },
+    {
+      "path": "app/staff/dashboard/StaffAdvancedOperations.tsx",
+      "size": 83238,
+      "sha256": "bbd92cf51f7c80734da89f7ee15804744871796e75ed6b00b0e0d04b8523abce"
+    },
+    {
+      "path": "app/staff/dashboard/StaffDashboard.module.css",
+      "size": 42214,
+      "sha256": "cb31f4b7e08d100c3dea254d4758f1a2b9987dd3f972921157f42e198a1fb1cb"
+    },
+    {
+      "path": "app/staff/dashboard/StaffDashboardClient.tsx",
+      "size": 83158,
+      "sha256": "b0a0ea61632693c9436db03465554156eb3a08ae4ecc0d6f71aed294f25155a1"
+    },
+    {
+      "path": "app/staff/dashboard/StaffLocationTracker.tsx",
+      "size": 2792,
+      "sha256": "ddc8543bc7eb90b2f5f38b4f0dc7cd44a338e1c6184167bb006dbfca542a37ea"
+    },
+    {
+      "path": "docs/ACCOUNTANT_NAVIGATION_SNIPPET.md",
+      "size": 291,
+      "sha256": "2a65145a02af4acbd96dcf16351482d79e831d69b792a9598feec39a4c52ffc0"
+    },
+    {
+      "path": "lib/staff/operations-v4.ts",
+      "size": 13155,
+      "sha256": "46b8d8a5f4689549efdbdedb54cac5668926347b6eeca4c7dfa724f737d204d0"
+    },
+    {
+      "path": "scripts/set-broker-auto-visit-radius.ts",
+      "size": 1877,
+      "sha256": "0e6dd094a39e04b16028df9f18bb602d1ec125883604f49622ab7c471e66c8c1"
+    }
+  ],
+  "validation": {
+    "typescript_syntax_errors": 0,
+    "css_brace_validation": "passed"
   }
-]
+}

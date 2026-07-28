@@ -4885,6 +4885,7 @@
   place-items: center;
   padding: 18px;
   background: rgba(2, 28, 34, .72);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   animation: popupEnter .2s ease both;
 }

@@ -353,6 +353,7 @@ export type FloatTransactionWhereInput = {
   toUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
+  fundingReceipt?: Prisma.XOR<Prisma.StaffFundingReceiptNullableScalarRelationFilter, Prisma.StaffFundingReceiptWhereInput> | null
 }
 
 export type FloatTransactionOrderByWithRelationInput = {
@@ -382,6 +383,7 @@ export type FloatTransactionOrderByWithRelationInput = {
   toUser?: Prisma.UserOrderByWithRelationInput
   approvedBy?: Prisma.UserOrderByWithRelationInput
   brokerCustomer?: Prisma.BrokerCustomerOrderByWithRelationInput
+  fundingReceipt?: Prisma.StaffFundingReceiptOrderByWithRelationInput
   _relevance?: Prisma.FloatTransactionOrderByRelevanceInput
 }
 
@@ -416,6 +418,7 @@ export type FloatTransactionWhereUniqueInput = Prisma.AtLeast<{
   toUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   brokerCustomer?: Prisma.XOR<Prisma.BrokerCustomerNullableScalarRelationFilter, Prisma.BrokerCustomerWhereInput> | null
+  fundingReceipt?: Prisma.XOR<Prisma.StaffFundingReceiptNullableScalarRelationFilter, Prisma.StaffFundingReceiptWhereInput> | null
 }, "id" | "companyId_referenceNo">
 
 export type FloatTransactionOrderByWithAggregationInput = {
@@ -496,6 +499,7 @@ export type FloatTransactionCreateInput = {
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
   brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
+  fundingReceipt?: Prisma.StaffFundingReceiptCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionUncheckedCreateInput = {
@@ -520,6 +524,7 @@ export type FloatTransactionUncheckedCreateInput = {
   lockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionUpdateInput = {
@@ -544,6 +549,7 @@ export type FloatTransactionUpdateInput = {
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
   brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
+  fundingReceipt?: Prisma.StaffFundingReceiptUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateInput = {
@@ -568,6 +574,7 @@ export type FloatTransactionUncheckedUpdateInput = {
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionCreateManyInput = {
@@ -738,6 +745,11 @@ export type FloatTransactionMinOrderByAggregateInput = {
 export type FloatTransactionSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   returnedAmount?: Prisma.SortOrder
+}
+
+export type FloatTransactionNullableScalarRelationFilter = {
+  is?: Prisma.FloatTransactionWhereInput | null
+  isNot?: Prisma.FloatTransactionWhereInput | null
 }
 
 export type FloatTransactionCreateNestedManyWithoutCompanyInput = {
@@ -958,6 +970,22 @@ export type FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerNestedInput 
   deleteMany?: Prisma.FloatTransactionScalarWhereInput | Prisma.FloatTransactionScalarWhereInput[]
 }
 
+export type FloatTransactionCreateNestedOneWithoutFundingReceiptInput = {
+  create?: Prisma.XOR<Prisma.FloatTransactionCreateWithoutFundingReceiptInput, Prisma.FloatTransactionUncheckedCreateWithoutFundingReceiptInput>
+  connectOrCreate?: Prisma.FloatTransactionCreateOrConnectWithoutFundingReceiptInput
+  connect?: Prisma.FloatTransactionWhereUniqueInput
+}
+
+export type FloatTransactionUpdateOneWithoutFundingReceiptNestedInput = {
+  create?: Prisma.XOR<Prisma.FloatTransactionCreateWithoutFundingReceiptInput, Prisma.FloatTransactionUncheckedCreateWithoutFundingReceiptInput>
+  connectOrCreate?: Prisma.FloatTransactionCreateOrConnectWithoutFundingReceiptInput
+  upsert?: Prisma.FloatTransactionUpsertWithoutFundingReceiptInput
+  disconnect?: Prisma.FloatTransactionWhereInput | boolean
+  delete?: Prisma.FloatTransactionWhereInput | boolean
+  connect?: Prisma.FloatTransactionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FloatTransactionUpdateToOneWithWhereWithoutFundingReceiptInput, Prisma.FloatTransactionUpdateWithoutFundingReceiptInput>, Prisma.FloatTransactionUncheckedUpdateWithoutFundingReceiptInput>
+}
+
 export type FloatTransactionCreateWithoutCompanyInput = {
   id?: string
   transactionType?: $Enums.StaffFloatType
@@ -979,6 +1007,7 @@ export type FloatTransactionCreateWithoutCompanyInput = {
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
   brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
+  fundingReceipt?: Prisma.StaffFundingReceiptCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutCompanyInput = {
@@ -1002,6 +1031,7 @@ export type FloatTransactionUncheckedCreateWithoutCompanyInput = {
   lockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionCreateOrConnectWithoutCompanyInput = {
@@ -1078,6 +1108,7 @@ export type FloatTransactionCreateWithoutFromUserInput = {
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
   brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
+  fundingReceipt?: Prisma.StaffFundingReceiptCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutFromUserInput = {
@@ -1101,6 +1132,7 @@ export type FloatTransactionUncheckedCreateWithoutFromUserInput = {
   lockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionCreateOrConnectWithoutFromUserInput = {
@@ -1134,6 +1166,7 @@ export type FloatTransactionCreateWithoutToUserInput = {
   fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
   brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
+  fundingReceipt?: Prisma.StaffFundingReceiptCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutToUserInput = {
@@ -1157,6 +1190,7 @@ export type FloatTransactionUncheckedCreateWithoutToUserInput = {
   lockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionCreateOrConnectWithoutToUserInput = {
@@ -1190,6 +1224,7 @@ export type FloatTransactionCreateWithoutApprovedByInput = {
   fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
+  fundingReceipt?: Prisma.StaffFundingReceiptCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutApprovedByInput = {
@@ -1213,6 +1248,7 @@ export type FloatTransactionUncheckedCreateWithoutApprovedByInput = {
   lockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionCreateOrConnectWithoutApprovedByInput = {
@@ -1294,6 +1330,7 @@ export type FloatTransactionCreateWithoutBrokerCustomerInput = {
   fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
   toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
+  fundingReceipt?: Prisma.StaffFundingReceiptCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionUncheckedCreateWithoutBrokerCustomerInput = {
@@ -1317,6 +1354,7 @@ export type FloatTransactionUncheckedCreateWithoutBrokerCustomerInput = {
   lockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedCreateNestedOneWithoutFloatTransactionInput
 }
 
 export type FloatTransactionCreateOrConnectWithoutBrokerCustomerInput = {
@@ -1343,6 +1381,118 @@ export type FloatTransactionUpdateWithWhereUniqueWithoutBrokerCustomerInput = {
 export type FloatTransactionUpdateManyWithWhereWithoutBrokerCustomerInput = {
   where: Prisma.FloatTransactionScalarWhereInput
   data: Prisma.XOR<Prisma.FloatTransactionUpdateManyMutationInput, Prisma.FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerInput>
+}
+
+export type FloatTransactionCreateWithoutFundingReceiptInput = {
+  id?: string
+  transactionType?: $Enums.StaffFloatType
+  referenceNo?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: string | null
+  receiptUrl?: string | null
+  notes?: string | null
+  status?: $Enums.FloatStatus
+  issuedAt?: Date | string | null
+  confirmedAt?: Date | string | null
+  returnedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  lockedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutFloatTransactionsInput
+  fromUser?: Prisma.UserCreateNestedOneWithoutFloatSentInput
+  toUser?: Prisma.UserCreateNestedOneWithoutFloatReceivedInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutFloatsApprovedInput
+  brokerCustomer?: Prisma.BrokerCustomerCreateNestedOneWithoutFloatTransactionsInput
+}
+
+export type FloatTransactionUncheckedCreateWithoutFundingReceiptInput = {
+  id?: string
+  companyId: string
+  fromUserId?: string | null
+  toUserId?: string | null
+  approvedById?: string | null
+  brokerCustomerId?: string | null
+  transactionType?: $Enums.StaffFloatType
+  referenceNo?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: string | null
+  receiptUrl?: string | null
+  notes?: string | null
+  status?: $Enums.FloatStatus
+  issuedAt?: Date | string | null
+  confirmedAt?: Date | string | null
+  returnedAt?: Date | string | null
+  approvedAt?: Date | string | null
+  lockedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FloatTransactionCreateOrConnectWithoutFundingReceiptInput = {
+  where: Prisma.FloatTransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.FloatTransactionCreateWithoutFundingReceiptInput, Prisma.FloatTransactionUncheckedCreateWithoutFundingReceiptInput>
+}
+
+export type FloatTransactionUpsertWithoutFundingReceiptInput = {
+  update: Prisma.XOR<Prisma.FloatTransactionUpdateWithoutFundingReceiptInput, Prisma.FloatTransactionUncheckedUpdateWithoutFundingReceiptInput>
+  create: Prisma.XOR<Prisma.FloatTransactionCreateWithoutFundingReceiptInput, Prisma.FloatTransactionUncheckedCreateWithoutFundingReceiptInput>
+  where?: Prisma.FloatTransactionWhereInput
+}
+
+export type FloatTransactionUpdateToOneWithWhereWithoutFundingReceiptInput = {
+  where?: Prisma.FloatTransactionWhereInput
+  data: Prisma.XOR<Prisma.FloatTransactionUpdateWithoutFundingReceiptInput, Prisma.FloatTransactionUncheckedUpdateWithoutFundingReceiptInput>
+}
+
+export type FloatTransactionUpdateWithoutFundingReceiptInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumFloatStatusFieldUpdateOperationsInput | $Enums.FloatStatus
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutFloatTransactionsNestedInput
+  fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
+  toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
+  brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
+}
+
+export type FloatTransactionUncheckedUpdateWithoutFundingReceiptInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  fromUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brokerCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionType?: Prisma.EnumStaffFloatTypeFieldUpdateOperationsInput | $Enums.StaffFloatType
+  referenceNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  returnedAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  purpose?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumFloatStatusFieldUpdateOperationsInput | $Enums.FloatStatus
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  returnedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FloatTransactionCreateManyCompanyInput = {
@@ -1389,6 +1539,7 @@ export type FloatTransactionUpdateWithoutCompanyInput = {
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
   brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
+  fundingReceipt?: Prisma.StaffFundingReceiptUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutCompanyInput = {
@@ -1412,6 +1563,7 @@ export type FloatTransactionUncheckedUpdateWithoutCompanyInput = {
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateManyWithoutCompanyInput = {
@@ -1527,6 +1679,7 @@ export type FloatTransactionUpdateWithoutFromUserInput = {
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
   brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
+  fundingReceipt?: Prisma.StaffFundingReceiptUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutFromUserInput = {
@@ -1550,6 +1703,7 @@ export type FloatTransactionUncheckedUpdateWithoutFromUserInput = {
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateManyWithoutFromUserInput = {
@@ -1596,6 +1750,7 @@ export type FloatTransactionUpdateWithoutToUserInput = {
   fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
   brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
+  fundingReceipt?: Prisma.StaffFundingReceiptUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutToUserInput = {
@@ -1619,6 +1774,7 @@ export type FloatTransactionUncheckedUpdateWithoutToUserInput = {
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateManyWithoutToUserInput = {
@@ -1665,6 +1821,7 @@ export type FloatTransactionUpdateWithoutApprovedByInput = {
   fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   brokerCustomer?: Prisma.BrokerCustomerUpdateOneWithoutFloatTransactionsNestedInput
+  fundingReceipt?: Prisma.StaffFundingReceiptUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutApprovedByInput = {
@@ -1688,6 +1845,7 @@ export type FloatTransactionUncheckedUpdateWithoutApprovedByInput = {
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateManyWithoutApprovedByInput = {
@@ -1757,6 +1915,7 @@ export type FloatTransactionUpdateWithoutBrokerCustomerInput = {
   fromUser?: Prisma.UserUpdateOneWithoutFloatSentNestedInput
   toUser?: Prisma.UserUpdateOneWithoutFloatReceivedNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutFloatsApprovedNestedInput
+  fundingReceipt?: Prisma.StaffFundingReceiptUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateWithoutBrokerCustomerInput = {
@@ -1780,6 +1939,7 @@ export type FloatTransactionUncheckedUpdateWithoutBrokerCustomerInput = {
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  fundingReceipt?: Prisma.StaffFundingReceiptUncheckedUpdateOneWithoutFloatTransactionNestedInput
 }
 
 export type FloatTransactionUncheckedUpdateManyWithoutBrokerCustomerInput = {
@@ -1834,6 +1994,7 @@ export type FloatTransactionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   toUser?: boolean | Prisma.FloatTransaction$toUserArgs<ExtArgs>
   approvedBy?: boolean | Prisma.FloatTransaction$approvedByArgs<ExtArgs>
   brokerCustomer?: boolean | Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs>
+  fundingReceipt?: boolean | Prisma.FloatTransaction$fundingReceiptArgs<ExtArgs>
 }, ExtArgs["result"]["floatTransaction"]>
 
 
@@ -1869,6 +2030,7 @@ export type FloatTransactionInclude<ExtArgs extends runtime.Types.Extensions.Int
   toUser?: boolean | Prisma.FloatTransaction$toUserArgs<ExtArgs>
   approvedBy?: boolean | Prisma.FloatTransaction$approvedByArgs<ExtArgs>
   brokerCustomer?: boolean | Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs>
+  fundingReceipt?: boolean | Prisma.FloatTransaction$fundingReceiptArgs<ExtArgs>
 }
 
 export type $FloatTransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1879,6 +2041,7 @@ export type $FloatTransactionPayload<ExtArgs extends runtime.Types.Extensions.In
     toUser: Prisma.$UserPayload<ExtArgs> | null
     approvedBy: Prisma.$UserPayload<ExtArgs> | null
     brokerCustomer: Prisma.$BrokerCustomerPayload<ExtArgs> | null
+    fundingReceipt: Prisma.$StaffFundingReceiptPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2247,6 +2410,7 @@ export interface Prisma__FloatTransactionClient<T, Null = never, ExtArgs extends
   toUser<T extends Prisma.FloatTransaction$toUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$toUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   approvedBy<T extends Prisma.FloatTransaction$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   brokerCustomer<T extends Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$brokerCustomerArgs<ExtArgs>>): Prisma.Prisma__BrokerCustomerClient<runtime.Types.Result.GetResult<Prisma.$BrokerCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  fundingReceipt<T extends Prisma.FloatTransaction$fundingReceiptArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FloatTransaction$fundingReceiptArgs<ExtArgs>>): Prisma.Prisma__StaffFundingReceiptClient<runtime.Types.Result.GetResult<Prisma.$StaffFundingReceiptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2718,6 +2882,25 @@ export type FloatTransaction$brokerCustomerArgs<ExtArgs extends runtime.Types.Ex
    */
   include?: Prisma.BrokerCustomerInclude<ExtArgs> | null
   where?: Prisma.BrokerCustomerWhereInput
+}
+
+/**
+ * FloatTransaction.fundingReceipt
+ */
+export type FloatTransaction$fundingReceiptArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffFundingReceipt
+   */
+  select?: Prisma.StaffFundingReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffFundingReceipt
+   */
+  omit?: Prisma.StaffFundingReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffFundingReceiptInclude<ExtArgs> | null
+  where?: Prisma.StaffFundingReceiptWhereInput
 }
 
 /**
