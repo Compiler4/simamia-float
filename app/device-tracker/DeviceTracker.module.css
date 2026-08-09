@@ -1,0 +1,245 @@
+.page,
+.page * {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(22, 163, 174, 0.25), transparent 28%),
+    radial-gradient(circle at 90% 90%, rgba(109, 53, 255, 0.2), transparent 30%),
+    linear-gradient(145deg, #071d24, #0a3f4a 55%, #0c7884);
+  color: #102c34;
+}
+
+.card {
+  width: min(680px, 100%);
+  padding: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+  animation: enter 0.45s ease both;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #0e9eaa, #087080);
+  color: white;
+  font-size: 20px;
+  font-weight: 950;
+  box-shadow: 0 18px 36px rgba(14, 158, 170, 0.3);
+}
+
+.eyebrow {
+  margin: 22px 0 7px;
+  color: #0e8792;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.card h1 {
+  margin: 0;
+  font-size: clamp(34px, 7vw, 58px);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.description {
+  margin: 16px 0 24px;
+  color: #697f85;
+  line-height: 1.7;
+  font-weight: 650;
+}
+
+.field {
+  display: grid;
+  gap: 9px;
+  color: #244049;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.field input {
+  width: 100%;
+  min-height: 56px;
+  border: 1px solid #d7e5e8;
+  border-radius: 17px;
+  padding: 0 16px;
+  background: #f7fbfc;
+  outline: none;
+  font: inherit;
+  transition: 0.2s ease;
+}
+
+.field input:focus {
+  border-color: #0e9eaa;
+  box-shadow: 0 0 0 5px rgba(14, 158, 170, 0.12);
+  background: white;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 15px;
+  padding: 0 18px;
+  background: linear-gradient(135deg, #0e9eaa, #087080);
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.24s ease;
+}
+
+.actions button:last-child {
+  background: #eaf1f3;
+  color: #244049;
+}
+
+.actions button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(14, 158, 170, 0.2);
+}
+
+.actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+  transform: none;
+}
+
+.status {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #dfe9eb;
+  border-radius: 18px;
+  background: #f7fafb;
+}
+
+.status > span {
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #94a3a8;
+}
+
+.status strong,
+.status p {
+  display: block;
+  margin: 0;
+}
+
+.status p {
+  margin-top: 4px;
+  color: #70858c;
+}
+
+.success > span {
+  background: #16a34a;
+  box-shadow: 0 0 0 7px rgba(22, 163, 74, 0.12);
+  animation: pulse 1.6s infinite;
+}
+
+.error > span {
+  background: #dc2626;
+}
+
+.positionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.positionGrid article {
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #eff8f9, #ffffff);
+  border: 1px solid #dcebed;
+}
+
+.positionGrid span,
+.positionGrid strong {
+  display: block;
+}
+
+.positionGrid span {
+  color: #71868c;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.positionGrid strong {
+  margin-top: 6px;
+  font-size: 18px;
+}
+
+.note {
+  margin-top: 18px;
+  padding: 15px;
+  border-radius: 17px;
+  background: #fff7df;
+  color: #735514;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 12px rgba(22, 163, 74, 0);
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 22px;
+    border-radius: 24px;
+  }
+
+  .positionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    display: grid;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}

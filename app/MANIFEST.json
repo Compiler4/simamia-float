@@ -1,0 +1,72 @@
+[
+  {
+    "path": ".env.accountant.example",
+    "size": 185,
+    "sha256": "24238836807d8003fde8b29b0efe409186aa61485eb1d374545163031d54eebb"
+  },
+  {
+    "path": "README.md",
+    "size": 5624,
+    "sha256": "2dca0485ea4a2878bceb9435c6ac95d22499960d81289d3251220c4dc9881f21"
+  },
+  {
+    "path": "app/accountant/dashboard/AccountantDashboard.module.css",
+    "size": 46463,
+    "sha256": "3dba0bb065e2a684e99c271a03465a68efc4a8119eaa12d0a2ce6e1f4ec853b5"
+  },
+  {
+    "path": "app/accountant/dashboard/AccountantDashboardClient.tsx",
+    "size": 85079,
+    "sha256": "30b898da6f3462028eb9d9d85630f798530f4b8c372898431436af4c5a29509e"
+  },
+  {
+    "path": "app/accountant/dashboard/page.tsx",
+    "size": 829,
+    "sha256": "875c4f1567a8e488af01cb734ca5ec8e94dddceb05ab045c1fc53f40f69ad993"
+  },
+  {
+    "path": "app/api/accountant/actions/route.ts",
+    "size": 31870,
+    "sha256": "d82a4c63ade314e1c78b022f1e512803c2f40d01f8832a202a2a8ad722b572fb"
+  },
+  {
+    "path": "app/api/accountant/dashboard/route.ts",
+    "size": 17587,
+    "sha256": "11183367f95b36fef0aed887d92831c717ba3ac6fdf3c8f4f860ee3abb26a131"
+  },
+  {
+    "path": "app/api/accountant/upload/route.ts",
+    "size": 2104,
+    "sha256": "d4bfb8769a7fc79823954d39f2b2e761bdb57e23cbc087ecb5faacabd76dbca2"
+  },
+  {
+    "path": "app/api/employee/expenses/route.ts",
+    "size": 2518,
+    "sha256": "085cb97d939893c4fce41c53ad1048919076e2a9a0afc87b810f08603917cbc5"
+  },
+  {
+    "path": "app/api/staff/bank-deposits/route.ts",
+    "size": 3598,
+    "sha256": "44c5f7672d75b0a40d64db57126dcb0fd6db442dfa538750191114acc7ca0c3d"
+  },
+  {
+    "path": "install-accountant-portal.ps1",
+    "size": 769,
+    "sha256": "9b3885c19694f064fbe79cca7ce36e171c2acff15a0ff5e6cc41f7a2a53cffe9"
+  },
+  {
+    "path": "lib/accountant-server.ts",
+    "size": 9940,
+    "sha256": "14747943bc4dd2d1fc5771e4bac1867b33d24f50f4c9fc4532ded7c42ab88ad7"
+  },
+  {
+    "path": "prisma/schema.prisma",
+    "size": 25624,
+    "sha256": "a3ce43ff328c857cdf154f0495114a35f953e5211865dfd5d8ae60035cd2f116"
+  },
+  {
+    "path": "prisma/seed-accountant-portal.ts",
+    "size": 12035,
+    "sha256": "710ed3eb9ea9f4858f3b1199230a4f04bc6143a3e78a8a738cd1045e64ea0a57"
+  }
+]

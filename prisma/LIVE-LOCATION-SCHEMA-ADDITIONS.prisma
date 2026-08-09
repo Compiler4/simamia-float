@@ -1,0 +1,59 @@
+// Add these relation fields inside model Company:
+// brokerAgentLocationDevices BrokerAgentLocationDevice[]
+// brokerAgentLocationPings   BrokerAgentLocationPing[]
+
+// Add these relation fields inside model BrokerCustomer:
+// liveLocationDevice BrokerAgentLocationDevice?
+// liveLocationPings  BrokerAgentLocationPing[]
+
+enum BrokerAgentLocationDeviceStatus {
+  ACTIVE
+  REVOKED
+}
+
+model BrokerAgentLocationDevice {
+  id               String                          @id @default(cuid())
+  companyId        String
+  brokerCustomerId String                          @unique
+  label            String?                         @db.VarChar(150)
+  tokenHash        String                          @unique @db.Char(64)
+  status           BrokerAgentLocationDeviceStatus @default(ACTIVE)
+  lastSeenAt       DateTime?
+  lastLatitude     Float?
+  lastLongitude    Float?
+  lastAccuracy     Float?
+  lastHeading      Float?
+  lastSpeedKph     Float?
+  createdAt        DateTime                        @default(now())
+  updatedAt        DateTime                        @updatedAt
+
+  company Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  broker  BrokerCustomer @relation(fields: [brokerCustomerId], references: [id], onDelete: Cascade)
+  pings   BrokerAgentLocationPing[]
+
+  @@index([companyId, status, lastSeenAt])
+  @@map("broker_agent_location_devices")
+}
+
+model BrokerAgentLocationPing {
+  id               String   @id @default(cuid())
+  deviceId         String
+  companyId        String
+  brokerCustomerId String
+  latitude         Float
+  longitude        Float
+  accuracy         Float?
+  heading          Float?
+  speedKph         Float?
+  capturedAt       DateTime
+  createdAt        DateTime @default(now())
+
+  device  BrokerAgentLocationDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  company Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  broker  BrokerCustomer            @relation(fields: [brokerCustomerId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, capturedAt])
+  @@index([companyId, capturedAt])
+  @@index([brokerCustomerId, capturedAt])
+  @@map("broker_agent_location_pings")
+}

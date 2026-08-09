@@ -1,0 +1,1983 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  SYSTEM_DEVELOPER
+  SUPER_ADMIN
+  COMPANY_ADMIN
+  ACCOUNTANT
+  STAFF
+  BROKER
+  GPS_MANAGER
+}
+
+enum CompanyStatus {
+  ACTIVE
+  SUSPENDED
+  DISABLED
+}
+
+enum BranchStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  REMOVED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LATE
+  ABSENT
+  ON_LEAVE
+  HOLIDAY
+  SUSPENDED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum FinancialDayStatus {
+  OPEN
+  CLOSED
+  BLOCKED
+}
+
+enum DepositStatus {
+  PENDING
+  VERIFIED
+  AMOUNT_MISMATCH
+  MISSING_RECEIPT
+  DUPLICATE_DEPOSIT
+  MISSING_BANK_RECORD
+}
+
+enum FloatStatus {
+  PENDING
+  ISSUED
+  CONFIRMED
+  RETURNED
+  DEPOSITED
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+/**
+ * Company Admin workflow enums.
+ * These are intentionally separate from the existing ERP enums so the
+ * additional dashboard module can evolve without changing the behavior of
+ * the original Expense, BankDeposit and Attendance tables.
+ */
+enum CompanyExpenseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CompanyBankStatus {
+  PENDING
+  VERIFIED
+  AMOUNT_MISMATCH
+  MISSING_RECEIPT
+  DUPLICATE_DEPOSIT
+  MISSING_BANK_RECORD
+  REJECTED
+}
+
+enum CompanyAttendanceMark {
+  PRESENT
+  LATE
+  ABSENT
+  LEAVE
+  HOLIDAY
+}
+
+enum CompanyGpsDeviceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum BrokerCustomerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum AccountingPeriodStatus {
+  OPEN
+  LOCKED
+}
+
+enum StaffFloatType {
+  ACCOUNTANT_TO_STAFF
+  STAFF_TO_BROKER
+  BROKER_RETURN_TO_STAFF
+  STAFF_RETURN_TO_ACCOUNTANT
+}
+
+enum StaffCollectionStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  DEPOSITED
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+}
+
+enum NotificationDeliveryStatus {
+  QUEUED
+  SENT
+  FAILED
+}
+
+enum GpsAlertType {
+  GPS_DISABLED
+  EMPLOYEE_OFFLINE
+  LEFT_ASSIGNED_REGION
+  OVERSPEED
+  LONG_IDLE_TIME
+}
+
+enum GpsAlertStatus {
+  OPEN
+  RESOLVED
+}
+
+enum StaffAssignmentStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum StaffFileKind {
+  PROFILE
+  RECEIPT
+  PROOF
+  EXPENSE
+  BANK
+  OTHER
+}
+
+enum ImportedDataSourceType {
+  EXCEL_AGENT_MASTER
+  BANK_STATEMENT_PDF
+}
+
+enum ImportBatchStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  PARTIAL
+  FAILED
+}
+
+enum BankStatementTransactionDirection {
+  CREDIT
+  DEBIT
+}
+
+enum BankTransactionMatchStatus {
+  MATCHED
+  REVIEW_REQUIRED
+  UNMATCHED
+  NOT_APPLICABLE
+}
+
+enum BrokerServiceVisitStatus {
+  STARTED
+  ARRIVED
+  SERVICE_RECORDED
+  PROOF_PENDING
+  COMPLETED
+  LATE_PROOF
+  CANCELLED
+}
+
+enum LocationRecordSource {
+  IMPORTED
+  MANUAL
+  STAFF_GPS
+  BROKER_GPS
+  CUSTOMER_GPS
+}
+
+model Company {
+  id        String        @id @default(cuid())
+  name      String
+  code      String        @unique
+  email     String?
+  phone     String?
+  address   String?
+  status    CompanyStatus @default(ACTIVE)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  branches           Branch[]
+  users              User[]
+  subscriptions      Subscription[]
+  auditLogs          AuditLog[]
+  financialDays      FinancialDay[]
+  bankDeposits       BankDeposit[]
+  expenses           Expense[]
+  floatTransactions  FloatTransaction[]
+  attendanceRecords  Attendance[]
+  performanceRecords PerformanceRecord[]
+  notifications      Notification[]
+  messages           Message[]
+  products           Product[]
+  customers          Customer[]
+  brokerCustomers    BrokerCustomer[]
+  serviceActivities  ServiceActivity[]
+  gpsTrackings       GpsTracking[]
+  companySettings    CompanySetting[]
+
+  /**
+   * New Company Admin portal relations.
+   * The field names are different from the existing ERP relations to avoid
+   * collisions and to keep both modules available during migration.
+   */
+  adminExpenses                  CompanyExpense[]
+  adminBankVerifications         CompanyBankVerification[]
+  adminBankMessages              CompanyBankMessage[]
+  adminAttendanceJournal         CompanyAttendance[]
+  adminNotifications             CompanyNotification[]
+  adminGpsDevices                CompanyGpsDevice[]
+  adminGpsPings                  CompanyGpsPing[]
+  adminSetting                   CompanyAdminSetting?
+  adminAuditEvents               CompanyAuditEvent[]
+  accountingPeriods              AccountingPeriod[]
+  staffCollections               StaffCollection[]
+  gpsAlerts                      GpsAlert[]
+  notificationDeliveries         NotificationDelivery[]
+  staffBrokerAssignments         StaffBrokerAssignment[]
+  staffCustomerAssignments       StaffCustomerAssignment[]
+  staffFiles                     StaffFile[]
+  dataImportBatches              DataImportBatch[]
+  importedBankStatements         ImportedBankStatement[]
+  importedBankTransactions       ImportedBankTransaction[]
+  staffWorkAreas                 StaffWorkArea[]
+  staffBrokerCustomerAssignments StaffBrokerCustomerAssignment[]
+  brokerServiceVisits            BrokerServiceVisit[]
+
+  @@map("companies")
+}
+
+model Branch {
+  id        String       @id @default(cuid())
+  companyId String
+  name      String
+  code      String
+  region    String?
+  address   String?
+  status    BranchStatus @default(ACTIVE)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  users   User[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@map("branches")
+}
+
+model User {
+  id                String     @id @default(cuid())
+  companyId         String?
+  branchId          String?
+  name              String
+  username          String     @unique
+  email             String     @unique
+  phone             String?
+  passwordHash      String     @db.Text
+  role              Role
+  status            UserStatus @default(ACTIVE)
+  lastLoginAt       DateTime?
+  profileImageUrl   String?    @db.VarChar(500)
+  assignedRegion    String?    @db.VarChar(150)
+  usernameChangedAt DateTime?
+  passwordChangedAt DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  branch  Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  attendanceRecords  Attendance[]
+  performanceRecords PerformanceRecord[]
+  auditLogs          AuditLog[]
+  notifications      Notification[]
+
+  servicesAsStaff  ServiceActivity[] @relation("ServiceStaff")
+  servicesAsBroker ServiceActivity[] @relation("ServiceBroker")
+  gpsTrackings     GpsTracking[]
+
+  sentMessages     Message[] @relation("MessageSender")
+  receivedMessages Message[] @relation("MessageReceiver")
+
+  openedFinancialDays FinancialDay[] @relation("FinancialDayOpenedBy")
+  closedFinancialDays FinancialDay[] @relation("FinancialDayClosedBy")
+
+  depositsSubmitted BankDeposit[] @relation("DepositStaff")
+  depositsReviewed  BankDeposit[] @relation("DepositAccountant")
+
+  expensesSubmitted Expense[] @relation("ExpenseEmployee")
+  expensesReviewed  Expense[] @relation("ExpenseReviewer")
+
+  floatSent      FloatTransaction[] @relation("FloatFrom")
+  floatReceived  FloatTransaction[] @relation("FloatTo")
+  floatsApproved FloatTransaction[] @relation("FloatApprovedBy")
+
+  staffCollectionsRecorded      StaffCollection[]               @relation("StaffCollectionOfficer")
+  brokerCollections             StaffCollection[]               @relation("StaffCollectionBroker")
+  staffCollectionsVerified      StaffCollection[]               @relation("StaffCollectionVerifier")
+  gpsAlerts                     GpsAlert[]                      @relation("GpsAlertUser")
+  notificationDeliveries        NotificationDelivery[]          @relation("NotificationDeliveryUser")
+  brokerAssignmentsAsStaff      StaffBrokerAssignment[]         @relation("StaffBrokerAssignmentStaff")
+  assignmentsAsBroker           StaffBrokerAssignment[]         @relation("StaffBrokerAssignmentBroker")
+  brokerAssignmentsCreated      StaffBrokerAssignment[]         @relation("StaffBrokerAssignmentCreator")
+  customerAssignmentsAsStaff    StaffCustomerAssignment[]       @relation("StaffCustomerAssignmentStaff")
+  customerAssignmentsCreated    StaffCustomerAssignment[]       @relation("StaffCustomerAssignmentCreator")
+  ownedStaffFiles               StaffFile[]                     @relation("StaffFileOwner")
+  staffWorkAreas                StaffWorkArea[]                 @relation("StaffWorkAreaStaff")
+  brokerCustomerAssignments     StaffBrokerCustomerAssignment[] @relation("StaffBrokerCustomerAssignmentStaff")
+  brokerCustomerAssignmentsMade StaffBrokerCustomerAssignment[] @relation("StaffBrokerCustomerAssignmentCreator")
+  brokerServiceVisits           BrokerServiceVisit[]            @relation("BrokerServiceVisitStaff")
+
+  /**
+   * New Company Admin portal relations.
+   */
+  adminExpensesCreated    CompanyExpense[]          @relation("CompanyExpenseCreatedBy")
+  adminExpensesReviewed   CompanyExpense[]          @relation("CompanyExpenseReviewedBy")
+  adminBankUploads        CompanyBankVerification[] @relation("CompanyBankUploadedBy")
+  adminBankReviews        CompanyBankVerification[] @relation("CompanyBankVerifiedBy")
+  adminBankMessages       CompanyBankMessage[]      @relation("CompanyBankMessageSender")
+  adminAttendanceRecords  CompanyAttendance[]
+  adminNotifications      CompanyNotification[]     @relation("CompanyNotificationTarget")
+  adminGpsDevices         CompanyGpsDevice[]        @relation("CompanyGpsDeviceOwner")
+  adminAuditEvents        CompanyAuditEvent[]       @relation("CompanyAuditActor")
+  accountingPeriodsLocked AccountingPeriod[]        @relation("AccountingPeriodLockedBy")
+  depositHoldsCleared     BankDeposit[]             @relation("DepositHoldClearedBy")
+
+  @@index([companyId])
+  @@index([branchId])
+  @@index([role])
+  @@index([status])
+  @@map("users")
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  companyId String
+  plan      String
+  amount    Decimal  @default(0) @db.Decimal(18, 2)
+  startsAt  DateTime
+  endsAt    DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("subscriptions")
+}
+
+model FinancialDay {
+  id             String             @id @default(cuid())
+  companyId      String
+  date           DateTime
+  openingBalance Decimal            @default(0) @db.Decimal(18, 2)
+  cashIn         Decimal            @default(0) @db.Decimal(18, 2)
+  cashOut        Decimal            @default(0) @db.Decimal(18, 2)
+  closingBalance Decimal            @default(0) @db.Decimal(18, 2)
+  status         FinancialDayStatus @default(OPEN)
+  blockedReason  String?            @db.Text
+  openedById     String?
+  closedById     String?
+  openedAt       DateTime           @default(now())
+  closedAt       DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  company  Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  openedBy User?   @relation("FinancialDayOpenedBy", fields: [openedById], references: [id], onDelete: SetNull)
+  closedBy User?   @relation("FinancialDayClosedBy", fields: [closedById], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, date])
+  @@index([companyId])
+  @@map("financial_days")
+}
+
+model Attendance {
+  id         String           @id @default(cuid())
+  companyId  String?
+  userId     String
+  date       DateTime
+  status     AttendanceStatus @default(PRESENT)
+  checkInAt  DateTime?
+  checkOutAt DateTime?
+  source     String           @default("SYSTEM_ACTIVITY")
+  notes      String?          @db.Text
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([companyId])
+  @@index([status])
+  @@map("attendance")
+}
+
+model Expense {
+  id           String         @id @default(cuid())
+  companyId    String
+  employeeId   String
+  reviewedById String?
+  expenseDate  DateTime       @default(now())
+  category     String
+  amount       Decimal        @db.Decimal(18, 2)
+  description  String?        @db.Text
+  receiptUrl   String?
+  status       ApprovalStatus @default(PENDING)
+  reviewNote   String?        @db.Text
+  reviewedAt   DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee   User    @relation("ExpenseEmployee", fields: [employeeId], references: [id], onDelete: Cascade)
+  reviewedBy User?   @relation("ExpenseReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([companyId, expenseDate])
+  @@index([employeeId])
+  @@index([status])
+  @@map("expenses")
+}
+
+model BankDeposit {
+  id                   String        @id @default(cuid())
+  companyId            String
+  staffId              String
+  accountantId         String?
+  amount               Decimal       @db.Decimal(18, 2)
+  referenceNo          String?
+  bankAccount          String?
+  depositDate          DateTime
+  depositSlipUrl       String?
+  bankReceiptUrl       String?
+  bankStatementUrl     String?
+  statementAmount      Decimal?      @db.Decimal(18, 2)
+  statementReference   String?       @db.VarChar(191)
+  statementDate        DateTime?
+  statementBankAccount String?       @db.VarChar(191)
+  comparisonJson       String?       @db.LongText
+  comparedAt           DateTime?
+  holdActive           Boolean       @default(false)
+  status               DepositStatus @default(PENDING)
+  mismatchReason       String?       @db.Text
+  reviewedAt           DateTime?
+  holdClearedAt        DateTime?
+  holdClearedById      String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  company       Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff         User    @relation("DepositStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  accountant    User?   @relation("DepositAccountant", fields: [accountantId], references: [id], onDelete: SetNull)
+  holdClearedBy User?   @relation("DepositHoldClearedBy", fields: [holdClearedById], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([staffId])
+  @@index([status])
+  @@index([holdClearedById])
+  @@map("bank_deposits")
+}
+
+model FloatTransaction {
+  id               String         @id @default(cuid())
+  companyId        String
+  fromUserId       String?
+  toUserId         String?
+  approvedById     String?
+  brokerCustomerId String?
+  transactionType  StaffFloatType @default(ACCOUNTANT_TO_STAFF)
+  referenceNo      String?
+  amount           Decimal        @db.Decimal(18, 2)
+  returnedAmount   Decimal?       @db.Decimal(18, 2)
+  purpose          String?        @db.Text
+  receiptUrl       String?        @db.VarChar(500)
+  notes            String?        @db.Text
+  status           FloatStatus    @default(PENDING)
+  issuedAt         DateTime?
+  confirmedAt      DateTime?
+  returnedAt       DateTime?
+  approvedAt       DateTime?
+  lockedAt         DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  fromUser       User?           @relation("FloatFrom", fields: [fromUserId], references: [id], onDelete: SetNull)
+  toUser         User?           @relation("FloatTo", fields: [toUserId], references: [id], onDelete: SetNull)
+  approvedBy     User?           @relation("FloatApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  brokerCustomer BrokerCustomer? @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, transactionType, status])
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([approvedById])
+  @@index([brokerCustomerId])
+  @@index([createdAt])
+  @@map("float_transactions")
+}
+
+model StaffCollection {
+  id               String                @id @default(cuid())
+  companyId        String
+  staffId          String
+  brokerId         String?
+  brokerCustomerId String?
+  reviewedById     String?
+  referenceNo      String
+  amount           Decimal               @db.Decimal(18, 2)
+  collectionDate   DateTime
+  description      String?               @db.Text
+  receiptUrl       String?               @db.VarChar(500)
+  status           StaffCollectionStatus @default(PENDING)
+  reviewNote       String?               @db.Text
+  reviewedAt       DateTime?
+  depositedAt      DateTime?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff          User            @relation("StaffCollectionOfficer", fields: [staffId], references: [id], onDelete: Restrict)
+  broker         User?           @relation("StaffCollectionBroker", fields: [brokerId], references: [id], onDelete: SetNull)
+  brokerCustomer BrokerCustomer? @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  reviewedBy     User?           @relation("StaffCollectionVerifier", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, collectionDate])
+  @@index([staffId, status])
+  @@index([brokerId])
+  @@index([brokerCustomerId])
+  @@index([reviewedById])
+  @@map("staff_collections")
+}
+
+model PerformanceRecord {
+  id                     String   @id @default(cuid())
+  companyId              String
+  userId                 String
+  month                  Int
+  year                   Int
+  totalFloatIssued       Decimal  @default(0) @db.Decimal(18, 2)
+  totalCollections       Decimal  @default(0) @db.Decimal(18, 2)
+  outstandingBalance     Decimal  @default(0) @db.Decimal(18, 2)
+  attendanceRate         Decimal  @default(0) @db.Decimal(5, 2)
+  depositAccuracyRate    Decimal  @default(0) @db.Decimal(5, 2)
+  gpsComplianceRate      Decimal  @default(0) @db.Decimal(5, 2)
+  averageReturnMinutes   Decimal  @default(0) @db.Decimal(10, 2)
+  bankMismatches         Int      @default(0)
+  customerVisits         Int      @default(0)
+  brokerVisits           Int      @default(0)
+  transactionsCompleted  Int      @default(0)
+  approvalComplianceRate Decimal  @default(0) @db.Decimal(5, 2)
+  score                  Int      @default(0)
+  rating                 String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, month, year])
+  @@index([companyId])
+  @@map("performance_records")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  companyId String?
+  userId    String
+  title     String
+  message   String           @db.Text
+  type      NotificationType @default(INFO)
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  company    Company?               @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries NotificationDelivery[]
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  companyId  String?
+  senderId   String
+  receiverId String
+  subject    String
+  body       String   @db.Text
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  company  Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  sender   User     @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User     @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([isRead])
+  @@map("messages")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  companyId String?
+  userId    String?
+  action    String
+  module    String
+  details   String?  @db.Text
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([module])
+  @@map("audit_logs")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  sku         String?
+  category    String?
+  price       Decimal  @default(0) @db.Decimal(18, 2)
+  stock       Int      @default(0)
+  status      String   @default("ACTIVE")
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("products")
+}
+
+model Customer {
+  id           String   @id @default(cuid())
+  companyId    String
+  name         String
+  phone        String?
+  email        String?
+  region       String?
+  district     String?
+  ward         String?
+  address      String?
+  locationName String?  @db.VarChar(191)
+  latitude     Float?
+  longitude    Float?
+  status       String   @default("ACTIVE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company           Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  serviceActivities ServiceActivity[]
+  staffAssignments  StaffCustomerAssignment[]
+
+  @@index([companyId])
+  @@map("customers")
+}
+
+model BrokerCustomer {
+  id               String               @id @default(cuid())
+  companyId        String
+  code             String
+  name             String
+  businessName     String?
+  phone            String
+  alternatePhone   String?
+  email            String?
+  location         String
+  region           String?
+  district         String?
+  ward             String?
+  city             String?
+  address          String?
+  latitude         Float?
+  longitude        Float?
+  attendedBy       String?              @db.VarChar(191)
+  attendedDate     DateTime?
+  attendedLocation String?              @db.VarChar(255)
+  status           BrokerCustomerStatus @default(ACTIVE)
+  notes            String?              @db.Text
+  importBatchId    String?
+  sourceRowNumber  Int?
+  sourceSheetName  String?              @db.VarChar(100)
+  sourceAgentName  String?              @db.VarChar(255)
+  sourceMsisdn     String?              @db.VarChar(32)
+  sourceAliasCode  String?              @db.VarChar(32)
+  normalizedName   String?              @db.VarChar(255)
+  isImported       Boolean              @default(false)
+  importedAt       DateTime?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  company           Company                         @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  floatTransactions FloatTransaction[]
+  staffCollections  StaffCollection[]
+  serviceActivities ServiceActivity[]
+  importBatch       DataImportBatch?                @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
+  bankTransactions  ImportedBankTransaction[]
+  workAssignments   StaffBrokerCustomerAssignment[]
+  serviceVisits     BrokerServiceVisit[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, location])
+  @@index([companyId, status])
+  @@index([companyId, phone])
+  @@index([companyId, isImported])
+  @@index([importBatchId])
+  @@index([normalizedName])
+  @@map("broker_customers")
+}
+
+model ServiceActivity {
+  id               String   @id @default(cuid())
+  companyId        String
+  staffId          String
+  brokerId         String?
+  brokerCustomerId String?
+  customerId       String?
+  serviceType      String
+  amount           Decimal  @default(0) @db.Decimal(18, 2)
+  status           String   @default("COMPLETED")
+  servedAt         DateTime @default(now())
+  latitude         Float?
+  longitude        Float?
+  locationName     String?  @db.VarChar(191)
+  notes            String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  company            Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff              User                @relation("ServiceStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  broker             User?               @relation("ServiceBroker", fields: [brokerId], references: [id], onDelete: SetNull)
+  brokerCustomer     BrokerCustomer?     @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  customer           Customer?           @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  brokerServiceVisit BrokerServiceVisit?
+
+  @@index([companyId])
+  @@index([staffId])
+  @@index([brokerId])
+  @@index([brokerCustomerId])
+  @@index([customerId])
+  @@map("service_activities")
+}
+
+model GpsTracking {
+  id                 String   @id @default(cuid())
+  companyId          String
+  userId             String?
+  assetType          String
+  assetName          String
+  liveLocation       String?  @db.LongText
+  latitude           Float?
+  longitude          Float?
+  accuracy           Float?
+  heading            Float?
+  speed              Decimal? @db.Decimal(10, 2)
+  stops              Int      @default(0)
+  routeHistory       String?  @db.Text
+  distanceTraveled   Decimal? @db.Decimal(10, 2)
+  batteryStatus      String?
+  gpsSignal          String?
+  geofenceViolations Int      @default(0)
+  alert              String?
+  recordedAt         DateTime @default(now())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([userId])
+  @@map("gps_tracking")
+}
+
+model CompanySetting {
+  id        String   @id @default(cuid())
+  companyId String
+  key       String
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, key])
+  @@index([companyId])
+  @@map("company_settings")
+}
+
+/**
+ * ============================================================
+ * COMPANY ADMIN PORTAL WORKFLOW MODELS
+ * ============================================================
+ */
+
+model CompanyExpense {
+  id             String               @id @default(cuid())
+  companyId      String
+  createdById    String
+  createdByName  String
+  createdByRole  String
+  category       String
+  amount         Decimal              @db.Decimal(18, 2)
+  description    String?              @db.Text
+  expenseDate    DateTime
+  receiptUrl     String?
+  status         CompanyExpenseStatus @default(PENDING)
+  reviewedById   String?
+  reviewedByName String?
+  reviewNote     String?              @db.Text
+  reviewedAt     DateTime?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdBy  User    @relation("CompanyExpenseCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  reviewedBy User?   @relation("CompanyExpenseReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([companyId, expenseDate])
+  @@index([companyId, status])
+  @@index([createdById])
+  @@index([reviewedById])
+  @@map("company_admin_expenses")
+}
+
+model CompanyBankVerification {
+  id               String            @id @default(cuid())
+  companyId        String
+  uploadedById     String
+  uploadedByName   String
+  uploadedByRole   String
+  amount           Decimal           @db.Decimal(18, 2)
+  referenceNumber  String
+  depositDate      DateTime
+  bankAccount      String
+  depositSlipUrl   String?
+  bankReceiptUrl   String?
+  bankStatementUrl String?
+  status           CompanyBankStatus @default(PENDING)
+  isSeenByAdmin    Boolean           @default(false)
+  verifiedById     String?
+  verifiedByName   String?
+  verifiedAt       DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  company    Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  uploadedBy User                 @relation("CompanyBankUploadedBy", fields: [uploadedById], references: [id], onDelete: Cascade)
+  verifiedBy User?                @relation("CompanyBankVerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
+  messages   CompanyBankMessage[]
+
+  @@unique([companyId, referenceNumber])
+  @@index([companyId, depositDate])
+  @@index([companyId, status])
+  @@index([uploadedById])
+  @@index([verifiedById])
+  @@map("company_bank_verifications")
+}
+
+model CompanyBankMessage {
+  id             String   @id @default(cuid())
+  verificationId String
+  companyId      String
+  senderId       String
+  senderName     String
+  senderRole     String
+  message        String   @db.Text
+  createdAt      DateTime @default(now())
+
+  verification CompanyBankVerification @relation(fields: [verificationId], references: [id], onDelete: Cascade)
+  company      Company                 @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sender       User                    @relation("CompanyBankMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([verificationId, createdAt])
+  @@index([companyId])
+  @@index([senderId])
+  @@map("company_bank_messages")
+}
+
+model CompanyAttendance {
+  id             String                @id @default(cuid())
+  companyId      String
+  userId         String
+  userName       String
+  userRole       String
+  attendanceDate DateTime
+  mark           CompanyAttendanceMark
+  checkInAt      DateTime?
+  checkOutAt     DateTime?
+  source         String                @default("MANUAL")
+  note           String?               @db.Text
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, userId, attendanceDate])
+  @@index([companyId, attendanceDate])
+  @@index([userId])
+  @@index([mark])
+  @@map("company_attendance_journal")
+}
+
+model CompanyNotification {
+  id           String    @id @default(cuid())
+  companyId    String
+  targetUserId String?
+  targetRole   Role?
+  title        String
+  message      String    @db.Text
+  type         String    @default("INFO")
+  link         String?
+  isRead       Boolean   @default(false)
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  targetUser User?   @relation("CompanyNotificationTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, createdAt])
+  @@index([targetUserId, isRead])
+  @@index([targetRole, isRead])
+  @@map("company_notifications")
+}
+
+model CompanyGpsDevice {
+  id            String                 @id @default(cuid())
+  companyId     String
+  name          String
+  deviceType    String
+  ownerUserId   String?
+  ownerName     String?
+  deviceToken   String                 @unique
+  status        CompanyGpsDeviceStatus @default(ACTIVE)
+  lastSeenAt    DateTime?
+  lastLatitude  Float?
+  lastLongitude Float?
+  batteryLevel  Int?
+  gpsAccuracy   Float?
+  speedKph      Float?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  company       Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  owner         User?                @relation("CompanyGpsDeviceOwner", fields: [ownerUserId], references: [id], onDelete: SetNull)
+  pings         CompanyGpsPing[]
+  alerts        GpsAlert[]
+  serviceVisits BrokerServiceVisit[]
+
+  @@index([companyId, status])
+  @@index([ownerUserId])
+  @@index([lastSeenAt])
+  @@map("company_gps_devices")
+}
+
+model CompanyGpsPing {
+  id           String   @id @default(cuid())
+  deviceId     String
+  companyId    String
+  latitude     Float
+  longitude    Float
+  accuracy     Float?
+  batteryLevel Int?
+  speedKph     Float?
+  capturedAt   DateTime
+  createdAt    DateTime @default(now())
+
+  device  CompanyGpsDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  company Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, capturedAt])
+  @@index([companyId, capturedAt])
+  @@map("company_gps_pings")
+}
+
+model CompanyAdminSetting {
+  id                 String   @id @default(cuid())
+  companyId          String   @unique
+  sms                Boolean  @default(true)
+  email              Boolean  @default(true)
+  inApp              Boolean  @default(true)
+  gpsAlerts          Boolean  @default(true)
+  dayClosingLock     Boolean  @default(true)
+  attendanceApproval Boolean  @default(true)
+  bankMismatchHold   Boolean  @default(true)
+  lowCashAlert       Boolean  @default(true)
+  accent             String   @default("TEAL")
+  currency           String   @default("TZS")
+  timezone           String   @default("Africa/Dar_es_Salaam")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("company_admin_settings")
+}
+
+model CompanyAuditEvent {
+  id        String   @id @default(cuid())
+  companyId String
+  actorId   String?
+  actorName String
+  actorRole String
+  action    String
+  module    String
+  details   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  actor   User?   @relation("CompanyAuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, createdAt])
+  @@index([actorId])
+  @@index([module])
+  @@map("company_audit_events")
+}
+
+model AccountingPeriod {
+  id         String                 @id @default(cuid())
+  companyId  String
+  periodKey  String
+  label      String
+  startsAt   DateTime
+  endsAt     DateTime
+  status     AccountingPeriodStatus @default(OPEN)
+  lockedById String?
+  lockedAt   DateTime?
+  unlockedAt DateTime?
+  reason     String?                @db.Text
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+
+  company  Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  lockedBy User?   @relation("AccountingPeriodLockedBy", fields: [lockedById], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, periodKey])
+  @@index([companyId, status])
+  @@index([lockedById])
+  @@map("accounting_periods")
+}
+
+model GpsAlert {
+  id         String         @id @default(cuid())
+  companyId  String
+  userId     String
+  deviceId   String?
+  type       GpsAlertType
+  status     GpsAlertStatus @default(OPEN)
+  title      String
+  message    String         @db.Text
+  latitude   Float?
+  longitude  Float?
+  speedKph   Float?
+  dedupeKey  String         @db.VarChar(191)
+  resolvedAt DateTime?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  company Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User              @relation("GpsAlertUser", fields: [userId], references: [id], onDelete: Cascade)
+  device  CompanyGpsDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, dedupeKey])
+  @@index([companyId, status, createdAt])
+  @@index([userId, status])
+  @@index([deviceId])
+  @@map("gps_alerts")
+}
+
+model NotificationDelivery {
+  id               String                     @id @default(cuid())
+  notificationId   String
+  companyId        String
+  userId           String
+  channel          NotificationChannel
+  status           NotificationDeliveryStatus @default(QUEUED)
+  endpoint         String?                    @db.VarChar(255)
+  providerResponse String?                    @db.Text
+  attempts         Int                        @default(0)
+  sentAt           DateTime?
+  createdAt        DateTime                   @default(now())
+  updatedAt        DateTime                   @updatedAt
+
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  company      Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user         User         @relation("NotificationDeliveryUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([notificationId, channel])
+  @@index([companyId, status, createdAt])
+  @@index([userId, status])
+  @@map("notification_deliveries")
+}
+
+model StaffBrokerAssignment {
+  id           String                @id @default(cuid())
+  companyId    String
+  staffId      String
+  brokerId     String
+  assignedById String?
+  status       StaffAssignmentStatus @default(ACTIVE)
+  startedAt    DateTime              @default(now())
+  endedAt      DateTime?
+  notes        String?               @db.Text
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff      User    @relation("StaffBrokerAssignmentStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  broker     User    @relation("StaffBrokerAssignmentBroker", fields: [brokerId], references: [id], onDelete: Cascade)
+  assignedBy User?   @relation("StaffBrokerAssignmentCreator", fields: [assignedById], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, brokerId])
+  @@index([companyId, staffId, status])
+  @@index([companyId, brokerId, status])
+  @@map("staff_broker_assignments")
+}
+
+model StaffCustomerAssignment {
+  id           String                @id @default(cuid())
+  companyId    String
+  staffId      String
+  customerId   String
+  assignedById String?
+  status       StaffAssignmentStatus @default(ACTIVE)
+  startedAt    DateTime              @default(now())
+  endedAt      DateTime?
+  notes        String?               @db.Text
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff      User     @relation("StaffCustomerAssignmentStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  assignedBy User?    @relation("StaffCustomerAssignmentCreator", fields: [assignedById], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, customerId])
+  @@index([companyId, staffId, status])
+  @@index([companyId, customerId, status])
+  @@map("staff_customer_assignments")
+}
+
+model StaffFile {
+  id                String        @id @default(cuid())
+  companyId         String
+  ownerUserId       String
+  kind              StaffFileKind @default(OTHER)
+  originalName      String        @db.VarChar(255)
+  storedName        String        @db.VarChar(255)
+  mimeType          String        @db.VarChar(120)
+  sizeBytes         Int
+  originalSizeBytes Int?
+  compressionRatio  Float?
+  compressed        Boolean       @default(false)
+  checksumSha256    String?       @db.VarChar(64)
+  storagePath       String        @db.VarChar(600)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  owner   User    @relation("StaffFileOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, ownerUserId, createdAt])
+  @@index([ownerUserId, kind, createdAt])
+  @@map("staff_files")
+}
+
+model StaffWorkArea {
+  id              String                @id @default(cuid())
+  companyId       String
+  staffId         String
+  name            String
+  region          String?
+  district        String?
+  ward            String?
+  street          String?
+  centreLatitude  Float?
+  centreLongitude Float?
+  radiusMeters    Int?
+  polygonJson     String?               @db.LongText
+  status          StaffAssignmentStatus @default(ACTIVE)
+  startedAt       DateTime              @default(now())
+  endedAt         DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  company     Company                         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff       User                            @relation("StaffWorkAreaStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  assignments StaffBrokerCustomerAssignment[]
+
+  @@index([companyId, staffId, status])
+  @@index([companyId, region, district, ward])
+  @@map("staff_work_areas")
+}
+
+model StaffBrokerCustomerAssignment {
+  id               String                @id @default(cuid())
+  companyId        String
+  staffId          String
+  brokerCustomerId String
+  workAreaId       String?
+  assignedById     String?
+  assignedArea     String?               @db.VarChar(255)
+  status           StaffAssignmentStatus @default(ACTIVE)
+  startedAt        DateTime              @default(now())
+  endedAt          DateTime?
+  notes            String?               @db.Text
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  company        Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff          User           @relation("StaffBrokerCustomerAssignmentStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  brokerCustomer BrokerCustomer @relation(fields: [brokerCustomerId], references: [id], onDelete: Cascade)
+  workArea       StaffWorkArea? @relation(fields: [workAreaId], references: [id], onDelete: SetNull)
+  assignedBy     User?          @relation("StaffBrokerCustomerAssignmentCreator", fields: [assignedById], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, brokerCustomerId])
+  @@index([companyId, staffId, status])
+  @@index([workAreaId])
+  @@index([assignedById])
+  @@map("staff_broker_customer_assignments")
+}
+
+model BrokerServiceVisit {
+  id                String                   @id @default(cuid())
+  companyId         String
+  staffId           String
+  brokerCustomerId  String
+  deviceId          String?
+  serviceActivityId String?                  @unique
+  serviceDay        DateTime
+  status            BrokerServiceVisitStatus @default(STARTED)
+  serviceType       String                   @default("GPS_VISIT_UPDATE")
+  communicationNote String?                  @db.Text
+  floatAmount       Decimal                  @default(0) @db.Decimal(18, 2)
+  cashAmount        Decimal                  @default(0) @db.Decimal(18, 2)
+  companyIncome     Decimal                  @default(0) @db.Decimal(18, 2)
+  staffLatitude     Float?
+  staffLongitude    Float?
+  brokerLatitude    Float?
+  brokerLongitude   Float?
+  distanceMeters    Float?
+  locationMatched   Boolean                  @default(false)
+  locationName      String?                  @db.VarChar(255)
+  proofUrl          String?                  @db.VarChar(500)
+  notes             String?                  @db.Text
+  startedAt         DateTime                 @default(now())
+  arrivedAt         DateTime?
+  serviceProvidedAt DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+
+  company         Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff           User              @relation("BrokerServiceVisitStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  brokerCustomer  BrokerCustomer    @relation(fields: [brokerCustomerId], references: [id], onDelete: Cascade)
+  device          CompanyGpsDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  serviceActivity ServiceActivity?  @relation(fields: [serviceActivityId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, staffId, brokerCustomerId, serviceDay])
+  @@index([companyId, serviceDay, status])
+  @@index([staffId, serviceDay])
+  @@index([brokerCustomerId, serviceDay])
+  @@index([deviceId])
+  @@map("broker_service_visits")
+}
+
+model DataImportBatch {
+  id              String                 @id @default(cuid())
+  companyId       String
+  sourceType      ImportedDataSourceType
+  sourceFileName  String                 @db.VarChar(255)
+  sourceSheetName String?                @db.VarChar(100)
+  sourceChecksum  String                 @db.VarChar(64)
+  status          ImportBatchStatus      @default(COMPLETED)
+  totalRows       Int                    @default(0)
+  importedRows    Int                    @default(0)
+  skippedRows     Int                    @default(0)
+  failedRows      Int                    @default(0)
+  notes           String?                @db.Text
+  importedAt      DateTime               @default(now())
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  company         Company                 @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  brokerCustomers BrokerCustomer[]
+  bankStatements  ImportedBankStatement[]
+
+  @@unique([companyId, sourceChecksum])
+  @@index([companyId, sourceType, importedAt])
+  @@index([status])
+  @@map("data_import_batches")
+}
+
+model ImportedBankStatement {
+  id               String    @id @default(cuid())
+  companyId        String
+  importBatchId    String?
+  statementKey     String    @db.VarChar(191)
+  bankName         String    @db.VarChar(120)
+  accountName      String    @db.VarChar(191)
+  branchName       String?   @db.VarChar(120)
+  accountNumber    String    @db.VarChar(64)
+  currency         String    @default("TZS") @db.VarChar(12)
+  periodStart      DateTime
+  periodEnd        DateTime
+  generatedAt      DateTime?
+  availableBalance Decimal   @default(0) @db.Decimal(20, 2)
+  totalCredit      Decimal   @default(0) @db.Decimal(20, 2)
+  totalDebit       Decimal   @default(0) @db.Decimal(20, 2)
+  bookBalance      Decimal   @default(0) @db.Decimal(20, 2)
+  clearedBalance   Decimal   @default(0) @db.Decimal(20, 2)
+  sourceFileName   String    @db.VarChar(255)
+  sourceChecksum   String?   @db.VarChar(64)
+  importedAt       DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  company      Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  importBatch  DataImportBatch?          @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
+  transactions ImportedBankTransaction[]
+
+  @@unique([companyId, statementKey])
+  @@index([companyId, accountNumber, periodStart])
+  @@index([importBatchId])
+  @@map("imported_bank_statements")
+}
+
+model ImportedBankTransaction {
+  id                       String                            @id @default(cuid())
+  companyId                String
+  statementId              String
+  matchedBrokerCustomerId  String?
+  reference                String                            @db.VarChar(191)
+  postingDate              DateTime
+  valueDate                DateTime
+  details                  String                            @db.LongText
+  direction                BankStatementTransactionDirection
+  debit                    Decimal                           @default(0) @db.Decimal(20, 2)
+  credit                   Decimal                           @default(0) @db.Decimal(20, 2)
+  bookBalance              Decimal                           @default(0) @db.Decimal(20, 2)
+  transactionType          String?                           @db.VarChar(80)
+  senderName               String?                           @db.VarChar(255)
+  receiverName             String?                           @db.VarChar(255)
+  externalAccountReference String?                           @db.VarChar(191)
+  narration                String?                           @db.Text
+  matchStatus              BankTransactionMatchStatus        @default(UNMATCHED)
+  matchConfidence          Decimal?                          @db.Decimal(5, 2)
+  matchNote                String?                           @db.Text
+  createdAt                DateTime                          @default(now())
+  updatedAt                DateTime                          @updatedAt
+
+  company               Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  statement             ImportedBankStatement @relation(fields: [statementId], references: [id], onDelete: Cascade)
+  matchedBrokerCustomer BrokerCustomer?       @relation(fields: [matchedBrokerCustomerId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, reference])
+  @@index([statementId, postingDate])
+  @@index([companyId, direction, postingDate])
+  @@index([companyId, matchStatus])
+  @@index([matchedBrokerCustomerId])
+  @@map("imported_bank_transactions")
+}
+
+// -----------------------------------------------------------------------------
+// Accountant workflow extension
+// Added for the Simamia Float accountant, company-admin, staff, fingerprint,
+// verification, and reporting routes. The models store scalar IDs so they can be
+// added without changing the existing Company/User relation graph.
+// -----------------------------------------------------------------------------
+
+enum AccountantApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AccountantReviewerRole {
+  ACCOUNTANT
+  COMPANY_ADMIN
+}
+
+enum AccountantFundingStatus {
+  ISSUED
+  CONFIRMED
+  RETURNED
+  VERIFIED
+  REJECTED
+  CANCELLED
+}
+
+enum AccountantAttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  ON_LEAVE
+  HOLIDAY
+}
+
+enum AccountantAttendanceSource {
+  ACCOUNTANT
+  FINGERPRINT
+}
+
+enum AccountantAttendanceOverall {
+  NOT_MARKED
+  PARTIAL
+  PRESENT
+  ABSENT
+  MIXED
+}
+
+enum AccountantVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum AccountantPacketTarget {
+  PROOF
+  BANK_DEPOSIT
+  EXPENSE
+  OTHER
+}
+
+enum AccountantBankStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  AMOUNT_MISMATCH
+  REFERENCE_MISMATCH
+  DATE_MISMATCH
+  ACCOUNT_MISMATCH
+  MISSING_RECEIPT
+  MISSING_BANK_RECORD
+}
+
+enum AccountantIncomeStatus {
+  COMPLETED
+  VOID
+}
+
+enum AccountantNotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+enum AccountantPeriodStatus {
+  OPEN
+  CLOSED
+  LOCKED
+}
+
+enum AccountantReopenStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AccAttendanceSession {
+  MORNING
+  EVENING
+}
+
+enum AccAttendanceMark {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum AccAttendanceSource {
+  ACCOUNTANT_MANUAL
+  FINGERPRINT
+  IMPORTED
+}
+
+enum AccDecision {
+  PENDING
+  APPROVE
+  REJECT
+}
+
+enum AccMoneyKind {
+  FLOAT
+  CASH
+}
+
+enum AccMoneyDirection {
+  ALLOCATE
+  RECEIVE
+  RETURN
+  ADJUSTMENT
+}
+
+enum AccVerificationKind {
+  SMS
+  PROOF
+  DOCUMENT
+  BANK_REFERENCE
+}
+
+enum AccVerificationStatus {
+  WAITING_ADMIN_REFERENCE
+  READY_FOR_ACCOUNTANT
+  VERIFIED
+  REJECTED
+}
+
+model AccountantExpenseRequest {
+  id              String                   @id @default(cuid())
+  companyId       String
+  staffId         String
+  category        String
+  requestedAction String?
+  description     String?                  @db.Text
+  amount          Decimal                  @db.Decimal(18, 2)
+  expenseDate     DateTime                 @default(now())
+  receiptUrl      String?                  @db.Text
+  requestMode     String                   @default("STAFF_REQUEST")
+  status          AccountantApprovalStatus @default(PENDING)
+  finalisedAt     DateTime?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+
+  @@index([companyId, createdAt])
+  @@index([companyId, staffId])
+  @@index([companyId, status])
+  @@map("accountant_expense_requests")
+}
+
+model AccountantExpenseDecision {
+  id           String                  @id @default(cuid())
+  companyId    String?
+  expenseId    String
+  reviewerId   String?
+  reviewerRole AccountantReviewerRole?
+  actorUserId  String?
+  actorRole    String?                 @db.VarChar(32)
+  decision     String                  @default("PENDING") @db.VarChar(32)
+  reason       String?                 @db.Text
+  decidedAt    DateTime                @default(now())
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  @@unique([expenseId, reviewerRole])
+  @@unique([companyId, expenseId, actorRole])
+  @@index([companyId, decision])
+  @@index([expenseId])
+  @@index([reviewerId, decidedAt])
+  @@map("accountant_expense_decisions")
+}
+
+model AccountantStaffFunding {
+  id             String                  @id @default(cuid())
+  companyId      String
+  staffId        String
+  issuedById     String
+  floatAmount    Decimal                 @default(0) @db.Decimal(18, 2)
+  cashAmount     Decimal                 @default(0) @db.Decimal(18, 2)
+  totalAmount    Decimal                 @default(0) @db.Decimal(18, 2)
+  referenceNo    String
+  purpose        String?
+  note           String?                 @db.Text
+  status         AccountantFundingStatus @default(ISSUED)
+  issuedAt       DateTime                @default(now())
+  confirmedAt    DateTime?
+  receiptUrl     String?                 @db.Text
+  returnedAmount Decimal?                @db.Decimal(18, 2)
+  returnedAt     DateTime?
+  returnReason   String?                 @db.Text
+  verifiedById   String?
+  verifiedAt     DateTime?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, issuedAt])
+  @@index([companyId, staffId])
+  @@index([companyId, status])
+  @@map("accountant_staff_fundings")
+}
+
+model AccountantAttendance {
+  id            String                      @id @default(cuid())
+  companyId     String
+  userId        String
+  date          DateTime                    @db.Date
+  morningStatus AccountantAttendanceStatus?
+  eveningStatus AccountantAttendanceStatus?
+  morningSource AccountantAttendanceSource?
+  eveningSource AccountantAttendanceSource?
+  checkInAt     DateTime?
+  checkOutAt    DateTime?
+  notes         String?                     @db.Text
+  markedById    String?
+  overallStatus AccountantAttendanceOverall @default(NOT_MARKED)
+  createdAt     DateTime                    @default(now())
+  updatedAt     DateTime                    @updatedAt
+
+  @@unique([companyId, userId, date])
+  @@index([companyId, date])
+  @@index([companyId, userId])
+  @@map("accountant_attendance")
+}
+
+model AccountantAttendanceSessionRecord {
+  id             String               @id @default(cuid())
+  companyId      String
+  staffId        String
+  attendanceDate DateTime             @db.Date
+  session        AccAttendanceSession
+  mark           AccAttendanceMark    @default(PRESENT)
+  source         AccAttendanceSource  @default(ACCOUNTANT_MANUAL)
+  checkedAt      DateTime             @default(now())
+  checkedById    String
+  deviceId       String?
+  note           String?              @db.Text
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@unique([companyId, staffId, attendanceDate, session])
+  @@index([companyId, attendanceDate])
+  @@index([companyId, staffId])
+  @@map("accountant_attendance_sessions")
+}
+
+model AccountantFingerprintDevice {
+  id              String    @id @default(cuid())
+  companyId       String
+  name            String
+  serialNumber    String
+  vendor          String?
+  location        String?
+  locationLabel   String?
+  status          String    @default("ACTIVE") @db.VarChar(32)
+  secretHash      String?   @db.VarChar(128)
+  accessTokenHash String?   @db.VarChar(128)
+  createdById     String?
+  registeredById  String?
+  lastSeenAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([companyId, serialNumber])
+  @@index([companyId, status])
+  @@map("accountant_fingerprint_devices")
+}
+
+model AccountantFingerprintEnrollment {
+  id               String   @id @default(cuid())
+  companyId        String
+  deviceId         String
+  userId           String?
+  staffId          String?
+  externalUserCode String?
+  templateKey      String?  @db.VarChar(191)
+  fingerLabel      String?
+  active           Boolean  @default(true)
+  enrolledById     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([deviceId, externalUserCode])
+  @@unique([deviceId, userId])
+  @@unique([companyId, deviceId, staffId])
+  @@unique([companyId, deviceId, templateKey])
+  @@index([companyId, staffId])
+  @@index([companyId, userId])
+  @@map("accountant_fingerprint_enrollments")
+}
+
+model AccountantStaffProof {
+  id            String                       @id @default(cuid())
+  companyId     String
+  staffId       String
+  kind          String                       @default("SMS")
+  referenceNo   String
+  transactionId String?
+  amount        Decimal                      @default(0) @db.Decimal(18, 2)
+  senderName    String?
+  receiverName  String?
+  transactionAt DateTime?
+  smsText       String?                      @db.LongText
+  proofUrl      String?                      @db.Text
+  status        AccountantVerificationStatus @default(PENDING)
+  reviewReason  String?                      @db.Text
+  reviewedById  String?
+  reviewedAt    DateTime?
+  createdAt     DateTime                     @default(now())
+  updatedAt     DateTime                     @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, createdAt])
+  @@index([companyId, staffId])
+  @@index([companyId, status])
+  @@map("accountant_staff_proofs")
+}
+
+model AccountantAdminPacket {
+  id              String                       @id @default(cuid())
+  companyId       String
+  sentByAdminId   String
+  sentByAdminName String
+  targetType      AccountantPacketTarget
+  targetId        String
+  message         String                       @db.Text
+  attachmentUrl   String?                      @db.Text
+  status          AccountantVerificationStatus @default(PENDING)
+  reviewReason    String?                      @db.Text
+  reviewedById    String?
+  reviewedAt      DateTime?
+  createdAt       DateTime                     @default(now())
+  updatedAt       DateTime                     @updatedAt
+
+  @@index([companyId, createdAt])
+  @@index([companyId, targetType, targetId])
+  @@index([companyId, status])
+  @@map("accountant_admin_packets")
+}
+
+model AccountantBankDeposit {
+  id                   String               @id @default(cuid())
+  companyId            String
+  staffId              String
+  amount               Decimal              @db.Decimal(18, 2)
+  referenceNo          String
+  depositDate          DateTime
+  bankAccount          String
+  depositSlipUrl       String?              @db.Text
+  bankReceiptUrl       String?              @db.Text
+  status               AccountantBankStatus @default(PENDING)
+  statementAmount      Decimal?             @db.Decimal(18, 2)
+  statementReference   String?
+  statementDate        DateTime?
+  statementBankAccount String?
+  bankStatementUrl     String?              @db.Text
+  reviewReason         String?              @db.Text
+  reviewedById         String?
+  reviewedAt           DateTime?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, createdAt])
+  @@index([companyId, staffId])
+  @@index([companyId, status])
+  @@map("accountant_bank_deposits")
+}
+
+model AccountantIncomeEntry {
+  id            String                 @id @default(cuid())
+  companyId     String
+  staffId       String
+  amount        Decimal                @db.Decimal(18, 2)
+  serviceType   String
+  referenceNo   String
+  sourceType    String                 @default("STAFF_SERVICE")
+  sourceId      String?
+  status        AccountantIncomeStatus @default(COMPLETED)
+  transactionAt DateTime               @default(now())
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, transactionAt])
+  @@index([companyId, staffId])
+  @@map("accountant_income_entries")
+}
+
+model AccountantNotification {
+  id         String                     @id @default(cuid())
+  companyId  String
+  userId     String?
+  roleTarget String?
+  title      String
+  message    String                     @db.Text
+  type       AccountantNotificationType @default(INFO)
+  isRead     Boolean                    @default(false)
+  readAt     DateTime?
+  createdAt  DateTime                   @default(now())
+
+  @@index([companyId, createdAt])
+  @@index([companyId, userId, isRead])
+  @@index([companyId, roleTarget, isRead])
+  @@map("accountant_notifications")
+}
+
+model AccountantPeriod {
+  id             String                          @id @default(cuid())
+  companyId      String
+  label          String
+  periodType     String                          @default("MONTH")
+  startDate      DateTime
+  endDate        DateTime
+  status         AccountantPeriodStatus          @default(OPEN)
+  reason         String?                         @db.Text
+  lockedById     String?
+  lockedAt       DateTime?
+  createdAt      DateTime                        @default(now())
+  updatedAt      DateTime                        @updatedAt
+  reopenRequests AccountantPeriodReopenRequest[]
+
+  @@unique([companyId, periodType, startDate, endDate])
+  @@index([companyId, status])
+  @@index([companyId, startDate, endDate])
+  @@map("accountant_periods")
+}
+
+model AccountantPeriodReopenRequest {
+  id            String                 @id @default(cuid())
+  companyId     String
+  periodId      String
+  requestedById String
+  reason        String                 @db.Text
+  status        AccountantReopenStatus @default(PENDING)
+  reviewNote    String?                @db.Text
+  reviewedById  String?
+  reviewedAt    DateTime?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  period        AccountantPeriod       @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, status, createdAt])
+  @@index([periodId, createdAt])
+  @@map("accountant_period_reopen_requests")
+}
+
+model AccountantStaffMoneyEntry {
+  id          String            @id @default(cuid())
+  companyId   String
+  staffId     String
+  kind        AccMoneyKind
+  direction   AccMoneyDirection
+  amount      Decimal           @db.Decimal(18, 2)
+  reference   String?
+  note        String?           @db.Text
+  enteredById String
+  occurredAt  DateTime
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([companyId, occurredAt])
+  @@index([companyId, staffId])
+  @@map("accountant_staff_money_entries")
+}
+
+model AccountantVerificationPacket {
+  id                     String                @id @default(cuid())
+  companyId              String
+  staffId                String
+  staffFileId            String?               @unique
+  kind                   AccVerificationKind
+  staffMessage           String?               @db.Text
+  staffFileUrl           String?               @db.Text
+  adminReferenceMessage  String?               @db.Text
+  adminReferenceUrl      String?               @db.Text
+  status                 AccVerificationStatus @default(WAITING_ADMIN_REFERENCE)
+  accountantDecisionById String?
+  decisionReason         String?               @db.Text
+  decidedAt              DateTime?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+
+  @@index([companyId, status])
+  @@index([companyId, staffId])
+  @@map("accountant_verification_packets")
+}
+
+model AccountantBankComparison {
+  id                 String      @id @default(cuid())
+  companyId          String
+  depositId          String?     @unique
+  staffId            String
+  staffAmount        Decimal?    @db.Decimal(18, 2)
+  staffReference     String?
+  staffDate          DateTime?
+  staffBankAccount   String?
+  staffFileUrl       String?     @db.Text
+  adminAmount        Decimal?    @db.Decimal(18, 2)
+  adminReference     String?
+  adminDate          DateTime?
+  adminBankAccount   String?
+  adminFileUrl       String?     @db.Text
+  accountantDecision AccDecision @default(PENDING)
+  mismatchReason     String?     @db.Text
+  reviewedById       String?
+  reviewedAt         DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@index([companyId, accountantDecision])
+  @@index([companyId, staffId])
+  @@map("accountant_bank_comparisons")
+}
+
+model AccountantReportSnapshot {
+  id          String   @id @default(cuid())
+  companyId   String
+  createdById String
+  reportName  String
+  periodLabel String
+  filtersJson Json
+  payloadJson Json
+  createdAt   DateTime @default(now())
+
+  @@index([companyId, createdAt])
+  @@map("accountant_report_snapshots")
+}

@@ -1,0 +1,42 @@
+Add this item near the top of the existing AccountantDashboardClient.tsx navigation array:
+
+{ page: "Operations Control Center", glyph: "dashboard", group: "Overview" },
+
+Because the current PageKey implementation renders internal sections, handle this item before setActivePage:
+
+function openPage(page: PageKey | "Operations Control Center") {
+  if (page === "Operations Control Center") {
+    router.push("/accountant/control-center");
+    return;
+  }
+
+  setActivePage(page);
+  setMobileOpen(false);
+  setNoticeOpen(false);
+}
+
+Also extend the navigation item type to allow the new label, or use this standalone button inside the sidebar:
+
+<button
+  type="button"
+  onClick={() => router.push("/accountant/control-center")}
+  title="Operations Control Center"
+>
+  <Glyph name="dashboard" />
+  <span>Operations Control Center</span>
+</button>
+
+The new /accountant/control-center page already contains these complete sidebar sections:
+
+- Overview
+- Staff Expenses
+- Expense Approval Matrix
+- Staff Cash & Float
+- Attendance Register
+- Attendance Analytics
+- Fingerprint Devices
+- Staff Proof & SMS
+- Admin Verification Documents
+- Bank Reconciliation
+- Financial & Performance Reports
+- Notifications

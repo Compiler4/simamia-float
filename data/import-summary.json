@@ -1,0 +1,22 @@
+{
+  "excel": {
+    "file": "float data_063712.xlsx",
+    "sheet": "Sheet1",
+    "declaredUniqueAgents": 2273,
+    "columns": ["Agent_name", "Agent_MSISDN", "Alias_code"]
+  },
+  "bankStatement": {
+    "file": "accountTransactionHistory (16).pdf",
+    "bank": "CRDB BANK",
+    "branch": "OHIO",
+    "accountName": "ARDHISOL (T) LIMITED",
+    "accountNumber": "0150959326500",
+    "periodStart": "2026-07-16",
+    "periodEnd": "2026-07-17",
+    "availableBalance": 1697115.12,
+    "totalCredit": 38369600.0,
+    "totalDebit": 39800000.0,
+    "bookBalance": 1697115.12,
+    "clearedBalance": 1697115.12
+  }
+}

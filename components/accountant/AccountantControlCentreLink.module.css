@@ -1,0 +1,32 @@
+.link {
+  position: relative;
+  isolation: isolate;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  padding: 0 17px;
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: 16px;
+  color: #fff;
+  background: linear-gradient(135deg,#087f63 0%,#12a77d 48%,#6333c9 100%);
+  box-shadow: 0 14px 34px rgba(8,127,99,.22);
+  font-size: 11px;
+  font-weight: 900;
+  text-decoration: none;
+  transition: transform .24s ease, box-shadow .24s ease, filter .24s ease;
+}
+.link::before { content:""; position:absolute; z-index:-1; width:90px; height:90px; top:-55px; left:-35px; border-radius:50%; background:rgba(255,255,255,.28); transition:transform .35s ease; }
+.link::after { content:""; position:absolute; inset:0; z-index:-1; translate:-115% 0; background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.28),transparent 70%); transition:translate .55s ease; }
+.link:hover { transform:translateY(-3px) scale(1.015); box-shadow:0 20px 44px rgba(52,70,137,.28); filter:saturate(1.12); }
+.link:hover::before { transform:scale(1.45); }
+.link:hover::after { translate:115% 0; }
+.icon { width:32px; height:32px; display:grid; place-items:center; border-radius:11px; background:rgba(255,255,255,.18); font-family:"Material Symbols Rounded","Segoe UI Symbol",sans-serif; font-size:20px; }
+.text { display:grid; gap:2px; }
+.text strong { font-size:10px; }
+.text small { color:rgba(255,255,255,.78); font-size:7px; font-weight:700; }
+.arrow { margin-left:4px; font-size:18px; transition:transform .24s ease; }
+.link:hover .arrow { transform:translateX(4px); }
+@media (max-width:520px) { .link { width:100%; justify-content:center; } }
+@media (prefers-reduced-motion:reduce) { .link,.link::before,.link::after,.arrow { transition:none; } }

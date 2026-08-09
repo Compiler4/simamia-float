@@ -1,0 +1,49 @@
+// REFERENCE ONLY: this is the BrokerServiceVisit shape detected from your
+// generated Prisma Client error. Do not paste it blindly if your existing
+// schema already contains these fields and relations.
+//
+// Important compatibility points used by the fixed API code:
+// - filter the day using startedAt, not serviceDay
+// - relation name is broker, not brokerCustomer
+// - serviceActivityId is a scalar; the activity is loaded separately
+
+model BrokerServiceVisit {
+  id                String   @id @default(cuid())
+  companyId         String
+  staffId           String
+  brokerCustomerId  String
+  deviceId          String?
+  serviceActivityId String?
+  status            BrokerVisitStatus @default(STARTED)
+  serviceType       String?
+  communicationNote String?  @db.Text
+  floatAmount       Decimal  @default(0) @db.Decimal(18, 2)
+  cashAmount        Decimal  @default(0) @db.Decimal(18, 2)
+  companyIncome     Decimal  @default(0) @db.Decimal(18, 2)
+  staffLatitude     Float?
+  staffLongitude    Float?
+  brokerLatitude    Float?
+  brokerLongitude   Float?
+  distanceMeters    Float?
+  locationMatched   Boolean  @default(false)
+  startedAt         DateTime @default(now())
+  arrivedAt         DateTime?
+  serviceProvidedAt DateTime?
+  proofDueAt        DateTime?
+  proofUploadedAt   DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  company          Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff            User              @relation("BrokerServiceVisitStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  broker           BrokerCustomer    @relation(fields: [brokerCustomerId], references: [id], onDelete: Cascade)
+  device           CompanyGpsDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  proofSubmissions StaffProofSubmission[]
+
+  @@index([companyId, staffId, startedAt])
+  @@index([brokerCustomerId, startedAt])
+  @@index([status, startedAt])
+  @@index([deviceId])
+  @@map("broker_service_visits")
+}

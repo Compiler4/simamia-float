@@ -1,0 +1,67 @@
+// ============================================================================
+// ADD THIS ENUM NEAR YOUR OTHER ENUMS IN prisma/schema.prisma
+// Do not create a second enum if it already exists.
+// ============================================================================
+
+enum BrokerCustomerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// ============================================================================
+// ADD THIS RELATION FIELD INSIDE YOUR EXISTING Company MODEL
+// Example:
+//
+// model Company {
+//   id String @id @default(cuid())
+//   ...
+//   brokerCustomers BrokerCustomer[]
+// }
+// ============================================================================
+
+// brokerCustomers BrokerCustomer[]
+
+// ============================================================================
+// ADD THIS COMPLETE MODEL AT THE END OF prisma/schema.prisma
+// ============================================================================
+
+model BrokerCustomer {
+  id             String               @id @default(cuid())
+  companyId      String
+  code           String
+  name           String
+  businessName   String?
+  phone          String
+  alternatePhone String?
+  email          String?
+  location       String
+  region         String?
+  district       String?
+  ward           String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  status         BrokerCustomerStatus @default(ACTIVE)
+  notes          String?              @db.Text
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  company Company @relation(
+    fields: [companyId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, location])
+  @@index([companyId, status])
+  @@index([companyId, phone])
+  @@map("broker_customers")
+}
+
+// IMPORTANT:
+// The file schema-broker-additions.prisma.txt is only an instruction file.
+// Prisma will ignore it unless the enum, Company relation field, and model above
+// are copied into the real prisma/schema.prisma file.

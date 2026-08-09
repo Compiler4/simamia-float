@@ -1,0 +1,1180 @@
+.page,
+.page * {
+    box-sizing: border-box;
+}
+
+.page {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 34px;
+    color: #e8f4ff;
+    background: radial-gradient( circle at 20% 15%, rgba(16, 117, 255, 0.14), transparent 30%), radial-gradient( circle at 85% 78%, rgba(0, 229, 255, 0.09), transparent 26%), linear-gradient( 145deg, #222a35, #111822 52%, #1b2530);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.materialIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    line-height: 1;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.backgroundGrid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    pointer-events: none;
+    background-image: linear-gradient( rgba(109, 190, 255, 0.08) 1px, transparent 1px), linear-gradient( 90deg, rgba(109, 190, 255, 0.08) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient( circle at center, black, transparent 78%);
+    mask-image: radial-gradient( circle at center, black, transparent 78%);
+}
+
+.backgroundGlowOne,
+.backgroundGlowTwo {
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+    filter: blur(18px);
+}
+
+.backgroundGlowOne {
+    top: -200px;
+    right: 8%;
+    width: 580px;
+    height: 580px;
+    background: rgba(0, 130, 255, 0.11);
+    animation: backgroundFloat 10s ease-in-out infinite;
+}
+
+.backgroundGlowTwo {
+    left: 5%;
+    bottom: -260px;
+    width: 600px;
+    height: 600px;
+    background: rgba(0, 238, 255, 0.07);
+    animation: backgroundFloat 13s ease-in-out infinite reverse;
+}
+
+.portalShell {
+    position: relative;
+    z-index: 2;
+    width: min(1420px, 100%);
+    min-height: min(790px, calc(100vh - 68px));
+    display: grid;
+    grid-template-columns: minmax(0, 1.52fr) minmax(390px, 0.72fr);
+    overflow: hidden;
+    border: 2px solid rgba(2, 8, 14, 0.9);
+    border-radius: 36px;
+    background: linear-gradient( 145deg, rgba(20, 32, 47, 0.98), rgba(8, 16, 27, 0.98));
+    box-shadow: 0 55px 130px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(116, 190, 255, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.shellHighlight {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 12%;
+    width: 76%;
+    height: 1px;
+    background: linear-gradient( 90deg, transparent, rgba(79, 189, 255, 0.8), transparent);
+    box-shadow: 0 0 22px rgba(26, 168, 255, 0.8);
+}
+
+.visualSection {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    padding: 38px 42px;
+    background: radial-gradient( circle at 48% 44%, rgba(0, 142, 255, 0.12), transparent 32%), linear-gradient( 145deg, #182333, #0f1825 65%, #111c29);
+}
+
+.visualSection::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.34;
+    pointer-events: none;
+    background: linear-gradient( 28deg, transparent 48%, rgba(55, 151, 255, 0.16) 49%, transparent 50%), linear-gradient( 152deg, transparent 48%, rgba(55, 151, 255, 0.1) 49%, transparent 50%);
+    background-size: 260px 260px;
+}
+
+.brandHeader {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.headerLogo {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgba(95, 203, 255, 0.38);
+    border-radius: 18px;
+    background: rgba(12, 29, 46, 0.7);
+    box-shadow: 0 13px 32px rgba(0, 0, 0, 0.26), 0 0 22px rgba(0, 136, 255, 0.16);
+}
+
+.headerLogo .logoImage {
+    width: 48px;
+    height: 48px;
+}
+
+.brandName {
+    margin: 0;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 950;
+    letter-spacing: 0.16em;
+}
+
+.brandSubtitle {
+    margin: 4px 0 0;
+    color: rgba(170, 203, 226, 0.62);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+}
+
+.logoImage {
+    display: block;
+    width: 74px;
+    height: 74px;
+    object-fit: contain;
+    border-radius: 20px;
+    filter: drop-shadow( 0 9px 20px rgba(0, 156, 255, 0.35));
+}
+
+.logoFallback {
+    width: 68px;
+    height: 68px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(107, 219, 255, 0.6);
+    border-radius: 21px;
+    color: #f2fcff;
+    background: linear-gradient( 145deg, #0bc6bb, #05764e 55%, #d3a528);
+    box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.2), 0 0 28px rgba(0, 188, 255, 0.34);
+}
+
+.logoFallback .materialIcon {
+    font-size: 34px;
+}
+
+.securityScene {
+    position: absolute;
+    top: 48%;
+    left: 48%;
+    width: min(650px, 70vw);
+    height: min(650px, 70vw);
+    transform: translate(-50%, -50%) perspective(900px) rotateX(60deg) rotateZ(-8deg);
+    transform-style: preserve-3d;
+}
+
+.floorShadow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 76%;
+    height: 76%;
+    border-radius: 50%;
+    background: radial-gradient( circle, rgba(0, 0, 0, 0.7), transparent 67%);
+    filter: blur(25px);
+    transform: translate(-50%, -50%) translateZ(-45px);
+}
+
+.outerOrbit,
+.middleOrbit,
+.innerOrbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.outerOrbit {
+    width: 92%;
+    height: 92%;
+    border: 2px solid rgba(105, 211, 255, 0.58);
+    box-shadow: 0 0 18px rgba(0, 153, 255, 0.34), inset 0 0 18px rgba(0, 153, 255, 0.22);
+    animation: orbitRotate 17s linear infinite;
+}
+
+.outerOrbit::before,
+.outerOrbit::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #74ddff;
+    box-shadow: 0 0 18px #19aaff, 0 0 35px rgba(0, 153, 255, 0.8);
+}
+
+.outerOrbit::before {
+    top: 8%;
+    left: 23%;
+}
+
+.outerOrbit::after {
+    right: 8%;
+    bottom: 27%;
+}
+
+.middleOrbit {
+    width: 68%;
+    height: 68%;
+    border: 13px solid rgba(0, 104, 223, 0.86);
+    box-shadow: 0 0 25px rgba(0, 133, 255, 0.4), inset 0 0 22px rgba(0, 196, 255, 0.22);
+    animation: orbitRotateReverse 13s linear infinite;
+}
+
+.middleOrbit::after {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border: 2px solid rgba(123, 224, 255, 0.72);
+    border-radius: inherit;
+}
+
+.innerOrbit {
+    width: 43%;
+    height: 43%;
+    border: 2px solid rgba(96, 217, 255, 0.74);
+    box-shadow: 0 0 26px rgba(0, 170, 255, 0.36);
+    animation: innerPulse 3.2s ease-in-out infinite;
+}
+
+.orbitLightOne,
+.orbitLightTwo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 2px;
+    transform-origin: left center;
+    background: linear-gradient( 90deg, rgba(76, 218, 255, 0.9), transparent);
+    box-shadow: 0 0 10px rgba(0, 184, 255, 0.8);
+}
+
+.orbitLightOne {
+    width: 43%;
+    transform: translateY(-50%) rotate(36deg);
+    animation: lightSweep 8s linear infinite;
+}
+
+.orbitLightTwo {
+    width: 39%;
+    transform: translateY(-50%) rotate(184deg);
+    animation: lightSweep 11s linear infinite reverse;
+}
+
+.centralPlatform {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 218px;
+    height: 218px;
+    transform: translate(-50%, -50%) translateZ(24px);
+    transform-style: preserve-3d;
+}
+
+.platformTop {
+    position: absolute;
+    inset: 15px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 4px solid rgba(121, 220, 255, 0.66);
+    border-radius: 50%;
+    background: radial-gradient( circle, #125ec3, #08264e 54%, #061527 70%);
+    box-shadow: inset 0 0 25px rgba(83, 204, 255, 0.65), 0 0 28px rgba(0, 142, 255, 0.52);
+    transform: translateZ(38px);
+}
+
+.platformGlow {
+    position: absolute;
+    inset: 17%;
+    border-radius: 50%;
+    background: rgba(31, 183, 255, 0.24);
+    filter: blur(18px);
+    animation: glowPulse 2.6s ease-in-out infinite;
+}
+
+.centralLogo {
+    position: relative;
+    z-index: 3;
+    animation: centralFloat 3.4s ease-in-out infinite;
+}
+
+.centralLogo .logoImage {
+    width: 95px;
+    height: 95px;
+    border-radius: 28px;
+    transform: rotateX(-60deg) rotateZ(8deg);
+}
+
+.centralLogo .logoFallback {
+    width: 92px;
+    height: 92px;
+    transform: rotateX(-60deg) rotateZ(8deg);
+}
+
+.platformBase {
+    position: absolute;
+    inset: 0;
+    border: 9px solid rgba(53, 91, 133, 0.9);
+    border-radius: 50%;
+    background: #07111f;
+    box-shadow: 0 23px 0 #040a12, 0 35px 28px rgba(0, 0, 0, 0.65);
+}
+
+.featureNode {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    display: grid;
+    place-items: center;
+    border: 3px solid rgba(119, 224, 255, 0.68);
+    border-radius: 50%;
+    color: #dff9ff;
+    background: radial-gradient( circle at 38% 28%, #237dd3, #0b294a 58%, #071523);
+    box-shadow: inset 0 0 18px rgba(55, 199, 255, 0.42), 0 0 23px rgba(0, 148, 255, 0.42), 0 13px 0 rgba(2, 9, 16, 0.9);
+    transform-style: preserve-3d;
+}
+
+.featureNode .materialIcon {
+    font-size: 34px;
+    transform: rotateX(-60deg) rotateZ(8deg);
+}
+
+.featureNode small {
+    position: absolute;
+    right: 50%;
+    bottom: -31px;
+    color: rgba(195, 230, 247, 0.8);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transform: translateX(50%) rotateX(-60deg) rotateZ(8deg);
+}
+
+.nodePulse {
+    position: absolute;
+    inset: -9px;
+    border: 1px solid rgba(96, 218, 255, 0.52);
+    border-radius: 50%;
+    animation: nodePulse 2.6s ease-out infinite;
+}
+
+.nodePayments {
+    top: 7%;
+    left: 25%;
+    animation: nodeFloatOne 4.1s ease-in-out infinite;
+}
+
+.nodeSecurity {
+    top: 12%;
+    right: 15%;
+    animation: nodeFloatTwo 4.6s ease-in-out infinite;
+}
+
+.nodeAnalytics {
+    right: 1%;
+    bottom: 25%;
+    animation: nodeFloatOne 4.8s ease-in-out infinite reverse;
+}
+
+.nodeLocation {
+    left: 5%;
+    bottom: 22%;
+    animation: nodeFloatTwo 4.3s ease-in-out infinite reverse;
+}
+
+.nodePeople {
+    left: 43%;
+    bottom: 1%;
+    animation: nodeFloatOne 5s ease-in-out infinite;
+}
+
+.visualText {
+    position: absolute;
+    z-index: 4;
+    left: 45px;
+    bottom: 38px;
+    max-width: 470px;
+}
+
+.liveBadge {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 13px;
+    padding: 8px 11px;
+    border: 1px solid rgba(96, 213, 255, 0.22);
+    border-radius: 999px;
+    color: #87d9ff;
+    background: rgba(8, 28, 46, 0.62);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.liveBadge span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #20e796;
+    box-shadow: 0 0 12px rgba(32, 231, 150, 0.9);
+    animation: statusPulse 1.7s ease-out infinite;
+}
+
+.visualText h1 {
+    margin: 0;
+    color: #f7fcff;
+    font-size: clamp(29px, 3.2vw, 46px);
+    line-height: 1.03;
+    letter-spacing: -0.045em;
+    text-shadow: 0 8px 28px rgba(0, 0, 0, 0.38);
+}
+
+.visualText p {
+    max-width: 440px;
+    margin: 15px 0 0;
+    color: rgba(186, 211, 229, 0.7);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.formSection {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 46px;
+    background: radial-gradient( circle at 80% 18%, rgba(0, 139, 255, 0.08), transparent 28%), linear-gradient( 155deg, rgba(21, 34, 49, 0.98), rgba(10, 18, 29, 0.98));
+}
+
+.formSection::before {
+    content: "";
+    position: absolute;
+    top: 8%;
+    bottom: 8%;
+    left: 0;
+    width: 1px;
+    background: linear-gradient( transparent, rgba(95, 182, 255, 0.34), transparent);
+}
+
+.loginCard {
+    position: relative;
+    overflow: hidden;
+    padding: 34px;
+    border: 1px solid rgba(115, 177, 221, 0.14);
+    border-radius: 24px;
+    background: linear-gradient( 150deg, rgba(28, 46, 65, 0.82), rgba(14, 25, 39, 0.88));
+    box-shadow: 0 26px 65px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(22px);
+}
+
+.loginCard::before {
+    content: "";
+    position: absolute;
+    top: -170px;
+    right: -130px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(0, 154, 255, 0.08);
+    filter: blur(8px);
+}
+
+.mobileLogo {
+    display: none;
+}
+
+.formHeader {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.formIcon {
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(107, 214, 255, 0.32);
+    border-radius: 15px;
+    color: #73d9ff;
+    background: linear-gradient( 145deg, rgba(9, 92, 161, 0.32), rgba(6, 41, 72, 0.48));
+    box-shadow: 0 0 19px rgba(0, 154, 255, 0.15);
+}
+
+.formIcon .materialIcon {
+    font-size: 28px;
+}
+
+.formEyebrow {
+    margin: 2px 0 7px;
+    color: #43baff;
+    font-size: 9px;
+    font-weight: 950;
+    letter-spacing: 0.16em;
+}
+
+.formHeader h2 {
+    margin: 0;
+    color: #f6fbff;
+    font-size: 30px;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+}
+
+.formHeader p:last-child {
+    margin: 10px 0 0;
+    color: rgba(178, 202, 219, 0.62);
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.form {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 17px;
+    margin-top: 30px;
+}
+
+.field {
+    display: grid;
+    gap: 8px;
+}
+
+.fieldLabel {
+    color: rgba(208, 226, 237, 0.74);
+    font-size: 10px;
+    font-weight: 780;
+}
+
+.inputWrapper {
+    position: relative;
+    display: block;
+}
+
+.inputWrapper input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 50px 0 46px;
+    border: 1px solid rgba(113, 165, 202, 0.19);
+    border-radius: 13px;
+    outline: none;
+    color: #f2f8fb;
+    background: rgba(5, 15, 25, 0.48);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.015);
+    font-size: 12px;
+    font-weight: 650;
+    transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.inputWrapper input::placeholder {
+    color: rgba(159, 184, 201, 0.38);
+}
+
+.inputWrapper input:focus {
+    border-color: rgba(56, 181, 255, 0.82);
+    background: rgba(7, 22, 37, 0.78);
+    box-shadow: 0 0 0 4px rgba(0, 145, 255, 0.09), 0 0 22px rgba(0, 145, 255, 0.12);
+    transform: translateY(-1px);
+}
+
+.inputWrapper input:disabled {
+    opacity: 0.66;
+    cursor: not-allowed;
+}
+
+.inputIcon {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 15px;
+    color: rgba(132, 187, 222, 0.72);
+    font-size: 21px;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.visibilityButton {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    right: 8px;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 10px;
+    color: rgba(156, 202, 229, 0.72);
+    background: transparent;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: color 180ms ease, background 180ms ease;
+}
+
+.visibilityButton:hover {
+    color: #77d8ff;
+    background: rgba(50, 171, 255, 0.1);
+}
+
+.visibilityButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.visibilityButton .materialIcon {
+    font-size: 21px;
+}
+
+.optionsRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.rememberLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: rgba(188, 211, 226, 0.72);
+    font-size: 10px;
+    font-weight: 720;
+    cursor: pointer;
+}
+
+.rememberLabel input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.customCheckbox {
+    width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(113, 178, 217, 0.42);
+    border-radius: 5px;
+    color: transparent;
+    background: rgba(4, 15, 25, 0.5);
+    transition: background 170ms ease, color 170ms ease, border-color 170ms ease, box-shadow 170ms ease;
+}
+
+.customCheckbox .materialIcon {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.rememberLabel input:checked+.customCheckbox {
+    border-color: #159cff;
+    color: white;
+    background: linear-gradient( 145deg, #1aaeff, #0875d8);
+    box-shadow: 0 0 14px rgba(0, 143, 255, 0.38);
+}
+
+.rememberLabel input:focus-visible+.customCheckbox {
+    outline: 2px solid #70d8ff;
+    outline-offset: 3px;
+}
+
+.forgotLink {
+    color: #48baff;
+    font-size: 10px;
+    font-weight: 780;
+    text-decoration: none;
+    transition: color 180ms ease;
+}
+
+.forgotLink:hover {
+    color: #9bddff;
+    text-decoration: underline;
+}
+
+.errorMessage,
+.successMessage {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 9px;
+    align-items: center;
+    padding: 11px 12px;
+    border-radius: 11px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.45;
+    animation: messageEnter 220ms ease-out;
+}
+
+.errorMessage {
+    border: 1px solid rgba(251, 113, 133, 0.25);
+    color: #ffc5ce;
+    background: rgba(127, 29, 29, 0.22);
+}
+
+.successMessage {
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    color: #b5f9dd;
+    background: rgba(6, 95, 70, 0.22);
+}
+
+.errorMessage .materialIcon,
+.successMessage .materialIcon {
+    font-size: 20px;
+}
+
+.loginButton {
+    position: relative;
+    min-height: 54px;
+    display: grid;
+    grid-template-columns: 24px minmax(0, auto) 24px;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    overflow: hidden;
+    border: 1px solid rgba(77, 201, 255, 0.48);
+    border-radius: 13px;
+    color: white;
+    background: linear-gradient( 135deg, #0a8cff, #0878e6 52%, #055cb9);
+    box-shadow: 0 13px 30px rgba(0, 119, 255, 0.29), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.loginButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 35px rgba(0, 132, 255, 0.38), 0 0 25px rgba(0, 156, 255, 0.16);
+    filter: brightness(1.06);
+}
+
+.loginButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.loginButton:disabled {
+    opacity: 0.68;
+    cursor: wait;
+}
+
+.loginButton .materialIcon {
+    position: relative;
+    z-index: 2;
+    font-size: 20px;
+}
+
+.buttonGlow {
+    position: absolute;
+    top: -80px;
+    left: -45%;
+    width: 32%;
+    height: 210px;
+    background: rgba(255, 255, 255, 0.2);
+    filter: blur(8px);
+    transform: rotate(24deg);
+    transition: left 500ms ease;
+}
+
+.loginButton:hover .buttonGlow {
+    left: 125%;
+}
+
+.buttonArrow {
+    transition: transform 180ms ease;
+}
+
+.loginButton:hover .buttonArrow {
+    transform: translateX(4px);
+}
+
+.spinner {
+    grid-column: 1;
+    width: 19px;
+    height: 19px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spinnerRotate 700ms linear infinite;
+}
+
+.cardFooter {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 23px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(110, 161, 196, 0.11);
+    color: rgba(149, 180, 201, 0.46);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.cardFooter .materialIcon {
+    font-size: 16px;
+    color: rgba(89, 193, 246, 0.62);
+}
+
+.copyright {
+    margin: 18px 0 0;
+    color: rgba(142, 174, 195, 0.38);
+    font-size: 9px;
+    text-align: center;
+}
+
+@keyframes backgroundFloat {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+        transform: translate3d(-25px, 20px, 0) scale(1.08);
+    }
+}
+
+@keyframes orbitRotate {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes orbitRotateReverse {
+    to {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
+}
+
+@keyframes innerPulse {
+    0%,
+    100% {
+        opacity: 0.65;
+        box-shadow: 0 0 22px rgba(0, 170, 255, 0.28);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 38px rgba(0, 191, 255, 0.58);
+    }
+}
+
+@keyframes lightSweep {
+    to {
+        transform: translateY(-50%) rotate(396deg);
+    }
+}
+
+@keyframes glowPulse {
+    0%,
+    100% {
+        opacity: 0.55;
+        transform: scale(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.18);
+    }
+}
+
+@keyframes centralFloat {
+    0%,
+    100% {
+        transform: translateZ(0);
+    }
+    50% {
+        transform: translateZ(20px);
+    }
+}
+
+@keyframes nodeFloatOne {
+    0%,
+    100% {
+        transform: translateZ(48px) translateY(0);
+    }
+    50% {
+        transform: translateZ(68px) translateY(-13px);
+    }
+}
+
+@keyframes nodeFloatTwo {
+    0%,
+    100% {
+        transform: translateZ(42px) translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateZ(65px) translateY(-11px) rotate(4deg);
+    }
+}
+
+@keyframes nodePulse {
+    0% {
+        opacity: 0.72;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.36);
+    }
+}
+
+@keyframes statusPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(32, 231, 150, 0.55);
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(32, 231, 150, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(32, 231, 150, 0);
+    }
+}
+
+@keyframes messageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spinnerRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1100px) {
+    .portalShell {
+        grid-template-columns: minmax(0, 1.1fr) minmax(380px, 0.9fr);
+    }
+    .visualSection {
+        padding: 34px 30px;
+    }
+    .securityScene {
+        left: 47%;
+        width: 590px;
+        height: 590px;
+    }
+    .visualText {
+        left: 32px;
+        bottom: 31px;
+    }
+    .formSection {
+        padding: 32px;
+    }
+}
+
+@media (max-width: 900px) {
+    .page {
+        padding: 20px;
+    }
+    .portalShell {
+        width: min(590px, 100%);
+        min-height: 0;
+        grid-template-columns: 1fr;
+        border-radius: 28px;
+    }
+    .visualSection {
+        min-height: 290px;
+        padding: 28px;
+    }
+    .brandHeader {
+        display: none;
+    }
+    .securityScene {
+        top: 45%;
+        left: 50%;
+        width: 410px;
+        height: 410px;
+    }
+    .featureNode {
+        width: 64px;
+        height: 64px;
+    }
+    .featureNode .materialIcon {
+        font-size: 26px;
+    }
+    .centralPlatform {
+        width: 150px;
+        height: 150px;
+    }
+    .centralLogo .logoImage,
+    .centralLogo .logoFallback {
+        width: 66px;
+        height: 66px;
+    }
+    .visualText {
+        left: 25px;
+        bottom: 22px;
+        max-width: 360px;
+    }
+    .visualText h1 {
+        font-size: 25px;
+    }
+    .visualText p {
+        display: none;
+    }
+    .formSection {
+        padding: 24px;
+    }
+    .formSection::before {
+        display: none;
+    }
+    .mobileLogo {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 26px;
+    }
+    .mobileLogo .logoImage,
+    .mobileLogo .logoFallback {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+    }
+    .mobileLogo strong {
+        display: block;
+        color: white;
+        font-size: 15px;
+        letter-spacing: 0.13em;
+    }
+    .mobileLogo small {
+        display: block;
+        margin-top: 4px;
+        color: rgba(152, 190, 214, 0.6);
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+    }
+}
+
+@media (max-width: 560px) {
+    .page {
+        min-height: 100dvh;
+        place-items: stretch;
+        padding: 0;
+    }
+    .portalShell {
+        width: 100%;
+        min-height: 100dvh;
+        border: 0;
+        border-radius: 0;
+    }
+    .visualSection {
+        min-height: 225px;
+        padding: 20px;
+    }
+    .securityScene {
+        width: 330px;
+        height: 330px;
+    }
+    .featureNode {
+        width: 52px;
+        height: 52px;
+        border-width: 2px;
+    }
+    .featureNode .materialIcon {
+        font-size: 21px;
+    }
+    .featureNode small {
+        display: none;
+    }
+    .nodePeople {
+        display: none;
+    }
+    .centralPlatform {
+        width: 124px;
+        height: 124px;
+    }
+    .centralLogo .logoImage,
+    .centralLogo .logoFallback {
+        width: 54px;
+        height: 54px;
+    }
+    .visualText {
+        right: 20px;
+        left: 20px;
+        bottom: 16px;
+    }
+    .visualText h1 {
+        max-width: 330px;
+        font-size: 21px;
+    }
+    .liveBadge {
+        margin-bottom: 8px;
+        padding: 6px 9px;
+        font-size: 8px;
+    }
+    .formSection {
+        justify-content: flex-start;
+        padding: 20px;
+    }
+    .loginCard {
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+    .formHeader {
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 12px;
+    }
+    .formIcon {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+    }
+    .formHeader h2 {
+        font-size: 26px;
+    }
+    .optionsRow {
+        align-items: flex-start;
+    }
+    .copyright {
+        margin-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page *,
+    .page *::before,
+    .page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

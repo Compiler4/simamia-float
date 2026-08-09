@@ -1,0 +1,371 @@
+// Add this block below your existing models in prisma/schema.prisma.
+// These models deliberately store existing Company/User IDs as strings without
+// Prisma relations, so they can be added without changing your current Company
+// and User models or their Int/String ID types.
+
+enum AccountantApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AccountantReviewerRole {
+  ACCOUNTANT
+  COMPANY_ADMIN
+}
+
+enum AccountantFundingStatus {
+  ISSUED
+  CONFIRMED
+  RETURNED
+  VERIFIED
+  REJECTED
+  CANCELLED
+}
+
+enum AccountantAttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  ON_LEAVE
+  HOLIDAY
+}
+
+enum AccountantAttendanceSource {
+  ACCOUNTANT
+  FINGERPRINT
+}
+
+enum AccountantAttendanceOverall {
+  NOT_MARKED
+  PARTIAL
+  PRESENT
+  ABSENT
+  MIXED
+}
+
+enum AccountantDeviceStatus {
+  ACTIVE
+  INACTIVE
+  REVOKED
+}
+
+enum AccountantVerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum AccountantPacketTarget {
+  PROOF
+  BANK_DEPOSIT
+  EXPENSE
+  OTHER
+}
+
+enum AccountantBankStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  AMOUNT_MISMATCH
+  REFERENCE_MISMATCH
+  DATE_MISMATCH
+  ACCOUNT_MISMATCH
+  MISSING_RECEIPT
+  MISSING_BANK_RECORD
+}
+
+enum AccountantIncomeStatus {
+  COMPLETED
+  VOID
+}
+
+enum AccountantNotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+model AccountantExpenseRequest {
+  id              String                    @id @default(cuid())
+  companyId       String
+  staffId         String
+  category        String
+  requestedAction String?
+  description     String?                   @db.Text
+  amount          Decimal                   @db.Decimal(18, 2)
+  expenseDate     DateTime                  @default(now())
+  receiptUrl      String?                   @db.Text
+  requestMode     String                    @default("STAFF_REQUEST")
+  status          AccountantApprovalStatus @default(PENDING)
+  finalisedAt     DateTime?
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+  decisions       AccountantExpenseDecision[]
+
+  @@index([companyId, createdAt])
+  @@index([companyId, staffId])
+  @@index([companyId, status])
+}
+
+model AccountantExpenseDecision {
+  id           String                    @id @default(cuid())
+  expenseId    String
+  reviewerId   String
+  reviewerRole AccountantReviewerRole
+  decision     AccountantApprovalStatus
+  reason       String                    @db.Text
+  decidedAt    DateTime                  @default(now())
+  expense      AccountantExpenseRequest  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, reviewerRole])
+  @@index([reviewerId, decidedAt])
+}
+
+model AccountantStaffFunding {
+  id           String                   @id @default(cuid())
+  companyId    String
+  staffId      String
+  issuedById   String
+  floatAmount  Decimal                  @default(0) @db.Decimal(18, 2)
+  cashAmount   Decimal                  @default(0) @db.Decimal(18, 2)
+  totalAmount  Decimal                  @default(0) @db.Decimal(18, 2)
+  referenceNo  String
+  purpose      String?
+  note         String?                  @db.Text
+  status       AccountantFundingStatus @default(ISSUED)
+  issuedAt     DateTime                 @default(now())
+  confirmedAt  DateTime?
+  receiptUrl    String?                  @db.Text
+  returnedAmount Decimal?                @db.Decimal(18, 2)
+  returnedAt    DateTime?
+  returnReason  String?                  @db.Text
+  verifiedById  String?
+  verifiedAt    DateTime?
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, issuedAt])
+  @@index([companyId, staffId])
+}
+
+model AccountantAttendance {
+  id                String                       @id @default(cuid())
+  companyId         String
+  userId            String
+  date              DateTime                     @db.Date
+  morningStatus     AccountantAttendanceStatus?
+  eveningStatus     AccountantAttendanceStatus?
+  morningSource     AccountantAttendanceSource?
+  eveningSource     AccountantAttendanceSource?
+  checkInAt         DateTime?
+  checkOutAt        DateTime?
+  notes             String?                      @db.Text
+  markedById        String?
+  overallStatus     AccountantAttendanceOverall  @default(NOT_MARKED)
+  createdAt         DateTime                     @default(now())
+  updatedAt         DateTime                     @updatedAt
+
+  @@unique([companyId, userId, date])
+  @@index([companyId, date])
+  @@index([companyId, userId])
+}
+
+model AccountantFingerprintDevice {
+  id           String                 @id @default(cuid())
+  companyId    String
+  name         String
+  serialNumber String
+  vendor       String?
+  location     String?
+  status       AccountantDeviceStatus @default(ACTIVE)
+  secretHash   String                 @db.VarChar(128)
+  createdById  String
+  lastSeenAt   DateTime?
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  enrolments   AccountantFingerprintEnrollment[]
+
+  @@unique([companyId, serialNumber])
+  @@index([companyId, status])
+}
+
+model AccountantFingerprintEnrollment {
+  id               String                        @id @default(cuid())
+  companyId        String
+  deviceId         String
+  userId           String
+  externalUserCode String
+  fingerLabel      String?
+  active           Boolean                       @default(true)
+  createdAt        DateTime                      @default(now())
+  updatedAt        DateTime                      @updatedAt
+  device           AccountantFingerprintDevice  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, externalUserCode])
+  @@unique([deviceId, userId])
+  @@index([companyId, userId])
+}
+
+model AccountantStaffProof {
+  id             String                       @id @default(cuid())
+  companyId      String
+  staffId        String
+  kind           String                       @default("SMS")
+  referenceNo    String
+  transactionId  String?
+  amount         Decimal                      @default(0) @db.Decimal(18, 2)
+  senderName     String?
+  receiverName   String?
+  transactionAt  DateTime?
+  smsText        String?                      @db.LongText
+  proofUrl       String?                      @db.Text
+  status         AccountantVerificationStatus @default(PENDING)
+  reviewReason   String?                      @db.Text
+  reviewedById   String?
+  reviewedAt     DateTime?
+  createdAt      DateTime                     @default(now())
+  updatedAt      DateTime                     @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, createdAt])
+  @@index([companyId, staffId])
+  @@index([companyId, status])
+}
+
+model AccountantAdminPacket {
+  id               String                       @id @default(cuid())
+  companyId        String
+  sentByAdminId    String
+  sentByAdminName  String
+  targetType       AccountantPacketTarget
+  targetId         String
+  message          String                       @db.Text
+  attachmentUrl    String?                      @db.Text
+  status           AccountantVerificationStatus @default(PENDING)
+  reviewReason     String?                      @db.Text
+  reviewedById     String?
+  reviewedAt       DateTime?
+  createdAt        DateTime                     @default(now())
+  updatedAt        DateTime                     @updatedAt
+
+  @@index([companyId, createdAt])
+  @@index([companyId, targetType, targetId])
+  @@index([companyId, status])
+}
+
+model AccountantBankDeposit {
+  id                       String                @id @default(cuid())
+  companyId                String
+  staffId                  String
+  amount                   Decimal               @db.Decimal(18, 2)
+  referenceNo              String
+  depositDate              DateTime
+  bankAccount              String
+  depositSlipUrl           String?               @db.Text
+  bankReceiptUrl           String?               @db.Text
+  status                   AccountantBankStatus @default(PENDING)
+  statementAmount          Decimal?              @db.Decimal(18, 2)
+  statementReference       String?
+  statementDate            DateTime?
+  statementBankAccount     String?
+  bankStatementUrl         String?               @db.Text
+  reviewReason             String?               @db.Text
+  reviewedById             String?
+  reviewedAt               DateTime?
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, createdAt])
+  @@index([companyId, staffId])
+  @@index([companyId, status])
+}
+
+model AccountantIncomeEntry {
+  id            String                  @id @default(cuid())
+  companyId     String
+  staffId       String
+  amount        Decimal                 @db.Decimal(18, 2)
+  serviceType   String
+  referenceNo   String
+  sourceType    String                  @default("STAFF_SERVICE")
+  sourceId      String?
+  status        AccountantIncomeStatus @default(COMPLETED)
+  transactionAt DateTime                @default(now())
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, transactionAt])
+  @@index([companyId, staffId])
+}
+
+model AccountantNotification {
+  id         String                      @id @default(cuid())
+  companyId  String
+  userId     String?
+  roleTarget String?
+  title      String
+  message    String                      @db.Text
+  type       AccountantNotificationType @default(INFO)
+  isRead     Boolean                     @default(false)
+  readAt     DateTime?
+  createdAt  DateTime                    @default(now())
+
+  @@index([companyId, createdAt])
+  @@index([companyId, userId, isRead])
+  @@index([companyId, roleTarget, isRead])
+}
+
+enum AccountantPeriodStatus {
+  OPEN
+  CLOSED
+  LOCKED
+}
+
+enum AccountantReopenStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model AccountantPeriod {
+  id             String                         @id @default(cuid())
+  companyId      String
+  label          String
+  periodType     String                         @default("MONTH")
+  startDate      DateTime
+  endDate        DateTime
+  status         AccountantPeriodStatus         @default(OPEN)
+  reason         String?                        @db.Text
+  lockedById     String?
+  lockedAt       DateTime?
+  createdAt      DateTime                       @default(now())
+  updatedAt      DateTime                       @updatedAt
+  reopenRequests AccountantPeriodReopenRequest[]
+
+  @@unique([companyId, periodType, startDate, endDate])
+  @@index([companyId, status])
+  @@index([companyId, startDate, endDate])
+}
+
+model AccountantPeriodReopenRequest {
+  id            String                  @id @default(cuid())
+  companyId     String
+  periodId      String
+  requestedById String
+  reason        String                  @db.Text
+  status        AccountantReopenStatus  @default(PENDING)
+  reviewNote    String?                 @db.Text
+  reviewedById  String?
+  reviewedAt    DateTime?
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  period        AccountantPeriod        @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, status, createdAt])
+  @@index([periodId, createdAt])
+}

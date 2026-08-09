@@ -1,0 +1,16 @@
+Add this standalone item to the existing Staff sidebar:
+
+<button
+  type="button"
+  onClick={() => router.push("/staff/verification-center")}
+  title="Proof and Verification Center"
+>
+  <span className="material-symbols-rounded">fact_check</span>
+  <span>Proof & Verification Center</span>
+</button>
+
+This page lets Staff:
+- upload proof, documents or SMS/message evidence;
+- upload bank deposit proof;
+- see whether Company Admin has supplied a reference;
+- see the final Accountant verification or rejection and reason.

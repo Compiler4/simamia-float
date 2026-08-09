@@ -1,0 +1,52 @@
+// File: app/admin/dashboard/CompanyAdminDashboardClient.tsx
+
+// Replace the broker-loading part of loadDashboard with this:
+
+let brokers: BrokerCustomerItem[] = [];
+let brokerLoadError = "";
+
+try {
+  const brokerResult = await requestJson<{
+    success: true;
+    brokers: BrokerCustomerItem[];
+    locations: string[];
+    total: number;
+  }>("/api/company-admin/brokers");
+
+  brokers = safeArray<BrokerCustomerItem>(
+    brokerResult.brokers,
+  );
+} catch (brokerError) {
+  brokerLoadError =
+    brokerError instanceof Error
+      ? brokerError.message
+      : "Could not load broker customers.";
+}
+
+setData({
+  ...dashboardResult,
+  brokers,
+  brokerLoadError,
+});
+
+// Remove this old global toast block:
+//
+// if (brokerLoadError) {
+//   setToast(
+//     "Dashboard loaded, but the broker directory needs database setup.",
+//   );
+// }
+
+// The Manage Brokers page may keep this local warning:
+
+{data.brokerLoadError && (
+  <section className={styles.brokerSetupError}>
+    <div>
+      <ShieldCheck size={22} />
+    </div>
+    <section>
+      <strong>Broker directory could not load</strong>
+      <p>{data.brokerLoadError}</p>
+    </section>
+  </section>
+)}

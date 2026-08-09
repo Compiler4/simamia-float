@@ -1,0 +1,203 @@
+// Append these enums and models to your existing prisma/schema.prisma.
+// They intentionally store existing User/Company IDs as scalar strings so the
+// module can be added without changing your current User/Company relations.
+
+enum CompanyExpenseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CompanyBankStatus {
+  PENDING
+  VERIFIED
+  AMOUNT_MISMATCH
+  MISSING_RECEIPT
+  DUPLICATE_DEPOSIT
+  MISSING_BANK_RECORD
+  REJECTED
+}
+
+enum CompanyAttendanceMark {
+  PRESENT
+  LATE
+  ABSENT
+  LEAVE
+  HOLIDAY
+}
+
+enum CompanyGpsDeviceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model CompanyExpense {
+  id             String               @id @default(cuid())
+  companyId      String
+  createdById    String
+  createdByName  String
+  createdByRole  String
+  category       String
+  amount         Decimal              @db.Decimal(18, 2)
+  description    String?
+  expenseDate    DateTime
+  receiptUrl     String?
+  status         CompanyExpenseStatus @default(PENDING)
+  reviewedById   String?
+  reviewedByName String?
+  reviewNote     String?
+  reviewedAt     DateTime?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@index([companyId, expenseDate])
+  @@index([companyId, status])
+}
+
+model CompanyBankVerification {
+  id                String            @id @default(cuid())
+  companyId         String
+  uploadedById      String
+  uploadedByName    String
+  uploadedByRole    String
+  amount            Decimal           @db.Decimal(18, 2)
+  referenceNumber   String
+  depositDate       DateTime
+  bankAccount       String
+  depositSlipUrl    String?
+  bankReceiptUrl    String?
+  bankStatementUrl  String?
+  status            CompanyBankStatus @default(PENDING)
+  isSeenByAdmin     Boolean           @default(false)
+  verifiedById      String?
+  verifiedByName    String?
+  verifiedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  messages          CompanyBankMessage[]
+
+  @@index([companyId, depositDate])
+  @@index([companyId, status])
+}
+
+model CompanyBankMessage {
+  id             String                  @id @default(cuid())
+  verificationId String
+  companyId      String
+  senderId       String
+  senderName     String
+  senderRole     String
+  message        String
+  createdAt      DateTime                @default(now())
+  verification   CompanyBankVerification @relation(fields: [verificationId], references: [id], onDelete: Cascade)
+
+  @@index([verificationId, createdAt])
+}
+
+model CompanyAttendance {
+  id             String                @id @default(cuid())
+  companyId      String
+  userId         String
+  userName       String
+  userRole       String
+  attendanceDate DateTime
+  mark           CompanyAttendanceMark
+  checkInAt      DateTime?
+  checkOutAt     DateTime?
+  source         String                @default("MANUAL")
+  note           String?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  @@unique([companyId, userId, attendanceDate])
+  @@index([companyId, attendanceDate])
+}
+
+model CompanyNotification {
+  id           String    @id @default(cuid())
+  companyId    String
+  targetUserId String?
+  targetRole   String?
+  title        String
+  message      String
+  type         String    @default("INFO")
+  link         String?
+  isRead       Boolean   @default(false)
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([companyId, createdAt])
+  @@index([targetUserId, isRead])
+  @@index([targetRole, isRead])
+}
+
+model CompanyGpsDevice {
+  id            String                 @id @default(cuid())
+  companyId     String
+  name          String
+  deviceType    String
+  ownerUserId   String?
+  ownerName     String?
+  deviceToken   String                 @unique
+  status        CompanyGpsDeviceStatus @default(ACTIVE)
+  lastSeenAt    DateTime?
+  lastLatitude  Float?
+  lastLongitude Float?
+  batteryLevel  Int?
+  gpsAccuracy   Float?
+  speedKph      Float?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  pings         CompanyGpsPing[]
+
+  @@index([companyId, status])
+}
+
+model CompanyGpsPing {
+  id           String           @id @default(cuid())
+  deviceId     String
+  companyId    String
+  latitude     Float
+  longitude    Float
+  accuracy     Float?
+  batteryLevel Int?
+  speedKph     Float?
+  capturedAt   DateTime
+  createdAt    DateTime         @default(now())
+  device       CompanyGpsDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, capturedAt])
+  @@index([companyId, capturedAt])
+}
+
+model CompanyAdminSetting {
+  id                 String   @id @default(cuid())
+  companyId          String   @unique
+  sms                Boolean  @default(true)
+  email              Boolean  @default(true)
+  inApp              Boolean  @default(true)
+  gpsAlerts          Boolean  @default(true)
+  dayClosingLock     Boolean  @default(true)
+  attendanceApproval Boolean  @default(true)
+  bankMismatchHold   Boolean  @default(true)
+  lowCashAlert       Boolean  @default(true)
+  accent             String   @default("TEAL")
+  currency           String   @default("TZS")
+  timezone           String   @default("Africa/Dar_es_Salaam")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model CompanyAuditEvent {
+  id        String   @id @default(cuid())
+  companyId String
+  actorId   String
+  actorName String
+  actorRole String
+  action    String
+  module    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  @@index([companyId, createdAt])
+}

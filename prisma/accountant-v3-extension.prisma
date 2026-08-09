@@ -1,0 +1,217 @@
+// -----------------------------------------------------------------------------
+// Simamia Float ERP — Accountant Control Center V3
+// Append this block to prisma/schema.prisma.
+// It intentionally uses scalar IDs rather than Prisma relations, so it does not
+// force destructive changes to your existing Company, User, Expense, Deposit,
+// FloatTransaction, StaffFile or Notification models.
+// -----------------------------------------------------------------------------
+
+enum AccAttendanceSession {
+  MORNING
+  EVENING
+}
+
+enum AccAttendanceMark {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum AccAttendanceSource {
+  ACCOUNTANT_MANUAL
+  FINGERPRINT
+  IMPORTED
+}
+
+enum AccDecision {
+  PENDING
+  APPROVE
+  REJECT
+}
+
+enum AccMoneyKind {
+  FLOAT
+  CASH
+}
+
+enum AccMoneyDirection {
+  ALLOCATE
+  RECEIVE
+  RETURN
+  ADJUSTMENT
+}
+
+enum AccVerificationKind {
+  SMS
+  PROOF
+  DOCUMENT
+  BANK_REFERENCE
+}
+
+enum AccVerificationStatus {
+  WAITING_ADMIN_REFERENCE
+  READY_FOR_ACCOUNTANT
+  VERIFIED
+  REJECTED
+}
+
+enum AccFingerprintDeviceStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+model AccountantAttendanceSessionRecord {
+  id             String              @id @default(cuid())
+  companyId      String
+  staffId        String
+  attendanceDate DateTime            @db.Date
+  session        AccAttendanceSession
+  mark           AccAttendanceMark   @default(PRESENT)
+  source         AccAttendanceSource @default(ACCOUNTANT_MANUAL)
+  checkedAt      DateTime            @default(now())
+  checkedById    String
+  deviceId       String?
+  note           String?             @db.Text
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@unique([companyId, staffId, attendanceDate, session], map: "acc_attendance_company_staff_date_session_key")
+  @@index([companyId, attendanceDate], map: "acc_attendance_company_date_idx")
+  @@index([companyId, staffId], map: "acc_attendance_company_staff_idx")
+  @@map("accountant_attendance_sessions")
+}
+
+model AccountantFingerprintDevice {
+  id             String                     @id @default(cuid())
+  companyId      String
+  name           String
+  serialNumber   String
+  locationLabel  String?
+  accessTokenHash String                    @db.VarChar(128)
+  status         AccFingerprintDeviceStatus @default(ACTIVE)
+  registeredById String
+  lastSeenAt     DateTime?
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+
+  @@unique([companyId, serialNumber], map: "acc_fingerprint_company_serial_key")
+  @@index([companyId, status], map: "acc_fingerprint_company_status_idx")
+  @@map("accountant_fingerprint_devices")
+}
+
+model AccountantFingerprintEnrollment {
+  id          String   @id @default(cuid())
+  companyId   String
+  deviceId    String
+  staffId     String
+  templateKey String   @db.VarChar(191)
+  enrolledById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([companyId, deviceId, staffId], map: "acc_fingerprint_enrollment_staff_key")
+  @@unique([companyId, deviceId, templateKey], map: "acc_fingerprint_enrollment_template_key")
+  @@index([companyId, staffId], map: "acc_fingerprint_enrollment_company_staff_idx")
+  @@map("accountant_fingerprint_enrollments")
+}
+
+model AccountantStaffMoneyEntry {
+  id          String             @id @default(cuid())
+  companyId   String
+  staffId     String
+  kind        AccMoneyKind
+  direction   AccMoneyDirection
+  amount      Decimal            @db.Decimal(18, 2)
+  reference   String?
+  note        String?            @db.Text
+  enteredById String
+  occurredAt  DateTime
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([companyId, occurredAt], map: "acc_staff_money_company_date_idx")
+  @@index([companyId, staffId], map: "acc_staff_money_company_staff_idx")
+  @@map("accountant_staff_money_entries")
+}
+
+model AccountantExpenseDecision {
+  id          String      @id @default(cuid())
+  companyId   String
+  expenseId   String
+  actorUserId String
+  actorRole   String      @db.VarChar(32)
+  decision    AccDecision @default(PENDING)
+  reason      String?     @db.Text
+  decidedAt   DateTime    @default(now())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([companyId, expenseId, actorRole], map: "acc_expense_company_expense_role_key")
+  @@index([companyId, decision], map: "acc_expense_company_decision_idx")
+  @@map("accountant_expense_decisions")
+}
+
+model AccountantVerificationPacket {
+  id                    String                    @id @default(cuid())
+  companyId             String
+  staffId               String
+  staffFileId            String?                   @unique(map: "acc_verification_staff_file_key")
+  kind                   AccVerificationKind
+  staffMessage           String?                   @db.Text
+  staffFileUrl           String?                   @db.Text
+  adminReferenceMessage  String?                   @db.Text
+  adminReferenceUrl      String?                   @db.Text
+  status                 AccVerificationStatus    @default(WAITING_ADMIN_REFERENCE)
+  accountantDecisionById String?
+  decisionReason         String?                   @db.Text
+  decidedAt              DateTime?
+  createdAt              DateTime                  @default(now())
+  updatedAt              DateTime                  @updatedAt
+
+  @@index([companyId, status], map: "acc_verification_company_status_idx")
+  @@index([companyId, staffId], map: "acc_verification_company_staff_idx")
+  @@map("accountant_verification_packets")
+}
+
+model AccountantBankComparison {
+  id                    String      @id @default(cuid())
+  companyId             String
+  depositId             String?     @unique(map: "acc_bank_deposit_key")
+  staffId               String
+  staffAmount           Decimal?    @db.Decimal(18, 2)
+  staffReference        String?
+  staffDate             DateTime?
+  staffBankAccount      String?
+  staffFileUrl          String?     @db.Text
+  adminAmount           Decimal?    @db.Decimal(18, 2)
+  adminReference        String?
+  adminDate             DateTime?
+  adminBankAccount      String?
+  adminFileUrl          String?     @db.Text
+  accountantDecision    AccDecision @default(PENDING)
+  mismatchReason        String?     @db.Text
+  reviewedById          String?
+  reviewedAt            DateTime?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([companyId, accountantDecision], map: "acc_bank_company_decision_idx")
+  @@index([companyId, staffId], map: "acc_bank_company_staff_idx")
+  @@map("accountant_bank_comparisons")
+}
+
+model AccountantReportSnapshot {
+  id          String   @id @default(cuid())
+  companyId   String
+  createdById String
+  reportName  String
+  periodLabel String
+  filtersJson Json
+  payloadJson Json
+  createdAt   DateTime @default(now())
+
+  @@index([companyId, createdAt], map: "acc_report_snapshot_company_date_idx")
+  @@map("accountant_report_snapshots")
+}
