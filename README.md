@@ -1,220 +1,114 @@
-# Simamia Float — Unified Company Admin Control Centre
+# Simamia Float — Automatic Daytime Staff GPS v2.2
 
-This package replaces the separate Company Admin Staff Assignments, Imported Finance, Accountant Bridge and Staff Operations entry pages with one control-centre route.
+This update makes the logged-in Staff Officer's browser location start automatically during the configured morning/day work window and stop automatically at night.
 
-## The three integrated UI files
+## Default schedule
 
-Copy these files exactly:
+- Start: `06:00`
+- Stop: `19:00`
+- Time zone: `Africa/Dar_es_Salaam`
 
-```text
-app/admin/control-centre/page.tsx
-app/admin/control-centre/CompanyAdminControlCentreClient.tsx
-app/admin/control-centre/CompanyAdminControlCentre.module.css
+Add the following to `.env` to change those values:
+
+```env
+STAFF_GPS_TIME_ZONE="Africa/Dar_es_Salaam"
+STAFF_GPS_MORNING_START="06:00"
+STAFF_GPS_NIGHT_STOP="19:00"
 ```
 
-The client contains these modules without importing the old page clients:
+The clock format must be `HH:mm` using the 24-hour clock.
 
-- Control Overview
-- Staff Areas
-- Finance & Banks
-- Accountant Verification
-- Staff Operations
-
-## New functionality
-
-### Multiple staff areas
-
-A STAFF user can have many active area records. Each record can contain:
-
-- region;
-- district;
-- ward;
-- street or local service area;
-- notes;
-- active/inactive history.
-
-The region/district/ward tree is generated from the company’s current:
-
-- BrokerCustomer records;
-- Customer records;
-- Branch records.
-
-This means selecting a region automatically displays the districts and wards/streets that actually exist in the company database.
-
-### Broker area filtering
-
-A broker is displayed only when its region, city, district, ward, location, address or attended location matches one of the selected active work areas.
-
-A broker remains uniquely owned by one staff officer. The assignment stores `workAreaId`, allowing one area to be removed without releasing brokers that belong to another area.
-
-### Multiple company banks
-
-The Finance & Banks module allows many accounts, including:
-
-- CRDB;
-- NMB;
-- DTB;
-- NBC;
-- Absa;
-- Stanbic;
-- Exim;
-- KCB;
-- Equity;
-- Bank of Africa;
-- I&M;
-- NCBA;
-- Access Bank;
-- Amana;
-- PBZ;
-- Tanzania Commercial Bank;
-- any custom bank.
-
-### Accountant document verification
-
-Company Admin can upload a PDF, image, Word document, Excel file, CSV or text file, add a message and send it to one accountant or all company accountants.
-
-The included Accountant page is:
+## Included files
 
 ```text
-/accountant/verification-requests
+app/api/staff/gps/route.ts
+app/api/staff/gps/schedule/route.ts
+app/staff/dashboard/StaffLocationTracker.tsx
+app/staff/dashboard/StaffLocationTracker.module.css
+app/staff/dashboard/StaffDashboardClient.tsx
+app/staff/live-locations/StaffLiveLocationsClient.tsx
+lib/staff/gps-schedule.ts
 ```
 
-The accountant can verify or reject each request and return a review note.
+The package also contains the compatible Live Locations and Service Visits files from v2.1.
 
-## API files
+## Behaviour
 
-```text
-app/api/admin/unified-control-centre/route.ts
-app/api/admin/unified-control-centre/upload/route.ts
-app/api/accountant/verification-requests/route.ts
-app/api/staff/brokers/route.ts
-```
+1. `StaffLocationTracker` is mounted once at the root of the Staff dashboard.
+2. It calls `/api/staff/gps/schedule` every 30 seconds.
+3. During the configured work window it starts one `navigator.geolocation.watchPosition` watcher.
+4. It saves a GPS point approximately every 15 seconds.
+5. The API marks the current Staff device `ACTIVE` and marks the Staff Officer's older active devices `INACTIVE`, so only one Staff pointer is shown.
+6. At the configured night stop time the watcher is cleared and the device becomes `INACTIVE`.
+7. At the next morning start, the watcher starts again automatically while the Staff portal remains open.
+8. Coordinates `0,0` are rejected.
+9. Travel-history insertion is compatibility-safe: a legacy `gps_tracking` table problem does not cancel the main device and ping save.
+10. The Live Locations page listens to the global tracker instead of starting a second GPS watcher.
 
-## Compatibility redirects
+## Browser permission
 
-The package includes redirects for:
+A web browser requires the Staff Officer to allow Location at least once. When permission is already granted, daily starting and stopping are automatic.
 
-```text
-/admin/staff-assignments
-/admin/accountant-bridge
-/admin/imported-finance
-/admin/staff-operations
-```
+The browser must have the Staff portal open for browser geolocation to run reliably. A normal website cannot guarantee that GPS restarts while the browser is completely closed or the phone has terminated the tab. For continuous closed-app background tracking, a native Android application or managed device application is required.
 
-Company Admin is redirected into the appropriate control-centre module. Accountant and other allowed roles keep their existing standalone finance/operations pages.
+Use `localhost` during development or HTTPS after deployment. Browser geolocation is normally blocked on insecure remote HTTP pages.
 
-## Prisma installation
+## Installation
 
-The package contains a complete updated schema:
-
-```text
-prisma/schema.prisma
-```
-
-It also contains the SQL migration:
-
-```text
-prisma/migrations/20260727_unified_control_centre/migration.sql
-```
-
-Use only one migration method.
-
-### Recommended Prisma workflow
-
-Back up the database, replace `prisma/schema.prisma`, then run:
+1. Stop Next.js.
+2. Extract this package into the project root and replace the included files.
+3. Copy `.env.gps-schedule.example` values into the project's `.env`.
+4. Run:
 
 ```powershell
 cd C:\Users\Micha\simamia-float
-
-npx prisma format
-npx prisma validate
-npx prisma db push
 npx prisma generate
 
-Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+if (Test-Path ".next") {
+    Remove-Item -Recurse -Force ".next"
+}
+
 npm run dev
 ```
 
-### Migration workflow
+5. Open:
 
-When the project is using committed migrations instead of `db push`:
-
-```powershell
-npx prisma migrate deploy
-npx prisma generate
-Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
-npm run dev
+```text
+http://localhost:3000/staff/dashboard
 ```
 
-Do not run the manual SQL and `prisma migrate deploy` for the same migration twice.
+6. Allow Location permission when the browser asks.
 
-## Dashboard link
+## API tests
 
-Add this item to the Company Admin dashboard navigation:
+While logged in as Staff, open:
 
-```ts
+```text
+http://localhost:3000/api/staff/gps/schedule
+```
+
+During the day it should contain:
+
+```json
 {
-  page: "Unified Control Centre",
-  icon: LayoutDashboard,
-  section: "Workspace",
+  "success": true,
+  "schedule": {
+    "startTime": "06:00",
+    "stopTime": "19:00",
+    "isSharingWindow": true
+  }
 }
 ```
 
-When it is selected:
+At night `isSharingWindow` becomes `false`.
 
-```ts
-router.push("/admin/control-centre");
-```
+The floating Staff GPS card displays one of:
 
-The dashboard broker loader should continue catching `/api/company-admin/brokers` independently so a broker-directory database issue does not stop the entire dashboard.
+- Automatic GPS active
+- Automatic night stop
+- GPS permission needed
+- GPS unavailable/offline
 
-## Upload storage
+## Database changes
 
-Verification uploads are stored under:
-
-```text
-public/uploads/company-admin/<companyId>/verification/
-```
-
-For production, replace local public storage with private object storage when documents contain sensitive financial or identity information.
-
-## Verification checklist
-
-1. Sign in as Company Admin.
-2. Open `/admin/control-centre?module=staff-areas`.
-3. Choose an active STAFF user.
-4. Choose a region and tick multiple districts/wards.
-5. Add the selections to the draft and save.
-6. Tick active areas and confirm only matching brokers appear.
-7. Assign selected brokers.
-8. Sign in as that STAFF user and call `/api/staff/brokers`; confirm only area brokers appear and assigned brokers have `canOperate: true`.
-9. Add CRDB, NMB and another bank account.
-10. Send a document to an Accountant.
-11. Sign in as Accountant and open `/accountant/verification-requests`.
-12. Verify or reject the request and confirm Company Admin sees the new status.
-
-## Searchable, scrollable and paginated Company Admin tables
-
-The Company Admin Control Centre now uses a shared `PaginatedDataTable` component for all data-heavy sections:
-
-- Brokers in selected staff areas
-- Customers assigned to the selected staff member
-- Configured company bank accounts
-- Imported bank statements
-- Documents sent for accountant verification
-- Staff float transactions
-- Staff collections
-- Broker service visits
-
-Every table includes:
-
-- Search inside the table
-- Context-specific filters
-- 5, 10, 25 or 50 rows per page
-- Previous/next page controls
-- Visible and total record counts
-- Sticky table headings
-- Horizontal and vertical scrolling
-- Responsive mobile toolbar layout
-
-No API, Prisma model or database migration changes are required for this UI upgrade.
+No Prisma schema change is required. This update uses the existing `CompanyGpsDevice` and `CompanyGpsPing` models and their existing `ACTIVE` / `INACTIVE` status values.

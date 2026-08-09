@@ -1,6 +1,14 @@
 {
   "dependencies": {
-    "exceljs": "latest",
-    "pdf-lib": "latest"
-  }
+    "leaflet": "^1.9.4",
+    "lucide-react": "latest"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.20",
+    "tsx": "latest"
+  },
+  "removedDependencies": [
+    "leaflet.markercluster",
+    "@types/leaflet.markercluster"
+  ]
 }

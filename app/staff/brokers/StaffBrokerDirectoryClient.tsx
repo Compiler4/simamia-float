@@ -1,21 +1,27 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Building2,
   CheckCircle2,
   Copy,
-  ExternalLink,
+  Crosshair,
   Filter,
   LocateFixed,
   MapPin,
   Phone,
   RefreshCw,
   Search,
+  Store,
   UserCheck,
 } from "lucide-react";
+
+import LiveMap from "../live-locations/LiveMap";
 import styles from "./StaffBrokerDirectory.module.css";
 
 type BrokerItem = {
@@ -31,13 +37,19 @@ type BrokerItem = {
   region: string | null;
   district: string | null;
   ward: string | null;
+  city: string | null;
   address: string | null;
   latitude: number | null;
   longitude: number | null;
-  status: "ACTIVE" | "INACTIVE" | "SUSPENDED";
-  notes: string | null;
-  createdAt: string;
-  updatedAt: string;
+  locationSource?: string;
+  locationVerifiedAt?: string | null;
+  status: string;
+  directlyAssigned: boolean;
+  canOperate: boolean;
+  assignedArea: string | null;
+  isImported: boolean;
+  sourceAliasCode: string | null;
+  sourceMsisdn: string | null;
 };
 
 type Props = {
@@ -50,44 +62,69 @@ type Props = {
   };
 };
 
-async function readJson<T>(url: string): Promise<T> {
+async function readJson<T>(
+  url: string,
+): Promise<T> {
   const response = await fetch(url, {
-    method: "GET",
     credentials: "include",
     cache: "no-store",
   });
-
-  const text = await response.text();
+  const raw = await response.text();
   let result: any = {};
 
   try {
-    result = text ? JSON.parse(text) : {};
+    result = raw
+      ? JSON.parse(raw)
+      : {};
   } catch {
-    throw new Error("The broker API returned invalid JSON.");
+    throw new Error(
+      "The broker API returned invalid JSON.",
+    );
   }
 
-  if (!response.ok || result.success === false) {
+  if (
+    !response.ok ||
+    result.success === false
+  ) {
     throw new Error(
-      result.message || result.error || "Could not load brokers.",
+      [
+        result.message,
+        result.details,
+        result.code,
+      ]
+        .filter(Boolean)
+        .join(" · ") ||
+        "Could not load brokers.",
     );
   }
 
   return result as T;
 }
 
-export default function StaffBrokerDirectoryClient({ user }: Props) {
+export default function StaffBrokerDirectoryClient({
+  user,
+}: Props) {
   const router = useRouter();
-  const [brokers, setBrokers] = useState<BrokerItem[]>([]);
-  const [locations, setLocations] = useState<string[]>([]);
-  const [search, setSearch] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [message, setMessage] = useState("");
+  const [brokers, setBrokers] =
+    useState<BrokerItem[]>([]);
+  const [locations, setLocations] =
+    useState<string[]>([]);
+  const [search, setSearch] =
+    useState("");
+  const [
+    locationFilter,
+    setLocationFilter,
+  ] = useState("");
+  const [loading, setLoading] =
+    useState(true);
+  const [error, setError] =
+    useState("");
+  const [message, setMessage] =
+    useState("");
 
-  async function loadBrokers() {
+  async function load() {
     setLoading(true);
-    setErrorMessage("");
+    setError("");
 
     try {
       const result = await readJson<{
@@ -96,15 +133,21 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
         locations: string[];
       }>("/api/staff/brokers");
 
-      setBrokers(Array.isArray(result.brokers) ? result.brokers : []);
-      setLocations(
-        Array.isArray(result.locations) ? result.locations : [],
+      setBrokers(
+        Array.isArray(result.brokers)
+          ? result.brokers
+          : [],
       );
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Could not load broker directory.",
+      setLocations(
+        Array.isArray(result.locations)
+          ? result.locations
+          : [],
+      );
+    } catch (loadError) {
+      setError(
+        loadError instanceof Error
+          ? loadError.message
+          : "Broker directory could not load.",
       );
     } finally {
       setLoading(false);
@@ -112,18 +155,23 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
   }
 
   useEffect(() => {
-    void loadBrokers();
+    void load();
   }, []);
 
   useEffect(() => {
     if (!message) return;
-
-    const timer = window.setTimeout(() => setMessage(""), 2600);
-    return () => window.clearTimeout(timer);
+    const timer = window.setTimeout(
+      () => setMessage(""),
+      3000,
+    );
+    return () =>
+      window.clearTimeout(timer);
   }, [message]);
 
-  const filteredBrokers = useMemo(() => {
-    const query = search.trim().toLowerCase();
+  const filtered = useMemo(() => {
+    const query = search
+      .trim()
+      .toLowerCase();
 
     return brokers.filter((broker) => {
       const searchMatches =
@@ -133,12 +181,14 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
           broker.name,
           broker.businessName,
           broker.phone,
-          broker.alternatePhone,
+          broker.sourceMsisdn,
+          broker.sourceAliasCode,
           broker.email,
           broker.location,
           broker.region,
           broker.district,
           broker.ward,
+          broker.city,
           broker.address,
         ].some((value) =>
           String(value || "")
@@ -148,47 +198,103 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
 
       const locationMatches =
         !locationFilter ||
-        broker.location.toLowerCase() ===
-          locationFilter.toLowerCase();
+        [
+          broker.location,
+          broker.region,
+          broker.district,
+          broker.ward,
+        ].some(
+          (value) =>
+            String(value || "")
+              .toLowerCase() ===
+            locationFilter.toLowerCase(),
+        );
 
-      return searchMatches && locationMatches;
+      return (
+        searchMatches &&
+        locationMatches
+      );
     });
-  }, [brokers, search, locationFilter]);
+  }, [
+    brokers,
+    search,
+    locationFilter,
+  ]);
 
-  function useBroker(broker: BrokerItem) {
-    sessionStorage.setItem(
-      "simamia_selected_broker_customer",
-      JSON.stringify(broker),
+  const mapPoints = filtered
+    .filter(
+      (broker) =>
+        Number.isFinite(
+          Number(broker.latitude),
+        ) &&
+        Number.isFinite(
+          Number(broker.longitude),
+        ),
+    )
+    .map((broker) => ({
+      id: broker.id,
+      latitude: Number(
+        broker.latitude,
+      ),
+      longitude: Number(
+        broker.longitude,
+      ),
+      label:
+        broker.businessName ||
+        broker.name,
+      subtitle:
+        `${broker.code} · ` +
+        `${broker.location || broker.assignedArea || "Registered agent"}`,
+      capturedAt:
+        broker.locationVerifiedAt,
+      markerType: broker.isImported
+        ? ("REGISTERED_AGENT" as const)
+        : ("BROKER_CUSTOMER" as const),
+    }));
+
+  async function copyContact(
+    broker: BrokerItem,
+  ) {
+    await navigator.clipboard.writeText(
+      [
+        broker.name,
+        broker.businessName,
+        broker.phone,
+        broker.sourceAliasCode,
+        broker.location,
+        broker.address,
+      ]
+        .filter(Boolean)
+        .join(" | "),
     );
-
-    router.push(
-      `/staff/service-visits?brokerCustomerId=${encodeURIComponent(
-        broker.id,
-      )}`,
+    setMessage(
+      `${broker.name}'s details were copied.`,
     );
   }
 
-  async function copyContact(broker: BrokerItem) {
-    const contact = [
-      broker.name,
-      broker.businessName || "",
-      broker.phone,
-      broker.location,
-      broker.address || "",
-    ]
-      .filter(Boolean)
-      .join(" | ");
-
-    await navigator.clipboard.writeText(contact);
-    setMessage(`${broker.name}'s contact copied.`);
+  function updateBroker(
+    broker: BrokerItem,
+  ) {
+    const query = new URLSearchParams({
+      brokerCustomerId: broker.id,
+    });
+    router.push(
+      `/staff/live-locations?${query.toString()}`,
+    );
   }
 
   return (
     <main className={styles.page}>
+      {message && (
+        <div className={styles.toast}>
+          {message}
+        </div>
+      )}
+
       <header className={styles.header}>
         <button
           type="button"
-          className={styles.backButton}
+          className={styles.back}
           onClick={() => router.back()}
         >
           <ArrowLeft size={18} />
@@ -200,50 +306,68 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
             <UserCheck size={25} />
           </span>
           <div>
-            <small>Company broker directory</small>
-            <h1>Available Broker Customers</h1>
+            <small>
+              STAFF BROKER DIRECTORY
+            </small>
+            <h1>
+              Registered Agents &
+              Broker Customers
+            </h1>
             <p>
-              Signed in as {user.name} · {user.role.replaceAll("_", " ")}
+              {user.name} · {user.email}
             </p>
           </div>
         </div>
 
         <button
           type="button"
-          className={styles.refreshButton}
-          onClick={() => void loadBrokers()}
+          className={styles.refresh}
+          onClick={() => void load()}
         >
           <RefreshCw size={17} />
           Refresh
         </button>
       </header>
 
-      {message && <div className={styles.toast}>{message}</div>}
-
       <section className={styles.hero}>
         <div>
-          <p>Shared company records</p>
-          <h2>Find brokers by their registered service location</h2>
-          <span>
-            These are customer/business records. They are not system users
-            and do not have login credentials.
-          </span>
+          <small>
+            ASSIGNED COMPANY RECORDS
+          </small>
+          <h2>
+            Find agents and open their
+            verified map location
+          </h2>
+          <p>
+            Imported agents are displayed
+            from BrokerCustomer records.
+            A pointer appears after
+            latitude and longitude are
+            stored in MySQL.
+          </p>
         </div>
 
-        <div className={styles.heroStats}>
+        <div className={styles.metrics}>
           <article>
-            <UserCheck size={20} />
+            <Store size={20} />
             <span>
-              <small>Active brokers</small>
-              <strong>{brokers.length}</strong>
+              <small>
+                Visible agents
+              </small>
+              <strong>
+                {brokers.length}
+              </strong>
             </span>
           </article>
-
           <article>
             <MapPin size={20} />
             <span>
-              <small>Locations</small>
-              <strong>{locations.length}</strong>
+              <small>
+                Mapped agents
+              </small>
+              <strong>
+                {mapPoints.length}
+              </strong>
             </span>
           </article>
         </div>
@@ -254,8 +378,12 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
           <Search size={18} />
           <input
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search broker, shop, phone or address..."
+            onChange={(event) =>
+              setSearch(
+                event.target.value,
+              )
+            }
+            placeholder="Search name, alias, MSISDN, phone, address or region..."
           />
         </label>
 
@@ -264,15 +392,24 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
           <select
             value={locationFilter}
             onChange={(event) =>
-              setLocationFilter(event.target.value)
+              setLocationFilter(
+                event.target.value,
+              )
             }
           >
-            <option value="">All locations</option>
-            {locations.map((location) => (
-              <option value={location} key={location}>
-                {location}
-              </option>
-            ))}
+            <option value="">
+              All locations
+            </option>
+            {locations.map(
+              (location) => (
+                <option
+                  value={location}
+                  key={location}
+                >
+                  {location}
+                </option>
+              ),
+            )}
           </select>
         </label>
 
@@ -289,127 +426,206 @@ export default function StaffBrokerDirectoryClient({ user }: Props) {
       </section>
 
       {loading ? (
-        <section className={styles.stateCard}>
-          <div className={styles.loader}></div>
-          <h3>Loading broker directory...</h3>
+        <section className={styles.state}>
+          <span
+            className={styles.loader}
+          />
+          <h3>
+            Loading registered agents...
+          </h3>
         </section>
-      ) : errorMessage ? (
-        <section className={styles.stateCard}>
-          <h3>Broker directory could not load</h3>
-          <p>{errorMessage}</p>
-          <button type="button" onClick={() => void loadBrokers()}>
+      ) : error ? (
+        <section className={styles.state}>
+          <h3>
+            Broker directory could not
+            load
+          </h3>
+          <p>{error}</p>
+          <button
+            type="button"
+            onClick={() => void load()}
+          >
             Try again
           </button>
         </section>
       ) : (
-        <section className={styles.tableCard}>
-          <div className={styles.tableHeading}>
-            <div>
-              <h2>Broker directory</h2>
-              <p>
-                Showing {filteredBrokers.length} of {brokers.length} active
-                brokers
-              </p>
-            </div>
-            <CheckCircle2 size={22} />
-          </div>
+        <>
+          <section className={styles.mapCard}>
+            <header>
+              <div>
+                <h3>
+                  Registered agent
+                  pointers
+                </h3>
+                <p>
+                  Map uses coordinates
+                  stored in the database.
+                </p>
+              </div>
+              <CheckCircle2 size={22} />
+            </header>
+            <LiveMap
+              points={mapPoints}
+              height={470}
+            />
+          </section>
 
-          <div className={styles.tableScroll}>
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Broker</th>
-                  <th>Business</th>
-                  <th>Phone</th>
-                  <th>Location</th>
-                  <th>Region / District</th>
-                  <th>Address</th>
-                  <th>Notes</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
+          <section className={styles.tableCard}>
+            <header>
+              <div>
+                <h3>
+                  Broker and agent
+                  directory
+                </h3>
+                <p>
+                  Showing {filtered.length}{" "}
+                  of {brokers.length}
+                </p>
+              </div>
+              <Store size={22} />
+            </header>
 
-              <tbody>
-                {filteredBrokers.map((broker, index) => (
-                  <tr key={broker.id}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <div className={styles.entity}>
-                        <span>
-                          {broker.name.slice(0, 1).toUpperCase()}
-                        </span>
-                        <div>
-                          <strong>{broker.name}</strong>
-                          <small>{broker.code}</small>
-                        </div>
-                      </div>
-                    </td>
-                    <td>{broker.businessName || "N/A"}</td>
-                    <td>
-                      <div className={styles.phoneCell}>
-                        <strong>{broker.phone}</strong>
-                        <small>{broker.alternatePhone || ""}</small>
-                      </div>
-                    </td>
-                    <td>
-                      <span className={styles.locationBadge}>
-                        <MapPin size={13} />
-                        {broker.location}
-                      </span>
-                    </td>
-                    <td>
-                      {[broker.region, broker.district, broker.ward]
-                        .filter(Boolean)
-                        .join(" / ") || "N/A"}
-                    </td>
-                    <td>{broker.address || "N/A"}</td>
-                    <td>{broker.notes || "No notes"}</td>
-                    <td>
-                      <div className={styles.actions}>
-                        <button
-                          type="button"
-                          onClick={() => useBroker(broker)}
-                        >
-                          <ExternalLink size={15} />
-                          Use for service
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => void copyContact(broker)}
-                        >
-                          <Copy size={15} />
-                          Copy
-                        </button>
-
-                        <a href={`tel:${broker.phone}`}>
-                          <Phone size={15} />
-                          Call
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-
-                {!filteredBrokers.length && (
+            <div className={styles.table}>
+              <table>
+                <thead>
                   <tr>
-                    <td colSpan={9}>
-                      <div className={styles.empty}>
-                        <Building2 size={31} />
-                        <strong>No broker found</strong>
-                        <p>
-                          Change the location or search filter and try
-                          again.
-                        </p>
-                      </div>
-                    </td>
+                    <th>#</th>
+                    <th>Agent</th>
+                    <th>Alias / MSISDN</th>
+                    <th>Phone</th>
+                    <th>Location</th>
+                    <th>GPS</th>
+                    <th>Assignment</th>
+                    <th>Actions</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                </thead>
+                <tbody>
+                  {filtered.map(
+                    (broker, index) => (
+                      <tr key={broker.id}>
+                        <td>{index + 1}</td>
+                        <td>
+                          <strong>
+                            {broker.businessName ||
+                              broker.name}
+                          </strong>
+                          <small>
+                            {broker.code}
+                          </small>
+                        </td>
+                        <td>
+                          <strong>
+                            {broker.sourceAliasCode ||
+                              "—"}
+                          </strong>
+                          <small>
+                            {broker.sourceMsisdn ||
+                              "—"}
+                          </small>
+                        </td>
+                        <td>
+                          {broker.phone}
+                        </td>
+                        <td>
+                          {[
+                            broker.location,
+                            broker.region,
+                            broker.district,
+                            broker.ward,
+                          ]
+                            .filter(Boolean)
+                            .join(" / ") ||
+                            "Not registered"}
+                        </td>
+                        <td>
+                          <span
+                            className={
+                              Number.isFinite(
+                                Number(
+                                  broker.latitude,
+                                ),
+                              ) &&
+                              Number.isFinite(
+                                Number(
+                                  broker.longitude,
+                                ),
+                              )
+                                ? styles.mapped
+                                : styles.unmapped
+                            }
+                          >
+                            {Number.isFinite(
+                              Number(
+                                broker.latitude,
+                              ),
+                            ) &&
+                            Number.isFinite(
+                              Number(
+                                broker.longitude,
+                              ),
+                            )
+                              ? "Mapped"
+                              : "Missing"}
+                          </span>
+                        </td>
+                        <td>
+                          {broker.directlyAssigned
+                            ? "Direct"
+                            : "Area only"}
+                        </td>
+                        <td>
+                          <div
+                            className={
+                              styles.actions
+                            }
+                          >
+                            <button
+                              type="button"
+                              disabled={
+                                !broker.canOperate
+                              }
+                              onClick={() =>
+                                updateBroker(
+                                  broker,
+                                )
+                              }
+                            >
+                              <Crosshair
+                                size={15}
+                              />
+                              Update
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void copyContact(
+                                  broker,
+                                )
+                              }
+                            >
+                              <Copy
+                                size={15}
+                              />
+                              Copy
+                            </button>
+                            <a
+                              href={`tel:${broker.phone}`}
+                            >
+                              <Phone
+                                size={15}
+                              />
+                              Call
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
       )}
     </main>
   );

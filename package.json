@@ -3,9 +3,9 @@
     "private": true,
     "version": "3.0.0",
     "scripts": {
-        "dev": "next dev",
+        "dev": "next dev --hostname 0.0.0.0 --port 3000",
         "build": "next build",
-        "start": "next start",
+        "start": "next start --hostname 0.0.0.0 --port 3000",
         "typecheck": "tsc --noEmit",
         "prisma:generate": "prisma generate",
         "prisma:format": "prisma format",
@@ -24,6 +24,7 @@
         "db:seed:verify": "tsx prisma/verify-seeded-data.ts",
         "db:import:agents": "tsx prisma/import-float-agents-json.ts",
         "db:import:bank": "tsx prisma/import-bank-statement-json.ts"
+
     },
     "dependencies": {
         "@prisma/adapter-mariadb": "^7.9.0",

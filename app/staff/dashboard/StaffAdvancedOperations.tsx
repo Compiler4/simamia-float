@@ -1652,6 +1652,72 @@ function ServiceView({
     notes: "",
   });
   const [locating, setLocating] = useState(false);
+  const [visitRows, setVisitRows] = useState<any[]>([]);
+  const [visitSyncing, setVisitSyncing] = useState(false);
+  const [editingVisit, setEditingVisit] = useState<any | null>(null);
+  const [editForm, setEditForm] = useState({
+    serviceType: "BROKER_VISIT_SERVICE",
+    floatAmount: "",
+    cashAmount: "",
+    companyIncome: "",
+    status: "SERVICE_RECORDED",
+    locationName: "",
+    notes: "",
+  });
+
+  async function loadSyncedVisits() {
+    setVisitSyncing(true);
+    try {
+      const query = new URLSearchParams({
+        date: today(),
+      });
+      const response = await fetch(`/api/staff/service-visits?${query}`, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      });
+      const result = await readResponse<{ success: true; visits: any[] }>(response);
+      setVisitRows(Array.isArray(result.visits) ? result.visits : []);
+    } catch (visitError) {
+      console.warn("SERVICE_VISIT_SYNC_FAILED:", visitError);
+      setVisitRows(Array.isArray(data.services) ? data.services : []);
+    } finally {
+      setVisitSyncing(false);
+    }
+  }
+
+  useEffect(() => {
+    void loadSyncedVisits();
+  }, []);
+
+  useEffect(() => {
+    const refresh = () => void loadSyncedVisits();
+    const storageRefresh = (event: StorageEvent) => {
+      if (event.key === "simamia_service_visit_updated_at") {
+        void loadSyncedVisits();
+      }
+    };
+    const visibilityRefresh = () => {
+      if (document.visibilityState === "visible") {
+        void loadSyncedVisits();
+      }
+    };
+
+    window.addEventListener("simamia:service-visit-updated", refresh);
+    window.addEventListener("storage", storageRefresh);
+    document.addEventListener("visibilitychange", visibilityRefresh);
+
+    return () => {
+      window.removeEventListener("simamia:service-visit-updated", refresh);
+      window.removeEventListener("storage", storageRefresh);
+      document.removeEventListener("visibilitychange", visibilityRefresh);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => void loadSyncedVisits(), 5_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const selectedId = window.sessionStorage.getItem(
@@ -1670,6 +1736,42 @@ function ServiceView({
     }
     window.sessionStorage.removeItem("simamia_selected_broker_customer_id_v4");
   }, [brokers]);
+
+  function startEditVisit(row: any) {
+    setEditingVisit(row);
+    setEditForm({
+      serviceType: String(row.serviceType || "BROKER_VISIT_SERVICE"),
+      floatAmount: String(row.floatAmount ?? ""),
+      cashAmount: String(row.cashAmount ?? ""),
+      companyIncome: String(row.companyIncome ?? ""),
+      status: String(row.status || "SERVICE_RECORDED"),
+      locationName: String(row.locationName || row.broker?.attendedLocation || row.broker?.location || ""),
+      notes: "",
+    });
+  }
+
+  async function saveEditedVisit(event: FormEvent) {
+    event.preventDefault();
+    if (!editingVisit) return;
+    try {
+      const response = await fetch("/api/staff/service-visits", {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          visitId: editingVisit.id,
+          ...editForm,
+        }),
+      });
+      const result = await readResponse<{ success: true; message: string }>(response);
+      notify(result.message);
+      setEditingVisit(null);
+      window.dispatchEvent(new CustomEvent("simamia:service-visit-updated"));
+      await loadSyncedVisits();
+    } catch (editError) {
+      notify(editError instanceof Error ? editError.message : "The service visit could not be edited.");
+    }
+  }
 
   function currentLocation() {
     if (!navigator.geolocation) {
@@ -1701,6 +1803,8 @@ function ServiceView({
     event.preventDefault();
     const ok = await operation("RECORD_SERVICE", form);
     if (ok) {
+      window.dispatchEvent(new CustomEvent("simamia:service-visit-updated"));
+      await loadSyncedVisits();
       setForm({
         brokerCustomerId: "",
         serviceType: "FLOAT_AND_CASH_SERVICE",
@@ -1719,8 +1823,8 @@ function ServiceView({
 
   return (
     <Section
-      title="Automatic broker service visit report"
-      subtitle="The update button captures your live position, records float + cash, updates the broker marker and notifies management."
+      title="Today's Broker Service Visits"
+      subtitle="Live Location updates appear here automatically. Edit service type, float, cash, income, status, location and notes from this section."
       icon="location_on"
     >
       <div className={styles.twoColumns}>
@@ -1796,9 +1900,15 @@ function ServiceView({
           </button>
         </form>
 
-        <Card title="My service visits" subtitle="Auto-filled staff-only service journey.">
+        <Card title="Today's visited and serviced brokers" subtitle="Auto-filled from today's broker_service_visits records used by Live Locations.">
+          <div className={styles.serviceSyncBar}>
+            <span>{visitSyncing ? "Synchronising service visits..." : `${visitRows.length} synced visit(s)`}</span>
+            <button type="button" onClick={() => void loadSyncedVisits()} disabled={visitSyncing}>
+              <Icon name="refresh" /> Refresh visits
+            </button>
+          </div>
           <div className={styles.serviceList}>
-            {data.services.map((row) => (
+            {visitRows.map((row) => (
               <article key={row.id}>
                 <span><Icon name="storefront" /></span>
                 <div>
@@ -1809,10 +1919,52 @@ function ServiceView({
                 <b>Float {money(row.floatAmount)}</b>
                 <b>Cash {money(row.cashAmount)}</b>
                 <Status value={row.status} />
+                <button type="button" onClick={() => startEditVisit(row)}>
+                  <Icon name="edit" /> Edit
+                </button>
               </article>
             ))}
-            {!data.services.length && <Empty text="No service visits in this period." />}
+            {!visitRows.length && <Empty text="No broker has been visited or serviced today." />}
           </div>
+
+          {editingVisit && (
+            <form className={styles.formCard} onSubmit={saveEditedVisit}>
+              <h3>Edit service visit · {editingVisit.broker?.name || "Broker"}</h3>
+              <Field label="Service type">
+                <select value={editForm.serviceType} onChange={(event) => setEditForm({ ...editForm, serviceType: event.target.value })}>
+                  <option value="BROKER_VISIT_SERVICE">Broker visit service</option>
+                  <option value="FLOAT_AND_CASH_SERVICE">Float and cash service</option>
+                  <option value="FLOAT_SERVICE">Float service</option>
+                  <option value="CASH_SERVICE">Cash service</option>
+                  <option value="BROKER_SUPPORT">Broker support</option>
+                  <option value="DOCUMENT_COLLECTION">Document collection</option>
+                  <option value="OTHER_SERVICE">Other service</option>
+                </select>
+              </Field>
+              <div className={styles.formGrid}>
+                <Field label="Float"><input type="number" min="0" value={editForm.floatAmount} onChange={(event) => setEditForm({ ...editForm, floatAmount: event.target.value })} /></Field>
+                <Field label="Cash"><input type="number" min="0" value={editForm.cashAmount} onChange={(event) => setEditForm({ ...editForm, cashAmount: event.target.value })} /></Field>
+              </div>
+              <div className={styles.formGrid}>
+                <Field label="Company income"><input type="number" min="0" value={editForm.companyIncome} onChange={(event) => setEditForm({ ...editForm, companyIncome: event.target.value })} /></Field>
+                <Field label="Visit status">
+                  <select value={editForm.status} onChange={(event) => setEditForm({ ...editForm, status: event.target.value })}>
+                    <option value="ARRIVED">Arrived</option>
+                    <option value="SERVICE_RECORDED">Service recorded</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="PROOF_PENDING">Proof pending</option>
+                    <option value="LATE_PROOF">Late proof</option>
+                  </select>
+                </Field>
+              </div>
+              <Field label="Location label"><input value={editForm.locationName} onChange={(event) => setEditForm({ ...editForm, locationName: event.target.value })} /></Field>
+              <Field label="Edit reason / notes"><textarea value={editForm.notes} onChange={(event) => setEditForm({ ...editForm, notes: event.target.value })} placeholder="Explain the correction" /></Field>
+              <div className={styles.modeButtons}>
+                <button type="submit" className={styles.modeActive}><Icon name="save" /> Save changes</button>
+                <button type="button" onClick={() => setEditingVisit(null)}><Icon name="close" /> Cancel</button>
+              </div>
+            </form>
+          )}
         </Card>
       </div>
     </Section>

@@ -1,1072 +1,530 @@
 import "dotenv/config";
 
-import { createHash } from "node:crypto";
-import { access, readFile } from "node:fs/promises";
-import path from "node:path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-import bcrypt from "bcryptjs";
-import * as XLSX from "xlsx";
-
 import { PrismaClient } from "../generated/prisma/client";
-import {
-  BrokerCustomerStatus,
-  ImportBatchStatus,
-  ImportedDataSourceType,
-  MobileNetwork,
-  Role,
-  StaffAssignmentStatus,
-  UserStatus,
-} from "../generated/prisma/enums";
 
-type SeedUserInput = {
+type AgentSeedRow = {
+  sourceRow: number;
+  sourceAgentName: string;
+  sourceMsisdn: string;
+  sourceAliasCode: string;
   name: string;
-  username: string;
-  email: string;
-  phone: string;
-  password: string;
-  role: Role;
-  companyId: string | null;
-  branchId: string | null;
-  assignedRegion?: string | null;
+  msisdn: string;
+  aliasCode: string;
 };
 
-type BrokerSeedInput = {
-  code: string;
-  name: string;
-  businessName: string;
-  phone: string;
-  location: string;
-  region: string;
-  district: string;
-  ward: string;
-  address: string;
-  network: MobileNetwork;
-  agentNumber: string;
+type StatementTransactionSeed = {
+  postingDate: string;
+  valueDate: string;
+  reference: string;
+  transactionType: string;
+  senderName: string | null;
+  details: string;
+  externalAccountReference: string | null;
+  narration: string | null;
+  debit: number;
+  credit: number;
+  bookBalance: number;
 };
 
-type ExcelRow = Record<string, unknown>;
+type BankStatementSeed = {
+  statement: {
+    bankName: string;
+    accountName: string;
+    branchName: string;
+    accountNumber: string;
+    currency: string;
+    periodStart: string;
+    periodEnd: string;
+    generatedAt: string;
+    availableBalance: number;
+    totalCredit: number;
+    totalDebit: number;
+    bookBalance: number;
+    clearedBalance: number;
+    sourceFileName: string;
+  };
+  transactions: StatementTransactionSeed[];
+};
 
-const DEFAULT_COMPANY_CODE = "SIMAMIA";
-const DEFAULT_BRANCH_CODE = "HQ";
-const DEFAULT_BROKER_EXCEL_PATH = path.resolve(
-  process.cwd(),
-  "data",
-  "float data_063712.xlsx",
-);
+function required(name: string, value: string | undefined): string {
+  if (!value?.trim()) {
+    throw new Error(`Missing environment variable ${name}.`);
+  }
 
-function env(name: string, fallback = ""): string {
-  const value = process.env[name]?.trim();
-  return value || fallback;
+  return value.trim();
 }
 
 function positiveInteger(
+  name: string,
   value: string | undefined,
   fallback: number,
-  variableName: string,
 ): number {
-  const parsed = Number(value ?? fallback);
+  const parsed = value?.trim() ? Number(value) : fallback;
 
   if (!Number.isInteger(parsed) || parsed <= 0) {
-    throw new Error(
-      `${variableName} must be a positive integer. Received: ${
-        value ?? "undefined"
-      }`,
-    );
+    throw new Error(`${name} must be a positive integer.`);
   }
 
   return parsed;
 }
 
-function createPrismaClient(): PrismaClient {
-  const adapter = new PrismaMariaDb({
-    host: env("DATABASE_HOST", "127.0.0.1"),
-    port: positiveInteger(
-      process.env.DATABASE_PORT,
-      3306,
-      "DATABASE_PORT",
-    ),
-    user: env("DATABASE_USER", "root"),
+function databaseConfig() {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+
+  if (databaseUrl) {
+    const url = new URL(databaseUrl);
+
+    return {
+      host: required("DATABASE_HOST", url.hostname),
+      port: positiveInteger("DATABASE_PORT", url.port, 3306),
+      user: required("DATABASE_USER", decodeURIComponent(url.username)),
+      password: decodeURIComponent(url.password),
+      database: required(
+        "DATABASE_NAME",
+        decodeURIComponent(url.pathname.replace(/^\/+/, "")),
+      ),
+      connectionLimit: 5,
+    };
+  }
+
+  return {
+    host: required("DATABASE_HOST", process.env.DATABASE_HOST),
+    port: positiveInteger("DATABASE_PORT", process.env.DATABASE_PORT, 3306),
+    user: required("DATABASE_USER", process.env.DATABASE_USER),
     password: process.env.DATABASE_PASSWORD ?? "",
-    database: env("DATABASE_NAME", "simamia"),
-    connectionLimit: positiveInteger(
-      process.env.DATABASE_CONNECTION_LIMIT,
-      5,
-      "DATABASE_CONNECTION_LIMIT",
-    ),
-  });
-
-  return new PrismaClient({
-    adapter,
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["warn", "error"]
-        : ["error"],
-  });
+    database: required("DATABASE_NAME", process.env.DATABASE_NAME),
+    connectionLimit: 5,
+  };
 }
 
-const prisma = createPrismaClient();
+const db = new PrismaClient({
+  adapter: new PrismaMariaDb(databaseConfig()),
+  log: ["warn", "error"],
+});
 
-function cleanText(value: unknown): string {
-  if (value === null || value === undefined) {
-    return "";
-  }
-
-  return String(value).trim();
-}
-
-function compactSpaces(value: string): string {
-  return value.replace(/\s+/g, " ").trim();
-}
-
-function truncate(value: string, maximumLength: number): string {
-  return value.length <= maximumLength
-    ? value
-    : value.slice(0, maximumLength);
-}
-
-function normaliseHeader(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[\s_-]+/g, "");
-}
-
-function rowValue(
-  row: ExcelRow,
-  acceptedHeaders: string[],
-): string {
-  const accepted = new Set(
-    acceptedHeaders.map(normaliseHeader),
-  );
-
-  for (const [key, value] of Object.entries(row)) {
-    if (accepted.has(normaliseHeader(key))) {
-      return cleanText(value);
-    }
-  }
-
-  return "";
-}
-
-function normalisePhone(value: string): string {
-  let digits = value.replace(/\D/g, "");
-
-  if (digits.startsWith("00")) {
-    digits = digits.slice(2);
-  }
-
-  if (digits.startsWith("0") && digits.length === 10) {
-    return `255${digits.slice(1)}`;
-  }
-
-  if (digits.length === 9) {
-    return `255${digits}`;
-  }
-
-  return digits;
+function loadJson<T>(fileName: string): T {
+  const path = join(process.cwd(), "prisma", "data", fileName);
+  return JSON.parse(readFileSync(path, "utf8")) as T;
 }
 
 function normaliseName(value: string): string {
-  return compactSpaces(value).toLowerCase();
-}
-
-function safeBrokerCode(
-  rawCode: string,
-  sourceRowNumber: number,
-): string {
-  const cleaned = rawCode
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toUpperCase()
-    .replace(/[^A-Z0-9_-]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-
-  return truncate(
-    cleaned || `AGENT-${String(sourceRowNumber).padStart(6, "0")}`,
-    80,
-  );
+    .replace(/[^A-Z0-9 ]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function fileSha256(buffer: Buffer): string {
-  return createHash("sha256").update(buffer).digest("hex");
+function initialsCompatible(shortToken: string, longToken: string): boolean {
+  return shortToken.length === 1 && longToken.startsWith(shortToken);
 }
 
-async function fileExists(filePath: string): Promise<boolean> {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
+function nameMatchScore(source: string, candidate: string): number {
+  const left = normaliseName(source);
+  const right = normaliseName(candidate);
 
-async function upsertUser(
-  input: SeedUserInput,
-): Promise<Awaited<ReturnType<typeof prisma.user.create>>> {
-  const passwordHash = await bcrypt.hash(input.password, 12);
+  if (!left || !right) return 0;
+  if (left === right) return 100;
 
-  const matches = await prisma.user.findMany({
-    where: {
-      OR: [
-        { username: input.username },
-        { email: input.email },
-      ],
-    },
-    select: {
-      id: true,
-      username: true,
-      email: true,
-    },
-  });
+  const a = left.split(" ");
+  const b = right.split(" ");
+  const firstMatches = a[0] === b[0];
+  const lastMatches = a.at(-1) === b.at(-1);
 
-  if (matches.length > 1) {
-    throw new Error(
-      [
-        `Cannot seed ${input.username}.`,
-        "The username and email belong to different existing users.",
-        `Matches: ${JSON.stringify(matches)}`,
-      ].join(" "),
-    );
-  }
+  if (firstMatches && lastMatches) {
+    const middleA = a.slice(1, -1);
+    const middleB = b.slice(1, -1);
 
-  const data = {
-    name: input.name,
-    username: input.username,
-    email: input.email,
-    phone: input.phone,
-    passwordHash,
-    role: input.role,
-    status: UserStatus.ACTIVE,
-    companyId: input.companyId,
-    branchId: input.branchId,
-    assignedRegion: input.assignedRegion ?? null,
-  };
+    if (!middleA.length || !middleB.length) return 90;
 
-  if (matches[0]) {
-    return prisma.user.update({
-      where: { id: matches[0].id },
-      data,
-    });
-  }
-
-  return prisma.user.create({ data });
-}
-
-async function seedCompanyAndBranch() {
-  const company = await prisma.company.upsert({
-    where: {
-      code: env("SEED_COMPANY_CODE", DEFAULT_COMPANY_CODE),
-    },
-    update: {
-      name: env("SEED_COMPANY_NAME", "Simamia Float Company"),
-      email: env("SEED_COMPANY_EMAIL", "company@simamia.co.tz"),
-      phone: env("SEED_COMPANY_PHONE", "255716885656"),
-      address: env(
-        "SEED_COMPANY_ADDRESS",
-        "Dar es Salaam, Tanzania",
+    const compatible = middleA.some((tokenA) =>
+      middleB.some(
+        (tokenB) =>
+          tokenA === tokenB ||
+          initialsCompatible(tokenA, tokenB) ||
+          initialsCompatible(tokenB, tokenA),
       ),
-      status: "ACTIVE",
-    },
-    create: {
-      code: env("SEED_COMPANY_CODE", DEFAULT_COMPANY_CODE),
-      name: env("SEED_COMPANY_NAME", "Simamia Float Company"),
-      email: env("SEED_COMPANY_EMAIL", "company@simamia.co.tz"),
-      phone: env("SEED_COMPANY_PHONE", "255716885656"),
-      address: env(
-        "SEED_COMPANY_ADDRESS",
-        "Dar es Salaam, Tanzania",
-      ),
-      status: "ACTIVE",
-    },
-  });
-
-  const branch = await prisma.branch.upsert({
-    where: {
-      companyId_code: {
-        companyId: company.id,
-        code: env("SEED_BRANCH_CODE", DEFAULT_BRANCH_CODE),
-      },
-    },
-    update: {
-      name: env("SEED_BRANCH_NAME", "Head Office"),
-      region: env("SEED_BRANCH_REGION", "Dar es Salaam"),
-      address: env(
-        "SEED_BRANCH_ADDRESS",
-        "Dar es Salaam, Tanzania",
-      ),
-      status: "ACTIVE",
-    },
-    create: {
-      companyId: company.id,
-      code: env("SEED_BRANCH_CODE", DEFAULT_BRANCH_CODE),
-      name: env("SEED_BRANCH_NAME", "Head Office"),
-      region: env("SEED_BRANCH_REGION", "Dar es Salaam"),
-      address: env(
-        "SEED_BRANCH_ADDRESS",
-        "Dar es Salaam, Tanzania",
-      ),
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.companyAdminSetting.upsert({
-    where: { companyId: company.id },
-    update: {
-      currency: "TZS",
-      timezone: "Africa/Dar_es_Salaam",
-      sms: true,
-      email: true,
-      inApp: true,
-      gpsAlerts: true,
-      bankMismatchHold: true,
-    },
-    create: {
-      companyId: company.id,
-      currency: "TZS",
-      timezone: "Africa/Dar_es_Salaam",
-      sms: true,
-      email: true,
-      inApp: true,
-      gpsAlerts: true,
-      bankMismatchHold: true,
-    },
-  });
-
-  return { company, branch };
-}
-
-async function seedUsers(
-  companyId: string,
-  branchId: string,
-) {
-  const users: SeedUserInput[] = [
-    {
-      name: "System Administrator",
-      username: "system-admin",
-      email: "system-admin@simamia.co.tz",
-      phone: "255700000001",
-      password: env(
-        "SEED_SYSTEM_ADMIN_PASSWORD",
-        "SystemAdmin@2026",
-      ),
-      role: Role.SYSTEM_DEVELOPER,
-      companyId: null,
-      branchId: null,
-    },
-    {
-      name: "Super Administrator",
-      username: "super-admin",
-      email: "super-admin@simamia.co.tz",
-      phone: "255700000002",
-      password: env(
-        "SEED_SUPER_ADMIN_PASSWORD",
-        "SuperAdmin@2026",
-      ),
-      role: Role.SUPER_ADMIN,
-      companyId: null,
-      branchId: null,
-    },
-    {
-      name: "Company Administrator",
-      username: "company-admin",
-      email: "company-admin@simamia.co.tz",
-      phone: "255700000003",
-      password: env(
-        "SEED_COMPANY_ADMIN_PASSWORD",
-        "CompanyAdmin@2026",
-      ),
-      role: Role.COMPANY_ADMIN,
-      companyId,
-      branchId,
-      assignedRegion: "Dar es Salaam",
-    },
-    {
-      name: "Company Accountant",
-      username: "accountant",
-      email: "accountant@simamia.co.tz",
-      phone: "255700000004",
-      password: env(
-        "SEED_ACCOUNTANT_PASSWORD",
-        "Accountant@2026",
-      ),
-      role: Role.ACCOUNTANT,
-      companyId,
-      branchId,
-      assignedRegion: "Dar es Salaam",
-    },
-    {
-      name: "Float Staff Officer",
-      username: "staff",
-      email: "staff@simamia.co.tz",
-      phone: "255700000005",
-      password: env(
-        "SEED_STAFF_PASSWORD",
-        "Staff@2026",
-      ),
-      role: Role.STAFF,
-      companyId,
-      branchId,
-      assignedRegion: "Dar es Salaam",
-    },
-    {
-      name: "Broker Portal User",
-      username: "broker",
-      email: "broker@simamia.co.tz",
-      phone: "255700000006",
-      password: env(
-        "SEED_BROKER_PASSWORD",
-        "Broker@2026",
-      ),
-      role: Role.BROKER,
-      companyId,
-      branchId,
-      assignedRegion: "Dar es Salaam",
-    },
-  ];
-
-  const created = new Map<Role, Awaited<ReturnType<typeof upsertUser>>>();
-
-  for (const user of users) {
-    const saved = await upsertUser(user);
-    created.set(user.role, saved);
-    console.log(`✓ User ready: ${user.username} (${user.role})`);
-  }
-
-  const companyAdmin = created.get(Role.COMPANY_ADMIN);
-  const staff = created.get(Role.STAFF);
-  const broker = created.get(Role.BROKER);
-
-  if (!companyAdmin || !staff || !broker) {
-    throw new Error(
-      "Company admin, staff or broker user was not created.",
-    );
-  }
-
-  await prisma.staffBrokerAssignment.upsert({
-    where: {
-      companyId_brokerId: {
-        companyId,
-        brokerId: broker.id,
-      },
-    },
-    update: {
-      staffId: staff.id,
-      assignedById: companyAdmin.id,
-      status: StaffAssignmentStatus.ACTIVE,
-      endedAt: null,
-      notes: "Seeded broker portal assignment.",
-    },
-    create: {
-      companyId,
-      staffId: staff.id,
-      brokerId: broker.id,
-      assignedById: companyAdmin.id,
-      status: StaffAssignmentStatus.ACTIVE,
-      notes: "Seeded broker portal assignment.",
-    },
-  });
-
-  return {
-    systemDeveloper: created.get(Role.SYSTEM_DEVELOPER)!,
-    superAdmin: created.get(Role.SUPER_ADMIN)!,
-    companyAdmin,
-    accountant: created.get(Role.ACCOUNTANT)!,
-    staff,
-    broker,
-  };
-}
-
-const SAMPLE_BROKERS: BrokerSeedInput[] = [
-  {
-    code: "BRK-DSM-001",
-    name: "Mikocheni Float Agent",
-    businessName: "Mikocheni Mobile Services",
-    phone: "255754100001",
-    location: "Mikocheni",
-    region: "Dar es Salaam",
-    district: "Kinondoni",
-    ward: "Mikocheni",
-    address: "Mikocheni, Dar es Salaam",
-    network: MobileNetwork.VODACOM,
-    agentNumber: "AGT-VODA-001",
-  },
-  {
-    code: "BRK-DSM-002",
-    name: "Kariakoo Float Agent",
-    businessName: "Kariakoo Money Point",
-    phone: "255684100002",
-    location: "Kariakoo",
-    region: "Dar es Salaam",
-    district: "Ilala",
-    ward: "Kariakoo",
-    address: "Kariakoo, Dar es Salaam",
-    network: MobileNetwork.AIRTEL,
-    agentNumber: "AGT-AIRTEL-002",
-  },
-  {
-    code: "BRK-DSM-003",
-    name: "Temeke Float Agent",
-    businessName: "Temeke Digital Services",
-    phone: "255714100003",
-    location: "Temeke",
-    region: "Dar es Salaam",
-    district: "Temeke",
-    ward: "Temeke",
-    address: "Temeke, Dar es Salaam",
-    network: MobileNetwork.YAS_MIX,
-    agentNumber: "AGT-YAS-003",
-  },
-  {
-    code: "BRK-DSM-004",
-    name: "Ubungo Float Agent",
-    businessName: "Ubungo Cash Services",
-    phone: "255624100004",
-    location: "Ubungo",
-    region: "Dar es Salaam",
-    district: "Ubungo",
-    ward: "Ubungo",
-    address: "Ubungo, Dar es Salaam",
-    network: MobileNetwork.HALOTEL,
-    agentNumber: "AGT-HALO-004",
-  },
-];
-
-async function assignBrokerCustomerToStaff(
-  companyId: string,
-  brokerCustomerId: string,
-  staffId: string,
-  assignedById: string,
-  assignedArea: string,
-) {
-  await prisma.staffBrokerCustomerAssignment.upsert({
-    where: {
-      companyId_brokerCustomerId: {
-        companyId,
-        brokerCustomerId,
-      },
-    },
-    update: {
-      staffId,
-      assignedById,
-      assignedArea,
-      status: StaffAssignmentStatus.ACTIVE,
-      endedAt: null,
-    },
-    create: {
-      companyId,
-      staffId,
-      brokerCustomerId,
-      assignedById,
-      assignedArea,
-      status: StaffAssignmentStatus.ACTIVE,
-      notes: "Automatically assigned by the database seed.",
-    },
-  });
-}
-
-async function seedSampleBrokers(
-  companyId: string,
-  staffId: string,
-  assignedById: string,
-) {
-  console.log(
-    "ℹ Excel file was not found. Adding editable sample brokers.",
-  );
-
-  for (const item of SAMPLE_BROKERS) {
-    const broker = await prisma.brokerCustomer.upsert({
-      where: {
-        companyId_code: {
-          companyId,
-          code: item.code,
-        },
-      },
-      update: {
-        name: item.name,
-        businessName: item.businessName,
-        phone: item.phone,
-        location: item.location,
-        region: item.region,
-        district: item.district,
-        ward: item.ward,
-        address: item.address,
-        country: "Tanzania",
-        nationality: "Tanzanian",
-        status: BrokerCustomerStatus.ACTIVE,
-        normalizedName: normaliseName(item.name),
-        isImported: false,
-      },
-      create: {
-        companyId,
-        code: item.code,
-        name: item.name,
-        businessName: item.businessName,
-        phone: item.phone,
-        location: item.location,
-        region: item.region,
-        district: item.district,
-        ward: item.ward,
-        address: item.address,
-        country: "Tanzania",
-        nationality: "Tanzanian",
-        status: BrokerCustomerStatus.ACTIVE,
-        normalizedName: normaliseName(item.name),
-        isImported: false,
-        registrationDate: new Date(),
-        notes: "Sample broker created by prisma/seed.ts.",
-      },
-    });
-
-    await prisma.brokerAgentAccount.upsert({
-      where: {
-        companyId_network_agentNumber: {
-          companyId,
-          network: item.network,
-          agentNumber: item.agentNumber,
-        },
-      },
-      update: {
-        brokerCustomerId: broker.id,
-        simPhoneNumber: item.phone,
-        accountName: item.businessName,
-        isPrimary: true,
-        status: "ACTIVE",
-      },
-      create: {
-        companyId,
-        brokerCustomerId: broker.id,
-        network: item.network,
-        simPhoneNumber: item.phone,
-        agentNumber: item.agentNumber,
-        accountName: item.businessName,
-        isPrimary: true,
-        status: "ACTIVE",
-      },
-    });
-
-    await assignBrokerCustomerToStaff(
-      companyId,
-      broker.id,
-      staffId,
-      assignedById,
-      `${item.district}, ${item.region}`,
     );
 
-    console.log(`✓ Sample broker ready: ${item.code} - ${item.name}`);
+    return compatible ? 94 : 84;
+  }
+
+  const setA = new Set(a);
+  const setB = new Set(b);
+  const common = [...setA].filter((token) => setB.has(token)).length;
+  const union = new Set([...setA, ...setB]).size;
+  const jaccard = union ? common / union : 0;
+
+  return Math.round(jaccard * 75);
+}
+
+function matchAgent(
+  senderName: string | null,
+  agents: Array<{ id: string; name: string; normalizedName: string | null }>,
+) {
+  if (!senderName) {
+    return {
+      matchedBrokerCustomerId: null,
+      matchStatus: "NOT_APPLICABLE",
+      matchConfidence: null,
+      matchNote: "Debit transaction without an identifiable agent sender.",
+    } as const;
+  }
+
+  const ranked = agents
+    .map((agent) => ({
+      agent,
+      score: nameMatchScore(senderName, agent.normalizedName || agent.name),
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  const best = ranked[0];
+  const second = ranked[1];
+
+  if (!best || best.score < 70) {
+    return {
+      matchedBrokerCustomerId: null,
+      matchStatus: "UNMATCHED",
+      matchConfidence: best?.score ?? 0,
+      matchNote: best
+        ? `Best candidate was ${best.agent.name}, but confidence was below the review threshold.`
+        : "No imported agent candidate was found.",
+    } as const;
+  }
+
+  const margin = best.score - (second?.score ?? 0);
+
+  if (best.score >= 90 && margin >= 8) {
+    return {
+      matchedBrokerCustomerId: best.agent.id,
+      matchStatus: "MATCHED",
+      matchConfidence: best.score,
+      matchNote: `Automatically matched ${senderName} to ${best.agent.name}.`,
+    } as const;
   }
 
   return {
-    source: "sample" as const,
-    imported: SAMPLE_BROKERS.length,
-    skipped: 0,
-    failed: 0,
-  };
+    matchedBrokerCustomerId: best.agent.id,
+    matchStatus: "REVIEW_REQUIRED",
+    matchConfidence: best.score,
+    matchNote: `Possible match: ${best.agent.name}. Manual review is required.`,
+  } as const;
 }
 
-function readExcelAgents(
-  workbook: XLSX.WorkBook,
-): {
-  sheetName: string;
-  rows: ExcelRow[];
-} {
-  const requestedSheet = env("BROKER_EXCEL_SHEET");
-  const sheetName =
-    requestedSheet && workbook.Sheets[requestedSheet]
-      ? requestedSheet
-      : workbook.SheetNames[0];
+function chunks<T>(rows: T[], size: number): T[][] {
+  const output: T[][] = [];
 
-  if (!sheetName) {
-    throw new Error("The Excel workbook has no sheets.");
+  for (let index = 0; index < rows.length; index += size) {
+    output.push(rows.slice(index, index + size));
   }
 
-  const worksheet = workbook.Sheets[sheetName];
-
-  if (!worksheet) {
-    throw new Error(`Excel sheet not found: ${sheetName}`);
-  }
-
-  return {
-    sheetName,
-    rows: XLSX.utils.sheet_to_json<ExcelRow>(worksheet, {
-      defval: "",
-      raw: false,
-    }),
-  };
-}
-
-async function importBrokersFromExcel(
-  excelPath: string,
-  companyId: string,
-  staffId: string,
-  assignedById: string,
-) {
-  console.log(`ℹ Importing brokers from: ${excelPath}`);
-
-  const buffer = await readFile(excelPath);
-  const checksum = fileSha256(buffer);
-  const workbook = XLSX.read(buffer, {
-    type: "buffer",
-    cellDates: true,
-  });
-  const { sheetName, rows } = readExcelAgents(workbook);
-
-  const importBatch = await prisma.dataImportBatch.upsert({
-    where: {
-      companyId_sourceChecksum: {
-        companyId,
-        sourceChecksum: checksum,
-      },
-    },
-    update: {
-      sourceFileName: path.basename(excelPath),
-      sourceSheetName: sheetName,
-      sourceType: ImportedDataSourceType.EXCEL_AGENT_MASTER,
-      status: ImportBatchStatus.PROCESSING,
-      totalRows: rows.length,
-      importedRows: 0,
-      skippedRows: 0,
-      failedRows: 0,
-      importedAt: new Date(),
-      notes: "Broker import started by prisma/seed.ts.",
-    },
-    create: {
-      companyId,
-      sourceType: ImportedDataSourceType.EXCEL_AGENT_MASTER,
-      sourceFileName: path.basename(excelPath),
-      sourceSheetName: sheetName,
-      sourceChecksum: checksum,
-      status: ImportBatchStatus.PROCESSING,
-      totalRows: rows.length,
-      notes: "Broker import started by prisma/seed.ts.",
-    },
-  });
-
-  let imported = 0;
-  let skipped = 0;
-  let failed = 0;
-  const usedCodes = new Set<string>();
-  const defaultLocation = env(
-    "DEFAULT_BROKER_LOCATION",
-    "Tanzania",
-  );
-
-  for (let index = 0; index < rows.length; index += 1) {
-    const row = rows[index];
-    const sourceRowNumber = index + 2;
-
-    const sourceAgentName = rowValue(row, [
-      "Agent_name",
-      "Agent Name",
-      "agentname",
-      "name",
-    ]);
-    const sourceMsisdn = rowValue(row, [
-      "Agent_MSISDN",
-      "Agent MSISDN",
-      "MSISDN",
-      "phone",
-      "mobile",
-    ]);
-    const sourceAliasCode = rowValue(row, [
-      "Alias_code",
-      "Alias Code",
-      "alias",
-      "code",
-      "agent code",
-    ]);
-    const sourceLocation = rowValue(row, [
-      "Location",
-      "Area",
-      "Region",
-      "District",
-    ]);
-
-    const name = compactSpaces(sourceAgentName);
-    const phone = normalisePhone(sourceMsisdn);
-
-    if (!name || !phone) {
-      skipped += 1;
-      console.warn(
-        `- Skipped Excel row ${sourceRowNumber}: missing agent name or phone.`,
-      );
-      continue;
-    }
-
-    let code = safeBrokerCode(
-      sourceAliasCode,
-      sourceRowNumber,
-    );
-
-    if (usedCodes.has(code)) {
-      code = truncate(`${code}-${sourceRowNumber}`, 80);
-    }
-
-    usedCodes.add(code);
-
-    try {
-      const broker = await prisma.brokerCustomer.upsert({
-        where: {
-          companyId_code: {
-            companyId,
-            code,
-          },
-        },
-        update: {
-          name,
-          phone,
-          location: sourceLocation || defaultLocation,
-          country: "Tanzania",
-          status: BrokerCustomerStatus.ACTIVE,
-          importBatchId: importBatch.id,
-          sourceRowNumber,
-          sourceSheetName: truncate(sheetName, 100),
-          sourceAgentName: truncate(sourceAgentName, 255),
-          sourceMsisdn: truncate(sourceMsisdn, 32),
-          sourceAliasCode: truncate(sourceAliasCode, 32),
-          normalizedName: truncate(normaliseName(name), 255),
-          isImported: true,
-          importedAt: new Date(),
-          notes: `Imported from ${path.basename(excelPath)}.`,
-        },
-        create: {
-          companyId,
-          code,
-          name,
-          phone,
-          location: sourceLocation || defaultLocation,
-          country: "Tanzania",
-          status: BrokerCustomerStatus.ACTIVE,
-          importBatchId: importBatch.id,
-          sourceRowNumber,
-          sourceSheetName: truncate(sheetName, 100),
-          sourceAgentName: truncate(sourceAgentName, 255),
-          sourceMsisdn: truncate(sourceMsisdn, 32),
-          sourceAliasCode: truncate(sourceAliasCode, 32),
-          normalizedName: truncate(normaliseName(name), 255),
-          isImported: true,
-          importedAt: new Date(),
-          registrationDate: new Date(),
-          notes: `Imported from ${path.basename(excelPath)}.`,
-        },
-      });
-
-      const agentNumber = truncate(
-        sourceAliasCode || code,
-        80,
-      );
-
-      await prisma.brokerAgentAccount.upsert({
-        where: {
-          companyId_network_agentNumber: {
-            companyId,
-            network: MobileNetwork.OTHER,
-            agentNumber,
-          },
-        },
-        update: {
-          brokerCustomerId: broker.id,
-          simPhoneNumber: truncate(phone, 32),
-          accountName: truncate(name, 191),
-          isPrimary: true,
-          status: "ACTIVE",
-        },
-        create: {
-          companyId,
-          brokerCustomerId: broker.id,
-          network: MobileNetwork.OTHER,
-          simPhoneNumber: truncate(phone, 32),
-          agentNumber,
-          accountName: truncate(name, 191),
-          isPrimary: true,
-          status: "ACTIVE",
-        },
-      });
-
-      await assignBrokerCustomerToStaff(
-        companyId,
-        broker.id,
-        staffId,
-        assignedById,
-        sourceLocation || defaultLocation,
-      );
-
-      imported += 1;
-
-      if (imported % 100 === 0) {
-        console.log(`  ${imported} broker rows imported...`);
-      }
-    } catch (error) {
-      failed += 1;
-      console.error(
-        `✗ Failed Excel row ${sourceRowNumber}:`,
-        error,
-      );
-    }
-  }
-
-  const finalStatus =
-    failed === 0
-      ? ImportBatchStatus.COMPLETED
-      : imported > 0
-        ? ImportBatchStatus.PARTIAL
-        : ImportBatchStatus.FAILED;
-
-  await prisma.dataImportBatch.update({
-    where: { id: importBatch.id },
-    data: {
-      status: finalStatus,
-      totalRows: rows.length,
-      importedRows: imported,
-      skippedRows: skipped,
-      failedRows: failed,
-      importedAt: new Date(),
-      notes: [
-        `Imported ${imported} broker rows.`,
-        `Skipped ${skipped}.`,
-        `Failed ${failed}.`,
-      ].join(" "),
-    },
-  });
-
-  return {
-    source: "excel" as const,
-    imported,
-    skipped,
-    failed,
-    sheetName,
-    checksum,
-  };
-}
-
-async function seedBrokers(
-  companyId: string,
-  staffId: string,
-  assignedById: string,
-) {
-  const excelPath = path.resolve(
-    env(
-      "BROKER_EXCEL_PATH",
-      DEFAULT_BROKER_EXCEL_PATH,
-    ),
-  );
-
-  if (await fileExists(excelPath)) {
-    return importBrokersFromExcel(
-      excelPath,
-      companyId,
-      staffId,
-      assignedById,
-    );
-  }
-
-  return seedSampleBrokers(
-    companyId,
-    staffId,
-    assignedById,
-  );
-}
-
-function printCredentials() {
-  const rows = [
-    [
-      "System admin",
-      "system-admin",
-      env("SEED_SYSTEM_ADMIN_PASSWORD", "SystemAdmin@2026"),
-      "SYSTEM_DEVELOPER",
-    ],
-    [
-      "Super admin",
-      "super-admin",
-      env("SEED_SUPER_ADMIN_PASSWORD", "SuperAdmin@2026"),
-      "SUPER_ADMIN",
-    ],
-    [
-      "Company admin",
-      "company-admin",
-      env("SEED_COMPANY_ADMIN_PASSWORD", "CompanyAdmin@2026"),
-      "COMPANY_ADMIN",
-    ],
-    [
-      "Accountant",
-      "accountant",
-      env("SEED_ACCOUNTANT_PASSWORD", "Accountant@2026"),
-      "ACCOUNTANT",
-    ],
-    [
-      "Staff",
-      "staff",
-      env("SEED_STAFF_PASSWORD", "Staff@2026"),
-      "STAFF",
-    ],
-    [
-      "Broker",
-      "broker",
-      env("SEED_BROKER_PASSWORD", "Broker@2026"),
-      "BROKER",
-    ],
-  ];
-
-  console.log("\nLogin credentials");
-  console.table(
-    rows.map(([portal, username, password, role]) => ({
-      portal,
-      username,
-      password,
-      role,
-    })),
-  );
+  return output;
 }
 
 async function main() {
-  console.log("Starting Simamia database seed...\n");
-
-  const { company, branch } =
-    await seedCompanyAndBranch();
-
-  console.log(`✓ Company ready: ${company.name}`);
-  console.log(`✓ Branch ready: ${branch.name}`);
-
-  const users = await seedUsers(
-    company.id,
-    branch.id,
+  const agents = loadJson<AgentSeedRow[]>("float-agents.json");
+  const bankData = loadJson<BankStatementSeed>(
+    "bank-statement-2026-07-16-to-17.json",
   );
 
-  const brokerResult = await seedBrokers(
-    company.id,
-    users.staff.id,
-    users.companyAdmin.id,
-  );
+  const company = await db.company.upsert({
+    where: { code: "ARDHISOL" },
+    update: {
+      name: "ARDHISOL (T) LIMITED",
+      status: "ACTIVE",
+    },
+    create: {
+      name: "ARDHISOL (T) LIMITED",
+      code: "ARDHISOL",
+      status: "ACTIVE",
+      address: "Tanzania",
+    },
+  });
 
-  const counts = await Promise.all([
-    prisma.user.count(),
-    prisma.brokerCustomer.count({
-      where: { companyId: company.id },
-    }),
-    prisma.staffBrokerCustomerAssignment.count({
-      where: { companyId: company.id },
-    }),
-  ]);
+  await db.branch.upsert({
+    where: {
+      companyId_code: {
+        companyId: company.id,
+        code: "OHIO",
+      },
+    },
+    update: {
+      name: "OHIO",
+      status: "ACTIVE",
+    },
+    create: {
+      companyId: company.id,
+      code: "OHIO",
+      name: "OHIO",
+      status: "ACTIVE",
+    },
+  });
 
-  console.log("\nSeed completed successfully.");
-  console.log(`Users in database: ${counts[0]}`);
-  console.log(`Broker customers: ${counts[1]}`);
-  console.log(`Broker assignments: ${counts[2]}`);
-  console.log(
-    `Broker source: ${brokerResult.source}; imported: ${brokerResult.imported}; skipped: ${brokerResult.skipped}; failed: ${brokerResult.failed}`,
-  );
+  const agentChecksum =
+    "46e660bc3bc9cbcc210a21fe6f619dbbf5660417ff143499101d8e864a0bf629";
 
-  printCredentials();
-  console.log(
-    "\nSecurity: change all default passwords before using this database outside local development.",
-  );
+  const agentBatch = await db.dataImportBatch.upsert({
+    where: {
+      companyId_sourceChecksum: {
+        companyId: company.id,
+        sourceChecksum: agentChecksum,
+      },
+    },
+    update: {
+      status: "PROCESSING",
+      totalRows: agents.length,
+      sourceFileName: "float data_063712.xlsx",
+      sourceSheetName: "Sheet1",
+    },
+    create: {
+      companyId: company.id,
+      sourceType: "EXCEL_AGENT_MASTER",
+      sourceFileName: "float data_063712.xlsx",
+      sourceSheetName: "Sheet1",
+      sourceChecksum: agentChecksum,
+      status: "PROCESSING",
+      totalRows: agents.length,
+      notes:
+        "Imported from the workbook containing Agent_name, Agent_MSISDN and Alias_code.",
+    },
+  });
+
+  let importedAgents = 0;
+
+  for (const batch of chunks(agents, 100)) {
+    await db.$transaction(
+      batch.map((agent) =>
+        db.brokerCustomer.upsert({
+          where: {
+            companyId_code: {
+              companyId: company.id,
+              code: agent.aliasCode,
+            },
+          },
+          update: {
+            name: agent.name,
+            phone: agent.msisdn,
+            normalizedName: normaliseName(agent.name),
+            sourceRowNumber: agent.sourceRow,
+            sourceSheetName: "Sheet1",
+            sourceAgentName: agent.sourceAgentName,
+            sourceMsisdn: agent.sourceMsisdn,
+            sourceAliasCode: agent.sourceAliasCode,
+            importBatchId: agentBatch.id,
+            isImported: true,
+            importedAt: new Date(),
+            status: "ACTIVE",
+          },
+          create: {
+            companyId: company.id,
+            code: agent.aliasCode,
+            name: agent.name,
+            phone: agent.msisdn,
+            location: "UNASSIGNED",
+            normalizedName: normaliseName(agent.name),
+            sourceRowNumber: agent.sourceRow,
+            sourceSheetName: "Sheet1",
+            sourceAgentName: agent.sourceAgentName,
+            sourceMsisdn: agent.sourceMsisdn,
+            sourceAliasCode: agent.sourceAliasCode,
+            importBatchId: agentBatch.id,
+            isImported: true,
+            importedAt: new Date(),
+            status: "ACTIVE",
+            notes: "Imported from float data_063712.xlsx.",
+          },
+        }),
+      ),
+    );
+
+    importedAgents += batch.length;
+    console.log(`Imported ${importedAgents}/${agents.length} agent rows.`);
+  }
+
+  await db.dataImportBatch.update({
+    where: { id: agentBatch.id },
+    data: {
+      status: "COMPLETED",
+      importedRows: importedAgents,
+      skippedRows: 0,
+      failedRows: 0,
+    },
+  });
+
+  const statementChecksum =
+    "956d62f57fd2f10fe183199386b169c63067a6940ae0fa3d5b4c0cc47f0a1d5e";
+
+  const statementBatch = await db.dataImportBatch.upsert({
+    where: {
+      companyId_sourceChecksum: {
+        companyId: company.id,
+        sourceChecksum: statementChecksum,
+      },
+    },
+    update: {
+      status: "PROCESSING",
+      totalRows: bankData.transactions.length,
+      sourceFileName: bankData.statement.sourceFileName,
+    },
+    create: {
+      companyId: company.id,
+      sourceType: "BANK_STATEMENT_PDF",
+      sourceFileName: bankData.statement.sourceFileName,
+      sourceChecksum: statementChecksum,
+      status: "PROCESSING",
+      totalRows: bankData.transactions.length,
+      notes:
+        "CRDB account statement imported for 16/07/2026 through 17/07/2026.",
+    },
+  });
+
+  const statementKey = `${bankData.statement.accountNumber}:2026-07-16:2026-07-17`;
+
+  const statement = await db.importedBankStatement.upsert({
+    where: {
+      companyId_statementKey: {
+        companyId: company.id,
+        statementKey,
+      },
+    },
+    update: {
+      importBatchId: statementBatch.id,
+      availableBalance: bankData.statement.availableBalance,
+      totalCredit: bankData.statement.totalCredit,
+      totalDebit: bankData.statement.totalDebit,
+      bookBalance: bankData.statement.bookBalance,
+      clearedBalance: bankData.statement.clearedBalance,
+      generatedAt: new Date(bankData.statement.generatedAt),
+    },
+    create: {
+      companyId: company.id,
+      importBatchId: statementBatch.id,
+      statementKey,
+      bankName: bankData.statement.bankName,
+      accountName: bankData.statement.accountName,
+      branchName: bankData.statement.branchName,
+      accountNumber: bankData.statement.accountNumber,
+      currency: bankData.statement.currency,
+      periodStart: new Date(bankData.statement.periodStart),
+      periodEnd: new Date(bankData.statement.periodEnd),
+      generatedAt: new Date(bankData.statement.generatedAt),
+      availableBalance: bankData.statement.availableBalance,
+      totalCredit: bankData.statement.totalCredit,
+      totalDebit: bankData.statement.totalDebit,
+      bookBalance: bankData.statement.bookBalance,
+      clearedBalance: bankData.statement.clearedBalance,
+      sourceFileName: bankData.statement.sourceFileName,
+      sourceChecksum: statementChecksum,
+    },
+  });
+
+  const importedAgentRows = await db.brokerCustomer.findMany({
+    where: {
+      companyId: company.id,
+      isImported: true,
+    },
+    select: {
+      id: true,
+      name: true,
+      normalizedName: true,
+    },
+  });
+
+  for (const transaction of bankData.transactions) {
+    const match = matchAgent(transaction.senderName, importedAgentRows);
+    const direction = transaction.debit > 0 ? "DEBIT" : "CREDIT";
+
+    await db.importedBankTransaction.upsert({
+      where: {
+        companyId_reference: {
+          companyId: company.id,
+          reference: transaction.reference,
+        },
+      },
+      update: {
+        statementId: statement.id,
+        matchedBrokerCustomerId: match.matchedBrokerCustomerId,
+        matchStatus: match.matchStatus,
+        matchConfidence: match.matchConfidence,
+        matchNote: match.matchNote,
+        details: transaction.details,
+        debit: transaction.debit,
+        credit: transaction.credit,
+        bookBalance: transaction.bookBalance,
+      },
+      create: {
+        companyId: company.id,
+        statementId: statement.id,
+        matchedBrokerCustomerId: match.matchedBrokerCustomerId,
+        reference: transaction.reference,
+        postingDate: new Date(transaction.postingDate),
+        valueDate: new Date(transaction.valueDate),
+        details: transaction.details,
+        direction,
+        debit: transaction.debit,
+        credit: transaction.credit,
+        bookBalance: transaction.bookBalance,
+        transactionType: transaction.transactionType,
+        senderName: transaction.senderName,
+        receiverName: "ARDHISOL (T) LIMITED",
+        externalAccountReference: transaction.externalAccountReference,
+        narration: transaction.narration,
+        matchStatus: match.matchStatus,
+        matchConfidence: match.matchConfidence,
+        matchNote: match.matchNote,
+      },
+    });
+  }
+
+  await db.dataImportBatch.update({
+    where: { id: statementBatch.id },
+    data: {
+      status: "COMPLETED",
+      importedRows: bankData.transactions.length,
+      skippedRows: 0,
+      failedRows: 0,
+    },
+  });
+
+  const [agentCount, transactionCount, matchedCount, reviewCount] =
+    await Promise.all([
+      db.brokerCustomer.count({
+        where: { companyId: company.id, isImported: true },
+      }),
+      db.importedBankTransaction.count({
+        where: { companyId: company.id },
+      }),
+      db.importedBankTransaction.count({
+        where: { companyId: company.id, matchStatus: "MATCHED" },
+      }),
+      db.importedBankTransaction.count({
+        where: { companyId: company.id, matchStatus: "REVIEW_REQUIRED" },
+      }),
+    ]);
+
+  console.log("\nImport completed successfully.");
+  console.log({
+    company: company.name,
+    importedAgents: agentCount,
+    bankTransactions: transactionCount,
+    automaticallyMatched: matchedCount,
+    reviewRequired: reviewCount,
+    statementCredit: bankData.statement.totalCredit,
+    statementDebit: bankData.statement.totalDebit,
+  });
 }
 
 main()
-  .catch((error: unknown) => {
-    console.error("\nSeed failed:");
-    console.error(error);
+  .catch((error) => {
+    console.error("[IMPORTED_FINANCE_SEED]", error);
     process.exitCode = 1;
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await db.$disconnect();
   });

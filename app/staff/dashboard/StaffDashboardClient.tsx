@@ -11,9 +11,10 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 
-import LiveMap from "./LiveMap";
+import LiveMap from "../live-locations/LiveMap";
 import StaffAdvancedOperations from "./StaffAdvancedOperations";
 import StaffLocationTracker from "./StaffLocationTracker";
+import StaffLiveLocationsClient from "../live-locations/StaffLiveLocationsClient";
 import styles from "./StaffDashboard.module.css";
 
 type Props = {
@@ -741,7 +742,11 @@ export default function StaffDashboardClient({ user }: Props) {
     return result.url;
   }
 
-  function open(next: PageKey) { setPage(next); setMobileOpen(false); setNoticeOpen(false); }
+  function open(next: PageKey) {
+    setMobileOpen(false);
+    setNoticeOpen(false);
+    setPage(next);
+  }
   function runSearch() {
     const q = search.trim().toLowerCase();
     const found = nav.find((item) => item.page.toLowerCase().includes(q));
@@ -790,13 +795,14 @@ export default function StaffDashboardClient({ user }: Props) {
 
         {toast && <div className={styles.toast}>{toast}</div>}
         {loading ? <Loading/> : error ? <ErrorState text={error} retry={() => void load(true)}/> : data ?
-          <div className={styles.reveal} key={page}><PageContent page={page} data={data} busy={busy} action={action} upload={upload} open={open} notify={setToast} period={period} setPeriod={setPeriod} anchor={anchor} setAnchor={setAnchor} reload={() => load(false)} /></div> : null}
+          <div className={styles.reveal} key={page}><PageContent user={user} page={page} data={data} busy={busy} action={action} upload={upload} open={open} notify={setToast} period={period} setPeriod={setPeriod} anchor={anchor} setAnchor={setAnchor} reload={() => load(false)} /></div> : null}
       </section>
     </main>
   );
 }
 
 function PageContent(props: {
+  user: Props["user"];
   page: PageKey; data: DashboardData; busy: boolean;
   action: (name: string, payload?: Record<string, unknown>) => Promise<boolean>;
   upload: (file: File, kind?: UploadClientKind) => Promise<string>;
@@ -817,7 +823,18 @@ function PageContent(props: {
     case "Own Performance": return <StaffAdvancedOperations initialView="performance"/>;
     case "Reports": return <StaffAdvancedOperations initialView="reports"/>;
     case "Attendance": return <StaffAdvancedOperations initialView="attendance"/>;
-    case "Live Locations": return <StaffAdvancedOperations initialView="gps"/>;
+    case "Live Locations": return (
+      <StaffLiveLocationsClient
+        embedded
+        onOpenServiceVisits={() => props.open("Service Visits")}
+        user={{
+          id: props.user.id,
+          name: props.user.name,
+          email: props.user.email,
+          companyId: String(props.user.companyId || props.data.company?.id || ""),
+        }}
+      />
+    );
     case "Travel History": return <StaffAdvancedOperations initialView="travel"/>;
     case "GPS Alerts": return <StaffAdvancedOperations initialView="alerts"/>;
     case "Notifications": return <StaffAdvancedOperations initialView="notifications"/>;
