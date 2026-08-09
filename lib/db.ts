@@ -7,14 +7,22 @@ type PrismaGlobal = typeof globalThis & {
 
 type MariaDbConfig = ConstructorParameters<typeof PrismaMariaDb>[0];
 
-function required(name: string, value: string | undefined): string {
-  if (!value?.trim()) {
-    throw new Error(
-      `Missing database setting ${name}. Add DATABASE_URL or the DATABASE_* variables to .env.`,
-    );
-  }
+function isBuildOnlyPhase(): boolean {
+  return (
+    process.env.NEXT_PHASE === "phase-production-build" ||
+    process.env.npm_lifecycle_event === "build"
+  );
+}
 
-  return value.trim();
+function required(name: string, value: string | undefined, fallback: string): string {
+  const cleaned = value?.trim();
+  if (cleaned) return cleaned;
+
+  if (isBuildOnlyPhase()) return fallback;
+
+  throw new Error(
+    `Missing database setting ${name}. Add DATABASE_URL or the DATABASE_* variables to .env.`,
+  );
 }
 
 function numberSetting(
@@ -50,11 +58,11 @@ function configFromDatabaseUrl(databaseUrl: string): MariaDbConfig {
   const database = decodeURIComponent(url.pathname.replace(/^\/+/, ""));
 
   return {
-    host: required("DATABASE_HOST", url.hostname),
+    host: required("DATABASE_HOST", url.hostname, "127.0.0.1"),
     port: numberSetting("DATABASE_PORT", url.port, 3306),
-    user: required("DATABASE_USER", decodeURIComponent(url.username)),
+    user: required("DATABASE_USER", decodeURIComponent(url.username), "root"),
     password: decodeURIComponent(url.password),
-    database: required("DATABASE_NAME", database),
+    database: required("DATABASE_NAME", database, "simamia"),
     connectionLimit: numberSetting(
       "DATABASE_CONNECTION_LIMIT",
       process.env.DATABASE_CONNECTION_LIMIT,
@@ -71,11 +79,11 @@ function getMariaDbConfig(): MariaDbConfig {
   }
 
   return {
-    host: required("DATABASE_HOST", process.env.DATABASE_HOST),
+    host: required("DATABASE_HOST", process.env.DATABASE_HOST, "127.0.0.1"),
     port: numberSetting("DATABASE_PORT", process.env.DATABASE_PORT, 3306),
-    user: required("DATABASE_USER", process.env.DATABASE_USER),
+    user: required("DATABASE_USER", process.env.DATABASE_USER, "root"),
     password: process.env.DATABASE_PASSWORD ?? "",
-    database: required("DATABASE_NAME", process.env.DATABASE_NAME),
+    database: required("DATABASE_NAME", process.env.DATABASE_NAME, "simamia"),
     connectionLimit: numberSetting(
       "DATABASE_CONNECTION_LIMIT",
       process.env.DATABASE_CONNECTION_LIMIT,
