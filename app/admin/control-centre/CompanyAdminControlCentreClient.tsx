@@ -1522,7 +1522,7 @@ export default function CompanyAdminControlCentreClient({
                   </div>
                 }
               >
-                <PaginatedDataTable
+                <PaginatedDataTable<any>
                   rows={filteredBrokers}
                   rowKey={(broker) => broker.id}
                   searchPlaceholder="Search broker name, phone, code or location"
@@ -1643,7 +1643,7 @@ export default function CompanyAdminControlCentreClient({
                   text="Active customer assignments only."
                   icon={<CheckCircle2 size={21} />}
                 >
-                  <PaginatedDataTable
+                  <PaginatedDataTable<any>
                     rows={selectedStaffCustomers}
                     rowKey={(row) => row.id}
                     searchPlaceholder="Search assigned customer, phone, email or region"
@@ -1771,7 +1771,7 @@ export default function CompanyAdminControlCentreClient({
                   text="All accounts are kept separately and may be activated or suspended."
                   icon={<WalletCards size={21} />}
                 >
-                  <PaginatedDataTable
+                    <PaginatedDataTable<any>
                     rows={data.bankAccounts}
                     rowKey={(account) => account.id}
                     searchPlaceholder="Search bank, account number, branch or SWIFT code"
@@ -1834,7 +1834,7 @@ export default function CompanyAdminControlCentreClient({
                 text="Statements from CRDB, NMB, DTB, NBC and other banks remain separate for reconciliation."
                 icon={<FileText size={21} />}
               >
-                <PaginatedDataTable
+                    <PaginatedDataTable<any>
                   rows={data.importedStatements}
                   rowKey={(statement) => statement.id}
                   searchPlaceholder="Search bank statement, account, source file or period"
@@ -1987,7 +1987,7 @@ export default function CompanyAdminControlCentreClient({
                 text="Messages, attachments, assigned accountant and final decision."
                 icon={<FileText size={21} />}
               >
-                <PaginatedDataTable
+                <PaginatedDataTable<any>
                   rows={data.verificationPackets}
                   rowKey={(packet) => packet.id}
                   searchPlaceholder="Search document, message, reference, attachment or review"
@@ -2050,7 +2050,7 @@ export default function CompanyAdminControlCentreClient({
                 text="Accountant-to-staff and staff-to-broker transactions."
                 icon={<CircleDollarSign size={21} />}
               >
-                <PaginatedDataTable
+                <PaginatedDataTable<any>
                   rows={data.staffOperations.floatTransactions}
                   rowKey={(row) => row.id}
                   searchPlaceholder="Search reference, staff, broker, type, amount or status"
@@ -2094,7 +2094,7 @@ export default function CompanyAdminControlCentreClient({
                   text="Money collected by staff from brokers."
                   icon={<WalletCards size={21} />}
                 >
-                  <PaginatedDataTable
+                  <PaginatedDataTable<any>
                     rows={data.staffOperations.collections}
                     rowKey={(row) => row.id}
                     searchPlaceholder="Search staff collection, broker, reference or amount"
@@ -2134,7 +2134,7 @@ export default function CompanyAdminControlCentreClient({
                   text="Staff movement and service activity."
                   icon={<MapPinned size={21} />}
                 >
-                  <PaginatedDataTable
+                  <PaginatedDataTable<any>
                     rows={data.staffOperations.visits}
                     rowKey={(row) => row.id}
                     searchPlaceholder="Search staff, broker, service type, status or date"

@@ -253,7 +253,12 @@ export async function GET(request: NextRequest) {
             `${row.name} | Attendance ${row.attendanceRate}% | Score ${row.performanceScore} | Income TZS ${number(row.income).toLocaleString("en-GB")}`,
         ),
       ];
-      return new Response(makePdf(lines), {
+      const pdf = makePdf(lines);
+      const body = pdf.buffer.slice(
+        pdf.byteOffset,
+        pdf.byteOffset + pdf.byteLength,
+      ) as ArrayBuffer;
+      return new Response(body, {
         headers: {
           "Content-Type": "application/pdf",
           "Content-Disposition": `attachment; filename="accountant-report-${range.startKey}-${range.endKey}.pdf"`,

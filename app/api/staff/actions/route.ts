@@ -611,6 +611,7 @@ async function followUps(
       | "FLOAT_RECEIVED"
       | "FLOAT_ISSUED"
       | "COLLECTION_RETURNED"
+      | "GPS_MOVEMENT"
       | "MONEY_RETURNED";
 
     notice?: {

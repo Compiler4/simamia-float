@@ -12,6 +12,13 @@ const extensions = new Map<string, string>([
   ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"],
 ]);
 
+const UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "accountant-control",
+);
+
 export async function saveLocalUpload(input: {
   file: File;
   companyId: string;
@@ -29,14 +36,7 @@ export async function saveLocalUpload(input: {
   }
 
   const safeCategory = input.category.replace(/[^a-z0-9-]/gi, "-").toLowerCase();
-  const directory = path.join(
-    process.cwd(),
-    "public",
-    "uploads",
-    "accountant-control",
-    input.companyId,
-    safeCategory,
-  );
+  const directory = path.join(UPLOAD_ROOT, input.companyId, safeCategory);
   await mkdir(directory, { recursive: true });
 
   const filename = `${Date.now()}-${randomUUID()}${extension}`;

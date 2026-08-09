@@ -27,6 +27,11 @@ const DARK = rgb(0.08, 0.11, 0.15);
 const MUTED = rgb(0.35, 0.4, 0.45);
 const LIGHT = rgb(0.95, 0.98, 0.96);
 const BORDER = rgb(0.78, 0.84, 0.8);
+const PUBLIC_UPLOAD_ROOT = path.join(
+  /*turbopackIgnore: true*/ process.cwd(),
+  "public",
+  "uploads",
+);
 
 function parseDate(value: string | null, end = false): Date {
   const raw = value
@@ -74,10 +79,11 @@ function ellipsis(value: unknown, max = 45): string {
 function publicUrlToPath(url: string): string | null {
   const clean = url.split("?")[0].replaceAll("\\", "/");
   if (!clean.startsWith("/uploads/")) return null;
-  const relative = clean.replace(/^\/+/, "");
-  const absolute = path.resolve(process.cwd(), "public", relative.replace(/^public\//, ""));
-  const publicRoot = path.resolve(process.cwd(), "public");
-  return absolute.startsWith(publicRoot) ? absolute : null;
+  const uploadRelative = clean.replace(/^\/uploads\/?/, "");
+  const absolute = path.resolve(PUBLIC_UPLOAD_ROOT, uploadRelative);
+  return absolute.startsWith(`${path.resolve(PUBLIC_UPLOAD_ROOT)}${path.sep}`)
+    ? absolute
+    : null;
 }
 
 async function fileExists(filePath: string): Promise<boolean> {
@@ -444,7 +450,11 @@ export async function GET(request: NextRequest) {
       `simamia-grand-bank-report-${new Date().toISOString().slice(0, 10)}.pdf`,
     );
 
-    return new Response(bytes, {
+    const body = bytes.buffer.slice(
+      bytes.byteOffset,
+      bytes.byteOffset + bytes.byteLength,
+    ) as ArrayBuffer;
+    return new Response(body, {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",

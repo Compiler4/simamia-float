@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -15,10 +16,13 @@
 
 # next.js
 /.next/
+.next/
 /out/
+out/
 
 # production
 /build
+build/
 
 # misc
 .DS_Store
@@ -29,9 +33,20 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+!.env.gps-schedule.example
+!.env.seed.example
+
+# generated clients and runtime data
+/generated/
+/storage/private/
+/_seed_all_backup_*/
+/ORIGINAL-BACKUP/
+/pnpm-store/
 
 # vercel
 .vercel

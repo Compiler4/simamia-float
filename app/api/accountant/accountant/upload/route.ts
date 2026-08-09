@@ -19,6 +19,13 @@ const allowedTypes = new Map<string, string>([
   ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"],
 ]);
 
+const UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "accountant",
+);
+
 export async function POST(request: Request) {
   try {
     const session = await requireAccountant();
@@ -50,13 +57,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const directory = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      "accountant",
-      session.companyId,
-    );
+    const directory = path.join(UPLOAD_ROOT, session.companyId);
     await mkdir(directory, { recursive: true });
 
     const filename = `${Date.now()}-${randomUUID()}${extension}`;

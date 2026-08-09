@@ -18,6 +18,13 @@ const allowed = new Map([
   ["application/pdf", ".pdf"],
 ]);
 
+const RECEIPT_UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "float-receipts",
+);
+
 export async function POST(request: Request) {
   try {
     const session = (await getCurrentUser()) as any;
@@ -62,7 +69,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: "Returned amount cannot exceed the issued float." }, { status: 400 });
     }
 
-    const directory = path.join(process.cwd(), "public", "uploads", "float-receipts", String(session.companyId));
+    const directory = path.join(RECEIPT_UPLOAD_ROOT, String(session.companyId));
     await mkdir(directory, { recursive: true });
     const filename = `${Date.now()}-${randomUUID()}${extension}`;
     await writeFile(path.join(directory, filename), Buffer.from(await file.arrayBuffer()));

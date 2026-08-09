@@ -32,14 +32,15 @@ function validNida(value: string): boolean {
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const sessionUser = await requireCompanyAdmin();
     const companyId = sessionUser.companyId as string;
-    const { id } = await context.params;
     const body = await request.json();
+    const id = text(body.id ?? body.userId).trim();
     const db = prisma as any;
+
+    if (!id) throw new HttpError("User id is required.", 422);
 
     const target = await db.user.findFirst({
       where: {
@@ -178,14 +179,15 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
-  context: { params: Promise<{ id: string }> },
+  request: NextRequest,
 ) {
   try {
     const sessionUser = await requireCompanyAdmin();
     const companyId = sessionUser.companyId as string;
-    const { id } = await context.params;
+    const id = text(request.nextUrl.searchParams.get("id")).trim();
     const db = prisma as any;
+
+    if (!id) throw new HttpError("User id is required.", 422);
 
     if (id === sessionUser.id) {
       throw new HttpError("You cannot remove your own account.", 422);

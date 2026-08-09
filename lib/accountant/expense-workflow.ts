@@ -14,7 +14,6 @@ export async function decideExpense(input: {
   return prisma.$transaction(async (tx: any) => {
     const expense = await tx.accountantExpenseRequest.findFirst({
       where: { id: input.expenseId, companyId: input.companyId },
-      include: { decisions: true },
     });
     if (!expense) throw new Error("Expense request was not found.");
 
@@ -61,7 +60,6 @@ export async function decideExpense(input: {
         status: finalStatus,
         finalisedAt: finalStatus === "PENDING" ? null : new Date(),
       },
-      include: { decisions: true },
     });
 
     if (expense.status !== finalStatus && finalStatus !== "PENDING") {

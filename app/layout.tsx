@@ -7,6 +7,9 @@ import type {
   ReactNode,
 } from "react";
 
+import AppInstallPrompt from "@/components/AppInstallPrompt";
+import RouteTransitionBar from "@/components/RouteTransitionBar";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -81,7 +84,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>
+        <RouteTransitionBar />
         {children}
+        <AppInstallPrompt />
       </body>
     </html>
   );

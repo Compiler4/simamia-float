@@ -103,7 +103,13 @@ export async function GET() {
     const journalEntryDelegate = requiredDelegate("journalEntry");
     const manualReceiptDelegate = requiredDelegate("manualReceipt");
 
-    const chartOfAccounts = await ensureDefaultChartOfAccounts(companyId);
+    const chartOfAccountDelegate = requiredDelegate("chartOfAccount");
+    await ensureDefaultChartOfAccounts(companyId);
+    const chartOfAccounts = await chartOfAccountDelegate.findMany({
+      where: { companyId },
+      orderBy: { code: "asc" },
+      take: 500,
+    });
 
     const [
       company,

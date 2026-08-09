@@ -11,7 +11,7 @@ async function companyCutoff(companyId: string): Promise<number> {
 export async function markOperationalAttendance(input: {
   companyId: string;
   userId: string;
-  action: "FLOAT_RECEIVED" | "FLOAT_ISSUED" | "COLLECTION_RETURNED" | "GPS_MOVEMENT";
+  action: "FLOAT_RECEIVED" | "FLOAT_ISSUED" | "COLLECTION_RETURNED" | "MONEY_RETURNED" | "GPS_MOVEMENT";
   occurredAt?: Date;
 }) {
   const occurredAt = input.occurredAt || new Date();
@@ -19,7 +19,7 @@ export async function markOperationalAttendance(input: {
   const date = new Date(`${dateKey}T12:00:00+03:00`);
   const cutoff = await companyCutoff(input.companyId);
   const actionMinutes = currentMinutesTz(occurredAt);
-  const returning = input.action === "COLLECTION_RETURNED";
+  const returning = input.action === "COLLECTION_RETURNED" || input.action === "MONEY_RETURNED";
   const status = returning && actionMinutes > cutoff ? "LATE" : "PRESENT";
 
   const existing = await (db as any).attendance.findUnique({

@@ -29,6 +29,13 @@ const ALLOWED_MIME_TYPES = new Set([
   "application/pdf",
 ]);
 
+const STAFF_STORAGE_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "storage",
+  "private",
+  "staff",
+);
+
 function cleanText(value: unknown): string {
   return value === null || value === undefined ? "" : String(value).trim();
 }
@@ -161,20 +168,16 @@ export async function POST(request: Request) {
     const storedName = `${Date.now()}-${randomUUID()}${extensionForMime(
       finalMimeType,
     )}`;
-    const relativeDirectory = path.join(
-      "storage",
-      "private",
-      "staff",
-      String(session.companyId),
-      String(session.id),
-    );
-    const absoluteDirectory = path.join(process.cwd(), relativeDirectory);
+    const companyId = String(session.companyId);
+    const staffId = String(session.id);
+    const relativeDirectory = path.join("storage", "private", "staff", companyId, staffId);
+    const absoluteDirectory = path.join(STAFF_STORAGE_ROOT, companyId, staffId);
     await mkdir(absoluteDirectory, { recursive: true });
 
     const relativePath = path
       .join(relativeDirectory, storedName)
       .replaceAll("\\", "/");
-    const absolutePath = path.join(process.cwd(), relativePath);
+    const absolutePath = path.join(absoluteDirectory, storedName);
 
     await writeFile(absolutePath, finalBuffer, { flag: "wx" });
     writtenPath = absolutePath;

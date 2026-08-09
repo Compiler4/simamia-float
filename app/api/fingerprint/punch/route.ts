@@ -48,7 +48,8 @@ export async function POST(request: NextRequest) {
     const device = await prisma.accountantFingerprintDevice.findFirst({
       where: { serialNumber, status: "ACTIVE" },
     });
-    if (!device || !safeEqualHex(hashSecret(deviceKey), device.secretHash)) {
+    const storedHash = device?.secretHash ?? device?.accessTokenHash ?? "";
+    if (!device || !storedHash || !safeEqualHex(hashSecret(deviceKey), storedHash)) {
       return NextResponse.json({ success: false, message: "The fingerprint device is not authorised." }, { status: 401 });
     }
 
@@ -56,10 +57,12 @@ export async function POST(request: NextRequest) {
       where: { deviceId: device.id, externalUserCode, active: true },
     });
     if (!enrolment) throw new Error("The fingerprint user code is not enrolled on this device.");
+    const enrolledUserId = enrolment.userId ?? enrolment.staffId;
+    if (!enrolledUserId) throw new Error("The fingerprint enrolment is not linked to a staff account.");
 
-    const idCandidates: Array<string | number> = /^\d+$/.test(enrolment.userId)
-      ? [Number(enrolment.userId), enrolment.userId]
-      : [enrolment.userId];
+    const idCandidates: Array<string | number> = /^\d+$/.test(enrolledUserId)
+      ? [Number(enrolledUserId), enrolledUserId]
+      : [enrolledUserId];
     const companyCandidates: Array<string | number> = /^\d+$/.test(device.companyId)
       ? [Number(device.companyId), device.companyId]
       : [device.companyId];
@@ -90,14 +93,14 @@ export async function POST(request: NextRequest) {
       : currentHourInDar(occurredAt) < 13 ? "MORNING" : "EVENING";
 
     const existing = await prisma.accountantAttendance.findUnique({
-      where: { companyId_userId_date: { companyId: device.companyId, userId: enrolment.userId, date } },
+      where: { companyId_userId_date: { companyId: device.companyId, userId: enrolledUserId, date } },
     });
     const morningStatus = session === "MORNING" ? "PRESENT" : existing?.morningStatus ?? null;
     const eveningStatus = session === "EVENING" ? "PRESENT" : existing?.eveningStatus ?? null;
 
     await prisma.$transaction(async (tx: any) => {
       await tx.accountantAttendance.upsert({
-        where: { companyId_userId_date: { companyId: device.companyId, userId: enrolment.userId, date } },
+        where: { companyId_userId_date: { companyId: device.companyId, userId: enrolledUserId, date } },
         update: {
           ...(session === "MORNING"
             ? { morningStatus: "PRESENT", morningSource: "FINGERPRINT", checkInAt: occurredAt }
@@ -107,7 +110,7 @@ export async function POST(request: NextRequest) {
         },
         create: {
           companyId: device.companyId,
-          userId: enrolment.userId,
+          userId: enrolledUserId,
           date,
           morningStatus,
           eveningStatus,
@@ -129,7 +132,7 @@ export async function POST(request: NextRequest) {
       });
     });
 
-    return NextResponse.json({ success: true, message: `${session} attendance recorded.`, date: dateText, userId: enrolment.userId });
+    return NextResponse.json({ success: true, message: `${session} attendance recorded.`, date: dateText, userId: enrolledUserId });
   } catch (error) {
     console.error("[FINGERPRINT PUNCH]", error);
     return NextResponse.json(

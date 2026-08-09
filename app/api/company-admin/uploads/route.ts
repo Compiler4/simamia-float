@@ -56,6 +56,13 @@ const proofKinds = new Set([
   "SERVICE_PROOF",
 ]);
 
+const UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "company-admin",
+);
+
 function safeExtension(name: string, mimeType: string): string {
   const extension = path.extname(name).toLowerCase();
   if (/^\.[a-z0-9]{1,8}$/.test(extension)) return extension;
@@ -150,13 +157,7 @@ export async function POST(request: NextRequest) {
       compressed = prepared.compressed;
     }
 
-    const folder = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      "company-admin",
-      companyId,
-    );
+    const folder = path.join(UPLOAD_ROOT, companyId);
     await mkdir(folder, { recursive: true });
 
     const storedName = `${Date.now()}-${crypto.randomUUID()}${extension}`;

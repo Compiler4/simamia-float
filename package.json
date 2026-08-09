@@ -3,11 +3,12 @@
     "private": true,
     "version": "3.0.0",
     "scripts": {
+        "postinstall": "node scripts/prisma-generate-safe.mjs",
         "dev": "next dev --hostname 0.0.0.0 --port 3000",
-        "build": "next build",
+        "build": "node scripts/prisma-generate-safe.mjs && next build",
         "start": "next start --hostname 0.0.0.0 --port 3000",
-        "typecheck": "tsc --noEmit",
-        "prisma:generate": "prisma generate",
+        "typecheck": "tsc --noEmit --incremental false",
+        "prisma:generate": "node scripts/prisma-generate-safe.mjs",
         "prisma:format": "prisma format",
         "prisma:validate": "prisma validate",
         "db:sync": "prisma db push",
@@ -18,12 +19,13 @@
         "repair:v3": "node scripts/apply-v3-fixes.mjs",
         "db:migrate:deploy": "prisma migrate deploy",
         "db:schema:sync": "prisma db push",
-        "db:generate": "prisma generate",
+        "db:generate": "node scripts/prisma-generate-safe.mjs",
         "db:seed:all": "node scripts/run-all-seeds.mjs",
         "db:seed:data": "tsx prisma/seed-data-folder.ts",
         "db:seed:verify": "tsx prisma/verify-seeded-data.ts",
         "db:import:agents": "tsx prisma/import-float-agents-json.ts",
-        "db:import:bank": "tsx prisma/import-bank-statement-json.ts"
+        "db:import:bank": "tsx prisma/import-bank-statement-json.ts",
+        "github:check": "prisma validate && node scripts/prisma-generate-safe.mjs && tsc --noEmit --incremental false && next build"
 
     },
     "dependencies": {

@@ -1,114 +1,167 @@
-# Simamia Float — Automatic Daytime Staff GPS v2.2
+# Simamia Float
 
-This update makes the logged-in Staff Officer's browser location start automatically during the configured morning/day work window and stop automatically at night.
+Simamia Float is a production Next.js ERP-style system for company float control, staff operations, broker tracking, accounting verification, GPS activity, bank proof review, document upload, and multi-role dashboards.
 
-## Default schedule
+## What Is Ready
 
-- Start: `06:00`
-- Stop: `19:00`
-- Time zone: `Africa/Dar_es_Salaam`
+- Next.js 16 app router with Prisma 7 and MariaDB/MySQL.
+- Secure login flow with role-based redirects.
+- Staff, accountant, company admin, super admin, and developer workspaces.
+- Real database reads and writes through Prisma and API routes.
+- File upload endpoints scoped to safe public/private folders.
+- PWA manifest, service worker, install prompt, offline shell fallback, route transition bar, loading screen, and app error recovery.
+- GitHub-safe `.gitignore` that excludes secrets, generated clients, build output, node modules, backups, and private storage.
 
-Add the following to `.env` to change those values:
+## Requirements
 
-```env
-STAFF_GPS_TIME_ZONE="Africa/Dar_es_Salaam"
-STAFF_GPS_MORNING_START="06:00"
-STAFF_GPS_NIGHT_STOP="19:00"
-```
+- Node.js 20 or newer.
+- MySQL or MariaDB database.
+- A production HTTPS domain for browser GPS and PWA install behavior.
 
-The clock format must be `HH:mm` using the 24-hour clock.
+## Local Setup
 
-## Included files
-
-```text
-app/api/staff/gps/route.ts
-app/api/staff/gps/schedule/route.ts
-app/staff/dashboard/StaffLocationTracker.tsx
-app/staff/dashboard/StaffLocationTracker.module.css
-app/staff/dashboard/StaffDashboardClient.tsx
-app/staff/live-locations/StaffLiveLocationsClient.tsx
-lib/staff/gps-schedule.ts
-```
-
-The package also contains the compatible Live Locations and Service Visits files from v2.1.
-
-## Behaviour
-
-1. `StaffLocationTracker` is mounted once at the root of the Staff dashboard.
-2. It calls `/api/staff/gps/schedule` every 30 seconds.
-3. During the configured work window it starts one `navigator.geolocation.watchPosition` watcher.
-4. It saves a GPS point approximately every 15 seconds.
-5. The API marks the current Staff device `ACTIVE` and marks the Staff Officer's older active devices `INACTIVE`, so only one Staff pointer is shown.
-6. At the configured night stop time the watcher is cleared and the device becomes `INACTIVE`.
-7. At the next morning start, the watcher starts again automatically while the Staff portal remains open.
-8. Coordinates `0,0` are rejected.
-9. Travel-history insertion is compatibility-safe: a legacy `gps_tracking` table problem does not cancel the main device and ping save.
-10. The Live Locations page listens to the global tracker instead of starting a second GPS watcher.
-
-## Browser permission
-
-A web browser requires the Staff Officer to allow Location at least once. When permission is already granted, daily starting and stopping are automatic.
-
-The browser must have the Staff portal open for browser geolocation to run reliably. A normal website cannot guarantee that GPS restarts while the browser is completely closed or the phone has terminated the tab. For continuous closed-app background tracking, a native Android application or managed device application is required.
-
-Use `localhost` during development or HTTPS after deployment. Browser geolocation is normally blocked on insecure remote HTTP pages.
-
-## Installation
-
-1. Stop Next.js.
-2. Extract this package into the project root and replace the included files.
-3. Copy `.env.gps-schedule.example` values into the project's `.env`.
-4. Run:
+1. Install dependencies:
 
 ```powershell
-cd C:\Users\Micha\simamia-float
-npx prisma generate
+npm install
+```
 
-if (Test-Path ".next") {
-    Remove-Item -Recurse -Force ".next"
-}
+If npm has trouble with native packages on Windows, use pnpm:
 
+```powershell
+pnpm install --config.node-linker=hoisted
+pnpm approve-builds --all
+pnpm rebuild
+```
+
+2. Copy the environment template:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+3. Edit `.env.local` with the real database and secrets:
+
+```env
+DATABASE_URL="mysql://USER:PASSWORD@HOST:3306/simamia"
+AUTH_SECRET="use-a-long-random-production-secret"
+SESSION_SECRET="use-a-long-random-production-secret"
+CRON_SECRET="use-a-long-random-production-secret"
+APP_URL="https://your-domain.com"
+```
+
+4. Generate Prisma and sync the database schema:
+
+```powershell
+npm run prisma:generate
+npm run db:schema:sync
+```
+
+5. Start development:
+
+```powershell
 npm run dev
 ```
 
-5. Open:
+Open `http://localhost:3000/login`.
 
-```text
-http://localhost:3000/staff/dashboard
+## Production Build
+
+Run:
+
+```powershell
+npm run typecheck
+npm run build
 ```
 
-6. Allow Location permission when the browser asks.
+The build uses real environment values. For CI or Hostinger, configure the environment variables before running `npm run build`.
 
-## API tests
+## Hostinger Node Hosting
 
-While logged in as Staff, open:
+1. Buy a Hostinger plan that supports Node.js applications.
+2. Buy or connect a domain in Hostinger hPanel.
+3. Create a MySQL database in hPanel and save:
+   - database host
+   - database name
+   - database user
+   - database password
+4. Upload the project to GitHub.
+5. In Hostinger, create a Node.js app and connect it to the GitHub repository.
+6. Set the install command:
 
-```text
-http://localhost:3000/api/staff/gps/schedule
+```bash
+npm install
 ```
 
-During the day it should contain:
+7. Set the build command:
 
-```json
-{
-  "success": true,
-  "schedule": {
-    "startTime": "06:00",
-    "stopTime": "19:00",
-    "isSharingWindow": true
-  }
-}
+```bash
+npm run build
 ```
 
-At night `isSharingWindow` becomes `false`.
+8. Set the start command:
 
-The floating Staff GPS card displays one of:
+```bash
+npm run start
+```
 
-- Automatic GPS active
-- Automatic night stop
-- GPS permission needed
-- GPS unavailable/offline
+9. Add environment variables in Hostinger:
 
-## Database changes
+```env
+DATABASE_URL=mysql://USER:PASSWORD@HOST:3306/DB_NAME
+DATABASE_HOST=HOST
+DATABASE_PORT=3306
+DATABASE_USER=USER
+DATABASE_PASSWORD=PASSWORD
+DATABASE_NAME=DB_NAME
+DATABASE_CONNECTION_LIMIT=20
+AUTH_SECRET=long-random-secret
+SESSION_SECRET=long-random-secret
+CRON_SECRET=long-random-secret
+APP_URL=https://your-domain.com
+```
 
-No Prisma schema change is required. This update uses the existing `CompanyGpsDevice` and `CompanyGpsPing` models and their existing `ACTIVE` / `INACTIVE` status values.
+10. Run the database setup command from Hostinger terminal:
+
+```bash
+npm run db:schema:sync
+```
+
+11. Point the domain to the Node.js app in hPanel and enable SSL.
+12. Open `https://your-domain.com/login`.
+
+## GitHub Upload
+
+This package is prepared so you can safely run:
+
+```powershell
+git init
+git add .
+git commit -m "Prepare Simamia Float for hosting"
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
+git push -u origin main
+```
+
+Do not commit `.env`, `.env.local`, `.next`, `node_modules`, `generated`, private storage, or backup folders.
+
+## Scaling Notes
+
+The application code is structured for real production usage, but serving 1,000,000+ users depends on infrastructure as well as code:
+
+- Use managed MySQL/MariaDB with backups, read replicas, and connection pooling.
+- Run multiple Node.js instances behind a load balancer.
+- Store uploaded files in object storage such as S3-compatible storage instead of only local disk.
+- Put static assets and uploads behind a CDN.
+- Add Redis or another shared cache for high-traffic session and dashboard workloads.
+- Move heavy OCR, PDF, import, SMS, and report jobs into background workers.
+- Monitor errors, slow queries, CPU, memory, and database connections before traffic grows.
+
+## Validation Commands
+
+```powershell
+npm run prisma:validate
+npm run prisma:generate
+npm run typecheck
+npm run build
+```

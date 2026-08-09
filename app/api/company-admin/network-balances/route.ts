@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createAudit, requireCompanyMember, routeError, text, toNumber, HttpError } from "@/lib/company-admin-server";
 
-export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest) {
   try {
     const user = await requireCompanyMember(["COMPANY_ADMIN", "ACCOUNTANT"]);
     const companyId = user.companyId as string;
-    const { id } = await context.params;
     const body = await request.json();
+    const id = text(body.id ?? body.balanceId).trim();
     const db = prisma as any;
+    if (!id) throw new HttpError("Network balance id is required.", 422);
     const existing = await db.networkBalance.findFirst({ where: { id, companyId } });
     if (!existing) throw new HttpError("Network balance record not found.", 404);
     const data: Record<string, unknown> = { updatedByName: user.name };

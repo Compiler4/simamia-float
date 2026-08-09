@@ -9,13 +9,14 @@ import {
   HttpError,
 } from "@/lib/company-admin-server";
 
-export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest) {
   try {
     const user = await requireCompanyAdmin();
     const companyId = user.companyId as string;
-    const { id } = await context.params;
     const body = await request.json();
+    const id = text(body.id ?? body.expenseId).trim();
     const db = prisma as any;
+    if (!id) throw new HttpError("Expense id is required.", 422);
     const current = await db.companyExpense.findFirst({ where: { id, companyId } });
     if (!current) throw new HttpError("Expense not found.", 404);
     if (current.status !== "PENDING") throw new HttpError("Approved or rejected expenses are changed through the dual approval workflow.", 409);

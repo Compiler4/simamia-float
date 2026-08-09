@@ -57,7 +57,9 @@ async function deliverWebhook(
 }
 
 export async function sendNotice(input: NoticeInput) {
-  const channels = Array.from(new Set(input.channels || ["IN_APP", "EMAIL", "SMS"]));
+  const channels: Channel[] = Array.from(
+    new Set<Channel>(input.channels || ["IN_APP", "EMAIL", "SMS"]),
+  );
   const notification = await (db as any).notification.create({
     data: {
       companyId: input.companyId,

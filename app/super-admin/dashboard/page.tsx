@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import SuperAdminDashboardClient from "./SuperAdminDashboardClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function SuperAdminDashboardPage() {
   const user = await getCurrentUser();
 

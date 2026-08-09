@@ -23,6 +23,13 @@ const allowed = new Map<string, string>([
   ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"],
 ]);
 
+const UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "accounting-control",
+);
+
 export async function POST(request: NextRequest) {
   try {
     const session = await requirePortalRole(["ACCOUNTANT", "COMPANY_ADMIN"]);
@@ -37,7 +44,7 @@ export async function POST(request: NextRequest) {
       throw new PortalHttpError("Use JPG, PNG, WebP, PDF, CSV, XLS or XLSX.", 415);
     }
 
-    const folder = path.join(process.cwd(), "public", "uploads", "accounting-control", session.companyId);
+    const folder = path.join(UPLOAD_ROOT, session.companyId);
     await mkdir(folder, { recursive: true });
     const filename = `${Date.now()}-${randomUUID()}${extension}`;
     await writeFile(path.join(folder, filename), Buffer.from(await file.arrayBuffer()));

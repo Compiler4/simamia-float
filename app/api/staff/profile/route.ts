@@ -14,6 +14,14 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const STAFF_STORAGE_ROOT =
+  path.resolve(
+    /* turbopackIgnore: true */ process.cwd(),
+    "storage",
+    "private",
+    "staff",
+  );
+
 function cleanText(
   value: unknown,
 ): string {
@@ -92,23 +100,30 @@ async function removeOldProfileFile(
     })
     .catch(() => undefined);
 
+  const normalizedStoragePath =
+    oldRecord.storagePath.replaceAll("\\", "/");
+  const storagePrefix =
+    "storage/private/staff/";
+
+  if (
+    !normalizedStoragePath.startsWith(
+      storagePrefix,
+    )
+  ) {
+    return;
+  }
+
   const absolutePath =
     path.resolve(
-      process.cwd(),
-      oldRecord.storagePath,
-    );
-
-  const storageRoot =
-    path.resolve(
-      process.cwd(),
-      "storage",
-      "private",
-      "staff",
+      STAFF_STORAGE_ROOT,
+      normalizedStoragePath.slice(
+        storagePrefix.length,
+      ),
     );
 
   if (
     absolutePath.startsWith(
-      `${storageRoot}${path.sep}`,
+      `${STAFF_STORAGE_ROOT}${path.sep}`,
     )
   ) {
     await unlink(

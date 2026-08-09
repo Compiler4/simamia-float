@@ -39,6 +39,13 @@ const ALLOWED_EXTENSIONS = new Set([
   ".docx",
 ]);
 
+const UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "accountant-v3",
+);
+
 function safeExtension(file: File) {
   const ext = path.extname(file.name).toLowerCase().replace(/[^.a-z0-9]/g, "");
   return ext && ext.length <= 8 ? ext : "";
@@ -71,7 +78,11 @@ export async function POST(request: NextRequest) {
       safeSegment(user.companyId),
       safeSegment(user.role.toLowerCase()),
     );
-    const absoluteDirectory = path.join(process.cwd(), "public", relativeDirectory);
+    const absoluteDirectory = path.join(
+      UPLOAD_ROOT,
+      safeSegment(user.companyId),
+      safeSegment(user.role.toLowerCase()),
+    );
     await mkdir(absoluteDirectory, { recursive: true });
 
     const filename = `${Date.now()}-${randomUUID()}${extension}`;

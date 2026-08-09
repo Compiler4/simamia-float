@@ -3,6 +3,8 @@ import { getCurrentUser, getRoleLabel } from "@/lib/auth";
 import LogoutButton from "./LogoutButton";
 import styles from "./DeveloperDashboard.module.css";
 
+export const dynamic = "force-dynamic";
+
 export default async function DeveloperDashboardPage() {
   const user = await getCurrentUser();
 

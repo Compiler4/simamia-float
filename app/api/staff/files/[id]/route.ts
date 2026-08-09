@@ -7,6 +7,13 @@ import { prisma } from "@/lib/prisma";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const STAFF_STORAGE_ROOT = path.resolve(
+  /* turbopackIgnore: true */ process.cwd(),
+  "storage",
+  "private",
+  "staff",
+);
+
 type RouteContext = {
   params: Promise<{
     id: string;
@@ -83,21 +90,27 @@ export async function GET(
     );
   }
 
-  const storageRoot = path.resolve(
-    process.cwd(),
-    "storage",
-    "private",
-    "staff",
-  );
+  const normalizedStoragePath = record.storagePath.replaceAll("\\", "/");
+  const storagePrefix = "storage/private/staff/";
+
+  if (!normalizedStoragePath.startsWith(storagePrefix)) {
+    return Response.json(
+      {
+        success: false,
+        message: "The stored file path is invalid.",
+      },
+      { status: 400 },
+    );
+  }
 
   const absolutePath = path.resolve(
-    process.cwd(),
-    record.storagePath,
+    STAFF_STORAGE_ROOT,
+    normalizedStoragePath.slice(storagePrefix.length),
   );
 
   if (
     !absolutePath.startsWith(
-      `${storageRoot}${path.sep}`,
+      `${STAFF_STORAGE_ROOT}${path.sep}`,
     )
   ) {
     return Response.json(
@@ -116,7 +129,12 @@ export async function GET(
       .replaceAll("\r", "")
       .replaceAll("\n", "");
 
-    return new Response(content, {
+    const body = content.buffer.slice(
+      content.byteOffset,
+      content.byteOffset + content.byteLength,
+    ) as ArrayBuffer;
+
+    return new Response(body, {
       headers: {
         "Content-Type": record.mimeType,
         "Content-Length": String(content.length),

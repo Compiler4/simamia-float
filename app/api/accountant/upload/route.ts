@@ -25,6 +25,13 @@ const ALLOWED = new Map<string, string>([
   ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"],
 ]);
 
+const UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "accountant",
+);
+
 function documentKind(mime: string): string {
   if (mime.startsWith("image/")) return "IMAGE";
   if (mime === "application/pdf") return "PDF";
@@ -57,7 +64,7 @@ export async function POST(request: NextRequest) {
     const extension = ALLOWED.get(file.type) || path.extname(file.name).toLowerCase();
     const storedName = `${Date.now()}-${randomUUID()}${extension}`;
     const relativeDirectory = path.join("uploads", "accountant", context.companyId);
-    const absoluteDirectory = path.join(process.cwd(), "public", relativeDirectory);
+    const absoluteDirectory = path.join(UPLOAD_ROOT, context.companyId);
     await mkdir(absoluteDirectory, { recursive: true });
     const storagePath = path.join(absoluteDirectory, storedName);
     await writeFile(storagePath, bytes);

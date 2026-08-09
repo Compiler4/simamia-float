@@ -29,6 +29,13 @@ const EXTENSIONS = new Map<string, string>([
   ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"],
 ]);
 
+const UPLOAD_ROOT = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  "public",
+  "uploads",
+  "company-admin",
+);
+
 function text(value: unknown): string {
   return value === null || value === undefined ? "" : String(value).trim();
 }
@@ -102,7 +109,7 @@ export async function POST(request: Request) {
       companyId,
       "verification",
     );
-    const absoluteDirectory = path.join(process.cwd(), "public", relativeDirectory);
+    const absoluteDirectory = path.join(UPLOAD_ROOT, companyId, "verification");
     const absolutePath = path.join(absoluteDirectory, storedName);
 
     await mkdir(absoluteDirectory, { recursive: true });

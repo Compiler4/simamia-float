@@ -18,11 +18,11 @@ function getModel(resource: string) {
 
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ resource: string }> }
+  context: { params: Promise<{ resources: string }> }
 ) {
   try {
     const user = await getCurrentUser();
-    const { resource } = await context.params;
+    const { resources: resource } = await context.params;
 
     if (!user || user.role !== "COMPANY_ADMIN" || !user.companyId) {
       return NextResponse.json(

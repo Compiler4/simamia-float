@@ -12,7 +12,6 @@ import {
 
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await requireCompanyMember([
@@ -21,10 +20,12 @@ export async function POST(
       "STAFF",
     ]);
     const companyId = user.companyId as string;
-    const { id } = await context.params;
     const body = await request.json();
+    const id = text(body.id ?? body.visitId ?? body.serviceVisitId).trim();
     const documentId = text(body.documentId).trim();
     const db = prisma as any;
+
+    if (!id) throw new HttpError("Service visit id is required.", 422);
 
     const visit = await db.brokerServiceVisit.findFirst({
       where: {

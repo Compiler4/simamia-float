@@ -19,6 +19,13 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+const STAFF_STORAGE_ROOT = path.resolve(
+  /* turbopackIgnore: true */ process.cwd(),
+  "storage",
+  "private",
+  "staff",
+);
+
 type ReportRow = {
   date: Date;
   details: string;
@@ -531,9 +538,15 @@ async function createPdf(
   if (appendProofs) {
     for (const row of rows) {
       if (!row.storagePath || !row.mimeType) continue;
-      const storageRoot = path.resolve(process.cwd(), "storage", "private", "staff");
-      const absolutePath = path.resolve(process.cwd(), row.storagePath);
-      if (!absolutePath.startsWith(`${storageRoot}${path.sep}`)) continue;
+      const normalizedStoragePath = row.storagePath.replaceAll("\\", "/");
+      const storagePrefix = "storage/private/staff/";
+      if (!normalizedStoragePath.startsWith(storagePrefix)) continue;
+
+      const absolutePath = path.resolve(
+        STAFF_STORAGE_ROOT,
+        normalizedStoragePath.slice(storagePrefix.length),
+      );
+      if (!absolutePath.startsWith(`${STAFF_STORAGE_ROOT}${path.sep}`)) continue;
 
       try {
         const bytes = await readFile(absolutePath);
