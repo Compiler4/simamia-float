@@ -28,7 +28,7 @@ const MUTED = rgb(0.35, 0.4, 0.45);
 const LIGHT = rgb(0.95, 0.98, 0.96);
 const BORDER = rgb(0.78, 0.84, 0.8);
 const PUBLIC_UPLOAD_ROOT = path.join(
-  /*turbopackIgnore: true*/ process.cwd(),
+  /* turbopackIgnore: true */ process.cwd(),
   "public",
   "uploads",
 );
@@ -88,7 +88,7 @@ function publicUrlToPath(url: string): string | null {
 
 async function fileExists(filePath: string): Promise<boolean> {
   try {
-    await access(filePath);
+    await access(/* turbopackIgnore: true */ filePath);
     return true;
   } catch {
     return false;
@@ -320,7 +320,7 @@ async function appendDocument(
     return;
   }
 
-  const bytes = await readFile(filePath);
+  const bytes = await readFile(/* turbopackIgnore: true */ filePath);
   const mimeType = text(document.mimeType).toLowerCase();
   const extension = path.extname(filePath).toLowerCase();
 

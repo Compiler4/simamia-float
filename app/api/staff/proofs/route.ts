@@ -8,6 +8,25 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const text = (value: unknown) => String(value ?? "").trim();
+const proofKinds = new Set([
+  "SMS_SCREENSHOT",
+  "BANK_SLIP",
+  "BANK_RECEIPT",
+  "BANK_STATEMENT",
+  "PDF",
+  "DOCUMENT",
+  "IMAGE",
+  "SERVICE_PROOF",
+  "EXPENSE_RECEIPT",
+  "OTHER",
+]);
+
+function proofKind(value: unknown) {
+  const raw = text(value).toUpperCase();
+  if (raw === "SMS") return "SMS_SCREENSHOT";
+  if (raw === "PROOF") return "DOCUMENT";
+  return proofKinds.has(raw) ? raw : "OTHER";
+}
 
 export async function GET() {
   try {
@@ -28,7 +47,7 @@ export async function POST(request: NextRequest) {
   try {
     const staff = await requirePortalRole(["STAFF"]);
     const body = await request.json();
-    const kind = text(body.kind).toUpperCase();
+    const kind = proofKind(body.kind);
     const referenceNo = text(body.referenceNo);
     const documentUrl = text(body.documentUrl);
     const smsText = text(body.smsText);
@@ -41,13 +60,14 @@ export async function POST(request: NextRequest) {
       data: {
         companyId: staff.companyId,
         staffId: staff.id,
-        brokerId: text(body.brokerId) || null,
+        brokerCustomerId: text(body.brokerCustomerId ?? body.brokerId) || null,
         networkLineId: text(body.networkLineId) || null,
-        kind: kind || "OTHER",
+        kind,
         referenceNo,
         smsText: smsText || null,
         documentUrl: documentUrl || null,
-        amount: Number.isFinite(Number(body.amount)) ? Number(body.amount).toFixed(2) : null,
+        proofUrl: documentUrl || null,
+        amount: Number.isFinite(Number(body.amount)) ? Number(body.amount).toFixed(2) : "0",
         status: "PENDING",
       },
     });

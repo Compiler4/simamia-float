@@ -76,6 +76,15 @@ npm run build
 
 The build uses real environment values. For CI or Hostinger, configure the environment variables before running `npm run build`.
 
+## Vercel Deployment
+
+This project now includes `vercel.json` and a dedicated Vercel guide:
+
+- `docs/VERCEL_DEPLOYMENT.md`
+- `docs/SYSTEM_DOCUMENTATION.md`
+
+Before using the deployed app for production uploads on Vercel, connect persistent object storage such as Vercel Blob, S3, or R2. The app builds cleanly for Vercel, but runtime uploads need durable storage beyond serverless function disk.
+
 ## Hostinger Node Hosting
 
 1. Buy a Hostinger plan that supports Node.js applications.

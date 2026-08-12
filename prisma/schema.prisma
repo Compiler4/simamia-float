@@ -223,6 +223,113 @@ enum LocationRecordSource {
   CUSTOMER_GPS
 }
 
+enum MobileNetwork {
+  VODACOM
+  YAS_MIX
+  AIRTEL
+  HALOTEL
+  OTHER
+}
+
+enum ProofInspectionStatus {
+  PENDING
+  CHECKING
+  SUFFICIENT
+  INSUFFICIENT
+  MANUAL_REVIEW
+  ERROR
+}
+
+enum PortalDocumentKind {
+  PROFILE_IMAGE
+  SMS_SCREENSHOT
+  BANK_SLIP
+  BANK_RECEIPT
+  BANK_STATEMENT
+  PDF
+  DOCUMENT
+  IMAGE
+  SERVICE_PROOF
+  EXPENSE_RECEIPT
+  SIGNATURE
+  OTHER
+}
+
+enum ApprovalItemType {
+  EXPENSE
+  BANK_VERIFICATION
+}
+
+enum ApprovalDecisionValue {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum StaffNetworkPurpose {
+  FLOAT
+  CASH
+  BOTH
+}
+
+enum StaffNetworkLineStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum StaffFundingReceiptStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+enum StaffProofDirection {
+  ACCOUNTANT_TO_STAFF
+  STAFF_TO_BROKER
+  BROKER_TO_STAFF
+  STAFF_TO_ACCOUNTANT
+  STAFF_TO_BANK
+  EXPENSE_PAYMENT
+  OTHER
+}
+
+enum StaffProofStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum AttendanceSession {
+  MORNING
+  EVENING
+}
+
+enum AttendanceDeviceStatus {
+  ACTIVE
+  INACTIVE
+  REVOKED
+}
+
+enum AttendancePunchStatus {
+  ACCEPTED
+  REJECTED
+  REVIEW_REQUIRED
+}
+
+enum VerificationTargetType {
+  STAFF_PROOF
+  BANK_DEPOSIT
+  EXPENSE
+  OTHER
+}
+
+enum VerificationPacketStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
 model Company {
   id        String        @id @default(cuid())
   name      String
@@ -277,6 +384,13 @@ model Company {
   dataImportBatches              DataImportBatch[]
   importedBankStatements         ImportedBankStatement[]
   importedBankTransactions       ImportedBankTransaction[]
+  brokerAgentAccounts            BrokerAgentAccount[]
+  portalDocuments                PortalDocument[]
+  approvalDecisions              ApprovalDecision[]
+  networkBalances                NetworkBalance[]
+  staffNetworkLines              StaffNetworkLine[]
+  staffFundingReceipts           StaffFundingReceipt[]
+  staffProofSubmissions          StaffProofSubmission[]
   staffWorkAreas                 StaffWorkArea[]
   staffBrokerCustomerAssignments StaffBrokerCustomerAssignment[]
   brokerServiceVisits            BrokerServiceVisit[]
@@ -361,6 +475,13 @@ model User {
   customerAssignmentsAsStaff    StaffCustomerAssignment[]       @relation("StaffCustomerAssignmentStaff")
   customerAssignmentsCreated    StaffCustomerAssignment[]       @relation("StaffCustomerAssignmentCreator")
   ownedStaffFiles               StaffFile[]                     @relation("StaffFileOwner")
+  uploadedPortalDocuments       PortalDocument[]                @relation("PortalDocumentUploader")
+  approvalDecisions             ApprovalDecision[]              @relation("ApprovalDecisionReviewer")
+  assignedNetworkLines          StaffNetworkLine[]              @relation("StaffNetworkLineOwner")
+  receivedFundingReceipts       StaffFundingReceipt[]           @relation("StaffFundingReceiptStaff")
+  issuedFundingReceipts         StaffFundingReceipt[]           @relation("StaffFundingReceiptAccountant")
+  submittedProofs               StaffProofSubmission[]          @relation("StaffProofSubmissionStaff")
+  verifiedProofs                StaffProofSubmission[]          @relation("StaffProofSubmissionVerifier")
   staffWorkAreas                StaffWorkArea[]                 @relation("StaffWorkAreaStaff")
   brokerCustomerAssignments     StaffBrokerCustomerAssignment[] @relation("StaffBrokerCustomerAssignmentStaff")
   brokerCustomerAssignmentsMade StaffBrokerCustomerAssignment[] @relation("StaffBrokerCustomerAssignmentCreator")
@@ -432,42 +553,56 @@ model FinancialDay {
 }
 
 model Attendance {
-  id         String           @id @default(cuid())
-  companyId  String?
-  userId     String
-  date       DateTime
-  status     AttendanceStatus @default(PRESENT)
-  checkInAt  DateTime?
-  checkOutAt DateTime?
-  source     String           @default("SYSTEM_ACTIVITY")
-  notes      String?          @db.Text
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id            String           @id @default(cuid())
+  companyId     String?
+  userId        String
+  date          DateTime
+  status        AttendanceStatus @default(PRESENT)
+  checkInAt     DateTime?
+  checkOutAt    DateTime?
+  source        String           @default("SYSTEM_ACTIVITY")
+  notes         String?          @db.Text
+  morningStatus String?          @db.VarChar(40)
+  eveningStatus String?          @db.VarChar(40)
+  morningSource String?          @db.VarChar(80)
+  eveningSource String?          @db.VarChar(80)
+  markedById    String?          @db.VarChar(191)
+  verifiedById  String?          @db.VarChar(191)
+  verifiedAt    DateTime?
+  deviceId      String?          @db.VarChar(191)
+  overallStatus String?          @db.VarChar(40)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   company Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date])
   @@index([companyId])
+  @@index([companyId, date])
   @@index([status])
   @@map("attendance")
 }
 
 model Expense {
-  id           String         @id @default(cuid())
-  companyId    String
-  employeeId   String
-  reviewedById String?
-  expenseDate  DateTime       @default(now())
-  category     String
-  amount       Decimal        @db.Decimal(18, 2)
-  description  String?        @db.Text
-  receiptUrl   String?
-  status       ApprovalStatus @default(PENDING)
-  reviewNote   String?        @db.Text
-  reviewedAt   DateTime?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id              String         @id @default(cuid())
+  companyId       String
+  employeeId      String
+  createdById     String?
+  reviewedById    String?
+  expenseDate     DateTime       @default(now())
+  category        String
+  otherCategory   String?        @db.VarChar(191)
+  requestMode     String         @default("REIMBURSEMENT") @db.VarChar(80)
+  requestedAction String?        @db.Text
+  amount          Decimal        @db.Decimal(18, 2)
+  description     String?        @db.Text
+  receiptUrl      String?
+  status          ApprovalStatus @default(PENDING)
+  reviewNote      String?        @db.Text
+  reviewedAt      DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   employee   User    @relation("ExpenseEmployee", fields: [employeeId], references: [id], onDelete: Cascade)
@@ -475,6 +610,7 @@ model Expense {
 
   @@index([companyId, expenseDate])
   @@index([employeeId])
+  @@index([createdById])
   @@index([status])
   @@map("expenses")
 }
@@ -546,6 +682,7 @@ model FloatTransaction {
   toUser         User?           @relation("FloatTo", fields: [toUserId], references: [id], onDelete: SetNull)
   approvedBy     User?           @relation("FloatApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
   brokerCustomer BrokerCustomer? @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  fundingReceipt StaffFundingReceipt?
 
   @@unique([companyId, referenceNo])
   @@index([companyId, transactionType, status])
@@ -727,38 +864,56 @@ model Customer {
 }
 
 model BrokerCustomer {
-  id               String               @id @default(cuid())
-  companyId        String
-  code             String
-  name             String
-  businessName     String?
-  phone            String
-  alternatePhone   String?
-  email            String?
-  location         String
-  region           String?
-  district         String?
-  ward             String?
-  city             String?
-  address          String?
-  latitude         Float?
-  longitude        Float?
-  attendedBy       String?              @db.VarChar(191)
-  attendedDate     DateTime?
-  attendedLocation String?              @db.VarChar(255)
-  status           BrokerCustomerStatus @default(ACTIVE)
-  notes            String?              @db.Text
-  importBatchId    String?
-  sourceRowNumber  Int?
-  sourceSheetName  String?              @db.VarChar(100)
-  sourceAgentName  String?              @db.VarChar(255)
-  sourceMsisdn     String?              @db.VarChar(32)
-  sourceAliasCode  String?              @db.VarChar(32)
-  normalizedName   String?              @db.VarChar(255)
-  isImported       Boolean              @default(false)
-  importedAt       DateTime?
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
+  id                   String               @id @default(cuid())
+  companyId            String
+  code                 String
+  title                String?              @db.VarChar(40)
+  firstName            String?              @db.VarChar(120)
+  surname              String?              @db.VarChar(120)
+  name                 String
+  businessName         String?
+  tinNumber            String?              @db.VarChar(80)
+  officialAgentNo      String?              @db.VarChar(80)
+  phone                String
+  alternatePhone       String?
+  email                String?
+  location             String
+  region               String?
+  district             String?
+  ward                 String?
+  city                 String?
+  address              String?
+  postalAddress        String?              @db.VarChar(255)
+  country              String?              @db.VarChar(120)
+  nationality          String?              @db.VarChar(80)
+  dateOfBirth          DateTime?
+  gender               String?              @db.VarChar(40)
+  identityType         String?              @db.VarChar(80)
+  identityNumber       String?              @db.VarChar(80)
+  identityIssuedBy     String?              @db.VarChar(120)
+  identityOther        String?              @db.VarChar(120)
+  profileImageUrl      String?              @db.VarChar(500)
+  signatureUrl         String?              @db.VarChar(500)
+  registrationDate     DateTime?
+  latitude             Float?
+  longitude            Float?
+  attendedBy           String?              @db.VarChar(191)
+  attendedSignatureUrl String?              @db.VarChar(500)
+  attendedDate         DateTime?
+  attendedLocation     String?              @db.VarChar(255)
+  status               BrokerCustomerStatus @default(ACTIVE)
+  notes                String?              @db.Text
+  importBatchId        String?
+  sourceRowNumber      Int?
+  sourceSheetName      String?              @db.VarChar(100)
+  sourceAgentName      String?              @db.VarChar(255)
+  sourceMsisdn         String?              @db.VarChar(32)
+  sourceAliasCode      String?              @db.VarChar(32)
+  normalizedName       String?              @db.VarChar(255)
+  isImported           Boolean              @default(false)
+  importedAt           DateTime?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
 
   company           Company                         @relation(fields: [companyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   floatTransactions FloatTransaction[]
@@ -766,8 +921,10 @@ model BrokerCustomer {
   serviceActivities ServiceActivity[]
   importBatch       DataImportBatch?                @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
   bankTransactions  ImportedBankTransaction[]
+  agentAccounts     BrokerAgentAccount[]
   workAssignments   StaffBrokerCustomerAssignment[]
   serviceVisits     BrokerServiceVisit[]
+  proofSubmissions  StaffProofSubmission[]
 
   @@unique([companyId, code])
   @@index([companyId])
@@ -896,25 +1053,28 @@ model CompanyExpense {
 }
 
 model CompanyBankVerification {
-  id               String            @id @default(cuid())
-  companyId        String
-  uploadedById     String
-  uploadedByName   String
-  uploadedByRole   String
-  amount           Decimal           @db.Decimal(18, 2)
-  referenceNumber  String
-  depositDate      DateTime
-  bankAccount      String
-  depositSlipUrl   String?
-  bankReceiptUrl   String?
-  bankStatementUrl String?
-  status           CompanyBankStatus @default(PENDING)
-  isSeenByAdmin    Boolean           @default(false)
-  verifiedById     String?
-  verifiedByName   String?
-  verifiedAt       DateTime?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  id                    String                @id @default(cuid())
+  companyId             String
+  uploadedById          String
+  uploadedByName        String
+  uploadedByRole        String
+  amount                Decimal               @db.Decimal(18, 2)
+  referenceNumber       String
+  depositDate           DateTime
+  bankAccount           String
+  depositSlipUrl        String?
+  bankReceiptUrl        String?
+  bankStatementUrl      String?
+  proofInspectionStatus ProofInspectionStatus @default(PENDING)
+  proofMissingFields    String?               @db.Text
+  reviewNote            String?               @db.Text
+  status                CompanyBankStatus     @default(PENDING)
+  isSeenByAdmin         Boolean               @default(false)
+  verifiedById          String?
+  verifiedByName        String?
+  verifiedAt            DateTime?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
 
   company    Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
   uploadedBy User                 @relation("CompanyBankUploadedBy", fields: [uploadedById], references: [id], onDelete: Cascade)
@@ -1231,6 +1391,7 @@ model StaffFile {
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   owner   User    @relation("StaffFileOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  proofSubmissions StaffProofSubmission[]
 
   @@index([companyId, ownerUserId, createdAt])
   @@index([ownerUserId, kind, createdAt])
@@ -1328,6 +1489,7 @@ model BrokerServiceVisit {
   brokerCustomer  BrokerCustomer    @relation(fields: [brokerCustomerId], references: [id], onDelete: Cascade)
   device          CompanyGpsDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull)
   serviceActivity ServiceActivity?  @relation(fields: [serviceActivityId], references: [id], onDelete: SetNull)
+  proofSubmissions StaffProofSubmission[]
 
   @@unique([companyId, staffId, brokerCustomerId, serviceDay])
   @@index([companyId, serviceDay, status])
@@ -1432,6 +1594,297 @@ model ImportedBankTransaction {
   @@index([companyId, matchStatus])
   @@index([matchedBrokerCustomerId])
   @@map("imported_bank_transactions")
+}
+
+model BrokerAgentAccount {
+  id               String        @id @default(cuid())
+  companyId        String
+  brokerCustomerId String
+  network          MobileNetwork
+  simPhoneNumber   String        @db.VarChar(32)
+  agentNumber      String        @db.VarChar(80)
+  accountName      String?       @db.VarChar(191)
+  isPrimary        Boolean       @default(false)
+  status           String        @default("ACTIVE") @db.VarChar(30)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  company Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  broker  BrokerCustomer @relation(fields: [brokerCustomerId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, network, agentNumber])
+  @@index([companyId, network])
+  @@index([brokerCustomerId, status])
+  @@map("broker_agent_accounts")
+}
+
+model PortalDocument {
+  id                 String                @id @default(cuid())
+  companyId          String
+  uploadedById       String
+  brokerCustomerId   String?
+  bankVerificationId String?
+  serviceVisitId     String?
+  kind               PortalDocumentKind    @default(OTHER)
+  originalName       String                @db.VarChar(255)
+  storedName         String                @db.VarChar(255)
+  mimeType           String                @db.VarChar(120)
+  sizeBytes          Int
+  originalSizeBytes  Int?
+  compressed         Boolean               @default(false)
+  checksumSha256     String                @db.VarChar(64)
+  storagePath        String                @db.VarChar(600)
+  publicUrl          String                @db.VarChar(600)
+  extractedText      String?               @db.LongText
+  proofStatus        ProofInspectionStatus @default(PENDING)
+  missingFieldsJson  String?               @db.Text
+  analyzedAt         DateTime?
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+
+  company    Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  uploadedBy User    @relation("PortalDocumentUploader", fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  @@index([companyId, kind, createdAt])
+  @@index([uploadedById, createdAt])
+  @@index([brokerCustomerId])
+  @@index([bankVerificationId])
+  @@index([serviceVisitId])
+  @@map("portal_documents")
+}
+
+model ApprovalDecision {
+  id           String                @id @default(cuid())
+  companyId    String
+  itemType     ApprovalItemType
+  itemId       String
+  reviewerId   String
+  reviewerName String
+  reviewerRole Role
+  decision     ApprovalDecisionValue
+  reason       String                @db.Text
+  decidedAt    DateTime              @default(now())
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  company  Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  reviewer User    @relation("ApprovalDecisionReviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, itemType, itemId, reviewerRole])
+  @@index([companyId, itemType, itemId])
+  @@index([reviewerId, decidedAt])
+  @@map("approval_decisions")
+}
+
+model NetworkBalance {
+  id            String        @id @default(cuid())
+  companyId     String
+  network       MobileNetwork
+  simCardNumber String        @db.VarChar(32)
+  accountName   String?       @db.VarChar(191)
+  floatBalance  Decimal       @default(0) @db.Decimal(18, 2)
+  cashBalance   Decimal       @default(0) @db.Decimal(18, 2)
+  updatedByName String?       @db.VarChar(191)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, network, simCardNumber])
+  @@index([companyId, network])
+  @@map("network_balances")
+}
+
+model StaffNetworkLine {
+  id            String                 @id @default(cuid())
+  companyId     String
+  staffId       String
+  network       MobileNetwork
+  simCardNumber String                 @db.VarChar(32)
+  agentNumber   String?                @db.VarChar(80)
+  accountName   String?                @db.VarChar(191)
+  purpose       StaffNetworkPurpose    @default(BOTH)
+  assignedArea  String?                @db.VarChar(191)
+  isPrimary     Boolean                @default(false)
+  status        StaffNetworkLineStatus @default(ACTIVE)
+  floatBalance  Decimal                @default(0) @db.Decimal(18, 2)
+  cashBalance   Decimal                @default(0) @db.Decimal(18, 2)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff   User    @relation("StaffNetworkLineOwner", fields: [staffId], references: [id], onDelete: Cascade)
+
+  fundingReceipts  StaffFundingReceipt[]
+  proofSubmissions StaffProofSubmission[]
+
+  @@unique([companyId, network, simCardNumber])
+  @@index([companyId, staffId, status])
+  @@index([staffId, network])
+  @@map("staff_network_lines")
+}
+
+model StaffFundingReceipt {
+  id                 String                    @id @default(cuid())
+  companyId          String
+  staffId            String
+  accountantId       String
+  networkLineId      String?
+  floatTransactionId String?                   @unique
+  referenceNo        String                    @db.VarChar(191)
+  floatAmount        Decimal                   @default(0) @db.Decimal(18, 2)
+  cashAmount         Decimal                   @default(0) @db.Decimal(18, 2)
+  note               String?                   @db.Text
+  receiptUrl         String?                   @db.VarChar(600)
+  status             StaffFundingReceiptStatus @default(PENDING)
+  issuedAt           DateTime                  @default(now())
+  confirmedAt        DateTime?
+  rejectedAt         DateTime?
+  verifiedById       String?
+  verifiedAt         DateTime?
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+
+  company          Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff            User              @relation("StaffFundingReceiptStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  accountant       User              @relation("StaffFundingReceiptAccountant", fields: [accountantId], references: [id], onDelete: Restrict)
+  networkLine      StaffNetworkLine? @relation(fields: [networkLineId], references: [id], onDelete: SetNull)
+  floatTransaction FloatTransaction? @relation(fields: [floatTransactionId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, staffId, issuedAt])
+  @@index([accountantId, issuedAt])
+  @@index([networkLineId, issuedAt])
+  @@index([status])
+  @@map("staff_funding_receipts")
+}
+
+model StaffProofSubmission {
+  id               String              @id @default(cuid())
+  companyId        String
+  staffId          String
+  brokerCustomerId String?
+  serviceVisitId   String?
+  networkLineId    String?
+  fileId           String?
+  direction        StaffProofDirection @default(OTHER)
+  kind             PortalDocumentKind  @default(SMS_SCREENSHOT)
+  referenceNo      String              @db.VarChar(191)
+  transactionId    String?             @db.VarChar(191)
+  senderName       String              @default("") @db.VarChar(255)
+  receiverName     String              @default("") @db.VarChar(255)
+  amount           Decimal             @default(0) @db.Decimal(18, 2)
+  transactionAt    DateTime            @default(now())
+  smsText          String?             @db.LongText
+  proofUrl         String?             @db.VarChar(600)
+  documentUrl      String?             @db.VarChar(600)
+  weekKey          String              @default("") @db.VarChar(16)
+  status           StaffProofStatus    @default(PENDING)
+  verificationNote String?             @db.Text
+  verifiedById     String?
+  verifiedAt       DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  company      Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  staff        User                @relation("StaffProofSubmissionStaff", fields: [staffId], references: [id], onDelete: Cascade)
+  verifiedBy   User?               @relation("StaffProofSubmissionVerifier", fields: [verifiedById], references: [id], onDelete: SetNull)
+  broker       BrokerCustomer?     @relation(fields: [brokerCustomerId], references: [id], onDelete: SetNull)
+  networkLine  StaffNetworkLine?   @relation(fields: [networkLineId], references: [id], onDelete: SetNull)
+  file         StaffFile?          @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  serviceVisit BrokerServiceVisit? @relation(fields: [serviceVisitId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, referenceNo])
+  @@index([companyId, staffId, transactionAt])
+  @@index([staffId, weekKey])
+  @@index([brokerCustomerId])
+  @@index([serviceVisitId])
+  @@index([status, createdAt])
+  @@map("staff_proof_submissions")
+}
+
+model AttendanceDevice {
+  id             String                 @id @default(cuid())
+  companyId      String
+  name           String                 @db.VarChar(191)
+  serialNumber   String                 @db.VarChar(191)
+  location       String?                @db.VarChar(191)
+  vendor         String?                @db.VarChar(120)
+  apiKeyHash     String                 @db.VarChar(64)
+  status         AttendanceDeviceStatus @default(ACTIVE)
+  registeredById String
+  lastSeenAt     DateTime?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@unique([companyId, serialNumber])
+  @@index([companyId, status])
+  @@index([apiKeyHash])
+  @@map("attendance_devices")
+}
+
+model AttendanceDeviceEnrollment {
+  id               String   @id @default(cuid())
+  companyId        String
+  deviceId         String
+  userId           String
+  externalUserCode String   @db.VarChar(191)
+  fingerLabel      String?  @db.VarChar(80)
+  isActive         Boolean  @default(true)
+  enrolledById     String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([deviceId, externalUserCode])
+  @@unique([deviceId, userId])
+  @@index([companyId, userId, isActive])
+  @@map("attendance_device_enrollments")
+}
+
+model AttendancePunch {
+  id               String                @id @default(cuid())
+  companyId        String
+  deviceId         String
+  enrollmentId     String?
+  userId           String?
+  externalUserCode String                @db.VarChar(191)
+  session          AttendanceSession
+  occurredAt       DateTime
+  status           AttendancePunchStatus @default(ACCEPTED)
+  message          String?               @db.Text
+  rawPayloadJson   String?               @db.LongText
+  createdAt        DateTime              @default(now())
+
+  @@index([companyId, occurredAt])
+  @@index([deviceId, occurredAt])
+  @@index([userId, occurredAt])
+  @@map("attendance_punches")
+}
+
+model VerificationPacket {
+  id                     String                   @id @default(cuid())
+  companyId              String
+  title                  String?                  @db.VarChar(191)
+  targetType             VerificationTargetType
+  targetId               String
+  staffId                String?
+  sentByAdminId          String
+  sentByAdminName        String                   @db.VarChar(191)
+  assignedAccountantId   String?
+  message                String                   @db.Text
+  attachmentUrl          String?                  @db.VarChar(600)
+  status                 VerificationPacketStatus @default(PENDING)
+  reviewedByAccountantId String?
+  reviewReason           String?                  @db.Text
+  reviewedAt             DateTime?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+
+  @@index([companyId, targetType, targetId])
+  @@index([companyId, status, createdAt])
+  @@index([assignedAccountantId])
+  @@index([staffId, createdAt])
+  @@map("verification_packets")
 }
 
 // -----------------------------------------------------------------------------
