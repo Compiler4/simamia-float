@@ -69,6 +69,10 @@ function isDatabaseConfigurationError(error: unknown): boolean {
     message.includes("DATABASE_URL") ||
     message.includes("DATABASE_HOST") ||
     message.includes("Missing database setting") ||
+    message.includes("DriverAdapterError") ||
+    message.includes("pool timeout") ||
+    message.includes("ECONNREFUSED") ||
+    message.includes("P2010") ||
     message.includes("connect ECONNREFUSED 127.0.0.1") ||
     message.includes("connect ECONNREFUSED localhost")
   );
