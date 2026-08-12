@@ -65,6 +65,12 @@ npm run dev
 
 Open `http://localhost:3000/login`.
 
+To confirm the database is connected before logging in, open:
+
+```text
+http://localhost:3000/api/health/database
+```
+
 ## Production Build
 
 Run:
@@ -84,6 +90,8 @@ This project now includes `vercel.json` and a dedicated Vercel guide:
 - `docs/SYSTEM_DOCUMENTATION.md`
 
 Before using the deployed app for production uploads on Vercel, connect persistent object storage such as Vercel Blob, S3, or R2. The app builds cleanly for Vercel, but runtime uploads need durable storage beyond serverless function disk.
+
+For Vercel login to work, `DATABASE_URL` must point to a hosted MySQL/MariaDB database. `localhost` or `127.0.0.1` will fail in production because Vercel functions cannot reach your computer's local database.
 
 ## Hostinger Node Hosting
 

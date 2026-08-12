@@ -14,6 +14,14 @@ function isBuildOnlyPhase(): boolean {
   );
 }
 
+function isVercelRuntime(): boolean {
+  return Boolean(process.env.VERCEL);
+}
+
+function isLocalDatabaseHost(host: string): boolean {
+  return ["127.0.0.1", "localhost", "::1"].includes(host.trim().toLowerCase());
+}
+
 function required(name: string, value: string | undefined, fallback: string): string {
   const cleaned = value?.trim();
   if (cleaned) return cleaned;
@@ -57,8 +65,16 @@ function configFromDatabaseUrl(databaseUrl: string): MariaDbConfig {
 
   const database = decodeURIComponent(url.pathname.replace(/^\/+/, ""));
 
+  const host = required("DATABASE_HOST", url.hostname, "127.0.0.1");
+
+  if (isVercelRuntime() && !isBuildOnlyPhase() && isLocalDatabaseHost(host)) {
+    throw new Error(
+      "DATABASE_URL points to localhost. Set DATABASE_URL to a hosted MySQL/MariaDB database in Vercel, then redeploy.",
+    );
+  }
+
   return {
-    host: required("DATABASE_HOST", url.hostname, "127.0.0.1"),
+    host,
     port: numberSetting("DATABASE_PORT", url.port, 3306),
     user: required("DATABASE_USER", decodeURIComponent(url.username), "root"),
     password: decodeURIComponent(url.password),
@@ -78,8 +94,16 @@ function getMariaDbConfig(): MariaDbConfig {
     return configFromDatabaseUrl(databaseUrl);
   }
 
+  const host = required("DATABASE_HOST", process.env.DATABASE_HOST, "127.0.0.1");
+
+  if (isVercelRuntime() && !isBuildOnlyPhase() && isLocalDatabaseHost(host)) {
+    throw new Error(
+      "DATABASE_HOST points to localhost. Set DATABASE_URL or DATABASE_HOST to a hosted MySQL/MariaDB database in Vercel, then redeploy.",
+    );
+  }
+
   return {
-    host: required("DATABASE_HOST", process.env.DATABASE_HOST, "127.0.0.1"),
+    host,
     port: numberSetting("DATABASE_PORT", process.env.DATABASE_PORT, 3306),
     user: required("DATABASE_USER", process.env.DATABASE_USER, "root"),
     password: process.env.DATABASE_PASSWORD ?? "",

@@ -54,6 +54,26 @@ function jsonError(
   );
 }
 
+function messageFromError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return String(error);
+}
+
+function isDatabaseConfigurationError(error: unknown): boolean {
+  const message = messageFromError(error);
+
+  return (
+    message.includes("DATABASE_URL") ||
+    message.includes("DATABASE_HOST") ||
+    message.includes("Missing database setting") ||
+    message.includes("connect ECONNREFUSED 127.0.0.1") ||
+    message.includes("connect ECONNREFUSED localhost")
+  );
+}
+
 async function readBody(request: NextRequest): Promise<LoginBody> {
   const contentType =
     request.headers.get("content-type")?.toLowerCase() ?? "";
@@ -150,16 +170,28 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const lowerIdentifier = identifier.toLowerCase();
+    const identifierFilters = lowerIdentifier.includes("@")
+      ? [{ email: lowerIdentifier }, { email: identifier }]
+      : [
+          { username: identifier },
+          { username: lowerIdentifier },
+          { email: lowerIdentifier },
+        ];
 
     const user = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email: lowerIdentifier },
-          { username: identifier },
-          { username: lowerIdentifier },
-        ],
+        OR: identifierFilters,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        email: true,
+        role: true,
+        status: true,
+        companyId: true,
+        passwordHash: true,
+        profileImageUrl: true,
         company: {
           select: {
             id: true,
@@ -249,8 +281,18 @@ export async function POST(request: NextRequest): Promise<Response> {
   } catch (error) {
     console.error("AUTH_LOGIN_ERROR:", error);
 
+    if (isDatabaseConfigurationError(error)) {
+      return jsonError(
+        "The server database is not connected. Add the real hosted MySQL/MariaDB DATABASE_URL in Vercel, redeploy, then try again.",
+        503,
+        {
+          error: messageFromError(error),
+        },
+      );
+    }
+
     return jsonError("Login could not be completed.", 500, {
-      error: error instanceof Error ? error.message : String(error),
+      error: messageFromError(error),
     });
   }
 }

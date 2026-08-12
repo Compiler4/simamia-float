@@ -56,7 +56,9 @@ BROKER_GPS_MAX_ACCURACY_METERS=150
 AGENT_GPS_MAX_ACCURACY_METERS=150
 ```
 
-Use a managed MySQL/MariaDB database that accepts external/Vercel connections. For serverless hosting, keep `DATABASE_CONNECTION_LIMIT` modest unless the database provider gives a pooler.
+Use a managed MySQL/MariaDB database that accepts external/Vercel connections. Do not use `localhost`, `127.0.0.1`, or `::1` in Vercel. Those addresses point back to the Vercel function itself, so login will fail with a database connection error. For serverless hosting, keep `DATABASE_CONNECTION_LIMIT` modest unless the database provider gives a pooler.
+
+After editing environment variables in Vercel, redeploy the project so the new values are available to the running functions.
 
 ## 3. Database Setup
 
@@ -108,6 +110,8 @@ Vercel Cron automatically sends this header when the project has a `CRON_SECRET`
 6. Open `/api/health/database`.
 7. Open `/login`.
 8. Sign in by role and test each dashboard.
+
+If `/api/health/database` fails, fix the database environment variables before testing login. A successful login requires the same database connection used by the health endpoint.
 
 ## 7. Post-Deploy Smoke Test
 
