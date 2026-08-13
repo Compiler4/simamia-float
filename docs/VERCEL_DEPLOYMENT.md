@@ -40,6 +40,7 @@ DATABASE_USER=USER
 DATABASE_PASSWORD=PASSWORD
 DATABASE_NAME=DB_NAME
 DATABASE_CONNECTION_LIMIT=5
+ALLOW_LOCAL_DATABASE_IN_PRODUCTION=0
 
 AUTH_SECRET=long-random-production-secret
 SESSION_SECRET=long-random-production-secret
@@ -57,6 +58,8 @@ AGENT_GPS_MAX_ACCURACY_METERS=150
 ```
 
 Use a managed MySQL/MariaDB database that accepts external/Vercel connections. Do not use `localhost`, `127.0.0.1`, or `::1` in Vercel. Those addresses point back to the Vercel function itself, so login will fail with a database connection error. For serverless hosting, keep `DATABASE_CONNECTION_LIMIT` modest unless the database provider gives a pooler.
+
+Keep `ALLOW_LOCAL_DATABASE_IN_PRODUCTION=0` on Vercel. That setting is only for self-hosted/Hostinger servers where the Node app and MySQL run on the same machine. Also make sure `DATABASE_PASSWORD` is the MySQL/MariaDB password only, not a Stripe, SMS, or other API secret.
 
 After editing environment variables in Vercel, redeploy the project so the new values are available to the running functions.
 

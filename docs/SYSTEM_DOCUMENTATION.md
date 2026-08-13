@@ -180,6 +180,8 @@ Files:
 How it works:
 
 - Staff browser GPS records pings and device status.
+- `components/StaffGpsGate.tsx` runs globally and mounts the staff tracker after a signed-in Staff user changes route or returns focus to the app.
+- `app/staff/dashboard/StaffLocationTracker.tsx` checks the GPS work schedule, starts browser geolocation during the active window, saves pings, and records denied permission or schedule-stop events.
 - Live location pages combine staff devices, broker devices, broker database coordinates, and recent visits.
 - Fingerprint devices can submit morning/evening attendance.
 - Cron checks can create offline and missed-return alerts.
@@ -188,7 +190,26 @@ Production requirements:
 
 - HTTPS domain.
 - Staff must allow browser location.
+- Browser GPS permission is requested when the installed/mobile app opens and the staff tracker starts; browsers do not allow permission to be granted during installation itself.
 - `CRON_SECRET` if scheduled routes are enabled.
+
+### Installable Mobile And Windows App
+
+Files:
+
+- `app/manifest.ts`
+- `public/sw.js`
+- `components/AppInstallPrompt.tsx`
+- `components/RouteTransitionBar.tsx`
+
+How it works:
+
+- The app exposes a PWA manifest and service worker.
+- The install prompt supports Android, Windows Chrome, Windows Edge, and other PWA-capable browsers.
+- iPhone and iPad users install from Safari using Share, then Add to Home Screen.
+- The service worker caches the login shell and static assets only.
+- API routes are not cached, so float, reports, login, GPS, and dashboard data remain live database reads/writes.
+- Route transitions show a small progress bar so page changes feel responsive.
 
 ### Documents, Uploads, And Reports
 

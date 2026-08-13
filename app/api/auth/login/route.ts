@@ -287,7 +287,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     if (isDatabaseConfigurationError(error)) {
       return jsonError(
-        "The server database is not connected. Add the real hosted MySQL/MariaDB DATABASE_URL in Vercel, redeploy, then try again.",
+        "The server database is not connected. Add the real reachable MySQL/MariaDB DATABASE_URL in the hosting environment, redeploy, then try again.",
         503,
         {
           error: messageFromError(error),

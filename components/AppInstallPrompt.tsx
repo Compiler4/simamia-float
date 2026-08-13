@@ -2,7 +2,10 @@
 
 import {
   Download,
+  MapPin,
   RefreshCw,
+  ShieldCheck,
+  Smartphone,
   Wifi,
   WifiOff,
   X,
@@ -28,6 +31,7 @@ export default function AppInstallPrompt() {
   const [isOnline, setIsOnline] = useState(true);
   const [dismissed, setDismissed] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [canShowInstallHelp, setCanShowInstallHelp] = useState(false);
 
   useEffect(() => {
     const standalone =
@@ -36,6 +40,7 @@ export default function AppInstallPrompt() {
     setIsStandalone(standalone);
     setIsOnline(window.navigator.onLine);
     setDismissed(window.localStorage.getItem(DISMISSED_KEY) === "true");
+    setCanShowInstallHelp(!standalone);
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => undefined);
@@ -94,7 +99,7 @@ export default function AppInstallPrompt() {
         <span>{isOnline ? "Live connection" : "Offline mode"}</span>
       </div>
 
-      {!dismissed && installEvent ? (
+      {!dismissed && canShowInstallHelp ? (
         <div className={styles.installCard}>
           <button
             className={styles.close}
@@ -104,12 +109,37 @@ export default function AppInstallPrompt() {
           >
             <X size={16} />
           </button>
-          <strong>Install Simamia Float</strong>
-          <span>Open it like a phone app with faster access on this device.</span>
-          <button className={styles.action} type="button" onClick={installApp}>
-            <Download size={17} />
-            Install app
-          </button>
+          <div className={styles.installTitle}>
+            <span className={styles.installIcon}>
+              <Smartphone size={18} />
+            </span>
+            <div>
+              <strong>Install Simamia Float</strong>
+              <span>Use it like a secure mobile and Windows app.</span>
+            </div>
+          </div>
+
+          <ul className={styles.installBenefits}>
+            <li>
+              <ShieldCheck size={15} />
+              Faster role dashboards and offline shell access
+            </li>
+            <li>
+              <MapPin size={15} />
+              Staff GPS prompt appears when the app opens
+            </li>
+          </ul>
+
+          {installEvent ? (
+            <button className={styles.action} type="button" onClick={installApp}>
+              <Download size={17} />
+              Install app
+            </button>
+          ) : (
+            <span className={styles.manualInstall}>
+              Open your browser menu and choose Add to Home screen or Install app.
+            </span>
+          )}
         </div>
       ) : (
         <button

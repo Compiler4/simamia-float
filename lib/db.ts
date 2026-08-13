@@ -27,10 +27,30 @@ function isLocalDatabaseHost(host: string): boolean {
   return ["127.0.0.1", "localhost", "::1"].includes(host.trim().toLowerCase());
 }
 
+function isVercelLikeAppUrl(): boolean {
+  const appUrl = process.env.APP_URL?.trim();
+  if (!appUrl) return false;
+
+  try {
+    const hostname = new URL(appUrl).hostname.toLowerCase();
+    return hostname === "vercel.app" || hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
+
+function canAllowLocalDatabaseHost(): boolean {
+  return (
+    process.env.ALLOW_LOCAL_DATABASE_IN_PRODUCTION === "1" &&
+    !isVercelRuntime() &&
+    !isVercelLikeAppUrl()
+  );
+}
+
 function shouldBlockLocalDatabaseHost(): boolean {
   return (
     !isBuildOnlyPhase() &&
-    process.env.ALLOW_LOCAL_DATABASE_IN_PRODUCTION !== "1" &&
+    !canAllowLocalDatabaseHost() &&
     (isVercelRuntime() || process.env.NODE_ENV === "production")
   );
 }
@@ -82,7 +102,7 @@ function configFromDatabaseUrl(databaseUrl: string): MariaDbConfig {
 
   if (shouldBlockLocalDatabaseHost() && isLocalDatabaseHost(host)) {
     throw new Error(
-      "DATABASE_URL points to a local database host. Set DATABASE_URL to a hosted MySQL/MariaDB database in Vercel, then redeploy.",
+      "DATABASE_URL points to a local database host. Use a reachable MySQL/MariaDB host for Vercel, or enable ALLOW_LOCAL_DATABASE_IN_PRODUCTION=1 only on a self-hosted/Hostinger server where MySQL runs on the same machine.",
     );
   }
 
@@ -111,7 +131,7 @@ function getMariaDbConfig(): MariaDbConfig {
 
   if (shouldBlockLocalDatabaseHost() && isLocalDatabaseHost(host)) {
     throw new Error(
-      "DATABASE_HOST points to a local database host. Set DATABASE_URL or DATABASE_HOST to a hosted MySQL/MariaDB database in Vercel, then redeploy.",
+      "DATABASE_HOST points to a local database host. Use a reachable MySQL/MariaDB host for Vercel, or enable ALLOW_LOCAL_DATABASE_IN_PRODUCTION=1 only on a self-hosted/Hostinger server where MySQL runs on the same machine.",
     );
   }
 

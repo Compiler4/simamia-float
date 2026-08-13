@@ -9,6 +9,7 @@ import type {
 
 import AppInstallPrompt from "@/components/AppInstallPrompt";
 import RouteTransitionBar from "@/components/RouteTransitionBar";
+import StaffGpsGate from "@/components/StaffGpsGate";
 
 import "./globals.css";
 
@@ -86,6 +87,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <RouteTransitionBar />
         {children}
+        <StaffGpsGate />
         <AppInstallPrompt />
       </body>
     </html>

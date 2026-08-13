@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 
 import LiveMap from "../live-locations/LiveMap";
 import StaffAdvancedOperations from "./StaffAdvancedOperations";
-import StaffLocationTracker from "./StaffLocationTracker";
 import StaffLiveLocationsClient from "../live-locations/StaffLiveLocationsClient";
 import styles from "./StaffDashboard.module.css";
 
@@ -757,7 +756,6 @@ export default function StaffDashboardClient({ user }: Props) {
 
   return (
     <main className={`${styles.shell} ${collapsed ? styles.collapsed : ""}`}>
-      <StaffLocationTracker />
       <button className={`${styles.backdrop} ${mobileOpen ? styles.backdropVisible : ""}`} onClick={() => setMobileOpen(false)} aria-label="Close menu" />
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.sidebarOpen : ""}`}>
         <div className={styles.logo}><span><Icon name="wallet" size={24}/></span><div><strong>Simamia Float</strong><small>Staff Officer Portal</small></div><em>LIVE</em></div>

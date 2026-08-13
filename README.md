@@ -10,6 +10,7 @@ Simamia Float is a production Next.js ERP-style system for company float control
 - Real database reads and writes through Prisma and API routes.
 - File upload endpoints scoped to safe public/private folders.
 - PWA manifest, service worker, install prompt, offline shell fallback, route transition bar, loading screen, and app error recovery.
+- Installable mobile and Windows PWA shell with a global staff GPS gate that starts location tracking after Staff login.
 - GitHub-safe `.gitignore` that excludes secrets, generated clients, build output, node modules, backups, and private storage.
 
 ## Requirements
@@ -95,6 +96,8 @@ For Vercel login to work, `DATABASE_URL` must point to a hosted MySQL/MariaDB da
 
 ## Hostinger Node Hosting
 
+Use the full guide in `docs/HOSTINGER_DEPLOYMENT.md`.
+
 1. Buy a Hostinger plan that supports Node.js applications.
 2. Buy or connect a domain in Hostinger hPanel.
 3. Create a MySQL database in hPanel and save:
@@ -132,20 +135,32 @@ DATABASE_USER=USER
 DATABASE_PASSWORD=PASSWORD
 DATABASE_NAME=DB_NAME
 DATABASE_CONNECTION_LIMIT=20
+ALLOW_LOCAL_DATABASE_IN_PRODUCTION=0
 AUTH_SECRET=long-random-secret
 SESSION_SECRET=long-random-secret
 CRON_SECRET=long-random-secret
 APP_URL=https://your-domain.com
 ```
 
-10. Run the database setup command from Hostinger terminal:
+If Hostinger gives you `localhost` as the database host because MySQL and the Node app run on the same server, set `ALLOW_LOCAL_DATABASE_IN_PRODUCTION=1`. Keep it `0` on Vercel.
+
+10. Import `C:/Users/Micha/Downloads/simamia (1).sql` into the Hostinger database using phpMyAdmin or the Hostinger terminal.
+
+11. Run the database setup command from Hostinger terminal if the schema needs syncing after import:
 
 ```bash
 npm run db:schema:sync
 ```
 
-11. Point the domain to the Node.js app in hPanel and enable SSL.
-12. Open `https://your-domain.com/login`.
+12. Point the domain to the Node.js app in hPanel and enable SSL.
+13. Open `https://your-domain.com/api/health/database`.
+14. Open `https://your-domain.com/login`.
+
+## Mobile And Windows App Install
+
+The project includes `app/manifest.ts`, `public/sw.js`, and `components/AppInstallPrompt.tsx`. Users can install it from supported browsers on Android, Windows Chrome, Windows Edge, and other PWA-capable browsers. On iPhone/iPad, use Safari Share, then Add to Home Screen.
+
+Staff GPS permission is requested by the browser when a Staff user opens the app over HTTPS during the configured work window. Browsers do not allow websites to grant GPS permission during the installer itself.
 
 ## GitHub Upload
 
