@@ -187,7 +187,11 @@ export async function GET() {
       }),
       db.brokerServiceVisit.findMany({
         where: { companyId },
-        include: { staff: true, broker: { include: { agentAccounts: true } }, device: true },
+        include: {
+          staff: true,
+          brokerCustomer: { include: { agentAccounts: true } },
+          device: true,
+        },
         orderBy: { startedAt: "desc" },
         take: 10000,
       }),

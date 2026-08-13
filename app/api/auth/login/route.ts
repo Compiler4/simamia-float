@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { createAuthSession, getDashboardPath } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -129,6 +128,7 @@ async function readBody(request: NextRequest): Promise<LoginBody> {
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
+    const { prisma } = await import("@/lib/prisma");
     let body: LoginBody;
 
     try {

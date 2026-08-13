@@ -25,6 +25,9 @@
         "db:seed:verify": "tsx prisma/verify-seeded-data.ts",
         "db:import:agents": "tsx prisma/import-float-agents-json.ts",
         "db:import:bank": "tsx prisma/import-bank-statement-json.ts",
+        "local:repair-schema": "node scripts/repair-local-schema.mjs",
+        "local:reset-passwords": "node scripts/reset-local-passwords.mjs",
+        "local:setup": "npm run local:repair-schema && npm run local:reset-passwords",
         "github:check": "prisma validate && node scripts/prisma-generate-safe.mjs && tsc --noEmit --incremental false && next build"
 
     },

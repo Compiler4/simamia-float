@@ -431,6 +431,11 @@ model User {
   lastLoginAt       DateTime?
   profileImageUrl   String?    @db.VarChar(500)
   assignedRegion    String?    @db.VarChar(150)
+  nidaNumber        String?    @unique @db.VarChar(40)
+  dateOfBirth       DateTime?
+  gender            String?    @db.VarChar(40)
+  nationality       String?    @db.VarChar(80)
+  physicalAddress   String?    @db.VarChar(255)
   usernameChangedAt DateTime?
   passwordChangedAt DateTime?
   createdAt         DateTime   @default(now())

@@ -58,6 +58,14 @@ npm run prisma:generate
 npm run db:schema:sync
 ```
 
+If you imported `C:/Users/Micha/Downloads/simamia (1).sql`, run the local compatibility setup after import:
+
+```powershell
+npm run local:setup
+```
+
+That keeps the imported data, adds missing local schema columns required by the current app, and resets development account passwords.
+
 5. Start development:
 
 ```powershell
@@ -71,6 +79,30 @@ To confirm the database is connected before logging in, open:
 ```text
 http://localhost:3000/api/health/database
 ```
+
+## Local Login Accounts
+
+For local development, reset the imported/seeded account passwords with:
+
+```powershell
+npm run local:reset-passwords
+```
+
+The script only runs automatically against `localhost`, `127.0.0.1`, or `::1` unless you explicitly override it. After reset, use password:
+
+```text
+Simamia@2026
+```
+
+Common local usernames:
+
+| Role | Username |
+|---|---|
+| System Developer | `system-admin` |
+| Super Admin | `super-admin` |
+| Company Admin | `company-admin` |
+| Accountant | `kelvin` |
+| Staff | `meda`, `enjoy`, `baraka` |
 
 ## Production Build
 
