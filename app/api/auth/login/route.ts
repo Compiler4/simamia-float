@@ -142,14 +142,9 @@ export async function POST(request: NextRequest): Promise<Response> {
       );
     }
 
-    const identifier = cleanText(
-      body.identifier ??
-        body.usernameOrEmail ??
-        body.emailOrUsername ??
-        body.login ??
-        body.email ??
-        body.username,
-    );
+    const email = cleanText(
+      body.email ?? body.identifier ?? body.login,
+    ).toLowerCase();
 
     const passwordValue =
       body.password ?? body.userPassword ?? body.pass;
@@ -161,30 +156,28 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const rememberMe = booleanValue(body.rememberMe);
 
-    if (!identifier || !password) {
+    if (!email || !password) {
       return jsonError(
-        "Enter your email or username and password.",
+        "Enter your registered email and password.",
         422,
         {
           receivedFields: Object.keys(body),
-          hasIdentifier: Boolean(identifier),
+          hasEmail: Boolean(email),
           hasPassword: Boolean(password),
         },
       );
     }
 
-    const lowerIdentifier = identifier.toLowerCase();
-    const identifierFilters = lowerIdentifier.includes("@")
-      ? [{ email: lowerIdentifier }, { email: identifier }]
-      : [
-          { username: identifier },
-          { username: lowerIdentifier },
-          { email: lowerIdentifier },
-        ];
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return jsonError(
+        "Use your registered email address, not a username.",
+        422,
+      );
+    }
 
     const user = await prisma.user.findFirst({
       where: {
-        OR: identifierFilters,
+        email,
       },
       select: {
         id: true,
@@ -207,7 +200,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
     if (!user) {
-      return jsonError("Invalid email, username or password.", 401);
+      return jsonError("Invalid email or password.", 401);
     }
 
     if (String(user.status).trim().toUpperCase() !== "ACTIVE") {
@@ -242,7 +235,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       });
 
     if (!passwordMatches) {
-      return jsonError("Invalid email, username or password.", 401);
+      return jsonError("Invalid email or password.", 401);
     }
 
     await prisma.user.update({

@@ -87,7 +87,7 @@ export default function LoginForm() {
   const router = useRouter();
   const submittingRef = useRef(false);
 
-  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -97,12 +97,12 @@ export default function LoginForm() {
 
   useEffect(() => {
     try {
-      const rememberedIdentifier = window.localStorage.getItem(
-        "simamia_remembered_identifier",
+      const rememberedEmail = window.localStorage.getItem(
+        "simamia_remembered_email",
       );
 
-      if (rememberedIdentifier) {
-        setIdentifier(rememberedIdentifier);
+      if (rememberedEmail) {
+        setEmail(rememberedEmail);
         setRememberMe(true);
       }
     } catch {
@@ -119,10 +119,15 @@ export default function LoginForm() {
       return;
     }
 
-    const cleanedIdentifier = identifier.trim();
+    const cleanedEmail = email.trim().toLowerCase();
 
-    if (!cleanedIdentifier) {
-      setError("Enter your email address or username.");
+    if (!cleanedEmail) {
+      setError("Enter your registered email address.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedEmail)) {
+      setError("Use your registered email address, not a username.");
       return;
     }
 
@@ -146,7 +151,7 @@ export default function LoginForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          identifier: cleanedIdentifier,
+          email: cleanedEmail,
           password,
           rememberMe,
         }),
@@ -181,12 +186,12 @@ export default function LoginForm() {
       try {
         if (rememberMe) {
           window.localStorage.setItem(
-            "simamia_remembered_identifier",
-            cleanedIdentifier,
+            "simamia_remembered_email",
+            cleanedEmail,
           );
         } else {
           window.localStorage.removeItem(
-            "simamia_remembered_identifier",
+            "simamia_remembered_email",
           );
         }
       } catch {
@@ -337,22 +342,22 @@ export default function LoginForm() {
 
               <form className={styles.form} onSubmit={submitLogin} noValidate>
                 <label className={styles.field}>
-                  <span className={styles.fieldLabel}>Email or username</span>
+                  <span className={styles.fieldLabel}>Registered email</span>
                   <span className={styles.inputWrapper}>
                     <MaterialIcon
-                      name="person"
+                      name="mail"
                       className={styles.inputIcon}
                     />
                     <input
-                      type="text"
-                      name="identifier"
-                      value={identifier}
+                      type="email"
+                      name="email"
+                      value={email}
                       onChange={(event) => {
-                        setIdentifier(event.target.value);
+                        setEmail(event.target.value);
                         if (error) setError("");
                       }}
-                      placeholder="Enter email or username"
-                      autoComplete="username"
+                      placeholder="name@company.com"
+                      autoComplete="email"
                       autoCapitalize="none"
                       spellCheck={false}
                       disabled={loading}

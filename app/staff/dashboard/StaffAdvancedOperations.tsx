@@ -2343,6 +2343,28 @@ function GpsView({
 }
 
 function TravelHistoryView({ data }: { data: Data }) {
+  function routeDistance(
+    first: { latitude: number; longitude: number },
+    second: { latitude: number; longitude: number },
+  ) {
+    const radius = 6_371_000;
+    const toRadians = (value: number) => (value * Math.PI) / 180;
+    const lat1 = toRadians(first.latitude);
+    const lat2 = toRadians(second.latitude);
+    const deltaLat = toRadians(second.latitude - first.latitude);
+    const deltaLng = toRadians(second.longitude - first.longitude);
+    const value =
+      Math.sin(deltaLat / 2) ** 2 +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) ** 2;
+    return radius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+  }
+
+  function routeDistanceLabel(metres: number) {
+    if (!Number.isFinite(metres) || metres <= 0) return "0 m";
+    if (metres < 1000) return `${Math.round(metres)} m`;
+    return `${(metres / 1000).toFixed(metres >= 10_000 ? 1 : 2)} km`;
+  }
+
   const history = data.pings
     .filter(
       (ping) =>
@@ -2362,7 +2384,33 @@ function TravelHistoryView({ data }: { data: Data }) {
       type: "history" as const,
     }));
 
-  const latest = history.length ? [history[history.length - 1]] : [];
+  let runningDistance = 0;
+  const enrichedHistory = history.map((point, index) => {
+    const previous = index > 0 ? history[index - 1] : null;
+    const segmentMetres = previous
+      ? routeDistance(previous, point)
+      : 0;
+    runningDistance += segmentMetres;
+    const totalMetres = runningDistance;
+
+    return {
+      ...point,
+      label: `Stop ${index + 1}`,
+      subtitle: `${date(point.capturedAt, true)} - segment ${routeDistanceLabel(segmentMetres)} - total ${routeDistanceLabel(totalMetres)}`,
+      segmentMetres,
+      totalMetres,
+    };
+  });
+
+  const latest = enrichedHistory.length ? [enrichedHistory[enrichedHistory.length - 1]] : [];
+  const totalMetres = enrichedHistory.at(-1)?.totalMetres ?? 0;
+  const averageSpeed =
+    history.length > 1
+      ? history.reduce((sum, point) => {
+          const match = data.pings.find((ping) => String(ping.capturedAt) === String(point.capturedAt));
+          return sum + Number(match?.speedKph || 0);
+        }, 0) / history.length
+      : 0;
 
   return (
     <Section
@@ -2371,15 +2419,23 @@ function TravelHistoryView({ data }: { data: Data }) {
       icon="route"
     >
       <div className={styles.travelSummary}>
-        <Metric label="Distance covered" value={`${data.stats.distanceKm} km`} icon="route" />
+        <Metric label="Distance covered" value={routeDistanceLabel(totalMetres || Number(data.stats.distanceKm || 0) * 1000)} icon="route" />
         <Metric label="GPS points" value={history.length} icon="radar" />
+        <Metric label="Average speed" value={`${Math.round(averageSpeed)} km/h`} icon="speed" />
         <Metric label="Period" value={data.period.label} icon="calendar_month" />
       </div>
       <div className={styles.mapCard}>
-        <LiveMap points={latest} history={history} height={540} />
+        <LiveMap points={latest} history={enrichedHistory} height={560} />
+      </div>
+      <div className={styles.travelRouteStrip}>
+        <span>
+          <Icon name="timeline" />
+          Dotted GPS route with numbered stops
+        </span>
+        <strong>{routeDistanceLabel(totalMetres || Number(data.stats.distanceKm || 0) * 1000)} covered</strong>
       </div>
       <div className={styles.travelRecords}>
-        {history
+        {enrichedHistory
           .slice()
           .reverse()
           .slice(0, 80)
@@ -2392,7 +2448,8 @@ function TravelHistoryView({ data }: { data: Data }) {
                 </strong>
                 <small>{date(point.capturedAt, true)}</small>
               </span>
-              <b>{point.subtitle}</b>
+              <b>{routeDistanceLabel(point.segmentMetres)}</b>
+              <em>{routeDistanceLabel(point.totalMetres)} total</em>
             </article>
           ))}
         {!history.length && <Empty text="No GPS travel points were recorded for this period." />}

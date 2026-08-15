@@ -3,6 +3,11 @@ import PDFDocument from "pdfkit";
 
 import { prisma } from "@/lib/prisma";
 import { HttpError, requireCompanyAdmin, routeError, text, toNumber } from "@/lib/company-admin-server";
+import {
+  type CompanyReportProfile,
+  loadCompanyReportLogo,
+  resolveCompanyReportProfile,
+} from "@/lib/reports/branded-pdf";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -62,48 +67,80 @@ function dateTime(value: unknown): string {
   }).format(date);
 }
 
-function addHeader(doc: Pdf, company: any, title: string, subtitle: string) {
-  doc
-    .rect(0, 0, doc.page.width, 98)
-    .fill("#0f7a42");
+function addHeader(
+  doc: Pdf,
+  company: CompanyReportProfile,
+  title: string,
+  subtitle: string,
+  logo: Buffer | null,
+) {
+  const width = doc.page.width;
+  doc.save().rect(0, 0, width, 112).fill("#0b704a").restore();
 
-  doc
-    .fillColor("#ffffff")
-    .font("Helvetica-Bold")
-    .fontSize(22)
-    .text(text(company?.name) || "SIMAMIA FLOAT", 42, 24, { width: 360 });
-  doc
-    .font("Helvetica")
-    .fontSize(10)
-    .text(`${text(company?.code) || "COMPANY"} • ${text(company?.phone) || ""}`, 42, 55, {
-      width: 360,
-    });
+  const logoX = 42;
+  const logoY = 21;
+  const logoSize = 58;
+  doc.save().roundedRect(logoX, logoY, logoSize, logoSize, 10).fill("#ffffff").restore();
+  if (logo) {
+    try {
+      doc.image(logo, logoX + 6, logoY + 6, {
+        fit: [logoSize - 12, logoSize - 12],
+        align: "center",
+        valign: "center",
+      });
+    } catch {
+      doc.fillColor("#0b704a").font("Helvetica-Bold").fontSize(18).text(
+        company.name.slice(0, 2).toUpperCase(),
+        logoX,
+        logoY + 19,
+        { width: logoSize, align: "center" },
+      );
+    }
+  } else {
+    doc.fillColor("#0b704a").font("Helvetica-Bold").fontSize(18).text(
+      company.name.slice(0, 2).toUpperCase(),
+      logoX,
+      logoY + 19,
+      { width: logoSize, align: "center" },
+    );
+  }
 
-  doc
-    .roundedRect(doc.page.width - 180, 24, 138, 50, 8)
-    .fill("#ffffff")
-    .fillColor("#0f7a42")
-    .font("Helvetica-Bold")
-    .fontSize(11)
-    .text("SIMAMIA REPORT", doc.page.width - 166, 43, { width: 110, align: "center" });
+  doc.fillColor("#ffffff").font("Helvetica-Bold").fontSize(17).text(company.name, 112, 25, {
+    width: 230,
+    ellipsis: true,
+  });
+  doc.fillColor("#d7f4e7").font("Helvetica").fontSize(8.5).text("SIMAMIA FLOAT • COMPANY ADMIN REPORT", 112, 51, {
+    width: 230,
+  });
+  doc.font("Helvetica-Bold").fontSize(8).text(title, 112, 69, { width: 230, ellipsis: true });
 
-  doc
-    .fillColor("#111827")
-    .font("Helvetica-Bold")
-    .fontSize(20)
-    .text(title, 42, 122);
-  doc
-    .fillColor("#60717a")
-    .font("Helvetica")
-    .fontSize(9)
-    .text(subtitle, 42, 150, { width: doc.page.width - 84 });
-  doc
-    .moveTo(42, 174)
-    .lineTo(doc.page.width - 42, 174)
-    .strokeColor("#d2ded7")
-    .stroke();
+  const cardWidth = 205;
+  const cardX = width - cardWidth - 42;
+  doc.save().fillOpacity(0.95).roundedRect(cardX, 13, cardWidth, 88, 10).fill("#ffffff").restore();
+  const details = [
+    company.code ? `Code: ${company.code}` : "",
+    company.registrationNumber ? `Reg: ${company.registrationNumber}` : "",
+    company.tin ? `TIN: ${company.tin}` : "",
+    company.phone ? `Tel: ${company.phone}` : "",
+    company.email ? `Email: ${company.email}` : "",
+    company.address ? `Address: ${company.address}` : "",
+    company.website ? `Web: ${company.website}` : "",
+  ].filter(Boolean);
+  doc.fillColor("#0b5138").font("Helvetica-Bold").fontSize(7.2).text("REGISTERED COMPANY DETAILS", cardX + 10, 21, {
+    width: cardWidth - 20,
+    align: "right",
+  });
+  doc.fillColor("#263d35").font("Helvetica").fontSize(6.2).text(details.join("\n"), cardX + 10, 35, {
+    width: cardWidth - 20,
+    align: "right",
+    lineGap: 0.8,
+    ellipsis: true,
+  });
 
-  doc.y = 190;
+  doc.fillColor("#111827").font("Helvetica-Bold").fontSize(20).text(title, 42, 132);
+  doc.fillColor("#60717a").font("Helvetica").fontSize(9).text(subtitle, 42, 160, { width: width - 84 });
+  doc.moveTo(42, 184).lineTo(width - 42, 184).strokeColor("#d2ded7").stroke();
+  doc.y = 200;
 }
 
 function ensureSpace(doc: Pdf, height: number, onNewPage?: () => void) {
@@ -228,8 +265,8 @@ async function pdfBuffer(build: (doc: Pdf) => void): Promise<Buffer> {
       .text(
         `Generated ${new Date().toLocaleString("en-TZ")} • Page ${index + 1} of ${range.count}`,
         42,
-        doc.page.height - 34,
-        { width: doc.page.width - 84, align: "center" },
+        doc.page.height - 50,
+        { width: doc.page.width - 84, align: "center", lineBreak: false },
       );
   }
 
@@ -281,7 +318,7 @@ export async function GET(request: NextRequest) {
       }),
       db.brokerServiceVisit.findMany({
         where: { companyId, startedAt: { gte: from, lte: to } },
-        include: { staff: true, broker: true },
+        include: { staff: true, brokerCustomer: true },
         orderBy: { startedAt: "desc" },
       }),
       db.floatTransaction.findMany({
@@ -378,12 +415,16 @@ export async function GET(request: NextRequest) {
             ? "Bank Verification Report"
             : "Full System Activity Report";
 
+    const reportCompany = await resolveCompanyReportProfile(companyId, company);
+    const reportLogo = await loadCompanyReportLogo(reportCompany.logoUrl);
+
     const buffer = await pdfBuffer((doc) => {
       addHeader(
         doc,
-        company,
+        reportCompany,
         title,
         `Period: ${from.toLocaleDateString("en-GB")} - ${to.toLocaleDateString("en-GB")} • Prepared by ${user.name}`,
+        reportLogo,
       );
 
       summaryCards(doc, [

@@ -13,14 +13,14 @@ const statuses = new Set(["ACTIVE", "SUSPENDED"]);
 
 export async function PATCH(
   request: NextRequest,
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await requireCompanyAdmin();
     const companyId = user.companyId as string;
+    const { id } = await context.params;
     const body = await request.json();
-    const id = text(body.id).trim();
     const db = prisma as any;
-    if (!id) throw new HttpError("Branch id is required.", 422);
     const current = await db.branch.findFirst({ where: { id, companyId } });
     if (!current) throw new HttpError("Branch not found.", 404);
 
@@ -66,14 +66,14 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await requireCompanyAdmin();
     const companyId = user.companyId as string;
-    const id = text(request.nextUrl.searchParams.get("id")).trim();
+    const { id } = await context.params;
     const db = prisma as any;
-    if (!id) throw new HttpError("Branch id is required.", 422);
     const current = await db.branch.findFirst({ where: { id, companyId } });
     if (!current) throw new HttpError("Branch not found.", 404);
 

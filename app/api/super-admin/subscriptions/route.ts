@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
-export async function POST(request: NextRequest) {
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const user = await getCurrentUser();
+    const { id } = await context.params;
 
     if (!user || user.role !== "SUPER_ADMIN") {
       return NextResponse.json(
@@ -18,35 +22,24 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    const companyId = String(body.companyId || "");
-    const plan = String(body.plan || "").trim();
-    const amount = String(body.amount || "0");
-    const startsAt = String(body.startsAt || "");
-    const endsAt = String(body.endsAt || "");
-    const isActive = Boolean(body.isActive);
+    const data: any = {};
 
-    if (!companyId || !plan || !startsAt || !endsAt) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Company, plan, start date and end date are required.",
-        },
-        { status: 400 }
-      );
-    }
+    if (body.companyId !== undefined) data.companyId = String(body.companyId);
+    if (body.plan !== undefined) data.plan = String(body.plan).trim();
+    if (body.amount !== undefined) data.amount = String(body.amount || "0");
+    if (body.startsAt !== undefined) data.startsAt = new Date(body.startsAt);
+    if (body.endsAt !== undefined) data.endsAt = new Date(body.endsAt);
+    if (body.isActive !== undefined) data.isActive = Boolean(body.isActive);
 
-    const subscription = await prisma.subscription.create({
-      data: {
-        companyId,
-        plan,
-        amount,
-        startsAt: new Date(startsAt),
-        endsAt: new Date(endsAt),
-        isActive,
+    const subscription = await prisma.subscription.update({
+      where: {
+        id,
       },
+      data,
       include: {
         company: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -56,25 +49,101 @@ export async function POST(request: NextRequest) {
     await prisma.auditLog.create({
       data: {
         userId: user.id,
-        companyId,
-        action: "SUBSCRIPTION_CREATED",
+        companyId: subscription.company.id,
+        action: "SUBSCRIPTION_UPDATED",
         module: "SUBSCRIPTION",
-        details: `${user.name} created ${plan} subscription for ${subscription.company.name}.`,
+        details: `${user.name} updated subscription for ${subscription.company.name}.`,
       },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Subscription created successfully.",
+      message: "Subscription updated successfully.",
       subscription,
     });
   } catch (error) {
-    console.error("CREATE_SUBSCRIPTION_ERROR:", error);
+    console.error("UPDATE_SUBSCRIPTION_ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to create subscription.",
+        message: "Failed to update subscription.",
+        error: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = await getCurrentUser();
+    const { id } = await context.params;
+
+    if (!user || user.role !== "SUPER_ADMIN") {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized.",
+        },
+        { status: 401 }
+      );
+    }
+
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!subscription) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Subscription not found.",
+        },
+        { status: 404 }
+      );
+    }
+
+    await prisma.subscription.delete({
+      where: {
+        id,
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        companyId: subscription.company.id,
+        action: "SUBSCRIPTION_REMOVED",
+        module: "SUBSCRIPTION",
+        details: `${user.name} removed subscription for ${subscription.company.name}.`,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Subscription removed successfully.",
+    });
+  } catch (error) {
+    console.error("DELETE_SUBSCRIPTION_ERROR:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to remove subscription.",
         error: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }

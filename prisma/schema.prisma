@@ -1485,6 +1485,8 @@ model BrokerServiceVisit {
   startedAt         DateTime                 @default(now())
   arrivedAt         DateTime?
   serviceProvidedAt DateTime?
+  proofDueAt        DateTime?
+  proofUploadedAt   DateTime?
   completedAt       DateTime?
   createdAt         DateTime                 @default(now())
   updatedAt         DateTime                 @updatedAt
@@ -1500,6 +1502,7 @@ model BrokerServiceVisit {
   @@index([companyId, serviceDay, status])
   @@index([staffId, serviceDay])
   @@index([brokerCustomerId, serviceDay])
+  @@index([proofDueAt, status])
   @@index([deviceId])
   @@map("broker_service_visits")
 }

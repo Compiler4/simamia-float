@@ -1330,7 +1330,7 @@
 .rejectButton:disabled,
 .adjustmentCard form > button:disabled {
   opacity: 0.55;
-  cursor: wait;
+  cursor: not-allowed;
   transform: none;
 }
 
@@ -1340,6 +1340,26 @@
   margin-top: 13px;
   color: white;
   background: linear-gradient(135deg, #bc7259, #805044);
+}
+
+.primaryButton[data-processing="true"] {
+  cursor: progress;
+  opacity: 0.9;
+}
+
+.primaryButton[data-processing="true"] .glyph {
+  animation: financialDayPulse 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes financialDayPulse {
+  from {
+    transform: scale(0.92);
+    opacity: 0.65;
+  }
+  to {
+    transform: scale(1.06);
+    opacity: 1;
+  }
 }
 
 .approveButton {
@@ -3013,6 +3033,56 @@
 .rejectButton,
 .adjustmentCard form > button {
   font-size: 9px;
+}
+
+
+.settlementReady {
+  display: grid;
+  grid-template-columns: 43px 1fr;
+  gap: 11px;
+  align-items: start;
+  padding: 14px;
+  border: 1px solid rgba(57, 167, 112, 0.3);
+  border-radius: 18px;
+  color: #185c3a;
+  background:
+    radial-gradient(
+      circle at 95% 5%,
+      rgba(118, 225, 169, 0.28),
+      transparent 38%
+    ),
+    rgba(235, 255, 244, 0.78);
+  box-shadow: 0 14px 34px rgba(31, 122, 79, 0.1);
+}
+
+.settlementReady > .glyph {
+  width: 43px;
+  height: 43px;
+  color: white;
+  background: linear-gradient(145deg, #46b978, #208b57);
+}
+
+.settlementReady strong,
+.settlementReady p,
+.settlementReady small {
+  display: block;
+  margin: 0;
+}
+
+.settlementReady strong {
+  font-size: 11px;
+}
+
+.settlementReady p {
+  margin-top: 5px;
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.settlementReady small {
+  margin-top: 5px;
+  font-size: 9px;
+  line-height: 1.45;
 }
 
 .featureWarning {
@@ -6002,7 +6072,7 @@
   min-width: 110px;
 }
 
-.opTableScroll th > .contextIcon {
+.opTableHeaderLabel > .contextIcon {
   margin-right: 6px;
   color: #ffffff;
   background: rgba(255,255,255,.15);
@@ -6250,7 +6320,7 @@
 .sectionHeader small,
 .opField > span,
 .opFilters label > span,
-.opTableScroll th,
+.opTableHeaderLabel,
 .opStatus {
   display: inline-flex;
   align-items: center;
@@ -6320,7 +6390,7 @@
 }
 
 .tableHeaderLabel > .contextIcon,
-.opTableScroll th > .contextIcon {
+.opTableHeaderLabel > .contextIcon {
   width: 25px;
   height: 25px;
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -6825,4 +6895,197 @@
     gap: 9px !important;
     padding-inline: 9px !important;
   }
+}
+
+/* ========================================================================
+   2026-08 ACCOUNTANT RELIABILITY + TABLE ALIGNMENT PASS
+   Keep TH/TD in the native table formatting context. Earlier icon styling
+   changed operation TH elements to inline-flex, which visually detached the
+   header grid from the body grid.
+   ======================================================================== */
+.tableScroll table,
+.opTableScroll table {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tableScroll th,
+.tableScroll td,
+.opTableScroll th,
+.opTableScroll td {
+  box-sizing: border-box;
+  display: table-cell !important;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.tableScroll th,
+.opTableScroll th {
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.opTableHeaderLabel > .contextIcon,
+.opTableHeaderLabel > span,
+.tableHeaderLabel {
+  vertical-align: middle;
+}
+
+.opTableScroll td {
+  min-width: 0;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.opTableScroll tbody tr:last-child td,
+.tableScroll tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.opTableCard,
+.tableCard {
+  isolation: isolate;
+}
+
+.opTableCard::before,
+.tableCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,.32), rgba(218,238,255,.08));
+  backdrop-filter: blur(8px) saturate(1.04);
+  -webkit-backdrop-filter: blur(8px) saturate(1.04);
+}
+
+.opTableCard {
+  position: relative;
+}
+
+.opReportDivider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(190, 210, 239, .78);
+  border-radius: 16px;
+  color: #1c3765;
+  background: linear-gradient(135deg, rgba(255,255,255,.82), rgba(235,245,255,.68));
+  box-shadow: 0 10px 28px rgba(35, 73, 132, .08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.opReportDivider strong {
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.opReportDivider span {
+  color: #607396;
+  font-size: 10px;
+  font-weight: 750;
+  text-align: right;
+}
+
+.featureWarning small {
+  display: block;
+  margin-top: 4px;
+  color: #7c4b17;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .opReportDivider {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .opReportDivider span { text-align: left; }
+}
+
+
+/* ========================================================================
+   2026-08-14 FINAL NATIVE TABLE GRID RESET
+   The header icon layout belongs INSIDE TH; TH itself must remain a table-cell.
+   This prevents the blue header from shrinking to the width of header labels.
+   ======================================================================== */
+.tableScroll table,
+.opTableScroll table {
+  display: table !important;
+  width: 100% !important;
+  min-width: max-content;
+  table-layout: auto !important;
+}
+.tableScroll thead,
+.opTableScroll thead { display: table-header-group !important; }
+.tableScroll tbody,
+.opTableScroll tbody { display: table-row-group !important; }
+.tableScroll tfoot,
+.opTableScroll tfoot { display: table-footer-group !important; }
+.tableScroll tr,
+.opTableScroll tr { display: table-row !important; }
+.tableScroll th,
+.tableScroll td,
+.opTableScroll th,
+.opTableScroll td {
+  display: table-cell !important;
+  float: none !important;
+  position: relative;
+  width: auto;
+}
+.opTableHeaderLabel,
+.tableHeaderLabel {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  max-width: 100%;
+}
+.opTableScroll thead tr,
+.tableScroll thead tr {
+  background: linear-gradient(90deg, #123f9e 0%, #176bc3 56%, #6d4fc5 100%);
+}
+.opTableScroll thead th,
+.tableScroll thead th {
+  background: transparent !important;
+}
+
+.opRecoveryHint {
+  display: block;
+  margin-top: 7px;
+  color: #66738c;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.warningActionButton {
+  width: max-content;
+  max-width: 100%;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid rgba(157, 92, 10, .22);
+  border-radius: 11px;
+  color: #74450a;
+  background: rgba(255, 255, 255, .78);
+  box-shadow: 0 7px 18px rgba(116, 69, 10, .08);
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.warningActionButton:hover {
+  translate: 0 -1px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(116, 69, 10, .12);
 }

@@ -12,6 +12,11 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import {
+  loadCompanyReportLogo,
+  resolveCompanyReportProfile,
+  type CompanyReportProfile,
+} from "@/lib/reports/branded-pdf";
+import {
   HttpError,
   requireCompanyAdmin,
   routeError,
@@ -118,22 +123,55 @@ function addStatementHeader(
   page: PDFPage,
   regular: PDFFont,
   bold: PDFFont,
-  company: any,
+  company: CompanyReportProfile,
+  companyLogo: any | null,
   bankName: string,
   accountName: string,
   accountNumber: string,
   periodLabel: string,
 ) {
   const { width, height } = page.getSize();
-  page.drawRectangle({ x: 0, y: height - 92, width, height: 92, color: GREEN });
-  drawText(page, bold, text(company?.name) || "SIMAMIA FLOAT", 36, height - 43, 20, 370, rgb(1, 1, 1));
-  drawText(page, regular, "Grand Bank Proof and Transaction Report", 36, height - 67, 10, 420, rgb(0.9, 1, 0.93));
-  drawText(page, bold, bankName, width - 235, height - 42, 14, 195, rgb(1, 1, 1));
-  drawText(page, regular, accountName || "Account name not supplied", width - 235, height - 59, 8, 195, rgb(0.9, 1, 0.93));
-  drawText(page, regular, `Account: ${accountNumber}`, width - 235, height - 73, 8, 195, rgb(0.9, 1, 0.93));
+  page.drawRectangle({ x: 0, y: height - 108, width, height: 108, color: GREEN });
 
-  drawText(page, bold, "Account Bank Proof Statement", 36, height - 126, 18, 360);
-  drawText(page, regular, `Period: ${periodLabel}`, 36, height - 145, 9, 360, MUTED);
+  const logoX = 36;
+  const logoY = height - 82;
+  const logoSize = 54;
+  page.drawRectangle({ x: logoX, y: logoY, width: logoSize, height: logoSize, color: rgb(1, 1, 1) });
+  if (companyLogo) {
+    const scale = Math.min((logoSize - 8) / companyLogo.width, (logoSize - 8) / companyLogo.height);
+    const drawWidth = companyLogo.width * scale;
+    const drawHeight = companyLogo.height * scale;
+    page.drawImage(companyLogo, {
+      x: logoX + (logoSize - drawWidth) / 2,
+      y: logoY + (logoSize - drawHeight) / 2,
+      width: drawWidth,
+      height: drawHeight,
+    });
+  } else {
+    drawText(page, bold, company.name.slice(0, 2).toUpperCase(), logoX + 12, logoY + 18, 18, 32, GREEN);
+  }
+
+  drawText(page, bold, company.name || "SIMAMIA FLOAT", 102, height - 43, 19, 350, rgb(1, 1, 1));
+  drawText(page, regular, "Grand Bank Proof and Transaction Report", 102, height - 66, 9.5, 350, rgb(0.9, 1, 0.93));
+  drawText(page, bold, `Period: ${periodLabel}`, 102, height - 85, 7.5, 350, rgb(0.9, 1, 0.93));
+
+  const companyDetails = [
+    company.code ? `Code: ${company.code}` : "",
+    company.registrationNumber ? `Reg: ${company.registrationNumber}` : "",
+    company.tin ? `TIN: ${company.tin}` : "",
+    company.phone ? `Tel: ${company.phone}` : "",
+    company.email ? `Email: ${company.email}` : "",
+    company.address ? `Address: ${company.address}` : "",
+    company.website ? `Web: ${company.website}` : "",
+  ].filter(Boolean);
+  companyDetails.slice(0, 7).forEach((line, index) => {
+    drawText(page, regular, line, width - 330, height - 27 - index * 10, 6.1, 294, rgb(0.94, 1, 0.97));
+  });
+
+  drawText(page, bold, "Account Bank Proof Statement", 36, height - 139, 18, 390);
+  drawText(page, bold, bankName, width - 292, height - 134, 12, 256, GREEN);
+  drawText(page, regular, accountName || "Account name not supplied", width - 292, height - 150, 7.5, 256, MUTED);
+  drawText(page, regular, `Account: ${accountNumber}`, width - 292, height - 164, 7.5, 256, MUTED);
 }
 
 function addSummaryBoxes(
@@ -206,7 +244,8 @@ function addTransactionTablePages(
   pdf: PDFDocument,
   regular: PDFFont,
   bold: PDFFont,
-  company: any,
+  company: CompanyReportProfile,
+  companyLogo: any | null,
   group: Group,
   from: Date,
   to: Date,
@@ -230,6 +269,7 @@ function addTransactionTablePages(
       regular,
       bold,
       company,
+      companyLogo,
       group.bankName,
       group.accountName,
       group.accountNumber,
@@ -414,12 +454,26 @@ export async function GET(request: NextRequest) {
     });
 
     const groups = groupRows(records, documents);
+    const reportCompany = await resolveCompanyReportProfile(companyId, company);
     const output = await PDFDocument.create();
     const regular = await output.embedFont(StandardFonts.Helvetica);
     const bold = await output.embedFont(StandardFonts.HelveticaBold);
+    const logoBytes = await loadCompanyReportLogo(reportCompany.logoUrl);
+    let companyLogo: any | null = null;
+    if (logoBytes) {
+      try {
+        companyLogo = await output.embedPng(logoBytes);
+      } catch {
+        try {
+          companyLogo = await output.embedJpg(logoBytes);
+        } catch {
+          companyLogo = null;
+        }
+      }
+    }
 
     for (const group of groups) {
-      addTransactionTablePages(output, regular, bold, company, group, from, to);
+      addTransactionTablePages(output, regular, bold, reportCompany, companyLogo, group, from, to);
       for (const document of group.documents) {
         await appendDocument(output, regular, bold, document, group);
       }
@@ -441,7 +495,7 @@ export async function GET(request: NextRequest) {
     });
 
     output.setTitle("Simamia Grand Bank Proof Report");
-    output.setAuthor(text(company?.name) || "Simamia Float");
+    output.setAuthor(reportCompany.name || "Simamia Float");
     output.setSubject("Bank proof documents grouped by bank and account");
     output.setCreator("Simamia Float ERP");
 

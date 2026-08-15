@@ -34,6 +34,29 @@ type MarkerConfiguration = {
   icon: string;
 };
 
+function distanceMetres(
+  first: { latitude: number; longitude: number },
+  second: { latitude: number; longitude: number },
+): number {
+  const radius = 6_371_000;
+  const toRadians = (value: number) => (value * Math.PI) / 180;
+  const lat1 = toRadians(Number(first.latitude));
+  const lat2 = toRadians(Number(second.latitude));
+  const deltaLat = toRadians(Number(second.latitude) - Number(first.latitude));
+  const deltaLng = toRadians(Number(second.longitude) - Number(first.longitude));
+  const a =
+    Math.sin(deltaLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) ** 2;
+
+  return radius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function distanceLabel(metres: number): string {
+  if (!Number.isFinite(metres) || metres <= 0) return "0 m";
+  if (metres < 1000) return `${Math.round(metres)} m`;
+  return `${(metres / 1000).toFixed(metres >= 10_000 ? 1 : 2)} km`;
+}
+
 function escapeHtml(value: string): string {
   return value
     .replaceAll("&", "&amp;")
@@ -301,10 +324,16 @@ function popupHtml(point: PlottedPoint): string {
     ? "<br/><small>Approximate address markers were separated visually because several records share the same area coordinate.</small>"
     : "";
 
+  const routeDistance =
+    (point as any).segmentDistanceText || (point as any).totalDistanceText
+      ? `<br/><small>Moved: ${escapeHtml(String((point as any).segmentDistanceText || "0 m"))} from previous</small><br/><small>Total covered: ${escapeHtml(String((point as any).totalDistanceText || "0 m"))}</small>`
+      : "";
+
   return (
     `<strong>${escapeHtml(point.label || "Location")}</strong>` +
     `<br/>${escapeHtml(point.subtitle || "")}` +
     `<br/><small>Stored: ${storedLatitude.toFixed(6)}, ${storedLongitude.toFixed(6)}</small>` +
+    routeDistance +
     source +
     accuracy +
     approximateNote +
@@ -474,11 +503,85 @@ export default function LiveMap({
             color: "#08795c",
             weight: 4,
             opacity: 0.84,
-            dashArray: "4 10",
+            dashArray: "2 12",
             lineCap: "round",
             interactive: false,
           })
           .addTo(routeLayer);
+
+        let cumulative = 0;
+        for (let index = 0; index < route.length; index += 1) {
+          const current = validHistory[index];
+          const previous = index > 0 ? validHistory[index - 1] : null;
+          const segment = previous
+            ? distanceMetres(
+                {
+                  latitude: Number(previous.latitude),
+                  longitude: Number(previous.longitude),
+                },
+                {
+                  latitude: Number(current.latitude),
+                  longitude: Number(current.longitude),
+                },
+              )
+            : 0;
+          cumulative += segment;
+
+          const icon = leaflet.divIcon({
+            className: "simamia-route-dot-label",
+            html: `<div style="
+              display:grid;
+              place-items:center;
+              gap:3px;
+              transform:translate(-50%,-50%);
+            ">
+              <span style="
+                width:14px;
+                height:14px;
+                display:block;
+                border:3px solid #fff;
+                border-radius:50%;
+                background:#08795c;
+                box-shadow:0 5px 14px rgba(0,0,0,.22);
+              "></span>
+              <b style="
+                padding:3px 6px;
+                border:1px solid rgba(255,255,255,.92);
+                border-radius:999px;
+                color:#17352d;
+                background:#fff;
+                box-shadow:0 5px 14px rgba(0,0,0,.16);
+                font:900 8px/1 Inter,system-ui,sans-serif;
+                white-space:nowrap;
+              ">${index + 1} - ${distanceLabel(cumulative)}</b>
+            </div>`,
+            iconSize: [1, 1],
+            iconAnchor: [0, 0],
+          });
+          const dot = leaflet.marker(route[index], {
+            icon,
+            keyboard: true,
+          });
+
+          dot.bindPopup(
+            popupHtml({
+              ...current,
+              displayLatitude: Number(current.latitude),
+              displayLongitude: Number(current.longitude),
+              label: current.label || `Travel stop ${index + 1}`,
+              subtitle: [
+                current.subtitle,
+                `Segment ${distanceLabel(segment)}`,
+                `Total ${distanceLabel(cumulative)}`,
+              ]
+                .filter(Boolean)
+                .join(" - "),
+              segmentDistanceText: distanceLabel(segment),
+              totalDistanceText: distanceLabel(cumulative),
+            } as PlottedPoint),
+          );
+          dot.addTo(routeLayer);
+        }
       }
 
       const denseMode = plotted.length > 450;

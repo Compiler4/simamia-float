@@ -9,17 +9,47 @@ import {
   HttpError,
 } from "@/lib/company-admin-server";
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const user = await requireCompanyAdmin();
     const companyId = user.companyId as string;
+    const { id } = await context.params;
     const body = await request.json();
-    const id = text(body.id ?? body.expenseId).trim();
     const db = prisma as any;
-    if (!id) throw new HttpError("Expense id is required.", 422);
     const current = await db.companyExpense.findFirst({ where: { id, companyId } });
     if (!current) throw new HttpError("Expense not found.", 404);
-    if (current.status !== "PENDING") throw new HttpError("Approved or rejected expenses are changed through the dual approval workflow.", 409);
+
+    const requestedStatus = text(body.status).trim().toUpperCase();
+    if (requestedStatus) {
+      if (!["APPROVED", "REJECTED"].includes(requestedStatus)) {
+        throw new HttpError("Expense decision must be APPROVED or REJECTED.", 422);
+      }
+
+      const expense = await db.companyExpense.update({
+        where: { id },
+        data: {
+          status: requestedStatus,
+          reviewNote: text(body.reviewNote).trim() || null,
+          reviewedById: user.id,
+          reviewedByName: user.name,
+          reviewedAt: new Date(),
+        },
+      });
+
+      await createAudit({
+        companyId,
+        actorId: user.id,
+        actorName: user.name,
+        actorRole: user.role,
+        action: `${requestedStatus}_EXPENSE`,
+        module: "EXPENSES",
+        details: `${requestedStatus.toLowerCase()} expense ${id}.`,
+      });
+
+      return NextResponse.json({ success: true, expense });
+    }
+
+    if (current.status !== "PENDING") throw new HttpError("Only pending expenses can be edited.", 409);
 
     const data: Record<string, unknown> = {};
     if (body.category !== undefined) data.category = text(body.category).trim();

@@ -63,6 +63,17 @@ type DashboardData = {
   company: Record<string, any>;
   stats: Record<string, number>;
   currentDay: any | null;
+  financialDayControl?: {
+    state: "ACTIVE" | "REST";
+    canPost: boolean;
+    currentDayId: string | null;
+    currentDate: string | null;
+    lastClosedDayId: string | null;
+    lastClosedDate: string | null;
+    lastClosingBalance: number;
+    suggestedOpeningBalance: number;
+    message: string;
+  };
   financialDays: any[];
   users: any[];
   branches: any[];
@@ -93,6 +104,18 @@ type DashboardData = {
   };
   recentTransactions: any[];
   financialHolds: any[];
+  closeDayBlockers?: any[];
+  closeDaySettlement?: {
+    canClose: boolean;
+    bankBlockers: number;
+    staffFundingBlockers: number;
+    legacyFloatBlockers: number;
+    pendingReturnReviews: number;
+    issuedAmount: number;
+    verifiedReturnedAmount: number;
+    outstandingAmount: number;
+    blockers: any[];
+  };
   settings: Record<string, string>;
 };
 
@@ -408,6 +431,49 @@ function IconText({
       <MaterialIcon text={text} />
       <span>{text}</span>
     </span>
+  );
+}
+
+function filePreviewUrl(value: unknown): string {
+  const raw = safeText(value).trim();
+  if (!raw) return "";
+  if (/^(https?:|blob:|data:)/i.test(raw)) return raw;
+
+  // Route private STAFF files and all local paths through the authenticated
+  // accountant file gateway.  It understands old Windows paths, public upload
+  // paths and StaffFile database IDs, preventing broken Next.js 404 pages.
+  const normalized = raw.replaceAll("\\", "/");
+  if (/^\/?api\/staff\/files\//i.test(normalized)) {
+    const localApiPath = normalized.startsWith("/") ? normalized : `/${normalized}`;
+    return `/api/accountant/uploads?path=${encodeURIComponent(localApiPath)}`;
+  }
+  if (normalized.startsWith("/api/accountant/uploads")) return normalized;
+  if (normalized.startsWith("/api/")) return normalized;
+  if (normalized.startsWith("api/")) return `/${normalized}`;
+  return `/api/accountant/uploads?path=${encodeURIComponent(normalized)}`;
+}
+
+function DocumentLink({
+  value,
+  label = "View file",
+  className = "",
+}: {
+  value: unknown;
+  label?: string;
+  className?: string;
+}) {
+  const href = filePreviewUrl(value);
+  if (!href) return <Status status="MISSING" />;
+  return (
+    <a
+      className={`${styles.documentLink} ${className}`}
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+    >
+      <Glyph name="eye" />
+      {label}
+    </a>
   );
 }
 
@@ -826,11 +892,11 @@ function PageContent({
   };
 
   if (page === "Open Financial Day") {
-    return <FinancialDayPage mode="OPEN" {...common} />;
+    return <FinancialDayPage mode="OPEN" {...common} openPage={openPage} />;
   }
 
   if (page === "Close Financial Day") {
-    return <FinancialDayPage mode="CLOSE" {...common} />;
+    return <FinancialDayPage mode="CLOSE" {...common} openPage={openPage} />;
   }
 
   if (page === "Opening Balances") {
@@ -1296,6 +1362,7 @@ function FinancialDayPage({
   data,
   busy,
   runAction,
+  openPage,
 }: {
   mode: "OPEN" | "CLOSE";
   data: DashboardData;
@@ -1304,27 +1371,109 @@ function FinancialDayPage({
     action: string,
     payload?: Record<string, unknown>,
   ) => Promise<boolean>;
+  openPage: (page: PageKey) => void;
 }) {
+  const control = data.financialDayControl ?? {
+    state: data.currentDay ? "ACTIVE" : "REST",
+    canPost: Boolean(data.currentDay),
+    currentDayId: data.currentDay?.id ?? null,
+    currentDate: data.currentDay ? dateInput(data.currentDay.date) : null,
+    lastClosedDayId: null,
+    lastClosedDate: null,
+    lastClosingBalance: Number(data.financialDays?.find((item: any) => safeText(item.status).toUpperCase() === "CLOSED")?.closingBalance ?? 0),
+    suggestedOpeningBalance: Number(data.financialDays?.find((item: any) => safeText(item.status).toUpperCase() === "CLOSED")?.closingBalance ?? 0),
+    message: data.currentDay
+      ? "Financial operations are ACTIVE."
+      : "Financial operations are at REST.",
+  };
+
   const [form, setForm] = useState({
-    date: dateInput(),
+    date: mode === "CLOSE" && data.currentDay ? dateInput(data.currentDay.date) : dateInput(),
     openingBalance: safeText(
       data.currentDay?.openingBalance ??
-        data.financialDays?.[0]?.closingBalance ??
+        control.suggestedOpeningBalance ??
         0,
     ),
   });
 
+  useEffect(() => {
+    setForm({
+      date:
+        mode === "CLOSE" && data.currentDay
+          ? dateInput(data.currentDay.date)
+          : dateInput(),
+      openingBalance: safeText(
+        data.currentDay?.openingBalance ??
+          control.suggestedOpeningBalance ??
+          0,
+      ),
+    });
+  }, [
+    mode,
+    data.currentDay?.id,
+    data.currentDay?.openedAt,
+    control.suggestedOpeningBalance,
+  ]);
+
+  const [daySubmitting, setDaySubmitting] = useState<"OPEN" | "CLOSE" | null>(null);
+
   async function submit(event: FormEvent) {
     event.preventDefault();
 
-    await runAction(mode === "OPEN" ? "OPEN_DAY" : "CLOSE_DAY", {
-      date: form.date,
-      openingBalance: form.openingBalance,
-      financialDayId: data.currentDay?.id,
-    });
+    // The page must never enter a loading state just because the pointer is
+    // hovering over a disabled control.  Loading is reserved for a real
+    // network request started by the user.
+    if (daySubmitting || busy) return;
+
+    if (mode === "OPEN" && data.currentDay) {
+      openPage("Close Financial Day");
+      return;
+    }
+
+    if (mode === "CLOSE" && !data.currentDay) {
+      openPage("Open Financial Day");
+      return;
+    }
+
+    setDaySubmitting(mode);
+
+    try {
+      await runAction(mode === "OPEN" ? "OPEN_DAY" : "CLOSE_DAY", {
+        date: form.date,
+        openingBalance: form.openingBalance,
+        financialDayId: data.currentDay?.id,
+      });
+    } finally {
+      // runAction already reports any server error to the portal toast.
+      // Always restore the control so a failed request can be tried again.
+      setDaySubmitting(null);
+    }
   }
 
   const day = data.currentDay;
+  const settlement = data.closeDaySettlement ?? {
+    canClose: false,
+    bankBlockers: 0,
+    staffFundingBlockers: 0,
+    legacyFloatBlockers: 0,
+    pendingReturnReviews: 0,
+    issuedAmount: 0,
+    verifiedReturnedAmount: 0,
+    outstandingAmount: 0,
+    blockers: safeArray<any>((data as any).closeDayBlockers),
+  };
+  const blockerRows = safeArray<any>(settlement.blockers);
+  const closeDayBlockers = blockerRows.length;
+  const isSubmitting = daySubmitting === mode;
+  const openingBalanceNumber = Number(form.openingBalance);
+  const openFormValid =
+    Boolean(form.date) &&
+    Number.isFinite(openingBalanceNumber) &&
+    openingBalanceNumber >= 0;
+  const openAlreadyActive = mode === "OPEN" && Boolean(data.currentDay);
+  const closeHasNoOpenDay = mode === "CLOSE" && !data.currentDay;
+  const closeIsBlocked =
+    mode === "CLOSE" && Boolean(data.currentDay) && !settlement.canClose;
 
   return (
     <SectionPage
@@ -1332,10 +1481,29 @@ function FinancialDayPage({
       subtitle={
         mode === "OPEN"
           ? "Start the accounting day with a controlled opening balance."
-          : "Closing is blocked automatically while bank mismatches remain unresolved."
+          : "Close only when every staff float/cash return is verified and the current day bank controls are balanced."
       }
       glyph={mode === "OPEN" ? "open" : "close"}
     >
+      <div
+        className={control.state === "ACTIVE" ? styles.settlementReady : styles.featureWarning}
+        role="status"
+      >
+        <Glyph name={control.state === "ACTIVE" ? "check" : "warning"} />
+        <div>
+          <strong>
+            {control.state === "ACTIVE"
+              ? `Financial operations ACTIVE${control.currentDate ? ` · ${control.currentDate}` : ""}`
+              : "Financial operations at REST"}
+          </strong>
+          <p>
+            {control.state === "ACTIVE"
+              ? "The open financial day allows controlled financial posting. Close it only after all staff float/cash, returns and bank controls are fully balanced."
+              : "No financial day is open. Financial posting is stopped until the Accountant opens the next financial day."}
+          </p>
+        </div>
+      </div>
+
       <div className={styles.twoColumn}>
         <form className={styles.formCard} onSubmit={submit}>
           <CardHeading
@@ -1343,7 +1511,7 @@ function FinancialDayPage({
             text={
               mode === "OPEN"
                 ? "The previous closed balance is used by default."
-                : "Cash in and cash out are recalculated from verified and approved records."
+                : "The system verifies staff returns, outstanding float/cash and today’s bank controls before it allows closing."
             }
           />
 
@@ -1364,6 +1532,7 @@ function FinancialDayPage({
                 type="number"
                 min="0"
                 value={form.openingBalance}
+                disabled={Boolean(control.lastClosedDayId)}
                 onChange={(event) =>
                   setForm({
                     ...form,
@@ -1371,6 +1540,11 @@ function FinancialDayPage({
                   })
                 }
               />
+              <small>
+                {control.lastClosedDayId
+                  ? `Automatic carry-forward from ${control.lastClosedDate || "the last closed day"}: ${money(control.suggestedOpeningBalance)}.`
+                  : "This is the first financial day found for the company, so enter the verified starting balance."}
+              </small>
             </Field>
           )}
 
@@ -1393,22 +1567,117 @@ function FinancialDayPage({
             </div>
           )}
 
-          <button
-            type="submit"
-            className={styles.primaryButton}
-            disabled={
-              busy ||
-              (mode === "OPEN" && Boolean(data.currentDay)) ||
-              (mode === "CLOSE" && !data.currentDay)
-            }
-          >
-            <Glyph name={mode === "OPEN" ? "open" : "close"} />
-            {busy
-              ? "Processing..."
-              : mode === "OPEN"
-                ? "Open financial day"
-                : "Close financial day"}
-          </button>
+          {mode === "CLOSE" && !day && (
+            <div className={styles.featureWarning} role="status">
+              <Glyph name="warning" />
+              <div>
+                <strong>No financial day is open</strong>
+                <p>Financial operations are already at REST. Open a financial day before there is anything to close.</p>
+              </div>
+            </div>
+          )}
+
+          {mode === "CLOSE" && day && (
+            <div className={settlement.canClose ? styles.settlementReady : styles.featureWarning} role="status">
+              <Glyph name={settlement.canClose ? "check" : "warning"} />
+              <div>
+                <strong>
+                  {settlement.canClose
+                    ? "Ready to close - all float, cash returns and bank controls are balanced"
+                    : `${closeDayBlockers} settlement ${closeDayBlockers === 1 ? "item blocks" : "items block"} closing`}
+                </strong>
+                <p>
+                  Issued: {money(settlement.issuedAmount)} · Verified returned: {money(settlement.verifiedReturnedAmount)} · Outstanding: {money(settlement.outstandingAmount)}
+                </p>
+                {!settlement.canClose && (
+                  <>
+                    <small>
+                      Bank: {settlement.bankBlockers} · Staff funding: {settlement.staffFundingBlockers} · Older float: {settlement.legacyFloatBlockers} · Returns awaiting verification: {settlement.pendingReturnReviews}
+                    </small>
+                    {blockerRows.slice(0, 6).map((item) => (
+                      <small key={`${item.kind || "blocker"}-${item.id}`}>
+                        {item.staffName ? `${item.staffName} · ` : ""}
+                        {item.referenceNo || item.id} · {safeText(item.status).replaceAll("_", " ")}
+                        {Number(item.outstandingAmount || 0) > 0 ? ` · outstanding ${money(item.outstandingAmount)}` : ""}
+                      </small>
+                    ))}
+                    {settlement.bankBlockers > 0 && (
+                      <button
+                        type="button"
+                        className={styles.warningActionButton}
+                        onClick={() => openPage("Bank Reconciliation")}
+                      >
+                        <Glyph name="bank" />
+                        Review today’s bank controls
+                      </button>
+                    )}
+                    {(settlement.staffFundingBlockers > 0 || settlement.legacyFloatBlockers > 0 || settlement.pendingReturnReviews > 0) && (
+                      <button
+                        type="button"
+                        className={styles.warningActionButton}
+                        onClick={() => openPage("Float Verification")}
+                      >
+                        <Glyph name="float" />
+                        Verify staff returns
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
+          {openAlreadyActive ? (
+            <button
+              type="button"
+              className={styles.primaryButton}
+              onClick={() => openPage("Close Financial Day")}
+            >
+              <Glyph name="close" />
+              Day is ACTIVE - go to Close Financial Day
+            </button>
+          ) : closeHasNoOpenDay ? (
+            <button
+              type="button"
+              className={styles.primaryButton}
+              onClick={() => openPage("Open Financial Day")}
+            >
+              <Glyph name="open" />
+              Financial operations are at REST - open a day
+            </button>
+          ) : closeIsBlocked ? (
+            <button
+              type="button"
+              className={styles.primaryButton}
+              disabled
+              aria-disabled="true"
+              title="Resolve the listed settlement items before closing this financial day."
+            >
+              <Glyph name="warning" />
+              Resolve {closeDayBlockers || 1} settlement {closeDayBlockers === 1 ? "item" : "items"} before closing
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className={styles.primaryButton}
+              disabled={
+                busy ||
+                isSubmitting ||
+                (mode === "OPEN" && !openFormValid)
+              }
+              aria-busy={isSubmitting}
+              data-processing={isSubmitting ? "true" : "false"}
+            >
+              <Glyph name={mode === "OPEN" ? "open" : "close"} />
+              {isSubmitting
+                ? mode === "OPEN"
+                  ? "Opening financial day..."
+                  : "Closing financial day..."
+                : mode === "OPEN"
+                  ? "Open financial day"
+                  : "Close financial day"}
+            </button>
+          )}
         </form>
 
         <article className={styles.statusPanel}>
@@ -1446,6 +1715,44 @@ function FinancialDayPage({
           )}
         </article>
       </div>
+
+      {mode === "CLOSE" && blockerRows.length > 0 && (
+        <TableCard
+          title="Closing blockers to resolve"
+          subtitle="Resolve every listed staff-return, float/cash or bank-control item before the financial day can close."
+        >
+          <DataTable minWidth={1120}>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Control</th>
+                <th>Staff</th>
+                <th>Reference</th>
+                <th>Issued</th>
+                <th>Returned</th>
+                <th>Outstanding</th>
+                <th>Status</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              {blockerRows.map((item, index) => (
+                <tr key={`${item.kind || "BLOCKER"}-${item.id}`}>
+                  <td>{index + 1}</td>
+                  <td>{roleLabel(item.kind || "SETTLEMENT")}</td>
+                  <td>{item.staffName || item.staff?.name || "—"}</td>
+                  <td>{item.referenceNo || item.id}</td>
+                  <td>{money(item.issuedAmount ?? item.amount ?? 0)}</td>
+                  <td>{money(item.returnedAmount ?? 0)}</td>
+                  <td>{money(item.outstandingAmount ?? 0)}</td>
+                  <td><Status status={item.status || "PENDING"} /></td>
+                  <td>{item.reason || item.mismatchReason || "Resolve this control before closing the day."}</td>
+                </tr>
+              ))}
+            </tbody>
+          </DataTable>
+        </TableCard>
+      )}
 
       <TableCard
         title="Recent financial days"
@@ -2312,19 +2619,7 @@ function ManualCashflowPage({
                 </td>
 
                 <td>
-                  {item.receiptUrl ? (
-                    <a
-                      className={styles.documentLink}
-                      href={item.receiptUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Glyph name="eye" />
-                      View
-                    </a>
-                  ) : (
-                    "Optional"
-                  )}
+                  <DocumentLink value={item.receiptUrl} label="View" />
                 </td>
 
                 <td>
@@ -2383,19 +2678,7 @@ function ManualCashflowPage({
                 </td>
                 <td>{money(item.amount)}</td>
                 <td>
-                  {item.receiptUrl ? (
-                    <a
-                      className={styles.documentLink}
-                      href={item.receiptUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Glyph name="eye" />
-                      View
-                    </a>
-                  ) : (
-                    "N/A"
-                  )}
+                  <DocumentLink value={item.receiptUrl} label="View" />
                 </td>
                 <td>{item.postedBy?.name || "Accountant"}</td>
               </tr>
@@ -2704,18 +2987,7 @@ function ExpensesPage({
                     <td className={styles.wrapCell}>{item.description}</td>
                     <td>{money(item.amount)}</td>
                     <td>
-                      {item.receiptUrl ? (
-                        <a
-                          className={styles.documentLink}
-                          href={item.receiptUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          View
-                        </a>
-                      ) : (
-                        "Missing"
-                      )}
+                      <DocumentLink value={item.receiptUrl} label="View" />
                     </td>
                     <td>
                       <Status status={item.status} />
@@ -3030,18 +3302,7 @@ function ExpenseRegisterPage({ data }: { data: DashboardData }) {
                 <td className={styles.wrapCell}>{item.description}</td>
                 <td>{money(item.amount)}</td>
                 <td>
-                  {item.receiptUrl ? (
-                    <a
-                      className={styles.documentLink}
-                      href={item.receiptUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View
-                    </a>
-                  ) : (
-                    "Missing"
-                  )}
+                  <DocumentLink value={item.receiptUrl} label="View" />
                 </td>
                 <td>
                   <Status status={item.status} />
@@ -3667,7 +3928,7 @@ function BankReconciliationPage({
                     />
                   </td>
                   <td>
-                    <Status status={item.status} />
+                    <Status status={item.holdClearedAt && !item.holdActive ? "RESOLVED" : item.status} />
                   </td>
                   <td>
                     <button
@@ -3916,18 +4177,7 @@ function ExpenseApprovalPage({ data, busy, runAction }: CommonPageProps) {
                 <td className={styles.wrapCell}>{item.description || "N/A"}</td>
                 <td>{money(item.amount)}</td>
                 <td>
-                  {item.receiptUrl ? (
-                    <a
-                      className={styles.documentLink}
-                      href={item.receiptUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Glyph name="eye" /> Receipt
-                    </a>
-                  ) : (
-                    <Status status="MISSING" />
-                  )}
+                  <DocumentLink value={item.receiptUrl || item.fundingReceipt?.receiptUrl || item.fundingReceipt?.documentUrl} label="View receipt" />
                 </td>
                 <td>{formatDate(item.createdAt, true)}</td>
                 <td>
@@ -4074,18 +4324,7 @@ function FloatVerificationPage({ data, busy, runAction }: CommonPageProps) {
                 <td>{money(item.amount)}</td>
                 <td>{money(item.returnedAmount || item.amount)}</td>
                 <td>
-                  {item.receiptUrl ? (
-                    <a
-                      className={styles.documentLink}
-                      href={item.receiptUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Glyph name="eye" /> Receipt
-                    </a>
-                  ) : (
-                    <Status status="MISSING_RECEIPT" />
-                  )}
+                  <DocumentLink value={item.receiptUrl || item.fundingReceipt?.receiptUrl || item.fundingReceipt?.documentUrl} label="View receipt" />
                 </td>
                 <td>
                   <Status status={item.status} />
@@ -4930,6 +5169,35 @@ function ProfilePage({
   const [preview, setPreview] = useState(
     safeText(data.accountant?.profileImageUrl),
   );
+  const [details, setDetails] = useState({
+    name: safeText(data.accountant?.name),
+    username: safeText(data.accountant?.username),
+    email: safeText(data.accountant?.email),
+    phone: safeText(data.accountant?.phone),
+    assignedRegion: safeText(data.accountant?.assignedRegion),
+    physicalAddress: safeText(data.accountant?.physicalAddress),
+    nationality: safeText(data.accountant?.nationality),
+    currentPassword: "",
+  });
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  useEffect(() => {
+    setDetails((current) => ({
+      ...current,
+      name: safeText(data.accountant?.name),
+      username: safeText(data.accountant?.username),
+      email: safeText(data.accountant?.email),
+      phone: safeText(data.accountant?.phone),
+      assignedRegion: safeText(data.accountant?.assignedRegion),
+      physicalAddress: safeText(data.accountant?.physicalAddress),
+      nationality: safeText(data.accountant?.nationality),
+      currentPassword: "",
+    }));
+  }, [data.accountant?.updatedAt]);
 
   async function selectImage(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -4946,10 +5214,28 @@ function ProfilePage({
     }
   }
 
+  async function saveDetails(event: FormEvent) {
+    event.preventDefault();
+    const saved = await runAction("UPDATE_ACCOUNT_DETAILS", details);
+    if (saved) {
+      setDetails((current) => ({ ...current, currentPassword: "" }));
+      notify("Account details updated successfully.");
+    }
+  }
+
+  async function changePassword(event: FormEvent) {
+    event.preventDefault();
+    const saved = await runAction("CHANGE_ACCOUNT_PASSWORD", passwordForm);
+    if (saved) {
+      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      notify("Password changed successfully.");
+    }
+  }
+
   return (
     <SectionPage
-      title="Profile"
-      subtitle="Accountant identity and portal profile image."
+      title="Profile & Security"
+      subtitle="Update accountant details, profile image and sign-in password securely."
       glyph="profile"
     >
       <div className={styles.profilePageGrid}>
@@ -4972,32 +5258,36 @@ function ProfilePage({
             />
           </label>
           <small>JPG, PNG or WebP. Maximum 5 MB.</small>
-        </article>
-
-        <article className={styles.statusPanel}>
-          <CardHeading
-            title="Account information"
-            text="Read directly from the authenticated database user."
-          />
           <div className={styles.detailGrid}>
-            <Detail label="Name" value={safeText(data.accountant?.name)} />
-            <Detail label="Email" value={safeText(data.accountant?.email)} />
             <Detail label="Role" value={roleLabel(data.accountant?.role)} />
             <Detail label="Company" value={safeText(data.company?.name)} />
-            <Detail
-              label="Approval limit"
-              value={money(
-                data.accountant?.approvalLimit ||
-                  data.settings?.accountantExpenseApprovalLimit ||
-                  0,
-              )}
-            />
-            <Detail
-              label="Status"
-              value={safeText(data.accountant?.status || "ACTIVE")}
-            />
+            <Detail label="Status" value={safeText(data.accountant?.status || "ACTIVE")} />
+            <Detail label="Last password change" value={formatDate(data.accountant?.passwordChangedAt, true)} />
           </div>
         </article>
+
+        <form className={styles.formCard} onSubmit={saveDetails}>
+          <CardHeading title="Edit account details" text="Current password is required before identity details are changed." />
+          <div className={styles.formGrid}>
+            <Field label="Full name"><input required value={details.name} onChange={(event) => setDetails({ ...details, name: event.target.value })} /></Field>
+            <Field label="Username"><input required value={details.username} onChange={(event) => setDetails({ ...details, username: event.target.value })} /></Field>
+            <Field label="Email"><input type="email" required value={details.email} onChange={(event) => setDetails({ ...details, email: event.target.value })} /></Field>
+            <Field label="Phone"><input value={details.phone} onChange={(event) => setDetails({ ...details, phone: event.target.value })} /></Field>
+            <Field label="Assigned region"><input value={details.assignedRegion} onChange={(event) => setDetails({ ...details, assignedRegion: event.target.value })} /></Field>
+            <Field label="Nationality"><input value={details.nationality} onChange={(event) => setDetails({ ...details, nationality: event.target.value })} /></Field>
+          </div>
+          <Field label="Physical address"><input value={details.physicalAddress} onChange={(event) => setDetails({ ...details, physicalAddress: event.target.value })} /></Field>
+          <Field label="Current password"><input type="password" autoComplete="current-password" required value={details.currentPassword} onChange={(event) => setDetails({ ...details, currentPassword: event.target.value })} /></Field>
+          <button className={styles.primaryButton} type="submit" disabled={busy}><Glyph name="check" />{busy ? "Saving..." : "Save account details"}</button>
+        </form>
+
+        <form className={styles.formCard} onSubmit={changePassword}>
+          <CardHeading title="Change password" text="Use at least 8 characters with uppercase, lowercase and a number." />
+          <Field label="Current password"><input type="password" autoComplete="current-password" required value={passwordForm.currentPassword} onChange={(event) => setPasswordForm({ ...passwordForm, currentPassword: event.target.value })} /></Field>
+          <Field label="New password"><input type="password" autoComplete="new-password" minLength={8} required value={passwordForm.newPassword} onChange={(event) => setPasswordForm({ ...passwordForm, newPassword: event.target.value })} /></Field>
+          <Field label="Confirm new password"><input type="password" autoComplete="new-password" minLength={8} required value={passwordForm.confirmPassword} onChange={(event) => setPasswordForm({ ...passwordForm, confirmPassword: event.target.value })} /></Field>
+          <button className={styles.primaryButton} type="submit" disabled={busy}><Glyph name="lock" />{busy ? "Updating..." : "Change password"}</button>
+        </form>
       </div>
     </SectionPage>
   );
@@ -5013,6 +5303,7 @@ type CommonPageProps = {
   uploadFile: (file: File) => Promise<string>;
   notify: (message: string) => void;
 };
+
 
 function SectionPage({
   title,
@@ -5917,8 +6208,8 @@ namespace OperationsCentre {
       icon: "receipt_long",
     },
     "expense-approval": {
-      title: "Two-Part Expense Approval",
-      subtitle: "An expense is approved only when both the Accountant and Company Admin approve it.",
+      title: "Expense Approval",
+      subtitle: "Accountant approval or rejection immediately becomes the accounting status and is recorded in the audit trail.",
       icon: "approval",
     },
     "manual-cashflow": {
@@ -6092,6 +6383,13 @@ namespace OperationsCentre {
       to: tanzaniaToday(),
       q: "",
     });
+    const [appliedFilter, setAppliedFilter] = useState<Filter>({
+      period: "DAY",
+      anchor: tanzaniaToday(),
+      from: tanzaniaToday(),
+      to: tanzaniaToday(),
+      q: "",
+    });
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState(false);
@@ -6099,16 +6397,16 @@ namespace OperationsCentre {
 
     const query = useMemo(() => {
       const params = new URLSearchParams({
-        period: filter.period,
-        anchor: filter.anchor,
-        q: filter.q,
+        period: appliedFilter.period,
+        anchor: appliedFilter.anchor,
+        q: appliedFilter.q,
       });
-      if (filter.period === "CUSTOM") {
-        params.set("from", filter.from);
-        params.set("to", filter.to);
+      if (appliedFilter.period === "CUSTOM") {
+        params.set("from", appliedFilter.from);
+        params.set("to", appliedFilter.to);
       }
       return params.toString();
-    }, [filter]);
+    }, [appliedFilter]);
 
     const load = useCallback(async (showLoader = true) => {
       if (showLoader) setLoading(true);
@@ -6154,11 +6452,17 @@ namespace OperationsCentre {
       return result.url;
     }
 
+    function applyFilter() {
+      const unchanged = JSON.stringify(filter) === JSON.stringify(appliedFilter);
+      if (unchanged) void load();
+      else setAppliedFilter({ ...filter });
+    }
+
     return (
       <section className={styles.opWorkspace}>
         <ModuleHeader module={initialModule} />
         {initialModule !== "fingerprint" && (
-          <FilterBar filter={filter} setFilter={setFilter} apply={() => void load()} />
+          <FilterBar filter={filter} setFilter={setFilter} apply={applyFilter} />
         )}
         {message && <div className={styles.opToast}>{message}</div>}
         {loading ? <div className={styles.opLoading}>Loading verified company data…</div> : !data ? <Empty text="No data was returned." /> : (
@@ -6167,14 +6471,14 @@ namespace OperationsCentre {
             {initialModule === "expense-approval" && <ExpenseApproval data={data} busy={busy} action={action} />}
             {initialModule === "manual-cashflow" && <FundingIssue data={data} busy={busy} action={action} />}
             {initialModule === "funding-ledger" && <FundingLedger data={data} />}
-            {initialModule === "attendance-register" && <AttendanceJournal data={data} busy={busy} action={action} />}
+            {initialModule === "attendance-register" && <AttendanceJournal data={data} busy={busy} action={action} filter={appliedFilter} />}
             {initialModule === "attendance-progress" && <AttendanceProgress data={data} />}
             {initialModule === "fingerprint" && <FingerprintDevices notify={setMessage} />}
-            {initialModule === "proof-review" && <ProofReview data={data} busy={busy} action={action} />}
+            {initialModule === "proof-review" && <ProofReview data={data} busy={busy} action={action} upload={upload} notify={setMessage} />}
             {initialModule === "admin-documents" && <AdminDocuments data={data} busy={busy} action={action} />}
             {initialModule === "bank-reconciliation" && <BankReview data={data} busy={busy} action={action} upload={upload} notify={setMessage} />}
-            {initialModule === "financial-reports" && <Reports filter={filter} mode="FINANCIAL" notify={setMessage} />}
-            {initialModule === "performance-reports" && <Reports filter={filter} mode="PERFORMANCE" notify={setMessage} />}
+            {initialModule === "financial-reports" && <Reports filter={appliedFilter} mode="FINANCIAL" notify={setMessage} />}
+            {initialModule === "performance-reports" && <Reports filter={appliedFilter} mode="PERFORMANCE" notify={setMessage} />}
           </div>
         )}
       </section>
@@ -6216,7 +6520,7 @@ namespace OperationsCentre {
             <td><strong>{row.requestedAction || "Expense work"}</strong><small>{row.description || "No description"}</small></td>
             <td><strong>{money(row.amount)}</strong></td><td><Status value={accountant?.decision || "PENDING"} /></td>
             <td><Status value={admin?.decision || "PENDING"} /></td><td><Status value={row.status} /></td>
-            <td>{row.receiptUrl ? <a href={row.receiptUrl} target="_blank" rel="noreferrer">View file</a> : "Missing"}</td>
+            <td><DocumentLink value={row.receiptUrl || row.documentUrl || row.proofUrl || row.file?.storagePath} label="View file" /></td>
           </tr>;
         })}
         {!rows.length && <tr><td colSpan={9}><Empty text="No STAFF expense requests match this period." /></td></tr>}
@@ -6241,10 +6545,10 @@ namespace OperationsCentre {
           <Person row={row.employee} /><b>{money(row.amount)}</b><Status value={row.status} />
         </button>)}{!rows.length && <Empty text="No expense requests." />}</div>
       </article>
-      <article className={styles.opCard}><CardTitle title="Accountant decision" text="Any rejection rejects the expense; both approvals are required." />
+      <article className={styles.opCard}><CardTitle title="Accountant decision" text="Your Approve/Reject decision becomes the expense accounting status immediately." />
         {selected ? <div className={styles.opReview}>
           <div className={styles.opAmountHero}><small>{selected.employee?.name}</small><strong>{money(selected.amount)}</strong><span>{selected.category}</span></div>
-          <div className={styles.opDetailGrid}><Detail label="Purpose" value={selected.description || selected.requestedAction} /><Detail label="Date" value={date(selected.expenseDate || selected.createdAt)} /><Detail label="Receipt" value={selected.receiptUrl ? "Uploaded" : "Missing"} /><Detail label="Final status" value={label(selected.status)} /></div>
+          <div className={styles.opDetailGrid}><Detail label="Purpose" value={selected.description || selected.requestedAction} /><Detail label="Date" value={date(selected.expenseDate || selected.createdAt)} /><Detail label="Receipt" value={selected.receiptUrl ? "Uploaded" : "Missing"} /><Detail label="Final status" value={label(selected.status)} /></div><DocumentLink value={selected.receiptUrl} label="Review expense receipt" className={styles.opDocumentButton} />
           <div className={styles.opDecisionGrid}>{["ACCOUNTANT", "COMPANY_ADMIN"].map((role) => { const decision = safeArray(selected.decisions).find((row: any) => row.reviewerRole === role); return <article key={role}><span>{label(role)}</span><strong>{label(decision?.decision || "PENDING")}</strong><p>{decision?.reason || "No decision recorded."}</p></article>; })}</div>
           <label className={styles.opField}><span>Decision reason</span><textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Explain the decision…" /></label>
           <div className={styles.opActions}><button disabled={busy || !reason} onClick={() => void decide("APPROVED")}>✓ Approve</button><button className={styles.opDanger} disabled={busy || !reason} onClick={() => void decide("REJECTED")}>× Reject</button></div>
@@ -6284,9 +6588,16 @@ namespace OperationsCentre {
       <Table headers={["STAFF user", "Transactions", "Float total", "Cash total", "Combined total"]}>{rows.map((row: any) => <tr key={row.staff?.id}><td><Person row={row.staff} /></td><td>{row.count}</td><td>{money(row.float)}</td><td>{money(row.cash)}</td><td><strong>{money(row.combined)}</strong></td></tr>)}{!rows.length && <tr><td colSpan={5}><Empty text="No STAFF funding records." /></td></tr>}</Table></div>;
   }
 
-  function AttendanceJournal({ data, busy, action }: { data: any; busy: boolean; action: (payload: Record<string, unknown>) => Promise<boolean> }) {
+  function AttendanceJournal({ data, busy, action, filter }: { data: any; busy: boolean; action: (payload: Record<string, unknown>) => Promise<boolean>; filter: Filter }) {
     const staff = safeArray(data.staff);
     const [selectedDate, setSelectedDate] = useState(tanzaniaToday());
+    const search = filter.q.trim().toLowerCase();
+    const reportRows = safeArray(data.attendance).filter((row: any) => {
+      if (!search) return true;
+      return [row.user?.name, row.user?.email, row.status, row.morningStatus, row.eveningStatus, row.source, row.notes]
+        .some((value) => String(value || "").toLowerCase().includes(search));
+    });
+    useEffect(() => { if (filter.period === "DAY" && filter.anchor) setSelectedDate(filter.anchor); }, [filter.period, filter.anchor]);
     const [drafts, setDrafts] = useState<Record<string, any>>({});
     useEffect(() => {
       const next: Record<string, any> = {};
@@ -6301,6 +6612,11 @@ namespace OperationsCentre {
     return <div className={styles.opStack}>
       <div className={styles.opAttendanceTools}><label className={styles.opField}><span>Attendance date</span><input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} /></label><button onClick={() => bulk("PRESENT")}>✓ Mark all present</button><button className={styles.opDanger} onClick={() => bulk("ABSENT")}>× Mark all absent</button><button disabled={busy} onClick={() => void action({ action: "SAVE_ATTENDANCE", date: selectedDate, rows: Object.values(drafts) })}>{busy ? "Saving…" : "Save verified attendance"}</button></div>
       <div className={styles.opAttendanceGrid}>{staff.map((user: any) => { const draft = drafts[user.id] || {}; return <article key={user.id}><Person row={user} /><Session title="Morning" value={draft.morningStatus} time={draft.morningTime || "08:00"} onMark={(value) => mark(user.id, "morningStatus", value)} onTime={(value) => setDrafts((current) => ({ ...current, [user.id]: { ...current[user.id], morningTime: value } }))} /><Session title="Evening" value={draft.eveningStatus} time={draft.eveningTime || "17:00"} onMark={(value) => mark(user.id, "eveningStatus", value)} onTime={(value) => setDrafts((current) => ({ ...current, [user.id]: { ...current[user.id], eveningTime: value } }))} /></article>; })}{!staff.length && <Empty text="No active STAFF users were found." />}</div>
+      <div className={styles.opReportDivider}><strong>Filtered attendance report</strong><span>{data.range?.label || "Selected period"} · {reportRows.length} record(s){search ? ` · Search: ${filter.q}` : ""}</span></div>
+      <Table headers={["Date", "STAFF user", "Morning", "Morning time", "Evening", "Evening time", "Source", "Notes"]}>
+        {reportRows.map((row: any) => <tr key={row.id}><td>{date(row.date)}</td><td><Person row={row.user} /></td><td><Status value={row.morningStatus || row.status || "UNMARKED"} /></td><td>{row.checkInAt ? date(row.checkInAt, true) : "—"}</td><td><Status value={row.eveningStatus || "UNMARKED"} /></td><td>{row.checkOutAt ? date(row.checkOutAt, true) : "—"}</td><td>{label(row.source || "MANUAL")}</td><td>{row.notes || "—"}</td></tr>)}
+        {!reportRows.length && <tr><td colSpan={8}><Empty text="No attendance records match the applied filter." /></td></tr>}
+      </Table>
     </div>;
   }
 
@@ -6339,15 +6655,58 @@ namespace OperationsCentre {
     </div>;
   }
 
-  function ProofReview({ data, busy, action }: { data: any; busy: boolean; action: (payload: Record<string, unknown>) => Promise<boolean> }) {
-    const rows = safeArray(data.proofs); const [selectedId, setSelectedId] = useState(rows[0]?.id || ""); const [reason, setReason] = useState(""); const selected = rows.find((row: any) => row.id === selectedId) || rows[0];
-    async function decide(decision: "VERIFIED" | "REJECTED") { if (!selected) return; const ok = await action({ action: "REVIEW_PROOF", proofId: selected.id, decision, reason }); if (ok) setReason(""); }
-    return <div className={styles.opTwoColumn}><article className={styles.opCard}><CardTitle title="STAFF proof queue" text={`${rows.length} uploaded SMS/document records`} /><div className={styles.opQueue}>{rows.map((row: any) => <button key={row.id} onClick={() => setSelectedId(row.id)} className={selected?.id === row.id ? styles.opSelected : ""}><Person row={row.staff} /><b>{row.referenceNo}</b><Status value={row.status} /></button>)}{!rows.length && <Empty text="No STAFF proof uploads." />}</div></article><article className={styles.opCard}><CardTitle title="Verification decision" text="A notification is sent to the STAFF user after review." />{selected ? <div className={styles.opReview}><div className={styles.opDetailGrid}><Detail label="Type" value={label(selected.kind)} /><Detail label="Reference" value={selected.referenceNo} /><Detail label="Amount" value={money(selected.amount)} /><Detail label="Status" value={label(selected.status)} /></div>{selected.smsText && <div className={styles.opMessageBox}><strong>Uploaded SMS</strong><p>{selected.smsText}</p></div>}{selected.documentUrl && <a className={styles.opDocumentButton} href={selected.documentUrl} target="_blank" rel="noreferrer">Open uploaded document</a>}{safeArray(selected.packets).map((packet: any) => <div className={styles.opPacket} key={packet.id}><strong>Company Admin comparison</strong><p>{packet.adminMessage || "No message"}</p><a href={packet.attachmentUrl} target="_blank" rel="noreferrer">Open comparison file</a></div>)}<label className={styles.opField}><span>Verification reason</span><textarea value={reason} onChange={(e) => setReason(e.target.value)} /></label><div className={styles.opActions}><button disabled={busy || !reason} onClick={() => void decide("VERIFIED")}>✓ Verify</button><button className={styles.opDanger} disabled={busy || !reason} onClick={() => void decide("REJECTED")}>× Reject</button></div></div> : <Empty text="Select a proof submission." />}</article></div>;
+  function ProofReview({ data, busy, action, upload, notify }: { data: any; busy: boolean; action: (payload: Record<string, unknown>) => Promise<boolean>; upload: (file: File) => Promise<string>; notify: (message: string) => void }) {
+    const rows = safeArray(data.proofs);
+    const [selectedId, setSelectedId] = useState(rows[0]?.id || "");
+    const [reason, setReason] = useState("");
+    const selected = rows.find((row: any) => row.id === selectedId) || rows[0];
+
+    async function decide(decision: "VERIFIED" | "REJECTED") {
+      if (!selected) return;
+      const ok = await action({ action: "REVIEW_PROOF", proofId: selected.id, decision, reason });
+      if (ok) setReason("");
+    }
+
+    async function replaceMissingDocument(event: ChangeEvent<HTMLInputElement>) {
+      const file = event.target.files?.[0];
+      if (!file || !selected) return;
+      try {
+        const documentUrl = await upload(file);
+        await action({ action: "REPLACE_PROOF_DOCUMENT", proofId: selected.id, documentUrl });
+      } catch (error) {
+        notify(error instanceof Error ? error.message : "The replacement document could not be uploaded.");
+      } finally {
+        event.target.value = "";
+      }
+    }
+
+    return <div className={styles.opTwoColumn}>
+      <article className={styles.opCard}>
+        <CardTitle title="STAFF proof queue" text={`${rows.length} uploaded SMS/document records`} />
+        <div className={styles.opQueue}>{rows.map((row: any) => <button key={row.id} onClick={() => setSelectedId(row.id)} className={selected?.id === row.id ? styles.opSelected : ""}><Person row={row.staff} /><b>{row.referenceNo}</b><Status value={row.status} /></button>)}{!rows.length && <Empty text="No STAFF proof uploads." />}</div>
+      </article>
+      <article className={styles.opCard}>
+        <CardTitle title="Verification decision" text="A notification is sent to the STAFF user after review." />
+        {selected ? <div className={styles.opReview}>
+          <div className={styles.opDetailGrid}><Detail label="Type" value={label(selected.kind)} /><Detail label="Reference" value={selected.referenceNo} /><Detail label="Amount" value={money(selected.amount)} /><Detail label="Status" value={label(selected.status)} /></div>
+          {selected.smsText && <div className={styles.opMessageBox}><strong>Uploaded SMS</strong><p>{selected.smsText}</p></div>}
+          <DocumentLink value={selected.file?.id ? `/api/staff/files/${selected.file.id}` : (selected.file?.storagePath || selected.documentUrl || selected.proofUrl || selected.file?.url)} label="Open uploaded document" className={styles.opDocumentButton} />
+          <label className={styles.opUpload}>
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" onChange={(event) => void replaceMissingDocument(event)} />
+            <span><MaterialIcon text="Replace missing document" />Replace/recover document</span>
+          </label>
+          <small className={styles.opRecoveryHint}>Use this only when an old proof record points to a file that no longer exists on the server. The replacement is written to the audit trail.</small>
+          {safeArray(selected.packets).map((packet: any) => <div className={styles.opPacket} key={packet.id}><strong>Company Admin comparison</strong><p>{packet.adminMessage || packet.message || "No message"}</p><DocumentLink value={packet.attachmentUrl} label="Open comparison file" /></div>)}
+          <label className={styles.opField}><span>Verification reason</span><textarea value={reason} onChange={(e) => setReason(e.target.value)} /></label>
+          <div className={styles.opActions}><button disabled={busy || !reason} onClick={() => void decide("VERIFIED")}>✓ Verify</button><button className={styles.opDanger} disabled={busy || !reason} onClick={() => void decide("REJECTED")}>× Reject</button></div>
+        </div> : <Empty text="Select a proof submission." />}
+      </article>
+    </div>;
   }
 
   function AdminDocuments({ data, busy, action }: { data: any; busy: boolean; action: (payload: Record<string, unknown>) => Promise<boolean> }) {
     const rows = safeArray(data.packets); const [reasons, setReasons] = useState<Record<string, string>>({});
-    return <Table headers={["Sent", "Target type", "Target ID", "Admin message", "File", "Status", "Review reason", "Control"]}>{rows.map((row: any) => <tr key={row.id}><td>{date(row.createdAt, true)}</td><td>{label(row.targetType)}</td><td>{row.targetId}</td><td>{row.adminMessage || "—"}</td><td><a href={row.attachmentUrl} target="_blank" rel="noreferrer">Open file</a></td><td><Status value={row.status} /></td><td><input className={styles.opTableInput} value={reasons[row.id] || ""} onChange={(e) => setReasons({ ...reasons, [row.id]: e.target.value })} placeholder={row.reviewReason || "Review reason"} /></td><td><div className={styles.opTableActions}><button disabled={busy || !reasons[row.id]} onClick={() => void action({ action: "REVIEW_PACKET", packetId: row.id, decision: "VERIFIED", reason: reasons[row.id] })}>Verify</button><button className={styles.opDanger} disabled={busy || !reasons[row.id]} onClick={() => void action({ action: "REVIEW_PACKET", packetId: row.id, decision: "REJECTED", reason: reasons[row.id] })}>Reject</button></div></td></tr>)}{!rows.length && <tr><td colSpan={8}><Empty text="No Company Admin verification documents." /></td></tr>}</Table>;
+    return <Table headers={["Sent", "Target type", "Target ID", "Admin message", "File", "Status", "Review reason", "Control"]}>{rows.map((row: any) => <tr key={row.id}><td>{date(row.createdAt, true)}</td><td>{label(row.targetType)}</td><td>{row.targetId}</td><td>{row.adminMessage || row.message || "—"}</td><td><DocumentLink value={row.attachmentUrl || row.documentUrl || row.fileUrl || row.adminReferenceUrl} label="Review file" /></td><td><Status value={row.status} /></td><td><input className={styles.opTableInput} value={reasons[row.id] || ""} onChange={(e) => setReasons({ ...reasons, [row.id]: e.target.value })} placeholder={row.reviewReason || "Review reason"} /></td><td><div className={styles.opTableActions}><button disabled={busy || !reasons[row.id]} onClick={() => void action({ action: "REVIEW_PACKET", packetId: row.id, decision: "VERIFIED", reason: reasons[row.id] })}>Verify</button><button className={styles.opDanger} disabled={busy || !reasons[row.id]} onClick={() => void action({ action: "REVIEW_PACKET", packetId: row.id, decision: "REJECTED", reason: reasons[row.id] })}>Reject</button></div></td></tr>)}{!rows.length && <tr><td colSpan={8}><Empty text="No Company Admin verification documents." /></td></tr>}</Table>;
   }
 
   function BankReview({ data, busy, action, upload, notify }: { data: any; busy: boolean; action: (payload: Record<string, unknown>) => Promise<boolean>; upload: (file: File) => Promise<string>; notify: (message: string) => void }) {
@@ -6361,7 +6720,7 @@ namespace OperationsCentre {
 
   function Reports({ filter, mode, notify }: { filter: Filter; mode: "FINANCIAL" | "PERFORMANCE"; notify: (message: string) => void }) {
     const [report, setReport] = useState<any>(null); const [loading, setLoading] = useState(false);
-    const query = useMemo(() => { const params = new URLSearchParams({ period: filter.period, anchor: filter.anchor, format: "preview" }); if (filter.period === "CUSTOM") { params.set("from", filter.from); params.set("to", filter.to); } return params; }, [filter]);
+    const query = useMemo(() => { const params = new URLSearchParams({ period: filter.period, anchor: filter.anchor, format: "preview", reportType: mode }); if (filter.period === "CUSTOM") { params.set("from", filter.from); params.set("to", filter.to); } return params; }, [filter, mode]);
     async function preview() { setLoading(true); try { setReport(await requestJson(`/api/accountant/reports?${query.toString()}`)); } catch (error) { notify(error instanceof Error ? error.message : "Report preview failed."); } finally { setLoading(false); } }
     useEffect(() => { void preview(); }, [query.toString()]);
     function download(format: "pdf" | "csv" | "xlsx") { const params = new URLSearchParams(query); params.set("format", format); window.location.assign(`/api/accountant/reports?${params.toString()}`); }
@@ -6371,7 +6730,7 @@ namespace OperationsCentre {
   }
 
   function Table({ headers, children }: { headers: string[]; children: ReactNode }) {
-    return <article className={styles.opTableCard}><div className={styles.opTableScroll}><table><thead><tr>{headers.map((header) => <th key={header}><MaterialIcon text={header} /><span>{header}</span></th>)}</tr></thead><tbody>{children}</tbody></table></div></article>;
+    return <article className={styles.opTableCard}><div className={styles.opTableScroll}><table><thead><tr>{headers.map((header) => <th key={header}><span className={styles.opTableHeaderLabel}><MaterialIcon text={header} /><span>{header}</span></span></th>)}</tr></thead><tbody>{children}</tbody></table></div></article>;
   }
 
   function CardTitle({ title, text: description }: { title: string; text: string }) {

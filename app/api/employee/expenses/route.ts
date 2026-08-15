@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getOpenFinancialDayForDate } from "@/lib/accountant/accounting";
 import {
   AccountantHttpError,
   accountantRouteError,
@@ -42,6 +43,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const expenseDate = body.expenseDate ? new Date(String(body.expenseDate)) : new Date();
+    const openDay = await getOpenFinancialDayForDate(String(user.companyId), expenseDate);
+    if (!openDay) {
+      throw new AccountantHttpError(
+        "Financial operations are at rest for this date. Open the financial day before submitting an expense.",
+        409,
+      );
+    }
+
     const category = text(body.category).trim();
     const description = text(body.description).trim();
     const receiptUrl = text(body.receiptUrl).trim();
@@ -71,6 +81,7 @@ export async function POST(request: NextRequest) {
       data: {
         companyId: String(user.companyId),
         employeeId: String(user.id),
+        expenseDate,
         category,
         amount: decimalValue(body.amount),
         description,

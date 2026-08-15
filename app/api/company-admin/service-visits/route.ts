@@ -12,6 +12,7 @@ import {
 
 export async function POST(
   request: NextRequest,
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await requireCompanyMember([
@@ -20,12 +21,10 @@ export async function POST(
       "STAFF",
     ]);
     const companyId = user.companyId as string;
+    const { id } = await context.params;
     const body = await request.json();
-    const id = text(body.id ?? body.visitId ?? body.serviceVisitId).trim();
     const documentId = text(body.documentId).trim();
     const db = prisma as any;
-
-    if (!id) throw new HttpError("Service visit id is required.", 422);
 
     const visit = await db.brokerServiceVisit.findFirst({
       where: {
@@ -33,7 +32,7 @@ export async function POST(
         companyId,
         ...(user.role === "STAFF" ? { staffId: user.id } : {}),
       },
-      include: { broker: true, staff: true },
+      include: { brokerCustomer: true, staff: true },
     });
     if (!visit) throw new HttpError("Service visit was not found.", 404);
 
@@ -56,7 +55,7 @@ export async function POST(
       return tx.brokerServiceVisit.update({
         where: { id: visit.id },
         data: {
-          proofUploadedAt: new Date(),
+          proofUrl: document.publicUrl || document.url || document.storagePath || null,
           completedAt: completed ? new Date() : null,
           status: completed ? "COMPLETED" : "PROOF_PENDING",
         },
@@ -67,7 +66,7 @@ export async function POST(
       companyId,
       targetRole: "COMPANY_ADMIN",
       title: completed ? "Service proof completed" : "Service proof needs review",
-      message: `${visit.staff.name} uploaded proof for ${visit.broker.name}. Automatic status: ${document.proofStatus}.`,
+      message: `${visit.staff.name} uploaded proof for ${visit.brokerCustomer.name}. Automatic status: ${document.proofStatus}.`,
       type: completed ? "SUCCESS" : "WARNING",
       link: "/admin/dashboard?section=gps",
     });
@@ -79,7 +78,7 @@ export async function POST(
       actorRole: user.role,
       action: "UPLOAD_SERVICE_PROOF",
       module: "GPS",
-      details: `${visit.staff.name} / ${visit.broker.name}: ${document.proofStatus}.`,
+      details: `${visit.staff.name} / ${visit.brokerCustomer.name}: ${document.proofStatus}.`,
     });
 
     return NextResponse.json({ success: true, visit: updated, document });

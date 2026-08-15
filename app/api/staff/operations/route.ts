@@ -1,373 +1,88 @@
-import { randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
-import { NextResponse } from "next/server";
+import {
+  PDFDocument,
+  StandardFonts,
+  rgb,
+  type PDFPage,
+} from "pdf-lib";
 
 import { prisma } from "@/lib/prisma";
-import { sendNotice, sendNoticeToRoles } from "@/lib/staff/notify";
+import {
+  loadCompanyReportLogo,
+  resolveCompanyReportProfile,
+  type CompanyReportProfile,
+} from "@/lib/reports/branded-pdf";
 import { requireStaff } from "@/lib/staff/permissions";
 import {
-  assignedBrokerCustomers,
   cleanText,
-  isoWeekKey,
-  localDateKey,
   numberValue,
-  parseProofText,
   periodBounds,
-  positiveAmount,
-  requireAssignedBroker,
-  requireOwnedStaffFile,
-  responseError,
-  serialize,
 } from "@/lib/staff/operations-v4";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
-type JsonBody = Record<string, unknown>;
+const STAFF_STORAGE_ROOT = path.resolve(
+  /* turbopackIgnore: true */ process.cwd(),
+  "storage",
+  "private",
+  "staff",
+);
 
-function validCoordinate(latitude: number, longitude: number): boolean {
-  return (
-    Number.isFinite(latitude) &&
-    Number.isFinite(longitude) &&
-    latitude >= -90 &&
-    latitude <= 90 &&
-    longitude >= -180 &&
-    longitude <= 180
-  );
+type ReportRow = {
+  date: Date;
+  details: string;
+  reference: string;
+  debit: number;
+  credit: number;
+  balance: number;
+  proofUrl?: string | null;
+  storagePath?: string | null;
+  mimeType?: string | null;
+};
+
+function money(value: number): string {
+  return new Intl.NumberFormat("en-TZ", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 }
 
-function reference(prefix: string): string {
-  return `${prefix}-${Date.now().toString(36).toUpperCase()}-${randomUUID()
-    .replaceAll("-", "")
-    .slice(0, 7)
-    .toUpperCase()}`;
+function dateTime(value: Date): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Africa/Dar_es_Salaam",
+    hour12: false,
+  }).format(value);
 }
 
-function dateValue(value: unknown): Date {
-  const date = value ? new Date(String(value)) : new Date();
-  if (Number.isNaN(date.getTime())) throw new Error("INVALID_DATE");
-  return date;
+function csvCell(value: unknown): string {
+  return `"${String(value ?? "").replaceAll('"', '""')}"`;
 }
 
-function normaliseDirection(value: unknown): string {
-  const direction = cleanText(value).toUpperCase();
-  const allowed = new Set([
-    "ACCOUNTANT_TO_STAFF",
-    "STAFF_TO_BROKER",
-    "BROKER_TO_STAFF",
-    "STAFF_TO_ACCOUNTANT",
-    "STAFF_TO_BANK",
-    "EXPENSE_PAYMENT",
-    "OTHER",
-  ]);
-  return allowed.has(direction) ? direction : "OTHER";
+function safeDate(value: unknown): Date {
+  const date = new Date(String(value));
+  return Number.isNaN(date.getTime()) ? new Date(0) : date;
 }
 
-function normaliseProofKind(value: unknown): string {
-  const kind = cleanText(value).toUpperCase();
-  const allowed = new Set([
-    "SMS_SCREENSHOT",
-    "BANK_SLIP",
-    "BANK_RECEIPT",
-    "BANK_STATEMENT",
-    "PDF",
-    "DOCUMENT",
-    "IMAGE",
-    "SERVICE_PROOF",
-    "EXPENSE_RECEIPT",
-    "OTHER",
-  ]);
-  return allowed.has(kind) ? kind : "OTHER";
-}
+async function reportSource(
+  companyId: string,
+  staffId: string,
+  start: Date,
+  end: Date,
+) {
+  const db = prisma as any;
 
-function groupWeekly(input: {
-  proofs: any[];
-  deposits: any[];
-  expenses: any[];
-}) {
-  const folders = new Map<string, any>();
-
-  function folder(key: string) {
-    if (!folders.has(key)) {
-      folders.set(key, {
-        weekKey: key,
-        totalValue: 0,
-        proofValue: 0,
-        depositValue: 0,
-        expenseValue: 0,
-        documentCount: 0,
-        items: [],
-      });
-    }
-    return folders.get(key);
-  }
-
-  for (const row of input.proofs) {
-    const key = cleanText(row.weekKey) || isoWeekKey(row.transactionAt);
-    const group = folder(key);
-    const amount = numberValue(row.amount);
-    group.totalValue += amount;
-    group.proofValue += amount;
-    group.documentCount += 1;
-    group.items.push({
-      id: row.id,
-      source: "PROOF",
-      date: row.transactionAt,
-      reference: row.referenceNo,
-      amount,
-      status: row.status,
-      url: row.proofUrl,
-      label: `${row.senderName} to ${row.receiverName}`,
-    });
-  }
-
-  for (const row of input.deposits) {
-    const key = isoWeekKey(row.depositDate);
-    const group = folder(key);
-    const amount = numberValue(row.amount);
-    group.totalValue += amount;
-    group.depositValue += amount;
-
-    const depositDocuments = [
-      row.bankReceiptUrl
-        ? { suffix: "receipt", url: row.bankReceiptUrl, label: "Bank receipt" }
-        : null,
-      row.depositSlipUrl && row.depositSlipUrl !== row.bankReceiptUrl
-        ? { suffix: "slip", url: row.depositSlipUrl, label: "Deposit slip" }
-        : null,
-    ].filter(Boolean) as Array<{ suffix: string; url: string; label: string }>;
-
-    group.documentCount += depositDocuments.length;
-    for (const document of depositDocuments) {
-      group.items.push({
-        id: `${row.id}:${document.suffix}`,
-        source: "BANK_DEPOSIT",
-        date: row.depositDate,
-        reference: row.referenceNo ?? row.id,
-        amount,
-        status: row.status,
-        url: document.url,
-        label: `${document.label} · ${row.bankAccount ?? "Bank deposit"}`,
-      });
-    }
-  }
-
-  for (const row of input.expenses) {
-    if (!row.receiptUrl) continue;
-    const key = isoWeekKey(row.expenseDate);
-    const group = folder(key);
-    const amount = numberValue(row.amount);
-    group.totalValue += amount;
-    group.expenseValue += amount;
-    group.documentCount += 1;
-    group.items.push({
-      id: row.id,
-      source: "EXPENSE",
-      date: row.expenseDate,
-      reference: row.id,
-      amount,
-      status: row.status,
-      url: row.receiptUrl,
-      label: row.otherCategory || row.category,
-    });
-  }
-
-  return Array.from(folders.values())
-    .map((row) => ({
-      ...row,
-      totalValue: Number(row.totalValue.toFixed(2)),
-      proofValue: Number(row.proofValue.toFixed(2)),
-      depositValue: Number(row.depositValue.toFixed(2)),
-      expenseValue: Number(row.expenseValue.toFixed(2)),
-      items: row.items.sort(
-        (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-      ),
-    }))
-    .sort((a, b) => String(b.weekKey).localeCompare(String(a.weekKey)));
-}
-
-function ownTransactionRows(input: {
-  staffId: string;
-  funding: any[];
-  floats: any[];
-  collections: any[];
-  deposits: any[];
-  expenses: any[];
-  proofs: any[];
-  services: any[];
-}) {
-  const rows: any[] = [];
-
-  for (const row of input.funding) {
-    rows.push({
-      id: `funding:${row.id}`,
-      date: row.confirmedAt ?? row.issuedAt,
-      source: "FUNDING",
-      type: "ACCOUNTANT_TO_STAFF",
-      from: row.accountant?.name ?? "Accountant",
-      to: row.staff?.name ?? "Staff",
-      reference: row.referenceNo,
-      floatAmount: numberValue(row.floatAmount),
-      cashAmount: numberValue(row.cashAmount),
-      amount: numberValue(row.floatAmount) + numberValue(row.cashAmount),
-      status: row.status,
-      proofUrl: null,
-    });
-  }
-
-  for (const row of input.floats) {
-    const from =
-      row.fromUserId === input.staffId
-        ? row.fromUser?.name ?? "Staff"
-        : row.fromUser?.name ?? "Accountant";
-    const to =
-      row.toUserId === input.staffId
-        ? row.toUser?.name ?? "Staff"
-        : row.brokerCustomer?.name ?? row.toUser?.name ?? "Broker";
-    rows.push({
-      id: `float:${row.id}`,
-      date: row.returnedAt ?? row.confirmedAt ?? row.issuedAt ?? row.createdAt,
-      source: "FLOAT",
-      type: row.transactionType,
-      from,
-      to,
-      reference: row.referenceNo ?? row.id,
-      floatAmount: numberValue(row.returnedAmount ?? row.amount),
-      cashAmount: 0,
-      amount: numberValue(row.returnedAmount ?? row.amount),
-      status: row.status,
-      proofUrl: row.receiptUrl,
-    });
-  }
-
-  for (const row of input.collections) {
-    rows.push({
-      id: `collection:${row.id}`,
-      date: row.collectionDate,
-      source: "COLLECTION",
-      type: "BROKER_TO_STAFF",
-      from: row.brokerCustomer?.name ?? row.broker?.name ?? "Broker",
-      to: row.staff?.name ?? "Staff",
-      reference: row.referenceNo,
-      floatAmount: 0,
-      cashAmount: numberValue(row.amount),
-      amount: numberValue(row.amount),
-      status: row.status,
-      proofUrl: row.receiptUrl,
-    });
-  }
-
-  for (const row of input.deposits) {
-    rows.push({
-      id: `deposit:${row.id}`,
-      date: row.depositDate,
-      source: "BANK_DEPOSIT",
-      type: "STAFF_TO_BANK",
-      from: row.staff?.name ?? "Staff",
-      to: row.bankAccount ?? "Bank",
-      reference: row.referenceNo ?? row.id,
-      floatAmount: 0,
-      cashAmount: numberValue(row.amount),
-      amount: numberValue(row.amount),
-      status: row.status,
-      proofUrl: row.bankReceiptUrl ?? row.depositSlipUrl,
-    });
-  }
-
-  for (const row of input.expenses) {
-    rows.push({
-      id: `expense:${row.id}`,
-      date: row.expenseDate,
-      source: "EXPENSE",
-      type: row.requestMode ?? "REIMBURSEMENT",
-      from: row.employee?.name ?? "Staff",
-      to: row.requestedAction ?? row.otherCategory ?? row.category,
-      reference: row.id,
-      floatAmount: 0,
-      cashAmount: numberValue(row.amount),
-      amount: numberValue(row.amount),
-      status: row.status,
-      proofUrl: row.receiptUrl,
-    });
-  }
-
-  for (const row of input.proofs) {
-    rows.push({
-      id: `proof:${row.id}`,
-      date: row.transactionAt,
-      source: "PROOF",
-      type: row.direction,
-      from: row.senderName,
-      to: row.receiverName,
-      reference: row.referenceNo,
-      floatAmount: 0,
-      cashAmount: numberValue(row.amount),
-      amount: numberValue(row.amount),
-      status: row.status,
-      proofUrl: row.proofUrl,
-    });
-  }
-
-  for (const row of input.services) {
-    rows.push({
-      id: `service:${row.id}`,
-      date: row.serviceProvidedAt ?? row.startedAt,
-      source: "SERVICE",
-      type: row.serviceType ?? "BROKER_SERVICE",
-      from: row.staff?.name ?? "Staff",
-      to: row.broker?.name ?? "Broker",
-      reference: row.id,
-      floatAmount: numberValue(row.floatAmount),
-      cashAmount: numberValue(row.cashAmount),
-      amount: numberValue(row.floatAmount) + numberValue(row.cashAmount),
-      status: row.status,
-      proofUrl: null,
-    });
-  }
-
-  return rows.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
-}
-
-export async function GET(request: Request) {
-  try {
-    const session = await requireStaff();
-    const db = prisma as any;
-    const url = new URL(request.url);
-    const search = cleanText(url.searchParams.get("search")).toLowerCase();
-    const bounds = periodBounds(
-      url.searchParams.get("period"),
-      url.searchParams.get("anchor") ?? url.searchParams.get("date"),
-      url.searchParams.get("from"),
-      url.searchParams.get("to"),
-    );
-
-    const [
-      staff,
-      accountants,
-      funding,
-      assignedBrokers,
-      floats,
-      collections,
-      deposits,
-      expenses,
-      proofs,
-      services,
-      attendance,
-      devices,
-      pings,
-      alerts,
-      notifications,
-      performance,
-    ] = await Promise.all([
+  const [staff, funding, floats, collections, deposits, expenses, proofs, services] =
+    await Promise.all([
       db.user.findFirst({
-        where: {
-          id: session.id,
-          companyId: session.companyId,
-          status: "ACTIVE",
-        },
+        where: { id: staffId, companyId },
         select: {
           id: true,
           name: true,
@@ -375,887 +90,706 @@ export async function GET(request: Request) {
           email: true,
           phone: true,
           assignedRegion: true,
-          profileImageUrl: true,
-          company: { select: { id: true, name: true, code: true } },
+          companyId: true,
+          company: {
+            select: {
+              name: true,
+              code: true,
+              email: true,
+              phone: true,
+              address: true,
+            },
+          },
         },
-      }),
-      db.user.findMany({
-        where: {
-          companyId: session.companyId,
-          role: "ACCOUNTANT",
-          status: "ACTIVE",
-        },
-        select: { id: true, name: true, email: true, phone: true },
-        orderBy: { name: "asc" },
       }),
       db.staffFundingReceipt.findMany({
         where: {
-          companyId: session.companyId,
-          staffId: session.id,
-          issuedAt: { gte: bounds.start, lte: bounds.end },
+          companyId,
+          staffId,
+          issuedAt: { gte: start, lte: end },
         },
         include: {
-          accountant: {
-            select: { id: true, name: true, email: true },
-          },
-          staff: {
-            select: { id: true, name: true, email: true },
-          },
+          accountant: { select: { name: true } },
+          networkLine: true,
         },
-        orderBy: [{ issuedAt: "desc" }],
       }),
-      assignedBrokerCustomers(session.companyId, session.id),
       db.floatTransaction.findMany({
         where: {
-          companyId: session.companyId,
-          OR: [{ fromUserId: session.id }, { toUserId: session.id }],
-          createdAt: { gte: bounds.start, lte: bounds.end },
+          companyId,
+          OR: [{ fromUserId: staffId }, { toUserId: staffId }],
+          createdAt: { gte: start, lte: end },
         },
         include: {
-          fromUser: { select: { id: true, name: true, email: true } },
-          toUser: { select: { id: true, name: true, email: true } },
+          fromUser: { select: { name: true } },
+          toUser: { select: { name: true } },
           brokerCustomer: true,
         },
-        orderBy: [{ createdAt: "desc" }],
       }),
       db.staffCollection.findMany({
         where: {
-          companyId: session.companyId,
-          staffId: session.id,
-          collectionDate: { gte: bounds.start, lte: bounds.end },
+          companyId,
+          staffId,
+          collectionDate: { gte: start, lte: end },
         },
         include: {
-          staff: { select: { id: true, name: true } },
-          broker: { select: { id: true, name: true } },
           brokerCustomer: true,
+          broker: { select: { name: true } },
         },
-        orderBy: [{ collectionDate: "desc" }],
       }),
       db.bankDeposit.findMany({
         where: {
-          companyId: session.companyId,
-          staffId: session.id,
-          depositDate: { gte: bounds.start, lte: bounds.end },
+          companyId,
+          staffId,
+          depositDate: { gte: start, lte: end },
         },
-        include: {
-          staff: { select: { id: true, name: true } },
-          accountant: { select: { id: true, name: true } },
-        },
-        orderBy: [{ depositDate: "desc" }],
       }),
       db.expense.findMany({
         where: {
-          companyId: session.companyId,
-          employeeId: session.id,
-          expenseDate: { gte: bounds.start, lte: bounds.end },
+          companyId,
+          employeeId: staffId,
+          expenseDate: { gte: start, lte: end },
         },
-        include: {
-          employee: { select: { id: true, name: true } },
-          reviewedBy: { select: { id: true, name: true } },
-        },
-        orderBy: [{ expenseDate: "desc" }],
       }),
       db.staffProofSubmission.findMany({
         where: {
-          companyId: session.companyId,
-          staffId: session.id,
-          transactionAt: { gte: bounds.start, lte: bounds.end },
+          companyId,
+          staffId,
+          transactionAt: { gte: start, lte: end },
         },
         include: {
-          broker: {
-            include: {
-              agentAccounts: {
-                where: { status: "ACTIVE" },
-                orderBy: [{ isPrimary: "desc" }, { network: "asc" }],
-              },
-            },
-          },
-          verifiedBy: { select: { id: true, name: true, role: true } },
           file: {
             select: {
-              id: true,
-              originalName: true,
+              storagePath: true,
               mimeType: true,
-              sizeBytes: true,
             },
           },
         },
-        orderBy: [{ transactionAt: "desc" }],
       }),
       db.brokerServiceVisit.findMany({
         where: {
-          companyId: session.companyId,
-          staffId: session.id,
-          startedAt: { gte: bounds.start, lte: bounds.end },
+          companyId,
+          staffId,
+          startedAt: { gte: start, lte: end },
         },
-        include: {
-          staff: { select: { id: true, name: true } },
-          broker: true,
-          device: true,
-          proofSubmissions: true,
-        },
-        orderBy: [{ startedAt: "desc" }],
-      }),
-      db.attendance.findMany({
-        where: {
-          companyId: session.companyId,
-          userId: session.id,
-          date: { gte: bounds.start, lte: bounds.end },
-          source: { startsWith: "ACCOUNTANT_VERIFIED" },
-        },
-        orderBy: [{ date: "asc" }],
-      }),
-      db.companyGpsDevice.findMany({
-        where: {
-          companyId: session.companyId,
-          ownerUserId: session.id,
-        },
-        orderBy: [{ lastSeenAt: "desc" }],
-      }),
-      db.companyGpsPing.findMany({
-        where: {
-          companyId: session.companyId,
-          device: { ownerUserId: session.id },
-          capturedAt: { gte: bounds.start, lte: bounds.end },
-        },
-        orderBy: [{ capturedAt: "asc" }],
-        take: 5000,
-      }),
-      db.gpsAlert.findMany({
-        where: {
-          companyId: session.companyId,
-          userId: session.id,
-          createdAt: { gte: bounds.start, lte: bounds.end },
-        },
-        orderBy: [{ createdAt: "desc" }],
-      }),
-      db.notification.findMany({
-        where: {
-          companyId: session.companyId,
-          userId: session.id,
-        },
-        orderBy: [{ createdAt: "desc" }],
-        take: 300,
-      }),
-      db.performanceRecord.findMany({
-        where: {
-          companyId: session.companyId,
-          userId: session.id,
-        },
-        orderBy: [{ year: "desc" }, { month: "desc" }],
-        take: 24,
+        include: { brokerCustomer: true },
       }),
     ]);
 
-    const brokerIdsServed = new Set(
-      services.map((row: any) => String(row.brokerCustomerId)),
-    );
-    const unservedBrokers = assignedBrokers.filter(
-      (broker: any) => !brokerIdsServed.has(String(broker.id)),
-    );
+  const rows: Omit<ReportRow, "balance">[] = [];
 
-    const filteredBrokers = assignedBrokers.filter((broker: any) => {
-      if (!search) return true;
-      const words = search.split(/\s+/).filter(Boolean);
-      const haystack = [
-        broker.code,
-        broker.name,
-        broker.businessName,
-        broker.phone,
-        broker.alternatePhone,
-        broker.location,
-        broker.region,
-        broker.district,
-        broker.ward,
-        broker.address,
-        broker.assignedArea,
+  for (const item of funding) {
+    if (item.status !== "CONFIRMED") continue;
+    const total = numberValue(item.floatAmount) + numberValue(item.cashAmount);
+    rows.push({
+      date: safeDate(item.confirmedAt ?? item.issuedAt),
+      reference: item.referenceNo,
+      details: [
+        "ACCOUNTANT TO STAFF",
+        `FROM ${item.accountant?.name ?? "ACCOUNTANT"} TO ${staff?.name ?? "STAFF"}`,
+        item.networkLine
+          ? `${item.networkLine.network} ${item.networkLine.simCardNumber}`
+          : "",
+        `FLOAT ${money(numberValue(item.floatAmount))}; CASH ${money(
+          numberValue(item.cashAmount),
+        )}`,
       ]
-        .map(cleanText)
-        .join(" ")
-        .toLowerCase();
-      return words.every((word) => haystack.includes(word));
+        .filter(Boolean)
+        .join(" - "),
+      debit: 0,
+      credit: total,
     });
+  }
 
-    const transactions = ownTransactionRows({
-      staffId: session.id,
-      funding,
-      floats,
-      collections,
-      deposits,
-      expenses,
-      proofs,
-      services,
+  for (const item of floats) {
+    const amount = numberValue(item.returnedAmount ?? item.amount);
+    const outgoing = item.fromUserId === staffId;
+    rows.push({
+      date: safeDate(
+        item.returnedAt ?? item.confirmedAt ?? item.issuedAt ?? item.createdAt,
+      ),
+      reference: item.referenceNo ?? item.id,
+      details: [
+        item.transactionType,
+        `FROM ${item.fromUser?.name ?? staff?.name ?? "STAFF"} TO ${
+          item.brokerCustomer?.name ?? item.toUser?.name ?? "ACCOUNTANT"
+        }`,
+        item.purpose ?? "",
+      ]
+        .filter(Boolean)
+        .join(" - "),
+      debit: outgoing ? amount : 0,
+      credit: outgoing ? 0 : amount,
+      proofUrl: item.receiptUrl,
     });
+  }
 
-    const weeklyFolders = groupWeekly({ proofs, deposits, expenses });
-    const confirmedFunding = funding.filter((row: any) => row.status === "CONFIRMED");
-    const pendingFunding = funding.filter((row: any) => row.status === "PENDING");
-
-    const fundingByDay = Array.from(
-      confirmedFunding.reduce((map: Map<string, any>, row: any) => {
-        const key = localDateKey(row.confirmedAt ?? row.issuedAt);
-        const current = map.get(key) ?? {
-          date: key,
-          entries: 0,
-          floatAmount: 0,
-          cashAmount: 0,
-          totalAmount: 0,
-        };
-        current.entries += 1;
-        current.floatAmount += numberValue(row.floatAmount);
-        current.cashAmount += numberValue(row.cashAmount);
-        current.totalAmount += numberValue(row.floatAmount) + numberValue(row.cashAmount);
-        map.set(key, current);
-        return map;
-      }, new Map()).values(),
-    ).sort((a: any, b: any) => String(b.date).localeCompare(String(a.date)));
-
-    const totalDistanceKm = pings.reduce((total: number, row: any, index: number) => {
-      if (index === 0) return total;
-      const previous = pings[index - 1];
-      const rad = (value: number) => (value * Math.PI) / 180;
-      const earth = 6371;
-      const dLat = rad(numberValue(row.latitude) - numberValue(previous.latitude));
-      const dLng = rad(numberValue(row.longitude) - numberValue(previous.longitude));
-      const q =
-        Math.sin(dLat / 2) ** 2 +
-        Math.cos(rad(numberValue(previous.latitude))) *
-          Math.cos(rad(numberValue(row.latitude))) *
-          Math.sin(dLng / 2) ** 2;
-      return total + earth * 2 * Math.atan2(Math.sqrt(q), Math.sqrt(1 - q));
-    }, 0);
-
-    const attendanceJourney = attendance.map((row: any) => ({
-      ...row,
-      morning: row.checkInAt
-        ? { mark: "PRESENT", time: row.checkInAt }
-        : { mark: "ABSENT", time: null },
-      evening: row.checkOutAt
-        ? { mark: "PRESENT", time: row.checkOutAt }
-        : { mark: "ABSENT", time: null },
-    }));
-
-    const stats = {
-      assignedBrokers: assignedBrokers.length,
-      unservedBrokers: unservedBrokers.length,
-      pendingFunding: pendingFunding.length,
-      totalFundingFloat: confirmedFunding.reduce(
-        (sum: number, row: any) => sum + numberValue(row.floatAmount),
-        0,
-      ),
-      totalFundingCash: confirmedFunding.reduce(
-        (sum: number, row: any) => sum + numberValue(row.cashAmount),
-        0,
-      ),
-      pendingProofs: proofs.filter((row: any) => row.status === "PENDING").length,
-      verifiedProofs: proofs.filter((row: any) => row.status === "VERIFIED").length,
-      totalProofValue: proofs.reduce(
-        (sum: number, row: any) => sum + numberValue(row.amount),
-        0,
-      ),
-      serviceVisits: services.length,
-      totalServiceFloat: services.reduce(
-        (sum: number, row: any) => sum + numberValue(row.floatAmount),
-        0,
-      ),
-      totalServiceCash: services.reduce(
-        (sum: number, row: any) => sum + numberValue(row.cashAmount),
-        0,
-      ),
-      distanceKm: Number(totalDistanceKm.toFixed(2)),
-    };
-
-    return NextResponse.json({
-      success: true,
-      period: {
-        name: bounds.period,
-        label: bounds.label,
-        start: bounds.start,
-        end: bounds.end,
-      },
-      staff,
-      accountants,
-      funding,
-      fundingByDay,
-      brokers: filteredBrokers,
-      allAssignedBrokers: assignedBrokers,
-      unservedBrokers,
-      floats,
-      collections,
-      deposits,
-      expenses,
-      proofs,
-      services,
-      attendance: attendanceJourney,
-      devices,
-      pings,
-      alerts,
-      notifications,
-      performance,
-      transactions,
-      weeklyFolders,
-      stats,
+  for (const item of collections) {
+    const amount = numberValue(item.amount);
+    rows.push({
+      date: safeDate(item.collectionDate),
+      reference: item.referenceNo,
+      details: `BROKER COLLECTION - FROM ${
+        item.brokerCustomer?.name ?? item.broker?.name ?? "BROKER"
+      } TO ${staff?.name ?? "STAFF"}`,
+      debit: 0,
+      credit: amount,
+      proofUrl: item.receiptUrl,
     });
-  } catch (error) {
-    console.error("STAFF_OPERATIONS_GET_ERROR:", error);
-    const result = responseError(error);
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          result.status === 500
-            ? "The staff operations workspace could not load."
-            : result.message,
-        details:
-          process.env.NODE_ENV === "development"
-            ? error instanceof Error
-              ? error.message
-              : String(error)
-            : undefined,
-      },
-      { status: result.status },
-    );
+  }
+
+  for (const item of deposits) {
+    const amount = numberValue(item.amount);
+    rows.push({
+      date: safeDate(item.depositDate),
+      reference: item.referenceNo ?? item.id,
+      details: `BANK DEPOSIT - FROM ${staff?.name ?? "STAFF"} TO ${
+        item.bankAccount ?? "BANK"
+      }`,
+      debit: amount,
+      credit: 0,
+      proofUrl: item.bankReceiptUrl ?? item.depositSlipUrl,
+    });
+  }
+
+  for (const item of expenses) {
+    const amount = numberValue(item.amount);
+    rows.push({
+      date: safeDate(item.expenseDate),
+      reference: item.id,
+      details: `EXPENSE ${item.requestMode ?? "REIMBURSEMENT"} - ${
+        item.otherCategory ?? item.category
+      } - ${item.description ?? ""}`,
+      debit: amount,
+      credit: 0,
+      proofUrl: item.receiptUrl,
+    });
+  }
+
+  for (const item of proofs) {
+    rows.push({
+      date: safeDate(item.transactionAt),
+      reference: item.referenceNo,
+      details: `${item.direction} - FROM ${item.senderName} TO ${
+        item.receiverName
+      } - PROOF ${item.status}`,
+      debit: item.direction.includes("STAFF_TO") ? numberValue(item.amount) : 0,
+      credit: item.direction.includes("TO_STAFF") || item.direction === "BROKER_TO_STAFF"
+        ? numberValue(item.amount)
+        : 0,
+      proofUrl: item.proofUrl,
+      storagePath: item.file?.storagePath ?? null,
+      mimeType: item.file?.mimeType ?? null,
+    });
+  }
+
+  for (const item of services) {
+    rows.push({
+      date: safeDate(item.serviceProvidedAt ?? item.startedAt),
+      reference: item.id,
+      details: `SERVICE VISIT - ${item.brokerCustomer?.name ?? "BROKER"} - FLOAT ${money(
+        numberValue(item.floatAmount),
+      )}; CASH ${money(numberValue(item.cashAmount))}`,
+      debit: 0,
+      credit: 0,
+    });
+  }
+
+  rows.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  let balance = 0;
+  const completeRows: ReportRow[] = rows.map((row) => {
+    balance += row.credit - row.debit;
+    return { ...row, balance };
+  });
+
+  return { staff, rows: completeRows };
+}
+
+function drawHeader(
+  page: PDFPage,
+  font: any,
+  bold: any,
+  input: {
+    staffName: string;
+    company: CompanyReportProfile;
+    companyLogo: any | null;
+    periodLabel: string;
+    totalCredit: number;
+    totalDebit: number;
+    closingBalance: number;
+    pageNo: number;
+  },
+) {
+  const { width, height } = page.getSize();
+  page.drawRectangle({
+    x: 0,
+    y: height - 96,
+    width,
+    height: 96,
+    color: rgb(0.08, 0.45, 0.25),
+  });
+
+  const logoX = 38;
+  const logoY = height - 74;
+  const logoSize = 48;
+  page.drawRectangle({
+    x: logoX,
+    y: logoY,
+    width: logoSize,
+    height: logoSize,
+    color: rgb(1, 1, 1),
+  });
+  if (input.companyLogo) {
+    const imageWidth = input.companyLogo.width || 1;
+    const imageHeight = input.companyLogo.height || 1;
+    const scale = Math.min((logoSize - 8) / imageWidth, (logoSize - 8) / imageHeight);
+    const drawWidth = imageWidth * scale;
+    const drawHeight = imageHeight * scale;
+    page.drawImage(input.companyLogo, {
+      x: logoX + (logoSize - drawWidth) / 2,
+      y: logoY + (logoSize - drawHeight) / 2,
+      width: drawWidth,
+      height: drawHeight,
+    });
+  } else {
+    page.drawText(input.company.name.slice(0, 2).toUpperCase(), {
+      x: logoX + 11,
+      y: logoY + 15,
+      size: 17,
+      font: bold,
+      color: rgb(0.08, 0.45, 0.25),
+    });
+  }
+
+  page.drawText(input.company.name || "SIMAMIA FLOAT", {
+    x: 98,
+    y: height - 38,
+    size: 17,
+    font: bold,
+    color: rgb(1, 1, 1),
+  });
+  page.drawText("Staff Grand Transaction Report", {
+    x: 98,
+    y: height - 57,
+    size: 9.5,
+    font,
+    color: rgb(0.9, 1, 0.94),
+  });
+  page.drawText(`Period: ${input.periodLabel}`, {
+    x: 98,
+    y: height - 75,
+    size: 7.4,
+    font: bold,
+    color: rgb(0.9, 1, 0.94),
+  });
+
+  const companyDetails = [
+    input.company.code ? `Code: ${input.company.code}` : "",
+    input.company.registrationNumber ? `Reg: ${input.company.registrationNumber}` : "",
+    input.company.tin ? `TIN: ${input.company.tin}` : "",
+    input.company.phone ? `Tel: ${input.company.phone}` : "",
+    input.company.email ? `Email: ${input.company.email}` : "",
+    input.company.address ? `Address: ${input.company.address}` : "",
+    input.company.website ? `Web: ${input.company.website}` : "",
+  ].filter(Boolean);
+  page.drawText(`Page ${input.pageNo}`, {
+    x: width - 215,
+    y: height - 23,
+    size: 7,
+    font: bold,
+    color: rgb(1, 1, 1),
+    maxWidth: 177,
+  });
+  companyDetails.slice(0, 7).forEach((line, index) => {
+    page.drawText(line, {
+      x: width - 215,
+      y: height - 35 - index * 8,
+      size: 5.9,
+      font,
+      color: rgb(0.94, 1, 0.97),
+      maxWidth: 177,
+    });
+  });
+
+  page.drawText(input.staffName, {
+    x: 38,
+    y: height - 125,
+    size: 16,
+    font: bold,
+    color: rgb(0.05, 0.15, 0.1),
+  });
+  page.drawText(`Staff financial activity • ${input.company.name}`, {
+    x: 38,
+    y: height - 143,
+    size: 9,
+    font: bold,
+    color: rgb(0.22, 0.35, 0.28),
+  });
+
+  const summary = [
+    `Total Credit: ${money(input.totalCredit)} TZS`,
+    `Total Debit: ${money(input.totalDebit)} TZS`,
+    `Closing Balance: ${money(input.closingBalance)} TZS`,
+  ];
+  summary.forEach((value, index) => {
+    page.drawText(value, {
+      x: 325,
+      y: height - 124 - index * 19,
+      size: 9,
+      font: index === 2 ? bold : font,
+      color: rgb(0.08, 0.25, 0.16),
+    });
+  });
+}
+
+function drawTableHeader(page: PDFPage, bold: any, y: number) {
+  const columns = [
+    { x: 38, width: 78, label: "Posting Date" },
+    { x: 116, width: 226, label: "Details" },
+    { x: 342, width: 72, label: "Reference" },
+    { x: 414, width: 58, label: "Debit" },
+    { x: 472, width: 58, label: "Credit" },
+    { x: 530, width: 67, label: "Balance" },
+  ];
+  for (const column of columns) {
+    page.drawRectangle({
+      x: column.x,
+      y: y - 18,
+      width: column.width,
+      height: 20,
+      color: rgb(0.2, 0.55, 0.22),
+      borderColor: rgb(0.1, 0.35, 0.15),
+      borderWidth: 0.5,
+    });
+    page.drawText(column.label, {
+      x: column.x + 3,
+      y: y - 12,
+      size: 7.5,
+      font: bold,
+      color: rgb(1, 1, 1),
+    });
   }
 }
 
-export async function POST(request: Request) {
-  try {
-    const session = await requireStaff();
-    const db = prisma as any;
-    let body: JsonBody;
+function wrapText(text: string, max = 48): string[] {
+  const words = cleanText(text).split(/\s+/);
+  const lines: string[] = [];
+  let line = "";
+  for (const word of words) {
+    if (!line) {
+      line = word;
+    } else if (`${line} ${word}`.length <= max) {
+      line += ` ${word}`;
+    } else {
+      lines.push(line);
+      line = word;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.slice(0, 3);
+}
 
+async function createPdf(
+  staff: any,
+  rows: ReportRow[],
+  periodLabel: string,
+  appendProofs: boolean,
+): Promise<Uint8Array> {
+  const pdf = await PDFDocument.create();
+  const font = await pdf.embedFont(StandardFonts.Helvetica);
+  const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const totalCredit = rows.reduce((sum, row) => sum + row.credit, 0);
+  const totalDebit = rows.reduce((sum, row) => sum + row.debit, 0);
+  const closingBalance = rows.at(-1)?.balance ?? 0;
+  const companyProfile = await resolveCompanyReportProfile(String(staff?.companyId || ""), staff?.company);
+  const logoBytes = await loadCompanyReportLogo(companyProfile.logoUrl);
+  let companyLogo: any | null = null;
+  if (logoBytes) {
     try {
-      body = (await request.json()) as JsonBody;
+      companyLogo = await pdf.embedPng(logoBytes);
     } catch {
-      return NextResponse.json(
-        { success: false, message: "The request body must contain valid JSON." },
-        { status: 400 },
-      );
+      try {
+        companyLogo = await pdf.embedJpg(logoBytes);
+      } catch {
+        companyLogo = null;
+      }
+    }
+  }
+
+  const rowsPerPage = 16;
+  const pages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
+
+  for (let pageIndex = 0; pageIndex < pages; pageIndex += 1) {
+    const page = pdf.addPage([635, 842]);
+    drawHeader(page, font, bold, {
+      staffName: staff?.name ?? "Staff Officer",
+      company: companyProfile,
+      companyLogo,
+      periodLabel,
+      totalCredit,
+      totalDebit,
+      closingBalance,
+      pageNo: pageIndex + 1,
+    });
+
+    let y = 640;
+    drawTableHeader(page, bold, y);
+    y -= 25;
+
+    const pageRows = rows.slice(
+      pageIndex * rowsPerPage,
+      pageIndex * rowsPerPage + rowsPerPage,
+    );
+
+    for (const row of pageRows) {
+      const detailLines = wrapText(row.details);
+      const height = Math.max(30, detailLines.length * 9 + 8);
+      const columns = [
+        { x: 38, width: 78 },
+        { x: 116, width: 226 },
+        { x: 342, width: 72 },
+        { x: 414, width: 58 },
+        { x: 472, width: 58 },
+        { x: 530, width: 67 },
+      ];
+      for (const column of columns) {
+        page.drawRectangle({
+          x: column.x,
+          y: y - height,
+          width: column.width,
+          height,
+          borderColor: rgb(0.68, 0.72, 0.69),
+          borderWidth: 0.45,
+        });
+      }
+
+      page.drawText(dateTime(row.date), {
+        x: 41,
+        y: y - 12,
+        size: 6.5,
+        font,
+        color: rgb(0.08, 0.12, 0.1),
+      });
+      detailLines.forEach((line, lineIndex) => {
+        page.drawText(line, {
+          x: 119,
+          y: y - 10 - lineIndex * 9,
+          size: 6.5,
+          font,
+          color: rgb(0.08, 0.12, 0.1),
+        });
+      });
+      page.drawText(cleanText(row.reference).slice(0, 17), {
+        x: 345,
+        y: y - 12,
+        size: 6.2,
+        font,
+        color: rgb(0.08, 0.12, 0.1),
+      });
+      page.drawText(row.debit ? money(row.debit) : "0.00", {
+        x: 417,
+        y: y - 12,
+        size: 6.2,
+        font,
+        color: rgb(0.25, 0.08, 0.08),
+      });
+      page.drawText(row.credit ? money(row.credit) : "0.00", {
+        x: 475,
+        y: y - 12,
+        size: 6.2,
+        font,
+        color: rgb(0.02, 0.3, 0.12),
+      });
+      page.drawText(money(row.balance), {
+        x: 533,
+        y: y - 12,
+        size: 6.2,
+        font: bold,
+        color: rgb(0.02, 0.2, 0.1),
+      });
+      y -= height;
     }
 
-    const action = cleanText(body.action).toUpperCase();
+    page.drawText(`Generated ${dateTime(new Date())} - Staff data only`, {
+      x: 38,
+      y: 24,
+      size: 7,
+      font,
+      color: rgb(0.35, 0.42, 0.38),
+    });
+  }
 
-    if (action === "CONFIRM_FUNDING") {
-      const id = cleanText(body.id ?? body.fundingId);
-      const funding = await db.staffFundingReceipt.findFirst({
-        where: {
-          id,
-          companyId: session.companyId,
-          staffId: session.id,
-        },
-      });
+  if (appendProofs) {
+    for (const row of rows) {
+      if (!row.storagePath || !row.mimeType) continue;
+      const normalizedStoragePath = row.storagePath.replaceAll("\\", "/");
+      const storagePrefix = "storage/private/staff/";
+      if (!normalizedStoragePath.startsWith(storagePrefix)) continue;
 
-      if (!funding) throw new Error("FUNDING_NOT_FOUND");
-      if (funding.status !== "PENDING") throw new Error("FUNDING_ALREADY_HANDLED");
+      const absolutePath = path.resolve(
+        STAFF_STORAGE_ROOT,
+        normalizedStoragePath.slice(storagePrefix.length),
+      );
+      if (!absolutePath.startsWith(`${STAFF_STORAGE_ROOT}${path.sep}`)) continue;
 
-      const now = new Date();
-      const result = await db.$transaction(async (tx: any) => {
-        const updated = await tx.staffFundingReceipt.update({
-          where: { id: funding.id },
-          data: {
-            status: "CONFIRMED",
-            confirmedAt: now,
-          },
-          include: {
-            accountant: {
-              select: { id: true, name: true, email: true },
-            },
-          },
-        });
+      try {
+        const bytes = await readFile(absolutePath);
+        if (row.mimeType === "application/pdf") {
+          const source = await PDFDocument.load(bytes);
+          const copied = await pdf.copyPages(source, source.getPageIndices());
+          copied.forEach((page) => pdf.addPage(page));
+        } else if (
+          row.mimeType === "image/png" ||
+          row.mimeType === "image/jpeg" ||
+          row.mimeType === "image/webp"
+        ) {
+          const page = pdf.addPage([595, 842]);
+          let imageBytes: Uint8Array = bytes;
+          let imageMime = row.mimeType;
 
-        if (funding.floatTransactionId) {
-          await tx.floatTransaction.update({
-            where: { id: funding.floatTransactionId },
-            data: {
-              status: "CONFIRMED",
-              confirmedAt: now,
-              lockedAt: now,
-            },
+          if (row.mimeType === "image/webp") {
+            const sharpModule = await import("sharp");
+            imageBytes = await sharpModule.default(bytes).png().toBuffer();
+            imageMime = "image/png";
+          }
+
+          const image =
+            imageMime === "image/png"
+              ? await pdf.embedPng(imageBytes)
+              : await pdf.embedJpg(imageBytes);
+          const margin = 38;
+          const bounds = page.getSize();
+          const scale = Math.min(
+            (bounds.width - margin * 2) / image.width,
+            (bounds.height - margin * 2) / image.height,
+          );
+          page.drawImage(image, {
+            x: (bounds.width - image.width * scale) / 2,
+            y: (bounds.height - image.height * scale) / 2,
+            width: image.width * scale,
+            height: image.height * scale,
+          });
+          page.drawText(`Proof ${row.reference}`, {
+            x: margin,
+            y: 20,
+            size: 8,
+            font: bold,
+            color: rgb(0.1, 0.3, 0.18),
+          });
+        } else {
+          const page = pdf.addPage([595, 842]);
+          page.drawText("Proof document reference", {
+            x: 45,
+            y: 780,
+            size: 18,
+            font: bold,
+            color: rgb(0.08, 0.45, 0.25),
+          });
+          page.drawText(`Reference: ${cleanText(row.reference)}`, {
+            x: 45,
+            y: 744,
+            size: 11,
+            font,
+            color: rgb(0.1, 0.2, 0.15),
+          });
+          page.drawText(`File type: ${cleanText(row.mimeType)}`, {
+            x: 45,
+            y: 724,
+            size: 10,
+            font,
+            color: rgb(0.25, 0.35, 0.3),
+          });
+          page.drawText("The original file remains available through the secure staff preview route.", {
+            x: 45,
+            y: 690,
+            size: 9,
+            font,
+            color: rgb(0.25, 0.35, 0.3),
           });
         }
+      } catch (error) {
+        console.warn("STAFF_REPORT_PROOF_APPEND_WARNING:", row.reference, error);
+      }
+    }
+  }
 
-        return updated;
-      });
+  pdf.setTitle(`Staff Grand Report - ${staff?.name ?? "Staff"}`);
+  pdf.setAuthor("Simamia Float");
+  pdf.setSubject("Staff-only float, cash, proof, expense and service report");
+  return pdf.save();
+}
 
-      await Promise.all([
-        sendNotice({
-          companyId: session.companyId,
-          userId: session.id,
-          title: "Float and cash receipt confirmed",
-          message: `You confirmed ${funding.referenceNo}.`,
-          type: "SUCCESS",
-        }),
-        sendNoticeToRoles({
-          companyId: session.companyId,
-          roles: ["ACCOUNTANT", "COMPANY_ADMIN"],
-          title: "Staff funding confirmed",
-          message: `${session.name} confirmed ${funding.referenceNo}.`,
-          type: "SUCCESS",
-          excludeUserId: session.id,
-        }),
+export async function GET(request: Request) {
+  try {
+    const session = await requireStaff();
+    const url = new URL(request.url);
+    const format = cleanText(url.searchParams.get("format")).toLowerCase() || "pdf";
+    const appendProofs = url.searchParams.get("appendProofs") === "1";
+    const bounds = periodBounds(
+      url.searchParams.get("period"),
+      url.searchParams.get("anchor") ?? url.searchParams.get("date"),
+      url.searchParams.get("from"),
+      url.searchParams.get("to"),
+    );
+    const { staff, rows } = await reportSource(
+      session.companyId,
+      session.id,
+      bounds.start,
+      bounds.end,
+    );
+    const basename = `staff-grand-report-${cleanText(staff?.username) || session.id}-${bounds.period.toLowerCase()}`;
+
+    if (format === "csv") {
+      const header = [
+        "Posting Date",
+        "Details",
+        "Reference",
+        "Debit TZS",
+        "Credit TZS",
+        "Running Balance TZS",
+        "Proof URL",
+      ];
+      const body = rows.map((row) => [
+        dateTime(row.date),
+        row.details,
+        row.reference,
+        row.debit.toFixed(2),
+        row.credit.toFixed(2),
+        row.balance.toFixed(2),
+        row.proofUrl ?? "",
       ]);
-
-      return NextResponse.json({
-        success: true,
-        message: "Float and cash receipt confirmed successfully.",
-        funding: serialize(result),
+      const csv = [header, ...body]
+        .map((row) => row.map(csvCell).join(","))
+        .join("\r\n");
+      return new Response(csv, {
+        headers: {
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": `attachment; filename="${basename}.csv"`,
+          "Cache-Control": "private, no-store",
+        },
       });
     }
 
-    if (action === "SUBMIT_PROOF") {
-      const smsText = cleanText(body.smsText);
-      const parsed = parseProofText(smsText);
-      const referenceNo = cleanText(
-        body.referenceNo ?? body.transactionId ?? parsed.referenceNo,
-      ).toUpperCase();
-      const transactionId = cleanText(
-        body.transactionId ?? parsed.transactionId ?? referenceNo,
-      ).toUpperCase();
-      const senderName = cleanText(body.senderName ?? parsed.senderName);
-      const receiverName = cleanText(body.receiverName ?? parsed.receiverName);
-      const amount = numberValue(body.amount) || parsed.amount;
-
-      if (!referenceNo || !senderName || !receiverName || amount <= 0) {
-        throw new Error("PROOF_FIELDS_MISSING");
-      }
-
-      const proofFile = await requireOwnedStaffFile(
-        session.companyId,
-        session.id,
-        body.proofUrl,
-        ["PROOF", "RECEIPT", "BANK", "EXPENSE", "OTHER"],
-      );
-      if (!proofFile && !smsText) throw new Error("PROOF_CONTENT_REQUIRED");
-
-      const duplicate = await db.staffProofSubmission.findFirst({
-        where: {
-          companyId: session.companyId,
-          referenceNo,
-        },
-        select: { id: true },
-      });
-      if (duplicate) throw new Error("DUPLICATE_REFERENCE");
-
-      const brokerCustomerId = cleanText(body.brokerCustomerId) || null;
-      if (brokerCustomerId) {
-        await requireAssignedBroker(
-          session.companyId,
-          session.id,
-          brokerCustomerId,
-        );
-      }
-
-      const requestedServiceVisitId = cleanText(body.serviceVisitId) || null;
-      let serviceVisitId: string | null = null;
-      if (requestedServiceVisitId) {
-        const visit = await db.brokerServiceVisit.findFirst({
-          where: {
-            id: requestedServiceVisitId,
-            companyId: session.companyId,
-            staffId: session.id,
-          },
-          select: { id: true },
-        });
-        if (!visit) throw new Error("SERVICE_VISIT_NOT_OWNED");
-        serviceVisitId = String(visit.id);
-      }
-
-      const transactionAt = dateValue(body.transactionAt);
-      const proof = await db.staffProofSubmission.create({
-        data: {
-          companyId: session.companyId,
-          staffId: session.id,
-          brokerCustomerId,
-          serviceVisitId,
-          fileId: proofFile?.id ?? null,
-          direction: normaliseDirection(body.direction),
-          kind: normaliseProofKind(body.kind),
-          referenceNo,
-          transactionId: transactionId || null,
-          senderName,
-          receiverName,
-          amount,
-          transactionAt,
-          smsText: smsText || null,
-          proofUrl: proofFile?.url ?? null,
-          weekKey: isoWeekKey(transactionAt),
-          status: "PENDING",
-        },
-        include: {
-          broker: {
-            include: {
-              agentAccounts: {
-                where: { status: "ACTIVE" },
-                orderBy: [{ isPrimary: "desc" }, { network: "asc" }],
-              },
-            },
-          },
-          file: true,
-        },
-      });
-
-      if (serviceVisitId) {
-        await db.brokerServiceVisit.update({
-          where: { id: serviceVisitId },
-          data: {
-            status: "PROOF_PENDING",
-            proofUploadedAt: new Date(),
-          },
-        });
-      }
-
-      await sendNoticeToRoles({
-        companyId: session.companyId,
-        roles: ["ACCOUNTANT", "COMPANY_ADMIN"],
-        title: "Receipt or SMS proof awaiting verification",
-        message: `${session.name} submitted ${referenceNo} for TZS ${amount.toLocaleString()}.`,
-        type: "INFO",
-        excludeUserId: session.id,
-      });
-
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Proof submitted and is pending verification.",
-          proof: serialize(proof),
-        },
-        { status: 201 },
-      );
-    }
-
-    if (action === "SUBMIT_EXPENSE_REQUEST") {
-      const category = cleanText(body.category).toUpperCase() || "OTHER";
-      const otherCategory =
-        category === "OTHER" ? cleanText(body.otherCategory) : null;
-      if (category === "OTHER" && !otherCategory) {
-        return NextResponse.json(
-          { success: false, message: "Enter the other expense category." },
-          { status: 422 },
-        );
-      }
-
-      const receipt = await requireOwnedStaffFile(
-        session.companyId,
-        session.id,
-        body.receiptUrl,
-        ["EXPENSE", "RECEIPT", "PROOF"],
-      );
-
-      const requestMode = cleanText(body.requestMode).toUpperCase();
-      const allowedModes = new Set([
-        "REIMBURSEMENT",
-        "ADVANCE_REQUEST",
-        "DIRECT_PAYMENT_REQUEST",
-      ]);
-
-      const expense = await db.expense.create({
-        data: {
-          companyId: session.companyId,
-          employeeId: session.id,
-          reviewedById: null,
-          expenseDate: dateValue(body.expenseDate),
-          category,
-          otherCategory,
-          requestMode: allowedModes.has(requestMode)
-            ? requestMode
-            : "REIMBURSEMENT",
-          requestedAction: cleanText(body.requestedAction) || null,
-          amount: positiveAmount(body.amount),
-          description: cleanText(body.description) || "Staff expense request",
-          receiptUrl: receipt?.url ?? null,
-          status: "PENDING",
-        },
-      });
-
-      await sendNoticeToRoles({
-        companyId: session.companyId,
-        roles: ["ACCOUNTANT", "COMPANY_ADMIN"],
-        title: "Expense request awaiting approval",
-        message: `${session.name} submitted ${category === "OTHER" ? otherCategory : category}.`,
-        type: "INFO",
-        excludeUserId: session.id,
-      });
-
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Expense request submitted for accountant approval.",
-          expense: serialize(expense),
-        },
-        { status: 201 },
-      );
-    }
-
-    if (action === "RECORD_SERVICE") {
-      const brokerCustomerId = cleanText(body.brokerCustomerId);
-      const broker = await requireAssignedBroker(
-        session.companyId,
-        session.id,
-        brokerCustomerId,
-      );
-      const staffLatitude = Number(body.staffLatitude ?? body.latitude);
-      const staffLongitude = Number(body.staffLongitude ?? body.longitude);
-      if (!validCoordinate(staffLatitude, staffLongitude)) {
-        throw new Error("SERVICE_LOCATION_REQUIRED");
-      }
-
-      const brokerLatitude =
-        body.brokerLatitude === null || body.brokerLatitude === undefined || body.brokerLatitude === ""
-          ? staffLatitude
-          : Number(body.brokerLatitude);
-      const brokerLongitude =
-        body.brokerLongitude === null || body.brokerLongitude === undefined || body.brokerLongitude === ""
-          ? staffLongitude
-          : Number(body.brokerLongitude);
-
-      if (!validCoordinate(brokerLatitude, brokerLongitude)) {
-        throw new Error("SERVICE_LOCATION_REQUIRED");
-      }
-
-      const floatAmount = numberValue(body.floatAmount);
-      const cashAmount = numberValue(body.cashAmount);
-      const recentDevice = await db.companyGpsDevice.findFirst({
-        where: {
-          companyId: session.companyId,
-          ownerUserId: session.id,
-        },
-        orderBy: { lastSeenAt: "desc" },
-      });
-
-      const now = new Date();
-      const serviceType =
-        cleanText(body.serviceType) || "FLOAT_AND_CASH_SERVICE";
-      const nonFinancialService = [
-        "BROKER_SUPPORT",
-        "DOCUMENT_COLLECTION",
-        "OTHER_SERVICE",
-      ].includes(serviceType);
-
-      if (floatAmount < 0 || cashAmount < 0) {
-        throw new Error("NO_VALUE");
-      }
-
-      if (floatAmount + cashAmount <= 0 && !nonFinancialService) {
-        throw new Error("NO_VALUE");
-      }
-
-      const today = periodBounds("DAY", localDateKey(now));
-      const existingVisit = await db.brokerServiceVisit.findFirst({
-        where: {
-          companyId: session.companyId,
-          staffId: session.id,
-          brokerCustomerId: broker.id,
-          startedAt: { gte: today.start, lte: today.end },
-          status: { not: "CANCELLED" },
-        },
-        orderBy: { startedAt: "desc" },
-      });
-
-      const result = await db.$transaction(async (tx: any) => {
-        const activityData = {
-          companyId: session.companyId,
-          staffId: session.id,
-          brokerId: null,
-          brokerCustomerId: broker.id,
-          customerId: null,
-          serviceType,
-          amount: floatAmount + cashAmount,
-          status: "COMPLETED",
-          servedAt: now,
-          latitude: staffLatitude,
-          longitude: staffLongitude,
-          locationName:
-            cleanText(body.locationName) ||
-            broker.location ||
-            broker.assignedArea ||
-            null,
-          notes: [
-            cleanText(body.notes),
-            `Service type ${serviceType}.`,
-            `Float TZS ${floatAmount}; Cash TZS ${cashAmount}.`,
-          ]
-            .filter(Boolean)
-            .join(" "),
-        };
-
-        const activity = existingVisit?.serviceActivityId
-          ? await tx.serviceActivity.update({
-              where: { id: existingVisit.serviceActivityId },
-              data: activityData,
-            })
-          : await tx.serviceActivity.create({
-              data: activityData,
-            });
-
-        const visitData = {
-          deviceId: recentDevice?.id ?? existingVisit?.deviceId ?? null,
-          serviceActivityId: activity.id,
-          status: "PROOF_PENDING",
-          serviceType,
-          communicationNote: cleanText(body.notes) || null,
-          floatAmount,
-          cashAmount,
-          companyIncome: numberValue(body.companyIncome),
-          staffLatitude,
-          staffLongitude,
-          brokerLatitude,
-          brokerLongitude,
-          distanceMeters: 0,
-          locationMatched: true,
-          arrivedAt: existingVisit?.arrivedAt ?? now,
-          serviceProvidedAt: now,
-          proofDueAt: new Date(now.getTime() + 60 * 60 * 1000),
-        };
-
-        const visit = existingVisit
-          ? await tx.brokerServiceVisit.update({
-              where: { id: existingVisit.id },
-              data: visitData,
-              include: { broker: true },
-            })
-          : await tx.brokerServiceVisit.create({
-              data: {
-                companyId: session.companyId,
-                staffId: session.id,
-                brokerCustomerId: broker.id,
-                startedAt: now,
-                ...visitData,
-              },
-              include: { broker: true },
-            });
-
-        await tx.brokerCustomer.update({
-          where: { id: broker.id },
-          data: {
-            latitude: brokerLatitude,
-            longitude: brokerLongitude,
-            attendedBy: session.name,
-            attendedDate: now,
-            attendedLocation:
-              cleanText(body.locationName) ||
-              broker.location ||
-              broker.assignedArea ||
-              null,
-          },
-        });
-
-        return { activity, visit };
-      });
-
-      const serviceMessage =
-        `${session.name} serviced ${broker.name} (${serviceType.replaceAll("_", " ")}): ` +
-        `float TZS ${floatAmount.toLocaleString()} and cash TZS ${cashAmount.toLocaleString()}.`;
-
-      await Promise.all([
-        sendNotice({
-          companyId: session.companyId,
-          userId: session.id,
-          title: "Broker service saved",
-          message: serviceMessage,
-          type: "SUCCESS",
-        }),
-        sendNoticeToRoles({
-          companyId: session.companyId,
-          roles: ["COMPANY_ADMIN", "ACCOUNTANT", "GPS_MANAGER"],
-          title: "Broker service updated",
-          message: serviceMessage,
-          type: "SUCCESS",
-          excludeUserId: session.id,
-        }),
-      ]);
-
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Broker location and service report updated successfully.",
-          result: serialize(result),
-        },
-        { status: existingVisit ? 200 : 201 },
-      );
-    }
-
-    if (action === "CHECK_MISSED_BROKERS") {
-      const brokers = await assignedBrokerCustomers(session.companyId, session.id);
-      const bounds = periodBounds("DAY", localDateKey());
-      const visits = await db.brokerServiceVisit.findMany({
-        where: {
-          companyId: session.companyId,
-          staffId: session.id,
-          startedAt: { gte: bounds.start, lte: bounds.end },
-        },
-        select: { brokerCustomerId: true },
-      });
-      const visited = new Set(visits.map((row: any) => String(row.brokerCustomerId)));
-      const missed = brokers.filter((broker: any) => !visited.has(String(broker.id)));
-
-      if (missed.length) {
-        const message = `${missed.length} assigned broker${missed.length === 1 ? "" : "s"} still require service today.`;
-        await sendNotice({
-          companyId: session.companyId,
-          userId: session.id,
-          title: "Unserved broker reminder",
-          message,
-          type: "WARNING",
-        });
-      }
-
-      return NextResponse.json({
-        success: true,
-        message: missed.length
-          ? `${missed.length} broker service reminder(s) created.`
-          : "All assigned brokers have been serviced today.",
-        missed: missed.map((broker: any) => ({
-          id: broker.id,
-          name: broker.name,
-          location: broker.location,
-        })),
-      });
-    }
-
-    if (action === "MARK_NOTIFICATION_READ") {
-      const id = cleanText(body.id ?? body.notificationId);
-      const notification = await db.notification.findFirst({
-        where: {
-          id,
-          companyId: session.companyId,
-          userId: session.id,
-        },
-      });
-      if (!notification) {
-        return NextResponse.json(
-          { success: false, message: "The notification was not found." },
-          { status: 404 },
-        );
-      }
-      await db.notification.update({
-        where: { id: notification.id },
-        data: { isRead: true },
-      });
-      return NextResponse.json({
-        success: true,
-        message: "Notification marked as read.",
-      });
-    }
-
-    throw new Error("UNSUPPORTED_ACTION");
+    const bytes = await createPdf(staff, rows, bounds.label, appendProofs);
+    return new Response(Buffer.from(bytes), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="${basename}.pdf"`,
+        "Cache-Control": "private, no-store",
+      },
+    });
   } catch (error) {
-    console.error("STAFF_OPERATIONS_POST_ERROR:", error);
-    const result = responseError(error);
-    return NextResponse.json(
+    console.error("STAFF_REPORT_ERROR:", error);
+    return Response.json(
       {
         success: false,
-        message:
-          result.status === 500
-            ? "The staff operation could not be completed."
-            : result.message,
+        message: "The staff grand report could not be generated.",
         details:
-          process.env.NODE_ENV === "development"
-            ? error instanceof Error
-              ? error.message
-              : String(error)
+          process.env.NODE_ENV === "development" && error instanceof Error
+            ? error.message
             : undefined,
       },
-      { status: result.status },
+      { status: 500 },
     );
   }
 }

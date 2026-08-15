@@ -44,6 +44,7 @@ yarn-error.log*
 # generated clients and runtime data
 /generated/
 /storage/private/
+/public/uploads/
 /_seed_all_backup_*/
 /ORIGINAL-BACKUP/
 /pnpm-store/

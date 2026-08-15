@@ -231,6 +231,12 @@ type DashboardData = {
   gpsDevices: any[];
   gpsPings: any[];
   settings: Record<string, any>;
+  reportBrand?: {
+    logoUrl?: string;
+    registrationNumber?: string;
+    tin?: string;
+    website?: string;
+  };
   activities: any[];
   financialDays: any[];
   customers: any[];
@@ -255,6 +261,7 @@ type IconType = ComponentType<{
 
 const PROFILE_KEY = "simamia_company_admin_profile";
 const SIDEBAR_KEY = "simamia_company_admin_sidebar";
+const ACTIVE_PAGE_KEY = "simamia_company_admin_active_page";
 
 const emptyUserForm = {
   id: "",
@@ -372,6 +379,42 @@ const navigation: Array<{
   { page: "Approvals", icon: CheckCircle2, section: "Controls" },
   { page: "Company Settings", icon: Settings, section: "System" },
 ];
+
+function isPageName(value: unknown): value is PageName {
+  return navigation.some((item) => item.page === value);
+}
+
+const pageAliases: Record<string, PageName> = {
+  dashboard: "Dashboard",
+  users: "Manage Users",
+  "manage-users": "Manage Users",
+  brokers: "Manage Brokers",
+  "manage-brokers": "Manage Brokers",
+  staff: "Staff Work Areas",
+  "staff-areas": "Staff Work Areas",
+  "work-areas": "Staff Work Areas",
+  unified: "Unified Control Centre",
+  "control-centre": "Unified Control Centre",
+  branches: "Manage Branches",
+  expenses: "Expenses",
+  bank: "Bank Verification",
+  "bank-verification": "Bank Verification",
+  attendance: "Attendance",
+  performance: "Staff Performance",
+  gps: "GPS Tracking",
+  accounting: "Accounting Module",
+  notifications: "Notifications",
+  reports: "Reports",
+  approvals: "Approvals",
+  settings: "Company Settings",
+};
+
+function resolvePageName(value: unknown): PageName | null {
+  const clean = safeText(value).trim();
+  if (isPageName(clean)) return clean;
+  const alias = clean.toLowerCase().replace(/\s+/g, "-");
+  return pageAliases[alias] ?? null;
+}
 
 function safeText(value: unknown): string {
   return value === null || value === undefined ? "" : String(value);
@@ -597,9 +640,14 @@ export default function CompanyAdminDashboardClient({ user }: Props) {
   useEffect(() => {
     const savedProfile = localStorage.getItem(PROFILE_KEY);
     const savedSidebar = localStorage.getItem(SIDEBAR_KEY);
+    const requestedPage = resolvePageName(
+      new URLSearchParams(window.location.search).get("section"),
+    );
+    const savedPage = resolvePageName(localStorage.getItem(ACTIVE_PAGE_KEY));
 
     if (savedProfile) setProfileImage(savedProfile);
     if (savedSidebar === "collapsed") setSidebarCollapsed(true);
+    if (requestedPage || savedPage) setActivePage(requestedPage || savedPage || "Dashboard");
 
     void loadDashboard();
   }, []);
@@ -662,6 +710,14 @@ export default function CompanyAdminDashboardClient({ user }: Props) {
 
   function openPage(page: PageName) {
     setActivePage(page);
+    localStorage.setItem(ACTIVE_PAGE_KEY, page);
+    const url = new URL(window.location.href);
+    url.searchParams.set("section", page);
+    window.history.replaceState(
+      null,
+      "",
+      `${url.pathname}?${url.searchParams.toString()}${url.hash}`,
+    );
     setShowNotifications(false);
     setMobileSidebarOpen(false);
   }
@@ -1380,7 +1436,6 @@ function UsersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
 
     const requiredValues = [
       form.name,
-      form.username,
       form.email,
       form.phone,
       form.role,
@@ -1500,9 +1555,6 @@ function UsersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             <Field label="Full name *">
               <input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} />
             </Field>
-            <Field label="Username *">
-              <input required value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} />
-            </Field>
             <Field label="Email *">
               <input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} />
             </Field>
@@ -1604,7 +1656,6 @@ function UsersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             <ProfileAvatar name={selectedUser.name} url={selectedUser.profileImageUrl} large />
             <h2>{selectedUser.name}</h2>
             <StatusBadge status={selectedUser.status} />
-            <Detail label="Username" value={selectedUser.username || "N/A"} />
             <Detail label="Email" value={selectedUser.email || "N/A"} />
             <Detail label="Phone" value={selectedUser.phone || "N/A"} />
             <Detail label="NIDA number" value={selectedUser.nidaNumber || "N/A"} />
@@ -1633,6 +1684,8 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
   const [search, setSearch] = useState("");
   const [networkFilter, setNetworkFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [autofillBusy, setAutofillBusy] = useState(false);
+  const [autofillMessage, setAutofillMessage] = useState("");
 
   const filteredBrokers = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -1703,6 +1756,52 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
     }));
   }
 
+  async function autofillBrokerFromDocument(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      notify("Broker auto-fill document must be 10 MB or smaller.");
+      return;
+    }
+
+    setAutofillBusy(true);
+    setAutofillMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const result = await requestJson<{
+        success: true;
+        fields: Partial<BrokerCustomerForm>;
+        message?: string;
+      }>("/api/company-admin/brokers/autofill", {
+        method: "POST",
+        body: formData,
+      });
+
+      const fields = result.fields || {};
+      setForm((current) => ({
+        ...current,
+        ...fields,
+        id: current.id,
+        code: safeText(fields.code) || current.code,
+        agentAccounts: safeArray<BrokerAgentAccountItem>(fields.agentAccounts).length
+          ? safeArray<BrokerAgentAccountItem>(fields.agentAccounts)
+          : current.agentAccounts,
+      }));
+      setAutofillMessage(result.message || "Document values were applied to the broker form.");
+      notify("Broker registration document auto-fill completed.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Broker document auto-fill failed.";
+      setAutofillMessage(message);
+      notify(message);
+    } finally {
+      setAutofillBusy(false);
+    }
+  }
+
   async function saveBroker(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -1729,32 +1828,36 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
       form.identityType,
       form.identityNumber,
       form.identityIssuedBy,
-      form.registrationDate,
-      form.latitude,
-      form.longitude,
-      form.attendedBy,
-      form.attendedDate,
-      form.attendedLocation,
     ];
-
-    if (!form.signatureUrl && !signatureFile) requiredValues.push("");
-    if (!form.attendedSignatureUrl && !attenderSignatureFile) requiredValues.push("");
 
     if (requiredValues.some((value) => !safeText(value).trim())) {
       notify("Complete every required agent-registration field.");
       return;
     }
 
+    const agentAccounts = form.agentAccounts
+      .filter((account) =>
+        [
+          account.network,
+          account.simPhoneNumber,
+          account.agentNumber,
+          account.accountName,
+        ].some((value) => safeText(value).trim()),
+      )
+      .map((account, index) => ({
+        ...account,
+        isPrimary: index === 0 ? true : Boolean(account.isPrimary),
+      }));
+
     if (
-      form.agentAccounts.some(
+      agentAccounts.some(
         (account) =>
           !safeText(account.network).trim() ||
           !safeText(account.simPhoneNumber).trim() ||
-          !safeText(account.agentNumber).trim() ||
-          !safeText(account.accountName).trim(),
+          !safeText(account.agentNumber).trim(),
       )
     ) {
-      notify("Complete the network, account name, SIM phone and agent number for every account.");
+      notify("Complete network, SIM phone and agent number for any account row you add, or leave the row blank.");
       return;
     }
 
@@ -1783,6 +1886,8 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
         attendedSignatureUrl = (
           await uploadPortalDocument(attenderSignatureFile, "SIGNATURE")
         ).url;
+      } else if (!attendedSignatureUrl && signatureUrl) {
+        attendedSignatureUrl = signatureUrl;
       }
 
       const editing = Boolean(form.id);
@@ -1795,6 +1900,7 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...form,
+            agentAccounts,
             profileImageUrl,
             signatureUrl,
             attendedSignatureUrl,
@@ -1865,7 +1971,28 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
 
       <div className={styles.brokerFullLayout}>
         <form className={styles.formCard} onSubmit={saveBroker}>
-          <SectionHeading icon={form.id ? Pencil : Plus} title={form.id ? "Edit broker / agent" : "Agent registration form"} text="Every registration field marked with * must be completed before the broker can be saved." />
+          <SectionHeading icon={form.id ? Pencil : Plus} title={form.id ? "Edit broker / agent" : "Agent registration form"} text="Complete the core identity fields, then optionally add GPS, network accounts, signatures and attendance details." />
+
+          <section className={styles.autofillPanel}>
+            <div>
+              <FileText size={20} />
+              <span>
+                <strong>Auto-fill from registration document</strong>
+                <small>Upload a text, CSV, JSON, Excel, Word or copyable PDF form to fill matching broker fields.</small>
+              </span>
+            </div>
+            <label>
+              <UploadCloud size={17} />
+              {autofillBusy ? "Reading..." : "Upload document"}
+              <input
+                type="file"
+                accept=".txt,.csv,.json,.pdf,.docx,.xlsx,.xls"
+                disabled={autofillBusy}
+                onChange={autofillBrokerFromDocument}
+              />
+            </label>
+            {autofillMessage ? <p>{autofillMessage}</p> : null}
+          </section>
 
           <div className={styles.profileUploadRow}>
             <ProfileAvatar name={`${form.firstName} ${form.surname}`} url={profileFile ? URL.createObjectURL(profileFile) : form.profileImageUrl} large />
@@ -1894,8 +2021,8 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             <Field label="District *"><input required value={form.district} onChange={(event) => setForm({ ...form, district: event.target.value })} /></Field>
             <Field label="Ward *"><input required value={form.ward} onChange={(event) => setForm({ ...form, ward: event.target.value })} /></Field>
             <Field label="Country *"><input required value={form.country} onChange={(event) => setForm({ ...form, country: event.target.value })} /></Field>
-            <Field label="Latitude *"><input type="number" step="any" required value={form.latitude} onChange={(event) => setForm({ ...form, latitude: event.target.value })} /></Field>
-            <Field label="Longitude *"><input type="number" step="any" required value={form.longitude} onChange={(event) => setForm({ ...form, longitude: event.target.value })} /></Field>
+            <Field label="Latitude"><input type="number" step="any" value={form.latitude} onChange={(event) => setForm({ ...form, latitude: event.target.value })} /></Field>
+            <Field label="Longitude"><input type="number" step="any" value={form.longitude} onChange={(event) => setForm({ ...form, longitude: event.target.value })} /></Field>
           </div>
 
           <h3 className={styles.formSectionTitle}>Identification</h3>
@@ -1910,10 +2037,10 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
           <div className={styles.agentAccountList}>
             {form.agentAccounts.map((account, index) => (
               <div className={styles.agentAccountRow} key={`${index}-${account.id || "new"}`}>
-                <Field label={`Network ${index + 1} *`}><select required value={account.network} onChange={(event) => updateAccount(index, { network: event.target.value as BrokerAgentAccountItem["network"] })}><option value="VODACOM">Vodacom</option><option value="YAS_MIX">Mix by Yas</option><option value="AIRTEL">Airtel</option><option value="HALOTEL">Halotel</option><option value="OTHER">Other</option></select></Field>
-                <Field label="SIM phone number *"><input required value={account.simPhoneNumber} onChange={(event) => updateAccount(index, { simPhoneNumber: event.target.value })} /></Field>
-                <Field label="Agent number *"><input required value={account.agentNumber} onChange={(event) => updateAccount(index, { agentNumber: event.target.value })} /></Field>
-                <Field label="Account name *"><input required value={safeText(account.accountName)} onChange={(event) => updateAccount(index, { accountName: event.target.value })} /></Field>
+                <Field label={`Network ${index + 1}`}><select value={account.network} onChange={(event) => updateAccount(index, { network: event.target.value as BrokerAgentAccountItem["network"] })}><option value="VODACOM">Vodacom</option><option value="YAS_MIX">Mix by Yas</option><option value="AIRTEL">Airtel</option><option value="HALOTEL">Halotel</option><option value="OTHER">Other</option></select></Field>
+                <Field label="SIM phone number"><input value={account.simPhoneNumber} onChange={(event) => updateAccount(index, { simPhoneNumber: event.target.value })} /></Field>
+                <Field label="Agent number"><input value={account.agentNumber} onChange={(event) => updateAccount(index, { agentNumber: event.target.value })} /></Field>
+                <Field label="Account name"><input value={safeText(account.accountName)} onChange={(event) => updateAccount(index, { accountName: event.target.value })} /></Field>
                 <label className={styles.primaryCheck}><input type="radio" name="primary-agent-account" checked={Boolean(account.isPrimary)} onChange={() => makePrimary(index)} /> Primary account</label>
                 <button type="button" className={styles.dangerTextButton} disabled={form.agentAccounts.length === 1} onClick={() => removeAccount(index)}><Trash2 size={15} />Remove</button>
               </div>
@@ -1923,12 +2050,12 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
 
           <h3 className={styles.formSectionTitle}>Signatures and official attendance</h3>
           <div className={styles.formGrid}>
-            <Field label="Agent signature image *"><input type="file" accept="image/*" required={!form.id && !form.signatureUrl} onChange={(event) => setSignatureFile(event.target.files?.[0] || null)} /></Field>
-            <Field label="Registration date *"><input type="date" required value={form.registrationDate} onChange={(event) => setForm({ ...form, registrationDate: event.target.value })} /></Field>
-            <Field label="Attended by *"><input required value={form.attendedBy} onChange={(event) => setForm({ ...form, attendedBy: event.target.value })} /></Field>
-            <Field label="Attender signature image *"><input type="file" accept="image/*" required={!form.id && !form.attendedSignatureUrl} onChange={(event) => setAttenderSignatureFile(event.target.files?.[0] || null)} /></Field>
-            <Field label="Attended date *"><input type="date" required value={form.attendedDate} onChange={(event) => setForm({ ...form, attendedDate: event.target.value })} /></Field>
-            <Field label="Attended location *"><input required value={form.attendedLocation} onChange={(event) => setForm({ ...form, attendedLocation: event.target.value })} /></Field>
+            <Field label="Agent signature image"><input type="file" accept="image/*" onChange={(event) => setSignatureFile(event.target.files?.[0] || null)} /></Field>
+            <Field label="Registration date"><input type="date" value={form.registrationDate} onChange={(event) => setForm({ ...form, registrationDate: event.target.value })} /></Field>
+            <Field label="Attended by"><input value={form.attendedBy} onChange={(event) => setForm({ ...form, attendedBy: event.target.value })} /></Field>
+            <Field label="Attender signature image"><input type="file" accept="image/*" onChange={(event) => setAttenderSignatureFile(event.target.files?.[0] || null)} /></Field>
+            <Field label="Attended date"><input type="date" value={form.attendedDate} onChange={(event) => setForm({ ...form, attendedDate: event.target.value })} /></Field>
+            <Field label="Attended location"><input value={form.attendedLocation} onChange={(event) => setForm({ ...form, attendedLocation: event.target.value })} /></Field>
             <Field label="Status *"><select required value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value as BrokerCustomerStatus })}><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option><option value="SUSPENDED">Suspended</option></select></Field>
             <Field label="Notes"><textarea rows={4} value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} /></Field>
           </div>
@@ -2226,7 +2353,7 @@ function ExpensesPage({
     amount: "",
     expenseDate: todayInput(),
     description: "",
-    autoApprove: false,
+    autoApprove: true,
   });
   const [receipt, setReceipt] = useState<File | null>(null);
   const [decisionNote, setDecisionNote] = useState("");
@@ -2250,10 +2377,10 @@ function ExpensesPage({
         amount: "",
         expenseDate: todayInput(),
         description: "",
-        autoApprove: false,
+        autoApprove: true,
       });
       setReceipt(null);
-      notify("Expense saved and workflow notification created.");
+      notify("Expense saved and automatically approved because it was created by Company Admin.");
       await reload();
     } catch (error) {
       notify(
@@ -2394,14 +2521,8 @@ function ExpensesPage({
               </label>
             </Field>
             <label className={styles.checkField}>
-              <input
-                type="checkbox"
-                checked={form.autoApprove}
-                onChange={(event) =>
-                  setForm({ ...form, autoApprove: event.target.checked })
-                }
-              />
-              Auto-approve this admin-created expense
+              <input type="checkbox" checked readOnly disabled />
+              Company Admin-created expenses are automatically approved
             </label>
           </div>
           <button className={styles.fullButton} type="submit" disabled={busy}>
@@ -2787,7 +2908,7 @@ function AttendancePage({
       const matchesRole = !roleFilter || item.role === roleFilter;
       const matchesSearch =
         !query ||
-        [item.name, item.email, item.username, item.nidaNumber].some((value) =>
+        [item.name, item.email, item.phone, item.nidaNumber].some((value) =>
           safeText(value).toLowerCase().includes(query),
         );
       return matchesRole && matchesSearch;
@@ -2888,7 +3009,7 @@ function AttendancePage({
         <div className={styles.attendanceFilterFields}>
           <Field label="Reference date"><input type="date" value={referenceDate} onChange={(event) => setReferenceDate(event.target.value)} /></Field>
           <Field label="Role"><select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)}><option value="">Staff and accountants</option><option value="STAFF">Staff only</option><option value="ACCOUNTANT">Accountants only</option></select></Field>
-          <Field label="Search"><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Name, email, username or NIDA" /></Field>
+          <Field label="Search"><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Name, email, phone or NIDA" /></Field>
         </div>
         <div className={styles.periodRangeLabel}><CalendarDays size={18} /><span><small>Displaying</small><strong>{formatPeriodRange(range.start, range.end)}</strong></span></div>
       </section>
@@ -3255,7 +3376,7 @@ function GpsPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             <thead><tr><th>#</th><th>Staff</th><th>Broker</th><th>Started</th><th>Service time</th><th>Staff location</th><th>Broker location</th><th>Distance</th><th>Same location</th><th>Float</th><th>Cash</th><th>Income</th><th>Proof due</th><th>Status</th></tr></thead>
             <tbody>
               {visits.map((visit, index) => (
-                <tr key={visit.id}><td>{index + 1}</td><td>{visit.staff?.name || "N/A"}</td><td>{visit.broker?.name || "N/A"}</td><td>{formatDate(visit.startedAt, true)}</td><td>{formatDate(visit.serviceProvidedAt, true)}</td><td>{visit.staffLatitude == null ? "N/A" : `${Number(visit.staffLatitude).toFixed(5)}, ${Number(visit.staffLongitude).toFixed(5)}`}</td><td>{visit.brokerLatitude == null ? "N/A" : `${Number(visit.brokerLatitude).toFixed(5)}, ${Number(visit.brokerLongitude).toFixed(5)}`}</td><td>{visit.distanceMeters == null ? "N/A" : `${Math.round(Number(visit.distanceMeters))} m`}</td><td><StatusBadge status={visit.locationMatched ? "MATCHED" : "NOT_MATCHED"} /></td><td>{formatMoney(visit.floatAmount)}</td><td>{formatMoney(visit.cashAmount)}</td><td>{formatMoney(visit.companyIncome)}</td><td>{formatDate(visit.proofDueAt, true)}</td><td><StatusBadge status={visit.status} /></td></tr>
+                <tr key={visit.id}><td>{index + 1}</td><td>{visit.staff?.name || "N/A"}</td><td>{visit.brokerCustomer?.name || visit.broker?.name || "N/A"}</td><td>{formatDate(visit.startedAt, true)}</td><td>{formatDate(visit.serviceProvidedAt, true)}</td><td>{visit.staffLatitude == null ? "N/A" : `${Number(visit.staffLatitude).toFixed(5)}, ${Number(visit.staffLongitude).toFixed(5)}`}</td><td>{visit.brokerLatitude == null ? "N/A" : `${Number(visit.brokerLatitude).toFixed(5)}, ${Number(visit.brokerLongitude).toFixed(5)}`}</td><td>{visit.distanceMeters == null ? "N/A" : `${Math.round(Number(visit.distanceMeters))} m`}</td><td><StatusBadge status={visit.locationMatched ? "MATCHED" : "NOT_MATCHED"} /></td><td>{formatMoney(visit.floatAmount)}</td><td>{formatMoney(visit.cashAmount)}</td><td>{formatMoney(visit.companyIncome)}</td><td>{formatDate(visit.proofDueAt, true)}</td><td><StatusBadge status={visit.status} /></td></tr>
               ))}
               {!visits.length && <EmptyTable colSpan={14} text="No broker visit updates have been recorded." />}
             </tbody>
@@ -4419,18 +4540,59 @@ function ApprovalsPage({ data, currentUser, busy, setBusy, reload, notify }: Com
 }
 
 function SettingsPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
-  const [settings, setSettings] = useState({ ...defaultSettings, ...(data.settings || {}) });
+  const [settings, setSettings] = useState({
+    ...defaultSettings,
+    ...(data.settings || {}),
+    reportLogoUrl: safeText(data.reportBrand?.logoUrl),
+    registrationNumber: safeText(data.reportBrand?.registrationNumber),
+    tin: safeText(data.reportBrand?.tin),
+    website: safeText(data.reportBrand?.website),
+  });
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+
+  useEffect(() => {
+    setSettings({
+      ...defaultSettings,
+      ...(data.settings || {}),
+      reportLogoUrl: safeText(data.reportBrand?.logoUrl),
+      registrationNumber: safeText(data.reportBrand?.registrationNumber),
+      tin: safeText(data.reportBrand?.tin),
+      website: safeText(data.reportBrand?.website),
+    });
+  }, [data.settings, data.reportBrand]);
 
   async function saveSettings() {
     setBusy(true);
     try {
-      await requestJson("/api/company-admin/settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) });
-      notify("Company settings saved.");
+      await requestJson("/api/company-admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(settings),
+      });
+      notify("Company settings and PDF report branding saved.");
       await reload();
     } catch (error) {
       notify(error instanceof Error ? error.message : "Settings failed.");
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function uploadReportLogo(file: File | null) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      notify("Company report logo must be a JPG, PNG or WEBP image.");
+      return;
+    }
+    setUploadingLogo(true);
+    try {
+      const uploaded = await uploadPortalDocument(file, "IMAGE");
+      setSettings((current) => ({ ...current, reportLogoUrl: uploaded.url }));
+      notify("Company logo uploaded. Save settings to use it on PDF reports.");
+    } catch (error) {
+      notify(error instanceof Error ? error.message : "Logo upload failed.");
+    } finally {
+      setUploadingLogo(false);
     }
   }
 
@@ -4446,13 +4608,46 @@ function SettingsPage({ data, busy, setBusy, reload, notify }: CommonPageProps) 
   ] as const;
 
   return (
-    <PageShell icon={Settings} title="Company Settings" subtitle="Portal alerts, finance controls, GPS distance, proof deadlines and staff performance thresholds." action={<button type="button" onClick={saveSettings} disabled={busy}><Save size={17} /> Save settings</button>}>
+    <PageShell icon={Settings} title="Company Settings" subtitle="Portal alerts, finance controls, GPS distance, proof deadlines, staff performance and registered PDF report branding." action={<button type="button" onClick={saveSettings} disabled={busy || uploadingLogo}><Save size={17} /> Save settings</button>}>
       <section className={styles.settingsHero}>
         <div><span><Settings size={24} /></span><div><h2>{safeText(data.company?.name)}</h2><p>Company ID: {safeText(data.company?.id)} · Status: {safeText(data.company?.status)}</p></div></div>
         <div className={styles.settingsSelects}>
           <Field label="Currency"><select value={safeText(settings.currency) || "TZS"} onChange={(event) => setSettings({ ...settings, currency: event.target.value })}><option value="TZS">TZS</option><option value="USD">USD</option><option value="KES">KES</option></select></Field>
           <Field label="Timezone"><select value={safeText(settings.timezone) || "Africa/Dar_es_Salaam"} onChange={(event) => setSettings({ ...settings, timezone: event.target.value })}><option value="Africa/Dar_es_Salaam">Africa/Dar es Salaam</option><option value="UTC">UTC</option></select></Field>
           <Field label="Accent"><select value={safeText(settings.accent) || "TEAL"} onChange={(event) => setSettings({ ...settings, accent: event.target.value })}><option value="TEAL">Teal</option><option value="PURPLE">Purple</option><option value="BLUE">Blue</option></select></Field>
+        </div>
+      </section>
+
+      <section className={styles.reportBrandingCard}>
+        <div className={styles.reportBrandingIntro}>
+          <div className={styles.reportLogoPreview}>
+            {safeText(settings.reportLogoUrl) ? (
+              <img src={safeText(settings.reportLogoUrl)} alt="Registered company logo" />
+            ) : (
+              <Building2 size={28} />
+            )}
+          </div>
+          <div>
+            <small>PDF REPORT IDENTITY</small>
+            <h3>Registered company branding</h3>
+            <p>The logo and official details below are printed on Accountant, Company Admin and Staff PDF reports.</p>
+          </div>
+          <label className={styles.reportLogoUpload}>
+            <UploadCloud size={17} />
+            {uploadingLogo ? "Uploading..." : "Upload company logo"}
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              disabled={uploadingLogo || busy}
+              onChange={(event) => void uploadReportLogo(event.target.files?.[0] || null)}
+            />
+          </label>
+        </div>
+        <div className={styles.reportBrandingFields}>
+          <Field label="Registration number"><input value={safeText(settings.registrationNumber)} onChange={(event) => setSettings({ ...settings, registrationNumber: event.target.value })} placeholder="e.g. BRELA registration no." /></Field>
+          <Field label="TIN"><input value={safeText(settings.tin)} onChange={(event) => setSettings({ ...settings, tin: event.target.value })} placeholder="Company TIN" /></Field>
+          <Field label="Website"><input value={safeText(settings.website)} onChange={(event) => setSettings({ ...settings, website: event.target.value })} placeholder="https://company.example" /></Field>
+          <Field label="Logo URL"><input value={safeText(settings.reportLogoUrl)} onChange={(event) => setSettings({ ...settings, reportLogoUrl: event.target.value })} placeholder="/uploads/company-admin/..." /></Field>
         </div>
       </section>
 
@@ -4472,7 +4667,6 @@ function SettingsPage({ data, busy, setBusy, reload, notify }: CommonPageProps) 
     </PageShell>
   );
 }
-
 
 function ProfileAvatar({ name, url, large = false }: { name: string; url?: string | null; large?: boolean }) {
   const initials = safeText(name).split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "U";
@@ -4497,21 +4691,49 @@ function DetailModal({ title, onClose, children, wide = false }: { title: string
 function DocumentPreviewModal({ document, onClose }: { document: any; onClose: () => void }) {
   const mime = safeText(document?.mimeType).toLowerCase();
   const url = safeText(document?.publicUrl || document?.url);
+  const title = safeText(document?.originalName) || "Document preview";
+  const status = safeText(document?.proofStatus) || "PENDING";
+  const sizeKb = Math.max(1, Math.round(Number(document?.sizeBytes || 0) / 1024));
   const isImage = mime.startsWith("image/") || /\.(png|jpe?g|webp|gif)$/i.test(url);
   const isPdf = mime === "application/pdf" || /\.pdf$/i.test(url);
   return (
-    <DetailModal title={safeText(document?.originalName) || "Document preview"} onClose={onClose} wide>
+    <DetailModal title={title} onClose={onClose} wide>
+      <section className={styles.documentPreviewHero}>
+        <div>
+          <span><FileText size={24} /></span>
+          <div>
+            <small>Uploaded proof document</small>
+            <strong>{title}</strong>
+            <em>{mime || "Unknown file type"} - {sizeKb.toLocaleString()} KB</em>
+          </div>
+        </div>
+        <StatusBadge status={status} />
+      </section>
       <section className={styles.documentPreviewMeta}>
         <Detail label="Type" value={mime || "Unknown"} />
-        <Detail label="Proof status" value={safeText(document?.proofStatus) || "PENDING"} />
+        <Detail label="Proof status" value={status} />
         <Detail label="Uploaded" value={formatDate(document?.createdAt, true)} />
-        <Detail label="Size" value={`${Math.round(Number(document?.sizeBytes || 0) / 1024).toLocaleString()} KB`} />
+        <Detail label="Size" value={`${sizeKb.toLocaleString()} KB`} />
       </section>
       <div className={styles.documentViewer}>
-        {isImage ? <img src={url} alt={safeText(document?.originalName)} /> : isPdf ? <iframe src={url} title="PDF preview" /> : <iframe src={url} title="Document preview" />}
+        {!url ? (
+          <div className={styles.documentViewerEmpty}>
+            <FileText size={36} />
+            <strong>Original file link is missing</strong>
+            <p>The database record is available, but this upload does not have a readable public URL yet.</p>
+          </div>
+        ) : isImage ? (
+          <img src={url} alt={title} />
+        ) : isPdf ? (
+          <iframe src={url} title="PDF preview" />
+        ) : (
+          <iframe src={url} title="Document preview" />
+        )}
       </div>
       {document?.extractedText && <section className={styles.extractedTextBox}><strong>Extracted proof text</strong><pre>{safeText(document.extractedText)}</pre></section>}
-      <div className={styles.formActions}><a className={styles.documentOpenLink} href={url} target="_blank" rel="noreferrer"><Eye size={16} /> Open original</a></div>
+      <div className={styles.formActions}>
+        {url ? <a className={styles.documentOpenLink} href={url} target="_blank" rel="noreferrer"><Eye size={16} /> Open original</a> : <button type="button" disabled><FileText size={16} /> Original unavailable</button>}
+      </div>
     </DetailModal>
   );
 }

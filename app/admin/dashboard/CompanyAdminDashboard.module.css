@@ -1748,7 +1748,8 @@
 
 .tableScroll {
   width: 100%;
-  overflow-x: auto;
+  max-height: min(68vh, 760px);
+  overflow: auto;
   padding: 7px;
   border: 1px solid #dce8eb;
   border-radius: 17px;
@@ -1767,9 +1768,13 @@
 }
 
 .tableScroll th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   padding: 13px 12px;
   border: 0;
   color: white;
+  background: linear-gradient(135deg, #5a2bc5, #7a49ed);
   font-size: 9px;
   font-weight: 950;
   letter-spacing: 0.07em;
@@ -4516,6 +4521,64 @@
   align-items: start;
 }
 
+.autofillPanel {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #cde7de;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f5fffa, #eef8ff);
+}
+
+.autofillPanel > div,
+.autofillPanel > label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.autofillPanel > div > svg {
+  flex: 0 0 auto;
+  color: #0f766e;
+}
+
+.autofillPanel strong,
+.autofillPanel small {
+  display: block;
+}
+
+.autofillPanel strong {
+  color: #10363b;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.autofillPanel small,
+.autofillPanel p {
+  margin: 3px 0 0;
+  color: #5f777d;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.autofillPanel > label {
+  min-height: 42px;
+  justify-content: center;
+  border: 1px dashed #8ecdc1;
+  border-radius: 13px;
+  color: #075f59;
+  background: #ffffff;
+  font-size: 10px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.autofillPanel > label input {
+  display: none;
+}
+
 .formSectionTitle {
   grid-column: 1 / -1;
   margin: 8px 0 0;
@@ -4949,6 +5012,53 @@
   padding: 18px;
 }
 
+.documentPreviewHero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #dce8eb;
+  border-radius: 17px;
+  background: linear-gradient(135deg, #f7fbfa, #edf7f3);
+}
+
+.documentPreviewHero > div {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+}
+
+.documentPreviewHero > div > span {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  color: #0f7a42;
+  background: #dcfce7;
+}
+
+.documentPreviewHero small,
+.documentPreviewHero em {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.documentPreviewHero strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #0f172a;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
 .documentPreviewMeta {
   display: grid;
   grid-template-columns: repeat(4, minmax(0,1fr));
@@ -4974,6 +5084,28 @@
   object-fit: contain;
 }
 
+.documentViewerEmpty {
+  min-height: 460px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  padding: 28px;
+  color: #475569;
+  text-align: center;
+}
+
+.documentViewerEmpty strong {
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.documentViewerEmpty p {
+  max-width: 430px;
+  margin: 0;
+  line-height: 1.5;
+}
+
 @media (max-width: 1180px) {
   .brokerFullLayout { grid-template-columns: 1fr; }
   .agentAccountRow { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -4997,9 +5129,11 @@
   .modalBackdrop { padding: 7px; }
   .modalCard { max-height: 98vh; border-radius: 18px; }
   .modalBody { max-height: calc(98vh - 72px); padding: 12px; }
+  .documentPreviewHero { align-items: flex-start; flex-direction: column; }
   .documentViewer,
   .documentViewer img,
-  .documentViewer iframe { min-height: 360px; height: 58vh; }
+  .documentViewer iframe,
+  .documentViewerEmpty { min-height: 360px; height: 58vh; }
 }
 
 .approvalOverride {
@@ -5087,4 +5221,141 @@
   font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+
+/* Registered report branding ------------------------------------------------ */
+.reportBrandingCard {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid rgba(14, 116, 124, 0.16);
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(241, 250, 250, 0.78)),
+    radial-gradient(circle at 90% 0%, rgba(14, 158, 170, 0.13), transparent 34%);
+  box-shadow: 0 18px 42px rgba(17, 66, 75, 0.08);
+  backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.reportBrandingCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.24), transparent 38%);
+}
+
+.reportBrandingIntro {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.reportLogoPreview {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(14, 116, 124, 0.16);
+  border-radius: 18px;
+  color: var(--primary-dark);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.reportLogoPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 7px;
+}
+
+.reportBrandingIntro small,
+.reportBrandingIntro h3,
+.reportBrandingIntro p {
+  margin: 0;
+}
+
+.reportBrandingIntro small {
+  color: var(--primary-dark);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.reportBrandingIntro h3 {
+  margin-top: 3px;
+  font-size: 15px;
+}
+
+.reportBrandingIntro p {
+  margin-top: 4px;
+  max-width: 640px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.reportLogoUpload {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid rgba(14, 116, 124, 0.18);
+  border-radius: 12px;
+  color: var(--primary-dark);
+  background: rgba(255, 255, 255, 0.88);
+  font-size: 9px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.reportLogoUpload input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reportBrandingFields {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 1100px) {
+  .reportBrandingFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .reportBrandingIntro {
+    grid-template-columns: 56px 1fr;
+  }
+
+  .reportLogoPreview {
+    width: 56px;
+    height: 56px;
+  }
+
+  .reportLogoUpload {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  .reportBrandingFields {
+    grid-template-columns: 1fr;
+  }
 }

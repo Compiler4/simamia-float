@@ -22,10 +22,12 @@ export async function POST() {
       where: {
         companyId,
         status: "PROOF_PENDING",
-        proofUploadedAt: null,
-        proofDueAt: { lt: new Date() },
+        proofUrl: null,
+        serviceProvidedAt: {
+          lt: new Date(Date.now() - 30 * 60 * 1000),
+        },
       },
-      include: { staff: true, broker: true },
+      include: { staff: true, brokerCustomer: true },
       take: 100,
     });
 
@@ -46,7 +48,7 @@ export async function POST() {
         companyId,
         targetRole: "COMPANY_ADMIN",
         title: "Service proof overdue",
-        message: `${visit.staff.name} has not uploaded proof for ${visit.broker.name} within the required time. Current recorded location: ${location}. Required: date/time, reference, sender, receiver and amount.`,
+        message: `${visit.staff.name} has not uploaded proof for ${visit.brokerCustomer.name} within the required time. Current recorded location: ${location}. Required: date/time, reference, sender, receiver and amount.`,
         type: "ERROR",
         link: "/admin/dashboard?section=gps",
       });
@@ -55,7 +57,7 @@ export async function POST() {
         companyId,
         targetUserId: visit.staffId,
         title: "Your service proof is overdue",
-        message: `Upload proof for ${visit.broker.name} immediately.`,
+        message: `Upload proof for ${visit.brokerCustomer.name} immediately.`,
         type: "ERROR",
         link: "/dashboard",
       });

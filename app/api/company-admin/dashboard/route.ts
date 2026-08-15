@@ -104,6 +104,7 @@ export async function GET() {
       networkBalancesRaw,
       importedStatementsRaw,
       importedTransactionsRaw,
+      reportSettingsRaw,
     ] = await Promise.all([
       db.company.findUnique({ where: { id: companyId } }),
       db.user.findMany({
@@ -220,6 +221,19 @@ export async function GET() {
         where: { companyId },
         orderBy: { postingDate: "desc" },
         take: 10000,
+      }),
+      db.companySetting.findMany({
+        where: {
+          companyId,
+          key: {
+            in: [
+              "company.logoUrl",
+              "company.registrationNumber",
+              "company.tin",
+              "company.website",
+            ],
+          },
+        },
       }),
     ]);
 
@@ -438,6 +452,16 @@ export async function GET() {
 
     const maximumIncome = Math.max(1, ...performanceBase.map((row: any) => row.companyIncome));
     const settings = settingsRaw || defaultSettings;
+    const reportSettings = new Map(
+      reportSettingsRaw.map((item: any) => [text(item.key), text(item.value)]),
+    );
+    const reportBrand = {
+      logoUrl: reportSettings.get("company.logoUrl") || "",
+      registrationNumber:
+        reportSettings.get("company.registrationNumber") || "",
+      tin: reportSettings.get("company.tin") || "",
+      website: reportSettings.get("company.website") || "",
+    };
     const performanceRows = performanceBase
       .map((row: any) => {
         const incomeScore = percentage(row.companyIncome, maximumIncome, 0);
@@ -588,6 +612,7 @@ export async function GET() {
       gpsDevices,
       gpsPings,
       settings,
+      reportBrand,
       activities,
       financialDays,
       customers,

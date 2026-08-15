@@ -30,6 +30,10 @@ function validNida(value: string): boolean {
   return /^\d{20}$/.test(value.replace(/\s+/g, ""));
 }
 
+function validEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> },
@@ -54,7 +58,6 @@ export async function PATCH(
 
     for (const field of [
       "name",
-      "username",
       "email",
       "phone",
       "nationality",
@@ -130,21 +133,19 @@ export async function PATCH(
       data.passwordHash = await bcrypt.hash(password, 12);
     }
 
-    const loginChecks = [
-      data.email ? { email: data.email } : null,
-      data.username ? { username: data.username } : null,
-    ].filter(Boolean);
-
-    if (loginChecks.length) {
+    if (data.email) {
+      if (!validEmail(String(data.email))) {
+        throw new HttpError("A valid registered email is required.", 422);
+      }
       const duplicateLogin = await db.user.findFirst({
         where: {
           NOT: { id },
-          OR: loginChecks,
+          email: data.email,
         },
         select: { id: true },
       });
       if (duplicateLogin) {
-        throw new HttpError("Email or username is already in use.", 409);
+        throw new HttpError("Email is already in use.", 409);
       }
     }
 

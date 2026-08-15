@@ -1,36 +1,195 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+
 import { getCurrentUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-function getModel(resource: string) {
-  const db = prisma as any;
+type ResourceRouteContext = {
+  params: Promise<{
+    resources: string;
+    id: string;
+  }>;
+};
 
-  const models: Record<string, any> = {
-    branches: prisma.branch,
+type DynamicModel = {
+  findFirst: (args: {
+    where: {
+      id: string;
+      companyId: string;
+    };
+    select?: {
+      id: boolean;
+    };
+  }) => Promise<{ id: string } | null>;
+
+  update: (args: {
+    where: {
+      id: string;
+    };
+    data: Record<string, unknown>;
+  }) => Promise<unknown>;
+
+  delete: (args: {
+    where: {
+      id: string;
+    };
+  }) => Promise<unknown>;
+};
+
+function getModel(resource: string): DynamicModel | null {
+  const db = prisma as unknown as Record<string, DynamicModel>;
+
+  const models: Record<string, DynamicModel | undefined> = {
+    branches: db.branch,
     products: db.product,
     customers: db.customer,
     services: db.serviceActivity,
     gps: db.gpsTracking,
   };
 
-  return models[resource];
+  return models[resource] ?? null;
 }
 
-export async function POST(
+function prepareUpdateData(
+  body: Record<string, unknown>,
+): Record<string, unknown> {
+  const data: Record<string, unknown> = {};
+
+  const protectedFields = new Set([
+    "id",
+    "companyId",
+    "createdAt",
+    "updatedAt",
+  ]);
+
+  const decimalFields = new Set([
+    "price",
+    "amount",
+    "speed",
+    "distanceTraveled",
+  ]);
+
+  const integerFields = new Set([
+    "stock",
+    "stops",
+    "geofenceViolations",
+  ]);
+
+  const dateFields = new Set([
+    "servedAt",
+    "recordedAt",
+  ]);
+
+  for (const [key, value] of Object.entries(body)) {
+    if (protectedFields.has(key)) {
+      continue;
+    }
+
+    if (decimalFields.has(key)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+        data[key] = null;
+        continue;
+      }
+
+      const numericValue = Number(value);
+
+      if (!Number.isFinite(numericValue)) {
+        throw new Error(`${key} must be a valid number.`);
+      }
+
+      data[key] = String(value);
+      continue;
+    }
+
+    if (integerFields.has(key)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+        data[key] = null;
+        continue;
+      }
+
+      const numericValue = Number(value);
+
+      if (!Number.isInteger(numericValue)) {
+        throw new Error(`${key} must be a valid integer.`);
+      }
+
+      data[key] = numericValue;
+      continue;
+    }
+
+    if (dateFields.has(key)) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+        data[key] = null;
+        continue;
+      }
+
+      const dateValue = new Date(String(value));
+
+      if (Number.isNaN(dateValue.getTime())) {
+        throw new Error(`${key} must be a valid date.`);
+      }
+
+      data[key] = dateValue;
+      continue;
+    }
+
+    data[key] = value === "" ? null : value;
+  }
+
+  return data;
+}
+
+export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ resources: string }> }
-) {
+  context: ResourceRouteContext,
+): Promise<Response> {
   try {
     const user = await getCurrentUser();
-    const { resources: resource } = await context.params;
 
-    if (!user || user.role !== "COMPANY_ADMIN" || !user.companyId) {
+    /*
+     * The folder is named [resources], so the generated
+     * parameter is also named "resources".
+     */
+    const { resources, id } = await context.params;
+    const resource = resources.trim().toLowerCase();
+
+    if (
+      !user ||
+      user.role !== "COMPANY_ADMIN" ||
+      !user.companyId
+    ) {
       return NextResponse.json(
         {
           success: false,
           message: "Unauthorized.",
         },
-        { status: 401 }
+        {
+          status: 401,
+        },
+      );
+    }
+
+    if (!id?.trim()) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Record ID is required.",
+        },
+        {
+          status: 400,
+        },
       );
     }
 
@@ -40,113 +199,278 @@ export async function POST(
       return NextResponse.json(
         {
           success: false,
-          message: "Invalid resource.",
+          message: `Invalid resource: ${resource}.`,
         },
-        { status: 400 }
+        {
+          status: 400,
+        },
       );
     }
 
-    const body = await request.json();
-    let data: any = { companyId: user.companyId };
+    let requestBody: unknown;
 
-    if (resource === "branches") {
-      data = {
-        companyId: user.companyId,
-        name: String(body.name || "").trim(),
-        code: String(body.code || "").trim().toUpperCase(),
-        region: String(body.region || "").trim() || null,
-        address: String(body.address || "").trim() || null,
-        status: "ACTIVE",
-      };
+    try {
+      requestBody = await request.json();
+    } catch {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "The request body must contain valid JSON.",
+        },
+        {
+          status: 400,
+        },
+      );
     }
 
-    if (resource === "products") {
-      data = {
-        companyId: user.companyId,
-        name: String(body.name || "").trim(),
-        sku: String(body.sku || "").trim() || null,
-        category: String(body.category || "").trim() || null,
-        price: String(body.price || "0"),
-        stock: Number(body.stock || 0),
-        status: String(body.status || "ACTIVE"),
-        description: String(body.description || "").trim() || null,
-      };
+    if (
+      !requestBody ||
+      typeof requestBody !== "object" ||
+      Array.isArray(requestBody)
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "The request body must be a JSON object.",
+        },
+        {
+          status: 400,
+        },
+      );
     }
 
-    if (resource === "customers") {
-      data = {
+    /*
+     * Confirm ownership before updating. This prevents one
+     * company administrator from updating another company's data.
+     */
+    const existingRecord = await model.findFirst({
+      where: {
+        id,
         companyId: user.companyId,
-        name: String(body.name || "").trim(),
-        phone: String(body.phone || "").trim() || null,
-        email: String(body.email || "").trim() || null,
-        region: String(body.region || "").trim() || null,
-        address: String(body.address || "").trim() || null,
-        status: String(body.status || "ACTIVE"),
-      };
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existingRecord) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Record not found or it does not belong to your company.",
+        },
+        {
+          status: 404,
+        },
+      );
     }
 
-    if (resource === "services") {
-      data = {
-        companyId: user.companyId,
-        staffId: String(body.staffId || ""),
-        brokerId: String(body.brokerId || "") || null,
-        customerId: String(body.customerId || "") || null,
-        serviceType: String(body.serviceType || "Service"),
-        amount: String(body.amount || "0"),
-        status: String(body.status || "COMPLETED"),
-        servedAt: body.servedAt ? new Date(body.servedAt) : new Date(),
-        notes: String(body.notes || "").trim() || null,
-      };
+    const data = prepareUpdateData(
+      requestBody as Record<string, unknown>,
+    );
+
+    if (Object.keys(data).length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No valid fields were provided for updating.",
+        },
+        {
+          status: 400,
+        },
+      );
     }
 
-    if (resource === "gps") {
-      data = {
-        companyId: user.companyId,
-        userId: String(body.userId || "") || null,
-        assetType: String(body.assetType || "Employee"),
-        assetName: String(body.assetName || "").trim(),
-        liveLocation: String(body.liveLocation || "").trim() || null,
-        speed: body.speed ? String(body.speed) : null,
-        stops: Number(body.stops || 0),
-        routeHistory: String(body.routeHistory || "").trim() || null,
-        distanceTraveled: body.distanceTraveled
-          ? String(body.distanceTraveled)
-          : null,
-        batteryStatus: String(body.batteryStatus || "").trim() || null,
-        gpsSignal: String(body.gpsSignal || "").trim() || null,
-        geofenceViolations: Number(body.geofenceViolations || 0),
-        alert: String(body.alert || "").trim() || null,
-        recordedAt: body.recordedAt ? new Date(body.recordedAt) : new Date(),
-      };
-    }
-
-    const saved = await model.create({ data });
+    const saved = await model.update({
+      where: {
+        id,
+      },
+      data,
+    });
 
     await prisma.auditLog.create({
       data: {
         companyId: user.companyId,
         userId: user.id,
-        action: `${resource.toUpperCase()}_CREATED`,
+        action: `${resource.toUpperCase()}_UPDATED`,
         module: "COMPANY_ADMIN",
-        details: `${user.name} created ${resource} record.`,
+        details: `${user.name ?? user.email} updated a ${resource} record.`,
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: "Record created successfully.",
-      data: saved,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Record updated successfully.",
+        data: saved,
+      },
+      {
+        status: 200,
+      },
+    );
   } catch (error) {
-    console.error("COMPANY_ADMIN_RESOURCE_CREATE_ERROR:", error);
+    console.error(
+      "COMPANY_ADMIN_RESOURCE_UPDATE_ERROR:",
+      error,
+    );
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "An unexpected error occurred.";
+
+    const isValidationError =
+      message.includes("must be a valid");
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to create record.",
-        error: error instanceof Error ? error.message : String(error),
+        message: isValidationError
+          ? message
+          : "Failed to update record.",
+        error:
+          process.env.NODE_ENV === "development"
+            ? message
+            : undefined,
       },
-      { status: 500 }
+      {
+        status: isValidationError ? 400 : 500,
+      },
+    );
+  }
+}
+
+export async function DELETE(
+  _request: NextRequest,
+  context: ResourceRouteContext,
+): Promise<Response> {
+  try {
+    const user = await getCurrentUser();
+
+    /*
+     * Match the [resources] folder name.
+     */
+    const { resources, id } = await context.params;
+    const resource = resources.trim().toLowerCase();
+
+    if (
+      !user ||
+      user.role !== "COMPANY_ADMIN" ||
+      !user.companyId
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized.",
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+
+    if (!id?.trim()) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Record ID is required.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    const model = getModel(resource);
+
+    if (!model) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Invalid resource: ${resource}.`,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    /*
+     * Confirm the record belongs to the logged-in administrator's
+     * company before deleting it.
+     */
+    const existingRecord = await model.findFirst({
+      where: {
+        id,
+        companyId: user.companyId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existingRecord) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Record not found or it does not belong to your company.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    await model.delete({
+      where: {
+        id,
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        companyId: user.companyId,
+        userId: user.id,
+        action: `${resource.toUpperCase()}_REMOVED`,
+        module: "COMPANY_ADMIN",
+        details: `${user.name ?? user.email} removed a ${resource} record.`,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Record removed successfully.",
+      },
+      {
+        status: 200,
+      },
+    );
+  } catch (error) {
+    console.error(
+      "COMPANY_ADMIN_RESOURCE_DELETE_ERROR:",
+      error,
+    );
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "An unexpected error occurred.";
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to remove record.",
+        error:
+          process.env.NODE_ENV === "development"
+            ? message
+            : undefined,
+      },
+      {
+        status: 500,
+      },
     );
   }
 }

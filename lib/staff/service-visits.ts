@@ -620,6 +620,13 @@ export async function recordBrokerServiceVisit(
     ? String(existing.id)
     : randomUUID();
   const now = new Date();
+  const proofDueAt =
+    existing?.proofDueAt ??
+    new Date(capturedAt.getTime() + 60 * 60 * 1000);
+  const proofUploadedAt =
+    input.proofUrl
+      ? capturedAt
+      : existing?.proofUploadedAt ?? null;
 
   const visitData = onlyExistingColumns(visitColumns, {
     id: visitId,
@@ -627,6 +634,7 @@ export async function recordBrokerServiceVisit(
     staffId: input.staffId,
     brokerCustomerId: input.brokerCustomerId,
     ...(input.deviceId ? { deviceId: input.deviceId } : {}),
+    serviceDay: bounds.start,
     status,
     serviceType,
     communicationNote,
@@ -644,6 +652,10 @@ export async function recordBrokerServiceVisit(
     serviceProvidedAt: hasServiceDetails
       ? capturedAt
       : existing?.serviceProvidedAt ?? null,
+    proofDueAt,
+    proofUploadedAt,
+    proofUrl: input.proofUrl || existing?.proofUrl || null,
+    notes: input.notes || existing?.notes || null,
     completedAt:
       quickService || status === "COMPLETED"
         ? capturedAt

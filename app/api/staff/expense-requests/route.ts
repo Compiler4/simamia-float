@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import { getOpenFinancialDayForDate } from "@/lib/accountant/accounting";
 import { asPortalError, PortalHttpError, requirePortalRole } from "@/lib/accountant-control/auth";
 import { notifyUser } from "@/lib/accountant-control/notifications";
 
@@ -28,6 +29,15 @@ export async function POST(request: NextRequest) {
   try {
     const staff = await requirePortalRole(["STAFF"]);
     const body = await request.json();
+    const expenseDate = body.expenseDate ? new Date(String(body.expenseDate)) : new Date();
+    const openDay = await getOpenFinancialDayForDate(staff.companyId, expenseDate);
+    if (!openDay) {
+      throw new PortalHttpError(
+        "Financial operations are at rest for this date. Ask the Accountant to open the financial day before submitting an expense request.",
+        409,
+      );
+    }
+
     const amount = Number(body.amount);
     const category = text(body.category);
     const description = text(body.description);
@@ -46,7 +56,7 @@ export async function POST(request: NextRequest) {
         requestedAction: text(body.requestedAction) || null,
         requestMode: text(body.requestMode) || "STAFF_REQUEST",
         amount: amount.toFixed(2),
-        expenseDate: body.expenseDate ? new Date(String(body.expenseDate)) : new Date(),
+        expenseDate,
         receiptUrl: text(body.receiptUrl) || null,
         status: "PENDING",
       },

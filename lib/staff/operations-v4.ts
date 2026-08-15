@@ -262,7 +262,7 @@ export async function assignedBrokerCustomers(companyId: string, staffId: string
       status: "ACTIVE",
     },
     include: {
-      broker: {
+      brokerCustomer: {
         include: {
           agentAccounts: {
             where: { status: "ACTIVE" },
@@ -277,7 +277,7 @@ export async function assignedBrokerCustomers(companyId: string, staffId: string
   if (explicit.length) {
     return explicit
       .map((row: any) => ({
-        ...row.broker,
+        ...row.brokerCustomer,
         assignedArea: row.assignedArea,
         assignmentId: row.id,
       }))
@@ -387,6 +387,8 @@ export function responseError(error: unknown): { status: number; message: string
     DUPLICATE_REFERENCE: [409, "This reference or transaction ID is already registered."],
     SERVICE_LOCATION_REQUIRED: [422, "Current staff coordinates are required to update a service visit."],
     NO_VALUE: [422, "Enter a float amount, cash amount, or both."],
+    FINANCIAL_DAY_NOT_OPEN: [409, "Financial operations are at rest. Ask the Accountant to open today’s financial day before continuing."],
+    FINANCIAL_DAY_DATE_MISMATCH: [409, "The open financial day does not match today. The Accountant must close the old day and open the correct financial day."],
     UNSUPPORTED_ACTION: [400, "The requested staff operation is not supported."],
   };
   const found = known[message];

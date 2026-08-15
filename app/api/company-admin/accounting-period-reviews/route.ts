@@ -41,9 +41,43 @@ export async function POST(request: NextRequest) {
     if (!reopenRequest) throw new Error("Pending reopen request not found.");
 
     await prisma.$transaction(async (tx: any) => {
-      await tx.accountantPeriodReopenRequest.update({ where: { id: reopenRequest.id }, data: { status: decision, reviewNote, reviewedById: String(auth.user!.id), reviewedAt: new Date() } });
-      if (decision === "APPROVED") await tx.accountantPeriod.update({ where: { id: reopenRequest.periodId }, data: { status: "OPEN", reason: `Reopened by Company Admin: ${reviewNote}`, lockedById: null, lockedAt: null } });
-      await createNotification(tx, { companyId, userId: reopenRequest.requestedById, title: decision === "APPROVED" ? "Accounting period reopened" : "Reopen request rejected", message: `${reopenRequest.period.label}: ${reviewNote}`, type: decision === "APPROVED" ? "SUCCESS" : "ERROR" });
+      await tx.accountantPeriodReopenRequest.update({
+        where: { id: reopenRequest.id },
+        data: { status: decision, reviewNote, reviewedById: String(auth.user!.id), reviewedAt: new Date() },
+      });
+
+      if (decision === "APPROVED") {
+        await tx.accountantPeriod.update({
+          where: { id: reopenRequest.periodId },
+          data: { status: "OPEN", reason: `Reopened by Company Admin: ${reviewNote}`, lockedById: null, lockedAt: null },
+        });
+
+        // Keep the legacy AccountingPeriod register (used by the Accountant
+        // lock page and posting guards) in sync with the review workflow.
+        await tx.accountingPeriod.updateMany({
+          where: {
+            companyId,
+            startsAt: reopenRequest.period.startDate,
+            endsAt: reopenRequest.period.endDate,
+            status: "LOCKED",
+          },
+          data: {
+            status: "OPEN",
+            reason: `Reopened by Company Admin: ${reviewNote}`,
+            lockedById: null,
+            lockedAt: null,
+            unlockedAt: new Date(),
+          },
+        });
+      }
+
+      await createNotification(tx, {
+        companyId,
+        userId: reopenRequest.requestedById,
+        title: decision === "APPROVED" ? "Accounting period reopened" : "Reopen request rejected",
+        message: `${reopenRequest.period.label}: ${reviewNote}`,
+        type: decision === "APPROVED" ? "SUCCESS" : "ERROR",
+      });
     });
 
     return NextResponse.json({ success: true, message: decision === "APPROVED" ? "Accounting period reopened." : "Reopen request rejected." });

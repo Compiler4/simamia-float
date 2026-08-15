@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
-export async function POST(request: NextRequest) {
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const user = await getCurrentUser();
+    const { id } = await context.params;
 
     if (!user || user.role !== "SUPER_ADMIN") {
       return NextResponse.json(
@@ -17,31 +21,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const status = String(body.status || "").toUpperCase();
 
-    const name = String(body.name || "").trim();
-    const code = String(body.code || "").trim().toUpperCase();
-    const email = String(body.email || "").trim();
-    const phone = String(body.phone || "").trim();
-    const address = String(body.address || "").trim();
-
-    if (!name || !code) {
+    if (!["ACTIVE", "SUSPENDED"].includes(status)) {
       return NextResponse.json(
         {
           success: false,
-          message: "Company name and code are required.",
+          message: "Invalid company status.",
         },
         { status: 400 }
       );
     }
 
-    const company = await prisma.company.create({
+    const company = await prisma.company.update({
+      where: {
+        id,
+      },
       data: {
-        name,
-        code,
-        email: email || null,
-        phone: phone || null,
-        address: address || null,
-        status: "ACTIVE",
+        status: status as "ACTIVE" | "SUSPENDED",
       },
     });
 
@@ -49,24 +46,24 @@ export async function POST(request: NextRequest) {
       data: {
         userId: user.id,
         companyId: company.id,
-        action: "COMPANY_CREATED",
+        action: status === "ACTIVE" ? "COMPANY_ACTIVATED" : "COMPANY_SUSPENDED",
         module: "COMPANY",
-        details: `${user.name} created company ${company.name}.`,
+        details: `${user.name} changed ${company.name} status to ${status}.`,
       },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Company created successfully.",
+      message: `Company ${status.toLowerCase()} successfully.`,
       company,
     });
   } catch (error) {
-    console.error("CREATE_COMPANY_ERROR:", error);
+    console.error("UPDATE_COMPANY_STATUS_ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to create company.",
+        message: "Failed to update company status.",
         error: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }

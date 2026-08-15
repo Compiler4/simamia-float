@@ -8,18 +8,67 @@ export function asDate(value: unknown): Date {
   return date;
 }
 
-export function dayBounds(value: unknown) {
+const TANZANIA_TIME_ZONE = "Africa/Dar_es_Salaam";
+const TANZANIA_OFFSET = "+03:00";
+
+export function financialDateKey(value: unknown = new Date()): string {
   const date = asDate(value);
-  const start = new Date(date);
-  const end = new Date(date);
-  start.setHours(0, 0, 0, 0);
-  end.setHours(23, 59, 59, 999);
-  return { start, end };
+  return new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: TANZANIA_TIME_ZONE,
+  }).format(date);
+}
+
+export function dayBounds(value: unknown) {
+  const key = financialDateKey(value);
+  return {
+    start: new Date(`${key}T00:00:00.000${TANZANIA_OFFSET}`),
+    end: new Date(`${key}T23:59:59.999${TANZANIA_OFFSET}`),
+  };
+}
+
+export async function getOpenFinancialDayForDate(
+  companyId: string,
+  value: unknown = new Date(),
+  client: any = db,
+) {
+  const openDay = await client.financialDay.findFirst({
+    where: { companyId, status: "OPEN" },
+    orderBy: { date: "desc" },
+  });
+
+  if (!openDay) return null;
+
+  return financialDateKey(openDay.date) === financialDateKey(value)
+    ? openDay
+    : null;
+}
+
+export async function assertFinancialDayOpen(
+  companyId: string,
+  value: unknown = new Date(),
+  client: any = db,
+) {
+  const anyOpenDay = await client.financialDay.findFirst({
+    where: { companyId, status: "OPEN" },
+    orderBy: { date: "desc" },
+  });
+
+  if (!anyOpenDay) {
+    throw new Error("FINANCIAL_DAY_NOT_OPEN");
+  }
+
+  if (financialDateKey(anyOpenDay.date) !== financialDateKey(value)) {
+    throw new Error("FINANCIAL_DAY_DATE_MISMATCH");
+  }
+
+  return anyOpenDay;
 }
 
 export function monthKey(value: unknown): string {
-  const date = asDate(value);
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  return financialDateKey(value).slice(0, 7);
 }
 
 export async function assertPeriodOpen(
@@ -83,6 +132,7 @@ export async function postBalancedEntry(input: {
 
   return (db as any).$transaction(async (tx: any) => {
     await assertPeriodOpen(input.companyId, input.transactionDate, tx);
+    await assertFinancialDayOpen(input.companyId, input.transactionDate, tx);
 
     const existing = await tx.journalEntry.findFirst({
       where: {

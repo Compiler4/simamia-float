@@ -203,7 +203,7 @@ async function loadData(companyId: string) {
               profileImageUrl: true,
             },
           },
-          broker: {
+          brokerCustomer: {
             select: {
               id: true,
               code: true,
@@ -260,9 +260,15 @@ async function loadData(companyId: string) {
   const activeAssignmentByBroker = new Map<string, any>();
   for (const assignment of brokerAssignments) {
     if (text(assignment.status).toUpperCase() === "ACTIVE") {
+      assignment.broker = assignment.brokerCustomer;
       activeAssignmentByBroker.set(text(assignment.brokerCustomerId), assignment);
     }
   }
+
+  const brokerAssignmentRows = brokerAssignments.map((assignment: any) => ({
+    ...assignment,
+    broker: assignment.brokerCustomer,
+  }));
 
   const areas = Array.from(
     new Set<string>(
@@ -306,7 +312,7 @@ async function loadData(companyId: string) {
     branches,
     brokers: brokerRows,
     customers,
-    brokerAssignments,
+    brokerAssignments: brokerAssignmentRows,
     customerAssignments,
     summary: {
       staff: staff.length,
@@ -478,7 +484,7 @@ export async function POST(request: NextRequest) {
       const assignmentId = text(body.assignmentId);
       const assignment = await db.staffBrokerCustomerAssignment.findFirst({
         where: { id: assignmentId, companyId: session.companyId },
-        include: { broker: { select: { name: true } } },
+        include: { brokerCustomer: { select: { name: true } } },
       });
 
       if (!assignment) {
@@ -494,7 +500,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: `${assignment.broker?.name || "Broker"} was removed from the staff assignment.`,
+        message: `${assignment.brokerCustomer?.name || "Broker"} was removed from the staff assignment.`,
       });
     }
 

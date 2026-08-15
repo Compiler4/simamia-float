@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 
 export const metadata = {
   title: "Forgot Password | Simamia Float ERP",
@@ -22,40 +22,7 @@ export default function ForgotPasswordPage() {
             </p>
           </div>
 
-          <div className="px-6 py-8 sm:px-10 sm:py-10">
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
-              <h1 className="text-lg font-black text-[#0d5137]">
-                Contact your administrator
-              </h1>
-              <p className="mt-2 text-sm leading-6 text-[#547066]">
-                Ask your Company Admin or Super Admin to reset your password. Provide your username, company name and registered email address.
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              {[
-                ["1", "Contact Company Admin"],
-                ["2", "Verify your account"],
-                ["3", "Receive a new password"],
-              ].map(([number, text]) => (
-                <article key={number} className="rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm">
-                  <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-[#ecf7f1] text-sm font-black text-[#168655]">
-                    {number}
-                  </span>
-                  <p className="mt-3 text-xs font-bold leading-5 text-[#5c6961]">
-                    {text}
-                  </p>
-                </article>
-              ))}
-            </div>
-
-            <Link
-              href="/login"
-              className="mt-8 flex min-h-14 w-full items-center justify-center rounded-2xl bg-gradient-to-r from-[#05170f] via-[#0b3a25] to-[#1b8757] px-5 text-sm font-black text-white shadow-xl shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-emerald-900/20"
-            >
-              Return to sign in
-            </Link>
-          </div>
+          <ForgotPasswordForm />
         </section>
       </div>
     </main>

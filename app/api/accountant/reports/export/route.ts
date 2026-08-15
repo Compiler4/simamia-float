@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAccountant } from "@/lib/accountant-v3/guard";
 import { jsonError } from "@/lib/accountant-v3/http";
 import { buildAccountantControlCenterData } from "@/lib/accountant-v3/report-data";
+import { createBrandedTablePdf, resolveCompanyReportProfile } from "@/lib/reports/branded-pdf";
 
 export const dynamic = "force-dynamic";
 
@@ -88,57 +89,84 @@ function reportRows(data: any) {
 }
 
 async function createPdf(data: any) {
-  const { PDFDocument, StandardFonts, rgb } = await import("pdf-lib");
-  const pdf = await PDFDocument.create();
-  const regular = await pdf.embedFont(StandardFonts.Helvetica);
-  const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
-  const rows = reportRows(data);
-  const pageWidth = 595.28;
-  const pageHeight = 841.89;
-  const margin = 42;
-  const lineHeight = 14;
-  let page = pdf.addPage([pageWidth, pageHeight]);
-  let y = pageHeight - margin;
+  const company = await resolveCompanyReportProfile(String(data.accountant?.companyId || ""));
+  const detailRows: Array<{
+    section: string;
+    staff: string;
+    detail: string;
+    metric: string;
+    amount: string;
+    status: string;
+  }> = [];
 
-  const addPage = () => {
-    page = pdf.addPage([pageWidth, pageHeight]);
-    y = pageHeight - margin;
-  };
-
-  for (const row of rows) {
-    if (y < margin + lineHeight) addPage();
-    if (!row.length) {
-      y -= lineHeight;
-      continue;
-    }
-
-    const isHeading = row.length === 1;
-    const line = row.map((cell: unknown) => String(cell ?? "")).join("   |   ");
-    const chunks: string[] = [];
-    let remaining = line;
-    const maxChars = isHeading ? 78 : 95;
-    while (remaining.length > maxChars) {
-      let cut = remaining.lastIndexOf(" ", maxChars);
-      if (cut < 20) cut = maxChars;
-      chunks.push(remaining.slice(0, cut));
-      remaining = remaining.slice(cut).trimStart();
-    }
-    chunks.push(remaining);
-
-    for (const chunk of chunks) {
-      if (y < margin + lineHeight) addPage();
-      page.drawText(chunk, {
-        x: margin,
-        y,
-        size: isHeading ? 11 : 8.5,
-        font: isHeading ? bold : regular,
-        color: isHeading ? rgb(0.08, 0.2, 0.18) : rgb(0.1, 0.12, 0.16),
-      });
-      y -= isHeading ? 18 : lineHeight;
-    }
+  for (const row of data.expenses || []) {
+    detailRows.push({
+      section: "Expense",
+      staff: row.staffName || "Unknown staff",
+      detail: row.category || row.type || "Expense request",
+      metric: `Admin: ${row.adminDecision || "PENDING"} • Accountant: ${row.accountantDecision || "PENDING"}`,
+      amount: money(row.amount),
+      status: row.finalStatus || "PENDING",
+    });
   }
 
-  return await pdf.save();
+  for (const row of data.attendanceAnalytics || []) {
+    detailRows.push({
+      section: "Attendance",
+      staff: row.staffName || "Unknown staff",
+      detail: `Present ${row.present || 0} • Absent ${row.absent || 0} • Late ${row.late || 0}`,
+      metric: `Morning ${row.morning || 0} • Evening ${row.evening || 0}`,
+      amount: `${row.attendanceRate || 0}%`,
+      status: Number(row.attendanceRate || 0) >= 80 ? "ON TRACK" : "REVIEW",
+    });
+  }
+
+  for (const row of data.moneySummary || []) {
+    detailRows.push({
+      section: "Staff funds",
+      staff: row.staffName || "Unknown staff",
+      detail: `System float ${money(row.systemFloatAllocated)} • Manual float ${money(row.manualFloatAllocated)}`,
+      metric: `Cash ${money(Number(row.cashAllocated || 0) + Number(row.cashReceived || 0))} • Returned ${money(row.returned)}`,
+      amount: money(row.netAvailable),
+      status: "NET AVAILABLE",
+    });
+  }
+
+  for (const row of data.performance || []) {
+    detailRows.push({
+      section: "Performance",
+      staff: row.staffName || "Unknown staff",
+      detail: `Attendance ${row.attendanceRate || 0}% • Services ${row.serviceCount || 0}`,
+      metric: `Float transactions ${row.floatTransactions || 0}`,
+      amount: String(row.score ?? 0),
+      status: row.rating || "N/A",
+    });
+  }
+
+  return createBrandedTablePdf({
+    company,
+    title: "Accountant Control Centre Report",
+    subtitle: "Financial approvals, attendance, staff funding and performance in one controlled report.",
+    period: data.period?.label || `${data.period?.startKey || ""} - ${data.period?.endKey || ""}`,
+    generatedBy: data.accountant?.name || "Accountant",
+    reportCode: "ACCOUNTANT CONTROL REPORT",
+    orientation: "landscape",
+    summary: [
+      { label: "Total income", value: money(data.summary?.totalIncome) },
+      { label: "Approved expenses", value: money(data.summary?.approvedExpenseAmount) },
+      { label: "Net income", value: money(data.summary?.netIncome) },
+      { label: "Combined staff funds", value: money(data.summary?.combinedStaffFunds) },
+    ],
+    columns: [
+      { label: "Section", key: "section", weight: 0.75 },
+      { label: "Staff user", key: "staff", weight: 1.2 },
+      { label: "Details", key: "detail", weight: 2.0 },
+      { label: "Control metric", key: "metric", weight: 1.8 },
+      { label: "Amount / score", key: "amount", weight: 1.0, align: "right" },
+      { label: "Status", key: "status", weight: 0.9, align: "center" },
+    ],
+    rows: detailRows,
+  });
 }
 
 export async function GET(request: NextRequest) {

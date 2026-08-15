@@ -1290,6 +1290,37 @@
   box-shadow: 0 16px 38px #315d5312;
 }
 
+.travelRouteStrip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #dce9e4;
+  border-radius: 18px;
+  color: #17352d;
+  background: linear-gradient(135deg, #ffffff, #edf8f4);
+  box-shadow: 0 14px 34px #315d5310;
+}
+
+.travelRouteStrip span,
+.travelRouteStrip strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.travelRouteStrip strong {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 999px;
+  color: #086343;
+  background: #dff6ec;
+}
+
 .gpsHeader button {
   min-height: 100%;
 }
@@ -2102,6 +2133,15 @@
 
   .dailyLiveBar > button {
     width: 100%;
+  }
+
+  .travelRouteStrip {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .travelRouteStrip strong {
+    justify-content: center;
   }
 
   .travelSummary,

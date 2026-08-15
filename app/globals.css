@@ -203,3 +203,63 @@ table {
         padding-left: env(safe-area-inset-left);
     }
 }
+
+/* ========================================================================
+   SYSTEM-WIDE TABLE + GLASS POLISH
+   Native table cells guarantee every TH column stays aligned with its TD data
+   in Accountant, Company Admin, Staff, GPS and platform dashboards.
+   ======================================================================== */
+table {
+    width: 100%;
+    table-layout: auto;
+}
+
+table > thead > tr > th,
+table > tbody > tr > td,
+table > tfoot > tr > td,
+table > tfoot > tr > th {
+    box-sizing: border-box;
+    display: table-cell !important;
+    vertical-align: middle;
+}
+
+thead th {
+    text-align: left;
+}
+
+/* A very light non-interactive glass sheen shared by every role portal. */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    pointer-events: none;
+    opacity: .16;
+    background:
+        radial-gradient(circle at 8% 8%, rgba(255,255,255,.18), transparent 24%),
+        radial-gradient(circle at 92% 12%, rgba(137, 204, 255, .10), transparent 22%),
+        linear-gradient(135deg, rgba(255,255,255,.02), rgba(255,255,255,0) 42%);
+    backdrop-filter: saturate(1.025);
+    -webkit-backdrop-filter: saturate(1.025);
+}
+
+
+/* ========================================================================
+   SYSTEM TABLE ALIGNMENT - FINAL NATIVE DISPLAY RESET
+   Never apply flex/grid directly to table structural elements.  Put flex/grid
+   on wrappers inside TH/TD instead.  This keeps every header exactly above the
+   corresponding data column across Accountant, Company Admin, Staff and GPS.
+   ======================================================================== */
+table { display: table !important; width: 100%; }
+thead { display: table-header-group !important; }
+tbody { display: table-row-group !important; }
+tfoot { display: table-footer-group !important; }
+tr { display: table-row !important; }
+th, td {
+    display: table-cell !important;
+    float: none !important;
+    vertical-align: middle;
+}
+thead, tbody, tfoot, tr, th, td {
+    box-sizing: border-box;
+}

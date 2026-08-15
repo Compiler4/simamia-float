@@ -1,10 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
-export async function POST(request: NextRequest) {
+export async function PATCH(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     const user = await getCurrentUser();
+    const { id } = await context.params;
 
     if (!user) {
       return NextResponse.json(
@@ -16,46 +20,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
-
-    const receiverId = String(body.receiverId || "");
-    const subject = String(body.subject || "").trim();
-    const message = String(body.message || "").trim();
-
-    if (!receiverId || !subject || !message) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Receiver, subject and message are required.",
-        },
-        { status: 400 }
-      );
-    }
-
     const db = prisma as any;
 
-    const savedMessage = await db.message.create({
+    await db.message.updateMany({
+      where: {
+        id,
+        receiverId: user.id,
+      },
       data: {
-        companyId: user.companyId,
-        senderId: user.id,
-        receiverId,
-        subject,
-        body: message,
+        isRead: true,
       },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Message sent successfully.",
-      data: savedMessage,
+      message: "Message marked as read.",
     });
   } catch (error) {
-    console.error("SEND_MESSAGE_ERROR:", error);
+    console.error("READ_MESSAGE_ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to send message.",
+        message: "Failed to mark message as read.",
         error: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }

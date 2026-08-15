@@ -12,6 +12,7 @@ import {
 
 export async function POST(
   request: NextRequest,
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await requireCompanyMember([
@@ -20,14 +21,10 @@ export async function POST(
       "STAFF",
     ]);
     const companyId = user.companyId as string;
+    const { id } = await context.params;
     const body = await request.json();
-    const id = text(body.id ?? body.verificationId).trim();
     const message = text(body.message).trim();
     const db = prisma as any;
-
-    if (!id) {
-      throw new HttpError("Bank verification id is required.", 422);
-    }
 
     if (message.length < 3) {
       throw new HttpError("Write a clear bank-review message first.", 422);

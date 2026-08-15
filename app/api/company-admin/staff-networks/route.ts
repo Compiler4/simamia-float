@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { assertFinancialDayOpen } from "@/lib/accountant/accounting";
 import {
   cleanText,
   numberValue,
@@ -49,6 +50,8 @@ function errorResponse(error: unknown) {
     INVALID_PURPOSE: [422, "Select FLOAT, CASH or BOTH."],
     INVALID_VALUE: [422, "Enter a float amount, cash amount, or both."],
     DUPLICATE_LINE: [409, "This SIM line is already registered in the company."],
+    FINANCIAL_DAY_NOT_OPEN: [409, "Financial operations are at rest. The Accountant must open today’s financial day before staff funding can be issued."],
+    FINANCIAL_DAY_DATE_MISMATCH: [409, "The open financial day does not match today. Close the old day and open the correct financial day first."],
   };
   const result = known[code] ?? [500, "The staff network operation could not be completed."];
   return NextResponse.json(
@@ -174,7 +177,7 @@ export async function GET(request: Request) {
         },
         include: {
           staff: { select: { id: true, name: true, assignedRegion: true } },
-          broker: true,
+          brokerCustomer: true,
         },
         orderBy: [{ status: "asc" }, { startedAt: "desc" }],
       }),
@@ -186,7 +189,12 @@ export async function GET(request: Request) {
       lines: serialize(lines),
       funding: serialize(funding),
       brokers: serialize(brokers),
-      assignments: serialize(assignments),
+      assignments: serialize(
+        assignments.map((assignment: any) => ({
+          ...assignment,
+          broker: assignment.brokerCustomer,
+        })),
+      ),
     });
   } catch (error) {
     return errorResponse(error);
@@ -325,14 +333,14 @@ export async function POST(request: Request) {
         },
         include: {
           staff: { select: { id: true, name: true } },
-          broker: true,
+          brokerCustomer: true,
         },
       });
 
       return NextResponse.json({
         success: true,
         message: "Broker assigned to the staff service area.",
-        assignment: serialize(assignment),
+        assignment: serialize({ ...assignment, broker: assignment.brokerCustomer }),
       });
     }
 
@@ -361,7 +369,7 @@ export async function POST(request: Request) {
         },
         include: {
           staff: { select: { id: true, name: true } },
-          broker: true,
+          brokerCustomer: true,
         },
       });
 
@@ -370,11 +378,12 @@ export async function POST(request: Request) {
         message: status === "ACTIVE"
           ? "Broker assignment activated."
           : "Broker assignment deactivated.",
-        assignment: serialize(assignment),
+        assignment: serialize({ ...assignment, broker: assignment.brokerCustomer }),
       });
     }
 
     if (action === "ISSUE_FUNDING") {
+      await assertFinancialDayOpen(manager.companyId, new Date());
       const staffId = cleanText(body.staffId);
       const staff = await requireStaff(db, manager.companyId, staffId);
       const networkLineId = cleanText(body.networkLineId) || null;

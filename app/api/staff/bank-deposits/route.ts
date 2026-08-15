@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getOpenFinancialDayForDate } from "@/lib/accountant/accounting";
 import {
   AccountantHttpError,
   accountantRouteError,
@@ -70,6 +71,17 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const depositDate = body.depositDate
+      ? new Date(body.depositDate)
+      : new Date();
+    const openDay = await getOpenFinancialDayForDate(companyId, depositDate);
+    if (!openDay) {
+      throw new AccountantHttpError(
+        "Financial operations are at rest for this date. Ask the Accountant to open the financial day before submitting a bank deposit.",
+        409,
+      );
+    }
+
     const referenceNo = text(body.referenceNo).trim();
     const bankAccount = text(body.bankAccount).trim();
     const depositSlipUrl = text(body.depositSlipUrl).trim();
@@ -113,9 +125,7 @@ export async function POST(request: NextRequest) {
         amount: decimalValue(body.amount),
         referenceNo,
         bankAccount,
-        depositDate: body.depositDate
-          ? new Date(body.depositDate)
-          : new Date(),
+        depositDate,
         depositSlipUrl,
         bankReceiptUrl,
         status: "PENDING",

@@ -29,6 +29,46 @@ function serialize(item: any) {
   };
 }
 
+function normalizeAccounts(rows: unknown, companyId: string, brokerCustomerId: string) {
+  if (!Array.isArray(rows)) return [];
+
+  const accounts = rows
+    .filter((row: any) =>
+      [row?.network, row?.simPhoneNumber, row?.agentNumber, row?.accountName].some((value) =>
+        clean(value),
+      ),
+    )
+    .map((row: any, index: number) => {
+      const network = clean(row.network).toUpperCase() || "OTHER";
+      const simPhoneNumber = clean(row.simPhoneNumber);
+      const agentNumber = clean(row.agentNumber);
+
+      if (!allowedNetworks.has(network) || !simPhoneNumber || !agentNumber) {
+        throw new HttpError(
+          `Complete network, SIM phone and agent number for account ${index + 1}, or leave the row blank.`,
+          422,
+        );
+      }
+
+      return {
+        companyId,
+        brokerCustomerId,
+        network,
+        simPhoneNumber,
+        agentNumber,
+        accountName: optional(row.accountName),
+        isPrimary: Boolean(row.isPrimary),
+        status: clean(row.status).toUpperCase() || "ACTIVE",
+      };
+    });
+
+  if (accounts.length && !accounts.some((row: any) => row.isPrimary)) {
+    accounts[0].isPrimary = true;
+  }
+
+  return accounts;
+}
+
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> },
@@ -80,31 +120,10 @@ export async function PATCH(
     ];
 
     const mandatoryTextFields = new Set([
-      "title",
       "firstName",
       "surname",
-      "businessName",
-      "tinNumber",
-      "officialAgentNo",
       "phone",
-      "alternatePhone",
-      "email",
       "location",
-      "region",
-      "district",
-      "ward",
-      "postalAddress",
-      "city",
-      "country",
-      "nationality",
-      "identityType",
-      "identityNumber",
-      "identityIssuedBy",
-      "profileImageUrl",
-      "signatureUrl",
-      "attendedBy",
-      "attendedSignatureUrl",
-      "attendedLocation",
     ]);
 
     for (const field of textFields) {
@@ -140,7 +159,7 @@ export async function PATCH(
     ] as const) {
       if (body[field] !== undefined) {
         if (body[field] === null || body[field] === "") {
-          throw new HttpError(`${field} cannot be empty.`, 422);
+          data[field] = null;
         } else {
           const value = Number(body[field]);
           if (!Number.isFinite(value) || value < min || value > max) {
@@ -161,29 +180,7 @@ export async function PATCH(
       await tx.brokerCustomer.update({ where: { id }, data });
 
       if (body.agentAccounts !== undefined) {
-        if (!Array.isArray(body.agentAccounts) || body.agentAccounts.length === 0) {
-          throw new HttpError("At least one agent account is required.", 422);
-        }
-
-        const accounts = body.agentAccounts.map((row: any, index: number) => {
-          const network = clean(row.network).toUpperCase();
-          const simPhoneNumber = clean(row.simPhoneNumber);
-          const agentNumber = clean(row.agentNumber);
-          if (!allowedNetworks.has(network) || !simPhoneNumber || !agentNumber) {
-            throw new HttpError(`Complete network account ${index + 1}.`, 422);
-          }
-          return {
-            companyId,
-            brokerCustomerId: id,
-            network,
-            simPhoneNumber,
-            agentNumber,
-            accountName: clean(row.accountName) || (() => { throw new HttpError(`Account name for account ${index + 1} is required.`, 422); })(),
-            isPrimary: Boolean(row.isPrimary),
-            status: clean(row.status).toUpperCase() || "ACTIVE",
-          };
-        });
-        if (!accounts.some((row: any) => row.isPrimary)) accounts[0].isPrimary = true;
+        const accounts = normalizeAccounts(body.agentAccounts, companyId, id);
 
         for (const account of accounts) {
           const duplicate = await tx.brokerAgentAccount.findFirst({
@@ -204,7 +201,9 @@ export async function PATCH(
         }
 
         await tx.brokerAgentAccount.deleteMany({ where: { brokerCustomerId: id } });
-        await tx.brokerAgentAccount.createMany({ data: accounts });
+        if (accounts.length) {
+          await tx.brokerAgentAccount.createMany({ data: accounts });
+        }
       }
 
       return tx.brokerCustomer.findUnique({

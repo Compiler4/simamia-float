@@ -1,14 +1,24 @@
 import { redirect } from "next/navigation";
 
+import { getCurrentUser } from "@/lib/auth";
+import AccountantVerificationRequestsClient from "./AccountantVerificationRequestsClient";
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-/**
- * Compatibility entry route.
- *
- * The authenticated accountant landing URL is /accountant/dashboard.
- * Keeping /accountant as an alias prevents old bookmarks from returning 404.
- */
-export default function AccountantEntryPage() {
-  redirect("/accountant/dashboard");
+export default async function AccountantVerificationRequestsPage() {
+  const user = (await getCurrentUser()) as any;
+  if (!user) redirect("/login");
+  if (String(user.role).toUpperCase() !== "ACCOUNTANT") redirect("/dashboard");
+  if (!user.companyId) redirect("/dashboard");
+
+  return (
+    <AccountantVerificationRequestsClient
+      accountant={{
+        id: String(user.id),
+        name: String(user.name ?? user.username ?? "Accountant"),
+        email: String(user.email ?? ""),
+      }}
+    />
+  );
 }

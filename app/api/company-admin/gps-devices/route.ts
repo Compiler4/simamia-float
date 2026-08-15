@@ -12,14 +12,14 @@ import {
 
 export async function PATCH(
   request: NextRequest,
+  context: { params: Promise<{ id: string }> },
 ) {
   try {
     const user = await requireCompanyAdmin();
     const companyId = user.companyId as string;
+    const { id } = await context.params;
     const body = await request.json();
-    const id = text(body.id ?? body.deviceId).trim();
     const db = prisma as any;
-    if (!id) throw new HttpError("GPS device id is required.", 422);
 
     const existing = await db.companyGpsDevice.findFirst({ where: { id, companyId } });
     if (!existing) throw new HttpError("GPS device not found.", 404);

@@ -9,6 +9,11 @@ import {
 } from "pdf-lib";
 
 import { prisma } from "@/lib/prisma";
+import {
+  loadCompanyReportLogo,
+  resolveCompanyReportProfile,
+  type CompanyReportProfile,
+} from "@/lib/reports/branded-pdf";
 import { requireStaff } from "@/lib/staff/permissions";
 import {
   cleanText,
@@ -85,7 +90,16 @@ async function reportSource(
           email: true,
           phone: true,
           assignedRegion: true,
-          company: { select: { name: true, code: true } },
+          companyId: true,
+          company: {
+            select: {
+              name: true,
+              code: true,
+              email: true,
+              phone: true,
+              address: true,
+            },
+          },
         },
       }),
       db.staffFundingReceipt.findMany({
@@ -157,7 +171,7 @@ async function reportSource(
           staffId,
           startedAt: { gte: start, lte: end },
         },
-        include: { broker: true },
+        include: { brokerCustomer: true },
       }),
     ]);
 
@@ -272,7 +286,7 @@ async function reportSource(
     rows.push({
       date: safeDate(item.serviceProvidedAt ?? item.startedAt),
       reference: item.id,
-      details: `SERVICE VISIT - ${item.broker?.name ?? "BROKER"} - FLOAT ${money(
+      details: `SERVICE VISIT - ${item.brokerCustomer?.name ?? "BROKER"} - FLOAT ${money(
         numberValue(item.floatAmount),
       )}; CASH ${money(numberValue(item.cashAmount))}`,
       debit: 0,
@@ -297,7 +311,8 @@ function drawHeader(
   bold: any,
   input: {
     staffName: string;
-    companyName: string;
+    company: CompanyReportProfile;
+    companyLogo: any | null;
     periodLabel: string;
     totalCredit: number;
     totalDebit: number;
@@ -308,52 +323,106 @@ function drawHeader(
   const { width, height } = page.getSize();
   page.drawRectangle({
     x: 0,
-    y: height - 72,
+    y: height - 96,
     width,
-    height: 72,
+    height: 96,
     color: rgb(0.08, 0.45, 0.25),
   });
-  page.drawText("SIMAMIA FLOAT", {
-    x: 38,
-    y: height - 37,
-    size: 20,
+
+  const logoX = 38;
+  const logoY = height - 74;
+  const logoSize = 48;
+  page.drawRectangle({
+    x: logoX,
+    y: logoY,
+    width: logoSize,
+    height: logoSize,
+    color: rgb(1, 1, 1),
+  });
+  if (input.companyLogo) {
+    const imageWidth = input.companyLogo.width || 1;
+    const imageHeight = input.companyLogo.height || 1;
+    const scale = Math.min((logoSize - 8) / imageWidth, (logoSize - 8) / imageHeight);
+    const drawWidth = imageWidth * scale;
+    const drawHeight = imageHeight * scale;
+    page.drawImage(input.companyLogo, {
+      x: logoX + (logoSize - drawWidth) / 2,
+      y: logoY + (logoSize - drawHeight) / 2,
+      width: drawWidth,
+      height: drawHeight,
+    });
+  } else {
+    page.drawText(input.company.name.slice(0, 2).toUpperCase(), {
+      x: logoX + 11,
+      y: logoY + 15,
+      size: 17,
+      font: bold,
+      color: rgb(0.08, 0.45, 0.25),
+    });
+  }
+
+  page.drawText(input.company.name || "SIMAMIA FLOAT", {
+    x: 98,
+    y: height - 38,
+    size: 17,
     font: bold,
     color: rgb(1, 1, 1),
   });
   page.drawText("Staff Grand Transaction Report", {
-    x: 38,
+    x: 98,
     y: height - 57,
-    size: 10,
+    size: 9.5,
     font,
     color: rgb(0.9, 1, 0.94),
   });
+  page.drawText(`Period: ${input.periodLabel}`, {
+    x: 98,
+    y: height - 75,
+    size: 7.4,
+    font: bold,
+    color: rgb(0.9, 1, 0.94),
+  });
+
+  const companyDetails = [
+    input.company.code ? `Code: ${input.company.code}` : "",
+    input.company.registrationNumber ? `Reg: ${input.company.registrationNumber}` : "",
+    input.company.tin ? `TIN: ${input.company.tin}` : "",
+    input.company.phone ? `Tel: ${input.company.phone}` : "",
+    input.company.email ? `Email: ${input.company.email}` : "",
+    input.company.address ? `Address: ${input.company.address}` : "",
+    input.company.website ? `Web: ${input.company.website}` : "",
+  ].filter(Boolean);
   page.drawText(`Page ${input.pageNo}`, {
-    x: width - 78,
-    y: height - 43,
-    size: 9,
+    x: width - 215,
+    y: height - 23,
+    size: 7,
     font: bold,
     color: rgb(1, 1, 1),
+    maxWidth: 177,
+  });
+  companyDetails.slice(0, 7).forEach((line, index) => {
+    page.drawText(line, {
+      x: width - 215,
+      y: height - 35 - index * 8,
+      size: 5.9,
+      font,
+      color: rgb(0.94, 1, 0.97),
+      maxWidth: 177,
+    });
   });
 
   page.drawText(input.staffName, {
     x: 38,
-    y: height - 105,
+    y: height - 125,
     size: 16,
     font: bold,
     color: rgb(0.05, 0.15, 0.1),
   });
-  page.drawText(input.companyName, {
+  page.drawText(`Staff financial activity • ${input.company.name}`, {
     x: 38,
-    y: height - 123,
-    size: 10,
-    font: bold,
-    color: rgb(0.22, 0.35, 0.28),
-  });
-  page.drawText(`Period: ${input.periodLabel}`, {
-    x: 38,
-    y: height - 142,
+    y: height - 143,
     size: 9,
-    font,
+    font: bold,
     color: rgb(0.22, 0.35, 0.28),
   });
 
@@ -362,10 +431,10 @@ function drawHeader(
     `Total Debit: ${money(input.totalDebit)} TZS`,
     `Closing Balance: ${money(input.closingBalance)} TZS`,
   ];
-  summary.forEach((text, index) => {
-    page.drawText(text, {
+  summary.forEach((value, index) => {
+    page.drawText(value, {
       x: 325,
-      y: height - 104 - index * 19,
+      y: height - 124 - index * 19,
       size: 9,
       font: index === 2 ? bold : font,
       color: rgb(0.08, 0.25, 0.16),
@@ -432,6 +501,20 @@ async function createPdf(
   const totalCredit = rows.reduce((sum, row) => sum + row.credit, 0);
   const totalDebit = rows.reduce((sum, row) => sum + row.debit, 0);
   const closingBalance = rows.at(-1)?.balance ?? 0;
+  const companyProfile = await resolveCompanyReportProfile(String(staff?.companyId || ""), staff?.company);
+  const logoBytes = await loadCompanyReportLogo(companyProfile.logoUrl);
+  let companyLogo: any | null = null;
+  if (logoBytes) {
+    try {
+      companyLogo = await pdf.embedPng(logoBytes);
+    } catch {
+      try {
+        companyLogo = await pdf.embedJpg(logoBytes);
+      } catch {
+        companyLogo = null;
+      }
+    }
+  }
 
   const rowsPerPage = 16;
   const pages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
@@ -440,7 +523,8 @@ async function createPdf(
     const page = pdf.addPage([635, 842]);
     drawHeader(page, font, bold, {
       staffName: staff?.name ?? "Staff Officer",
-      companyName: staff?.company?.name ?? "Company",
+      company: companyProfile,
+      companyLogo,
       periodLabel,
       totalCredit,
       totalDebit,
@@ -448,7 +532,7 @@ async function createPdf(
       pageNo: pageIndex + 1,
     });
 
-    let y = 660;
+    let y = 640;
     drawTableHeader(page, bold, y);
     y -= 25;
 

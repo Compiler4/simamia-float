@@ -1,6 +1,10 @@
 import { randomBytes, randomUUID } from "node:crypto";
 
+import bcrypt from "bcryptjs";
+
 import { db } from "@/lib/db";
+import { getCloseDaySettlement, getFinancialDayPreview } from "@/lib/accountant/close-day";
+import { assertFinancialDayOpen, dayBounds as accountingDayBounds } from "@/lib/accountant/accounting";
 
 import {
   AccountantContext,
@@ -39,6 +43,27 @@ function validDate(value: unknown, label = "Date"): Date {
   return result;
 }
 
+async function requireOpenFinancialDay(context: AccountantContext, value: unknown) {
+  try {
+    return await assertFinancialDayOpen(context.companyId, value);
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "";
+    if (code === "FINANCIAL_DAY_NOT_OPEN") {
+      throw new PortalError(
+        "Financial operations are at rest. Open the financial day before posting or approving financial transactions.",
+        409,
+      );
+    }
+    if (code === "FINANCIAL_DAY_DATE_MISMATCH") {
+      throw new PortalError(
+        `The transaction date does not match the currently open financial day. Close the open day first or use its date.`,
+        409,
+      );
+    }
+    throw error;
+  }
+}
+
 function timeOnDate(dateValue: unknown, timeValue: unknown, fallback: string): Date | null {
   const statusTime = text(timeValue || fallback);
   if (!dateValue || !statusTime) return null;
@@ -66,12 +91,16 @@ async function updateExpenseDecision(context: AccountantContext, body: any, forc
     throw new PortalError(`This expense exceeds the accountant approval limit of TZS ${limit.toLocaleString("en-GB")}.`, 403);
   }
   await assertPeriodOpen(context.companyId, expense.expenseDate);
+  await requireOpenFinancialDay(context, expense.expenseDate);
 
-  let finalStatus = decision;
-  const decisionSaved = await safeQuery(
+  // The Accountant owns the accounting decision.  Keep ApprovalDecision rows as
+  // immutable/auditable evidence, but never force the expense back to PENDING
+  // after the Accountant has explicitly approved or rejected it.
+  const finalStatus = decision as "APPROVED" | "REJECTED";
+  await safeQuery(
     "approvalDecision.upsert",
-    async () => {
-      await prisma.approvalDecision.upsert({
+    () =>
+      prisma.approvalDecision.upsert({
         where: {
           companyId_itemType_itemId_reviewerRole: {
             companyId: context.companyId,
@@ -97,19 +126,9 @@ async function updateExpenseDecision(context: AccountantContext, body: any, forc
           decision,
           reason,
         },
-      });
-      const decisions = await prisma.approvalDecision.findMany({
-        where: { companyId: context.companyId, itemType: "EXPENSE", itemId: expenseId },
-      });
-      if (decisions.some((row: any) => text(row.decision) === "REJECTED")) finalStatus = "REJECTED";
-      else if (["ACCOUNTANT", "COMPANY_ADMIN"].every((role) => decisions.some((row: any) => text(row.reviewerRole) === role && text(row.decision) === "APPROVED"))) finalStatus = "APPROVED";
-      else finalStatus = "PENDING";
-      return true;
-    },
-    false,
+      }),
+    null,
   );
-
-  if (!decisionSaved) finalStatus = decision;
   await prisma.expense.update({
     where: { id: expenseId },
     data: {
@@ -208,6 +227,7 @@ async function issueStaffFunds(context: AccountantContext, body: any) {
   if (!staff) throw new PortalError("The selected active STAFF user was not found.", 404);
   const issueDate = body.issueDate ? validDate(body.issueDate, "Issue date") : new Date();
   await assertPeriodOpen(context.companyId, issueDate);
+  await requireOpenFinancialDay(context, issueDate);
   const referenceNo = text(body.referenceNo).trim() || `FUND-${dateKey(issueDate).replaceAll("-", "")}-${randomBytes(4).toString("hex").toUpperCase()}`;
   const purpose = text(body.purpose).trim() || "Daily field operations";
   const note = text(body.note ?? body.notes).trim() || null;
@@ -261,41 +281,157 @@ export async function performAccountantAction(context: AccountantContext, body: 
 
   switch (action) {
     case "OPEN_DAY": {
-      const date = validDate(body.date, "Financial date");
-      const openingBalance = Math.max(0, number(body.openingBalance));
+      const requestedDate = validDate(body.date, "Financial date");
+      const key = dateKey(requestedDate);
+      const date = startOfDay(key);
+      const { start, end } = accountingDayBounds(date);
+
       await assertPeriodOpen(context.companyId, date);
-      const existingOpen = await prisma.financialDay.findFirst({ where: { companyId: context.companyId, status: "OPEN" } });
-      if (existingOpen) throw new PortalError(`A financial day is already open for ${dateKey(existingOpen.date)}.`, 409);
-      await prisma.financialDay.upsert({
-        where: { companyId_date: { companyId: context.companyId, date } },
-        update: { openingBalance, cashIn: 0, cashOut: 0, closingBalance: openingBalance, status: "OPEN", blockedReason: null, openedById: context.accountantId, openedAt: new Date(), closedById: null, closedAt: null },
-        create: { companyId: context.companyId, date, openingBalance, closingBalance: openingBalance, status: "OPEN", openedById: context.accountantId },
+
+      const existingOpen = await prisma.financialDay.findFirst({
+        where: { companyId: context.companyId, status: "OPEN" },
+        orderBy: { date: "desc" },
       });
-      await audit(context, "OPEN_DAY", "FINANCIAL_DAY", { date: dateKey(date), openingBalance });
-      return { message: `Financial day ${dateKey(date)} opened successfully.` };
+      if (existingOpen) {
+        throw new PortalError(
+          `Financial operations are already ACTIVE for ${dateKey(existingOpen.date)}. Close that financial day before opening another one.`,
+          409,
+        );
+      }
+
+      const sameDay = await prisma.financialDay.findFirst({
+        where: {
+          companyId: context.companyId,
+          date: { gte: start, lte: end },
+        },
+      });
+      if (sameDay) {
+        const state = text(sameDay.status).toUpperCase();
+        throw new PortalError(
+          state === "CLOSED"
+            ? `Financial day ${key} is already CLOSED. It cannot be reopened from Open Financial Day; use the controlled period-reopen process if correction is required.`
+            : `A financial-day record already exists for ${key} with status ${state}.`,
+          409,
+        );
+      }
+
+      const previousClosed = await prisma.financialDay.findFirst({
+        where: {
+          companyId: context.companyId,
+          status: "CLOSED",
+          date: { lt: start },
+        },
+        orderBy: { date: "desc" },
+      });
+
+      const requestedOpening = Math.max(0, number(body.openingBalance));
+      const openingBalance = previousClosed
+        ? number(previousClosed.closingBalance)
+        : requestedOpening;
+
+      const day = await prisma.financialDay.create({
+        data: {
+          companyId: context.companyId,
+          date: start,
+          openingBalance,
+          cashIn: 0,
+          cashOut: 0,
+          closingBalance: openingBalance,
+          status: "OPEN",
+          blockedReason: null,
+          openedById: context.accountantId,
+          openedAt: new Date(),
+          closedById: null,
+          closedAt: null,
+        },
+      });
+
+      await audit(context, "OPEN_DAY", "FINANCIAL_DAY", {
+        financialDayId: day.id,
+        date: key,
+        openingBalance,
+        carriedForwardFrom: previousClosed?.id ?? null,
+      });
+
+      await Promise.all(
+        ["STAFF", "COMPANY_ADMIN", "BROKER", "GPS_MANAGER"].map((role) =>
+          notifyRole(
+            context,
+            role,
+            "Financial day opened",
+            `Financial operations are ACTIVE for ${key}. Controlled financial work may now begin.`,
+            "SUCCESS",
+          ),
+        ),
+      );
+
+      const carryMessage = previousClosed
+        ? ` Opening balance was carried forward automatically from ${dateKey(previousClosed.date)} closing balance.`
+        : "";
+
+      return {
+        message: `Financial day ${key} opened successfully. Financial operations are now ACTIVE.${carryMessage}`,
+        financialDay: day,
+        state: "ACTIVE",
+      };
     }
 
     case "CLOSE_DAY": {
       const day = body.financialDayId
         ? await prisma.financialDay.findFirst({ where: { id: text(body.financialDayId), companyId: context.companyId } })
         : await prisma.financialDay.findFirst({ where: { companyId: context.companyId, status: "OPEN" }, orderBy: { date: "desc" } });
-      if (!day) throw new PortalError("No open financial day was found.", 404);
+      if (!day || text(day.status).toUpperCase() !== "OPEN") {
+        throw new PortalError("No OPEN financial day was found. Financial operations are already at rest.", 409);
+      }
       await assertPeriodOpen(context.companyId, day.date);
-      const unresolved = await prisma.bankDeposit.count({ where: { companyId: context.companyId, OR: [{ holdActive: true }, { status: { in: ["AMOUNT_MISMATCH", "MISSING_RECEIPT", "DUPLICATE_DEPOSIT", "MISSING_BANK_RECORD"] } }] } });
-      if (unresolved > 0) throw new PortalError(`Financial day cannot close while ${unresolved} bank mismatch or hold remains unresolved.`, 409);
-      const start = new Date(day.date);
-      const end = new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
-      const [services, expenses, receipts] = await Promise.all([
-        prisma.serviceActivity.findMany({ where: { companyId: context.companyId, status: "COMPLETED", servedAt: { gte: start, lte: end } }, select: { amount: true } }),
-        prisma.expense.findMany({ where: { companyId: context.companyId, status: "APPROVED", expenseDate: { gte: start, lte: end } }, select: { amount: true } }),
-        safeQuery("manualReceipts", () => prisma.companySetting.findMany({ where: { companyId: context.companyId, key: { startsWith: "accounting.manualReceipt." } } }), []),
-      ]);
-      const cashIn = services.reduce((sum: number, row: any) => sum + number(row.amount), 0) + receipts.map((row: any) => { try { return JSON.parse(row.value); } catch { return null; } }).filter((row: any) => row && new Date(row.transactionDate).getTime() >= start.getTime() && new Date(row.transactionDate).getTime() <= end.getTime()).reduce((sum: number, row: any) => sum + number(row.amount), 0);
-      const cashOut = expenses.reduce((sum: number, row: any) => sum + number(row.amount), 0);
-      const closingBalance = number(day.openingBalance) + cashIn - cashOut;
+      const settlement = await getCloseDaySettlement(context.companyId, day.date);
+      if (!settlement.canClose) {
+        const parts: string[] = [];
+        if (settlement.outstandingAmount > 0.01) {
+          parts.push(`TZS ${settlement.outstandingAmount.toLocaleString("en-TZ")} staff float/cash is still outstanding`);
+        }
+        if (settlement.pendingReturnReviews > 0) {
+          parts.push(`${settlement.pendingReturnReviews} returned amount${settlement.pendingReturnReviews === 1 ? " is" : "s are"} waiting for verification`);
+        }
+        if (settlement.bankBlockers > 0) {
+          parts.push(`${settlement.bankBlockers} bank deposit${settlement.bankBlockers === 1 ? " is" : "s are"} not fully verified`);
+        }
+        const blockedReason = `Financial day cannot close yet: ${parts.join("; ") || "financial settlement is incomplete"}.`;
+        await prisma.financialDay.update({
+          where: { id: day.id },
+          data: { blockedReason },
+        });
+        throw new PortalError(blockedReason, 409);
+      }
+      const preview = await getFinancialDayPreview(
+        context.companyId,
+        day.date,
+        day.openingBalance,
+      );
+      const { cashIn, cashOut, closingBalance } = preview;
+      if (closingBalance < -0.01) {
+        const blockedReason = `Financial day cannot close because the calculated closing balance is negative: TZS ${closingBalance.toLocaleString("en-TZ")}. Review income, approved expenses and opening balance.`;
+        await prisma.financialDay.update({ where: { id: day.id }, data: { blockedReason } });
+        throw new PortalError(blockedReason, 409);
+      }
       await prisma.financialDay.update({ where: { id: day.id }, data: { cashIn, cashOut, closingBalance, status: "CLOSED", closedById: context.accountantId, closedAt: new Date(), blockedReason: null } });
       await audit(context, "CLOSE_DAY", "FINANCIAL_DAY", { financialDayId: day.id, cashIn, cashOut, closingBalance });
-      return { message: `Financial day closed with a balance of TZS ${closingBalance.toLocaleString("en-GB")}.` };
+      await Promise.all(
+        ["STAFF", "COMPANY_ADMIN", "BROKER", "GPS_MANAGER"].map((role) =>
+          notifyRole(
+            context,
+            role,
+            "Financial day closed",
+            `Financial operations are at REST after closing ${dateKey(day.date)}. New financial work must wait for the next OPEN financial day.`,
+            "INFO",
+          ),
+        ),
+      );
+      return {
+        message: `Financial day ${dateKey(day.date)} closed successfully. All staff float/cash returns and bank controls are balanced. Closing balance: TZS ${closingBalance.toLocaleString("en-GB")}. Financial operations are now at REST until the next financial day is opened.`,
+        settlement,
+        state: "REST",
+      };
     }
 
     case "SAVE_OPENING_BALANCE": {
@@ -304,6 +440,7 @@ export async function performAccountantAction(context: AccountantContext, body: 
       const amount = positive(body.amount, "Amount");
       const asOfDate = validDate(body.asOfDate, "As-of date");
       await assertPeriodOpen(context.companyId, asOfDate);
+      await requireOpenFinancialDay(context, asOfDate);
       const id = randomUUID();
       const record = {
         id,
@@ -330,6 +467,7 @@ export async function performAccountantAction(context: AccountantContext, body: 
       const amount = positive(body.amount, "Amount");
       const transactionDate = validDate(body.transactionDate, "Transaction date");
       await assertPeriodOpen(context.companyId, transactionDate);
+      await requireOpenFinancialDay(context, transactionDate);
       const sourceUserId = required(body.sourceUserId, "Source user");
       const sourceUser = await prisma.user.findFirst({ where: { id: sourceUserId, companyId: context.companyId }, select: { id: true, name: true, email: true } });
       if (!sourceUser) throw new PortalError("Source user was not found.", 404);
@@ -358,6 +496,7 @@ export async function performAccountantAction(context: AccountantContext, body: 
       if (!employee) throw new PortalError("Expense owner was not found.", 404);
       const expenseDate = validDate(body.expenseDate, "Expense date");
       await assertPeriodOpen(context.companyId, expenseDate);
+      await requireOpenFinancialDay(context, expenseDate);
       const receiptUrl = required(body.receiptUrl, "Receipt");
       const expense = await prisma.expense.create({
         data: {
@@ -395,6 +534,7 @@ export async function performAccountantAction(context: AccountantContext, body: 
       const deposit = await prisma.bankDeposit.findFirst({ where: { id: depositId, companyId: context.companyId }, include: { staff: { select: { id: true, name: true } } } });
       if (!deposit) throw new PortalError("Bank deposit was not found.", 404);
       await assertPeriodOpen(context.companyId, deposit.depositDate);
+      await requireOpenFinancialDay(context, deposit.depositDate);
       const statementAmount = positive(body.statementAmount, "Statement amount");
       const statementReference = required(body.statementReference, "Statement reference");
       const statementDate = validDate(body.statementDate, "Statement date");
@@ -435,6 +575,7 @@ export async function performAccountantAction(context: AccountantContext, body: 
       const investigationNote = required(body.investigationNote ?? body.reason, "Investigation note");
       const deposit = await prisma.bankDeposit.findFirst({ where: { id: depositId, companyId: context.companyId } });
       if (!deposit) throw new PortalError("Bank deposit was not found.", 404);
+      await requireOpenFinancialDay(context, deposit.depositDate);
       await prisma.bankDeposit.update({ where: { id: depositId }, data: { holdActive: false, holdClearedAt: new Date(), holdClearedById: context.accountantId, mismatchReason: investigationNote } });
       await audit(context, "CLEAR_FINANCIAL_HOLD", "BANK_RECONCILIATION", { depositId, investigationNote });
       return { message: "Financial hold cleared. The investigation note remains in the audit trail." };
@@ -445,6 +586,7 @@ export async function performAccountantAction(context: AccountantContext, body: 
       const floatId = required(body.floatId, "Float transaction");
       const row = await prisma.floatTransaction.findFirst({ where: { id: floatId, companyId: context.companyId } });
       if (!row) throw new PortalError("Float transaction was not found.", 404);
+      await requireOpenFinancialDay(context, new Date());
       if (action === "APPROVE_FLOAT" && !row.receiptUrl && number(row.returnedAmount) <= 0) throw new PortalError("A receipt or returned amount is required before float approval.", 422);
       const status = action === "APPROVE_FLOAT" ? "APPROVED" : "REJECTED";
       await prisma.floatTransaction.update({ where: { id: floatId }, data: { status, approvedById: context.accountantId, approvedAt: new Date() } });
@@ -477,12 +619,71 @@ export async function performAccountantAction(context: AccountantContext, body: 
     case "REQUEST_PERIOD_REOPEN": {
       const periodKey = required(body.periodKey, "Accounting month");
       const reason = required(body.reason, "Reopen reason");
-      const period = await prisma.accountingPeriod.findFirst({ where: { companyId: context.companyId, periodKey, status: "LOCKED" } });
+      const period = await prisma.accountingPeriod.findFirst({
+        where: { companyId: context.companyId, periodKey, status: "LOCKED" },
+      });
       if (!period) throw new PortalError("Locked accounting period was not found.", 404);
-      await prisma.accountingPeriod.update({ where: { id: period.id }, data: { reason: `${text(period.reason)}\nREOPEN REQUEST: ${reason}`.trim() } });
+
+      // Company Admin's review screen reads AccountantPeriodReopenRequest.
+      // Mirror the legacy accounting-period record into that workflow and create
+      // an actual pending request instead of only appending text to the reason.
+      const reviewPeriod = await prisma.accountantPeriod.upsert({
+        where: {
+          companyId_periodType_startDate_endDate: {
+            companyId: context.companyId,
+            periodType: "MONTH",
+            startDate: period.startsAt,
+            endDate: period.endsAt,
+          },
+        },
+        update: {
+          label: period.label || period.periodKey,
+          status: "LOCKED",
+          reason: period.reason,
+          lockedById: period.lockedById,
+          lockedAt: period.lockedAt || new Date(),
+        },
+        create: {
+          companyId: context.companyId,
+          label: period.label || period.periodKey,
+          periodType: "MONTH",
+          startDate: period.startsAt,
+          endDate: period.endsAt,
+          status: "LOCKED",
+          reason: period.reason,
+          lockedById: period.lockedById,
+          lockedAt: period.lockedAt || new Date(),
+        },
+      });
+
+      const pending = await prisma.accountantPeriodReopenRequest.findFirst({
+        where: {
+          companyId: context.companyId,
+          periodId: reviewPeriod.id,
+          status: "PENDING",
+        },
+      });
+      if (pending) {
+        throw new PortalError(`A reopen request for ${periodKey} is already pending Company Admin review.`, 409);
+      }
+
+      const reopenRequest = await prisma.accountantPeriodReopenRequest.create({
+        data: {
+          companyId: context.companyId,
+          periodId: reviewPeriod.id,
+          requestedById: context.accountantId,
+          reason,
+          status: "PENDING",
+        },
+      });
+
+      await prisma.accountingPeriod.update({
+        where: { id: period.id },
+        data: { reason: `${text(period.reason)}\nREOPEN REQUEST ${reopenRequest.id}: ${reason}`.trim() },
+      });
       await notifyRole(context, "COMPANY_ADMIN", "Accounting period reopen request", `${context.accountant.name} requested reopening of ${periodKey}. Reason: ${reason}`, "WARNING");
-      await audit(context, "REQUEST_PERIOD_REOPEN", "ACCOUNTING_PERIOD", { periodKey, reason });
-      return { message: `Reopen request for ${periodKey} sent to Company Admin.` };
+      await audit(context, "REQUEST_PERIOD_REOPEN", "ACCOUNTING_PERIOD", { periodKey, reason, reopenRequestId: reopenRequest.id });
+      return { message: `Reopen request for ${periodKey} was created and sent to Company Admin.` };
     }
 
     case "SAVE_ATTENDANCE":
@@ -549,11 +750,109 @@ export async function performAccountantAction(context: AccountantContext, body: 
       return { message: "All accountant notifications marked as read." };
     }
 
+    case "UPDATE_ACCOUNT_DETAILS": {
+      const currentPassword = required(body.currentPassword, "Current password");
+      const current = await prisma.user.findFirst({
+        where: { id: context.accountantId, companyId: context.companyId, role: "ACCOUNTANT" },
+        select: { id: true, passwordHash: true, username: true, email: true },
+      });
+      if (!current) throw new PortalError("The accountant account was not found.", 404);
+      if (!(await bcrypt.compare(currentPassword, current.passwordHash))) {
+        throw new PortalError("The current password is incorrect.", 403);
+      }
+
+      const name = required(body.name, "Full name");
+      const username = required(body.username, "Username").toLowerCase();
+      const email = required(body.email, "Email address").toLowerCase();
+      if (!/^[a-z0-9._-]{3,40}$/.test(username)) {
+        throw new PortalError("Username must contain 3-40 lowercase letters, numbers, dots, underscores or hyphens.", 422);
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new PortalError("Enter a valid email address.", 422);
+      }
+
+      const duplicate = await prisma.user.findFirst({
+        where: { OR: [{ username }, { email }], NOT: { id: context.accountantId } },
+        select: { id: true, username: true, email: true },
+      });
+      if (duplicate) {
+        if (text(duplicate.username).toLowerCase() === username) throw new PortalError("That username is already in use.", 409);
+        throw new PortalError("That email address is already in use.", 409);
+      }
+
+      const usernameChanged = text(current.username).toLowerCase() !== username;
+      const updated = await prisma.user.update({
+        where: { id: context.accountantId },
+        data: {
+          name,
+          username,
+          email,
+          phone: text(body.phone).trim() || null,
+          assignedRegion: text(body.assignedRegion).trim() || null,
+          physicalAddress: text(body.physicalAddress).trim() || null,
+          nationality: text(body.nationality).trim() || null,
+          ...(usernameChanged ? { usernameChangedAt: new Date() } : {}),
+        },
+        select: { id: true, name: true, username: true, email: true, phone: true, assignedRegion: true, physicalAddress: true, nationality: true, updatedAt: true },
+      });
+      await audit(context, "UPDATE_ACCOUNT_DETAILS", "PROFILE", {
+        fields: ["name", "username", "email", "phone", "assignedRegion", "physicalAddress", "nationality"],
+      });
+      return { message: "Account details updated successfully.", user: updated };
+    }
+
+    case "CHANGE_ACCOUNT_PASSWORD": {
+      const currentPassword = required(body.currentPassword, "Current password");
+      const newPassword = required(body.newPassword, "New password");
+      const confirmPassword = required(body.confirmPassword, "Password confirmation");
+      if (newPassword !== confirmPassword) throw new PortalError("The new password and confirmation do not match.", 422);
+      if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[a-z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+        throw new PortalError("The password must contain at least 8 characters, uppercase, lowercase and a number.", 422);
+      }
+
+      const current = await prisma.user.findFirst({
+        where: { id: context.accountantId, companyId: context.companyId, role: "ACCOUNTANT" },
+        select: { id: true, passwordHash: true },
+      });
+      if (!current) throw new PortalError("The accountant account was not found.", 404);
+      if (!(await bcrypt.compare(currentPassword, current.passwordHash))) throw new PortalError("The current password is incorrect.", 403);
+      if (await bcrypt.compare(newPassword, current.passwordHash)) throw new PortalError("The new password must be different from the current password.", 422);
+
+      await prisma.user.update({
+        where: { id: context.accountantId },
+        data: { passwordHash: await bcrypt.hash(newPassword, 12), passwordChangedAt: new Date() },
+      });
+      await audit(context, "CHANGE_ACCOUNT_PASSWORD", "PROFILE", { changedAt: new Date().toISOString() });
+      return { message: "Password changed successfully." };
+    }
+
     case "UPDATE_PROFILE_IMAGE": {
       const profileImageUrl = required(body.profileImageUrl, "Profile image URL");
       await prisma.user.update({ where: { id: context.accountantId }, data: { profileImageUrl } });
       await audit(context, "UPDATE_PROFILE_IMAGE", "PROFILE", { profileImageUrl });
       return { message: "Profile image updated." };
+    }
+
+    case "REPLACE_PROOF_DOCUMENT": {
+      const proofId = required(body.proofId, "Proof submission");
+      const documentUrl = required(body.documentUrl, "Replacement document");
+      const proof = await prisma.staffProofSubmission.findFirst({
+        where: { id: proofId, companyId: context.companyId },
+        select: { id: true, referenceNo: true, documentUrl: true, proofUrl: true, staffId: true },
+      });
+      if (!proof) throw new PortalError("Proof submission was not found.", 404);
+      await prisma.staffProofSubmission.update({
+        where: { id: proofId },
+        data: { documentUrl },
+      });
+      await audit(context, "REPLACE_PROOF_DOCUMENT", "PROOF", {
+        proofId,
+        referenceNo: proof.referenceNo,
+        previousUrl: proof.documentUrl || proof.proofUrl || null,
+        replacementUrl: documentUrl,
+      });
+      await notifyUser(context, proof.staffId, "Proof document recovered", `The document for ${proof.referenceNo} was replaced by the Accountant so it can be reviewed.`, "INFO");
+      return { message: "Replacement proof document saved. You can open and review it now." };
     }
 
     case "REVIEW_PROOF": {

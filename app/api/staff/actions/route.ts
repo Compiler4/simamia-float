@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import { assertFinancialDayOpen } from "@/lib/accountant/accounting";
 import {
   markOperationalAttendance,
 } from "@/lib/staff/attendance";
@@ -772,6 +773,14 @@ function actionError(
       409,
       "A financial hold must be resolved before another bank deposit is submitted.",
     ],
+    FINANCIAL_DAY_NOT_OPEN: [
+      409,
+      "Financial operations are at rest. Ask the Accountant to open today’s financial day before continuing.",
+    ],
+    FINANCIAL_DAY_DATE_MISMATCH: [
+      409,
+      "The open financial day does not match today. The Accountant must close the old day and open the correct financial day.",
+    ],
     FILE_NOT_OWNED: [
       403,
       "Use a file uploaded from your own staff account.",
@@ -922,6 +931,24 @@ export async function POST(
         body.action,
         "action",
       ).toUpperCase();
+
+    const financialActions = new Set([
+      "CONFIRM_FLOAT_RECEIVED",
+      "ISSUE_FLOAT",
+      "RECORD_COLLECTION",
+      "RETURN_MONEY",
+      "DEPOSIT_TO_BANK",
+      "UPLOAD_PROOF_OF_PAYMENT",
+      "SUBMIT_EXPENSE",
+      "RECORD_SERVICE_VISIT",
+    ]);
+
+    if (financialActions.has(action)) {
+      await assertFinancialDayOpen(
+        session.companyId,
+        new Date(),
+      );
+    }
 
     if (
       action ===

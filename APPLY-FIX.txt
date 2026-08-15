@@ -1,0 +1,30 @@
+SIMAMIA AUTH RUNTIME FIX V3
+===========================
+
+Problem:
+Next/Turbopack says getCurrentUser is not exported from @/lib/auth.
+That means the local project has an older/different lib/auth.ts than the pages that import it.
+
+Apply:
+1. Stop npm run dev (Ctrl+C).
+2. Extract this ZIP directly into:
+   C:\Users\Micha\simamia float
+3. Allow Windows to REPLACE the existing files.
+4. Confirm this exact file exists:
+   C:\Users\Micha\simamia float\lib\auth.ts
+5. From PowerShell in the project root run:
+
+   Select-String -Path .\lib\auth.ts -Pattern "export async function getCurrentUser"
+
+   It MUST show a match.
+
+6. Clear Turbopack/Next cache:
+
+   Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+
+7. Regenerate Prisma client and run:
+
+   npx prisma generate
+   npm run dev
+
+If Select-String gives no result, you extracted the patch into the wrong folder or did not overwrite lib\auth.ts.

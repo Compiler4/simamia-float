@@ -69,21 +69,32 @@ type RegisteredAgent = {
   liveNow?: boolean;
   liveDeviceSeenAt?: string | null;
   liveAccuracy?: number | null;
+  locationVerifiedAt?: string | null;
   markerType?: string;
   visitToday?: Visit | null;
 };
 
 type Visit = {
   id: string;
+  brokerCustomerId?: string;
   status: string;
   serviceType: string;
   floatAmount: number | string;
   cashAmount: number | string;
   companyIncome: number | string;
   locationName: string | null;
+  communicationNote?: string | null;
   distanceMeters: number | null;
+  staffLatitude?: number | string | null;
+  staffLongitude?: number | string | null;
+  brokerLatitude?: number | string | null;
+  brokerLongitude?: number | string | null;
+  startedAt?: string | null;
   arrivedAt: string | null;
   serviceProvidedAt: string | null;
+  completedAt?: string | null;
+  proofDueAt?: string | null;
+  proofUploadedAt?: string | null;
   updatedAt: string;
   brokerCustomer: RegisteredAgent;
 };
@@ -193,6 +204,11 @@ function sourceLabel(value: unknown): string {
     case "DATABASE_COORDINATE": return "Saved database coordinate";
     default: return "No valid GPS point";
   }
+}
+
+function coordinate(value: unknown): number | null {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed !== 0 ? parsed : null;
 }
 
 async function requestJson<T>(
@@ -427,11 +443,33 @@ export default function StaffLiveLocationsClient({
 
     if (!data) return [];
 
+    const ranked = data.registeredAgents
+      .slice()
+      .sort((first, second) => {
+        const priority = (agent: RegisteredAgent) => {
+          if (agent.liveNow) return 0;
+          if (agent.servicedToday) return 1;
+          if (agent.visitedToday) return 2;
+          if (agent.canOperate && agent.mapped) return 3;
+          if (agent.canOperate) return 4;
+          if (agent.mapped) return 5;
+          return 6;
+        };
+        const priorityDiff = priority(first) - priority(second);
+        if (priorityDiff) return priorityDiff;
+        if (first.directlyAssigned !== second.directlyAssigned) {
+          return first.directlyAssigned ? -1 : 1;
+        }
+        return String(first.businessName || first.name || "").localeCompare(
+          String(second.businessName || second.name || ""),
+        );
+      });
+
     if (!search) {
-      return data.registeredAgents;
+      return ranked;
     }
 
-    return data.registeredAgents.filter(
+    return ranked.filter(
       (agent) =>
         [
           agent.name,
@@ -482,6 +520,139 @@ export default function StaffLiveLocationsClient({
     });
   }
 
+  function mergeSavedVisit(input: {
+    agent: RegisteredAgent;
+    visit?: Visit | null;
+    broker?: RegisteredAgent | null;
+    latitude: number;
+    longitude: number;
+    capturedAt: string;
+  }) {
+    setData((current) => {
+      if (!current) return current;
+
+      const brokerId = String(
+        input.broker?.id ||
+          input.visit?.brokerCustomerId ||
+          input.agent.id,
+      );
+      const savedBroker = {
+        ...input.agent,
+        ...(input.broker || {}),
+        id: brokerId,
+        latitude: coordinate(input.broker?.latitude) ?? input.latitude,
+        longitude: coordinate(input.broker?.longitude) ?? input.longitude,
+        mapped: true,
+        visitedToday: true,
+        servicedToday: true,
+        attendedBy: user.name,
+        attendedDate: input.capturedAt,
+        attendedLocation:
+          input.visit?.locationName ||
+          input.broker?.attendedLocation ||
+          input.agent.location ||
+          input.agent.assignedArea,
+        locationSource: "STAFF_GPS_VERIFIED",
+        locationVerifiedAt: input.capturedAt,
+        markerType: input.agent.isImported
+          ? "REGISTERED_AGENT_SERVICED"
+          : "BROKER_CUSTOMER_SERVICED",
+      } satisfies RegisteredAgent;
+
+      const savedVisit = input.visit
+        ? {
+            ...input.visit,
+            brokerCustomerId:
+              input.visit.brokerCustomerId || brokerId,
+            brokerCustomer: savedBroker,
+            staffLatitude:
+              input.visit.staffLatitude ?? input.latitude,
+            staffLongitude:
+              input.visit.staffLongitude ?? input.longitude,
+            brokerLatitude:
+              input.visit.brokerLatitude ?? input.latitude,
+            brokerLongitude:
+              input.visit.brokerLongitude ?? input.longitude,
+            locationName:
+              input.visit.locationName ||
+              savedBroker.attendedLocation ||
+              savedBroker.location ||
+              "Broker location",
+            updatedAt:
+              input.visit.updatedAt || input.capturedAt,
+          }
+        : null;
+
+      const registeredAgents = current.registeredAgents.map((agent) =>
+        String(agent.id) === brokerId
+          ? {
+              ...agent,
+              ...savedBroker,
+              visitToday: savedVisit ?? agent.visitToday,
+            }
+          : agent,
+      );
+      const visits = savedVisit
+        ? [
+            savedVisit,
+            ...current.visits.filter(
+              (visit) => String(visit.id) !== String(savedVisit.id),
+            ),
+          ]
+        : current.visits;
+
+      const marker: LiveMapPoint = {
+        id: `agent-${brokerId}`,
+        entityId: brokerId,
+        markerType: savedBroker.markerType as LiveMapPoint["markerType"],
+        label: savedBroker.businessName || savedBroker.name,
+        subtitle: [
+          "Serviced today",
+          savedBroker.code,
+          savedBroker.ward,
+          savedBroker.district,
+          savedBroker.region,
+        ]
+          .filter(Boolean)
+          .join(" - "),
+        latitude: input.latitude,
+        longitude: input.longitude,
+        capturedAt: input.capturedAt,
+        source: "STAFF_GPS_VERIFIED",
+        accuracy: input.agent.liveAccuracy ?? null,
+      };
+      let markerUpdated = false;
+      const points = current.points.map((point) => {
+        if (
+          String(point.entityId || "") === brokerId ||
+          String(point.id || "") === `agent-${brokerId}`
+        ) {
+          markerUpdated = true;
+          return { ...point, ...marker };
+        }
+        return point;
+      });
+
+      if (!markerUpdated) {
+        points.push(marker);
+      }
+
+      return {
+        ...current,
+        points,
+        registeredAgents,
+        visits,
+        summary: {
+          ...current.summary,
+          mappedAgents: registeredAgents.filter((agent) => agent.mapped).length,
+          visitedAgents: registeredAgents.filter((agent) => agent.visitedToday).length,
+          servicedAgents: registeredAgents.filter((agent) => agent.servicedToday).length,
+          visitsToday: visits.length,
+        },
+      };
+    });
+  }
+
   async function quickUpdate(
     agent: RegisteredAgent,
   ) {
@@ -528,6 +699,14 @@ export default function StaffLiveLocationsClient({
           .filter(Boolean)
           .join(" "),
       );
+      mergeSavedVisit({
+        agent,
+        visit: result.visit ?? null,
+        broker: result.broker ?? null,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        capturedAt: new Date(position.timestamp).toISOString(),
+      });
       window.localStorage.setItem(
         "simamia_service_visit_updated_at",
         String(Date.now()),
@@ -537,6 +716,7 @@ export default function StaffLiveLocationsClient({
           detail: {
             visit: result.visit ?? null,
             broker: result.broker ?? null,
+            source: "live-location",
           },
         }),
       );
@@ -697,6 +877,9 @@ export default function StaffLiveLocationsClient({
       const result = await requestJson<{
         success: true;
         message: string;
+        visit?: Visit;
+        broker?: RegisteredAgent;
+        warnings?: string[];
       }>("/api/staff/service-visits", {
         method: "POST",
         headers: {
@@ -717,13 +900,31 @@ export default function StaffLiveLocationsClient({
         }),
       });
 
-      setMessage(result.message);
+      setMessage(
+        [result.message, ...(result.warnings || [])]
+          .filter(Boolean)
+          .join(" "),
+      );
+      mergeSavedVisit({
+        agent: selected,
+        visit: result.visit ?? null,
+        broker: result.broker ?? null,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        capturedAt: new Date(position.timestamp).toISOString(),
+      });
       window.localStorage.setItem(
         "simamia_service_visit_updated_at",
         String(Date.now()),
       );
       window.dispatchEvent(
-        new CustomEvent("simamia:service-visit-updated"),
+        new CustomEvent("simamia:service-visit-updated", {
+          detail: {
+            visit: result.visit ?? null,
+            broker: result.broker ?? null,
+            source: "live-location",
+          },
+        }),
       );
       setSelected(null);
       setForm({
@@ -1047,7 +1248,7 @@ export default function StaffLiveLocationsClient({
                 Assigned registered agents
               </h3>
               <p>
-                All assigned brokers are listed. Address results are marked approximate. Agent-phone sharing creates a true live pointer. Mark visited & serviced captures the Staff phone position and writes broker_service_visits plus service_activities.
+                Brokers are sorted by ready-to-work status: live, serviced, visited, mapped, then unmapped. Update GPS captures the Staff phone point and writes broker_service_visits plus service_activities.
               </p>
             </div>
             <Store size={22} />
@@ -1139,7 +1340,7 @@ export default function StaffLiveLocationsClient({
                       <Crosshair
                         size={15}
                       />
-                      Mark visited & serviced
+                      Update GPS + mark visited
                     </button>
 
                     <button
@@ -1276,6 +1477,128 @@ export default function StaffLiveLocationsClient({
             )}
           </div>
         </article>
+      </section>
+
+      <section className={styles.visitedTableCard}>
+        <header className={styles.visitedTableHeading}>
+          <div>
+            <small>VISITED DATABASE TABLE</small>
+            <h3>Visited and serviced brokers today</h3>
+            <p>
+              When a Staff Officer clicks Update GPS + mark visited, the broker point is saved, the broker is marked visited, and the broker_service_visits record below is updated for reports.
+            </p>
+          </div>
+          <strong>
+            {data.visits.length} saved visit
+            {data.visits.length === 1 ? "" : "s"}
+          </strong>
+        </header>
+
+        <div className={styles.visitedTableScroll}>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Broker</th>
+                <th>Visit time</th>
+                <th>GPS point</th>
+                <th>Service</th>
+                <th>Float</th>
+                <th>Cash</th>
+                <th>Income</th>
+                <th>Distance</th>
+                <th>Status</th>
+                <th>Open</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.visits.map((visit, index) => {
+                const broker = visit.brokerCustomer;
+                const latitude =
+                  coordinate(visit.brokerLatitude) ??
+                  coordinate(visit.staffLatitude) ??
+                  coordinate(broker?.latitude);
+                const longitude =
+                  coordinate(visit.brokerLongitude) ??
+                  coordinate(visit.staffLongitude) ??
+                  coordinate(broker?.longitude);
+                const location =
+                  visit.locationName ||
+                  broker?.attendedLocation ||
+                  broker?.location ||
+                  broker?.assignedArea ||
+                  "Location recorded";
+
+                return (
+                  <tr key={visit.id}>
+                    <td data-label="#"> {index + 1}</td>
+                    <td data-label="Broker">
+                      <strong>
+                        {broker?.businessName || broker?.name || "Broker"}
+                      </strong>
+                      <small>{broker?.code || broker?.phone || "Registered broker"}</small>
+                    </td>
+                    <td data-label="Visit time">
+                      <strong>
+                        {dateTime(
+                          visit.completedAt ||
+                            visit.serviceProvidedAt ||
+                            visit.arrivedAt ||
+                            visit.startedAt ||
+                            visit.updatedAt,
+                        )}
+                      </strong>
+                      <small>{location}</small>
+                    </td>
+                    <td data-label="GPS point">
+                      <strong>
+                        {latitude == null || longitude == null
+                          ? "No coordinate"
+                          : `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`}
+                      </strong>
+                      <small>Saved from staff phone GPS</small>
+                    </td>
+                    <td data-label="Service">{label(visit.serviceType)}</td>
+                    <td data-label="Float">{money(visit.floatAmount)}</td>
+                    <td data-label="Cash">{money(visit.cashAmount)}</td>
+                    <td data-label="Income">{money(visit.companyIncome)}</td>
+                    <td data-label="Distance">
+                      {visit.distanceMeters == null
+                        ? "N/A"
+                        : `${Math.round(Number(visit.distanceMeters))} m`}
+                    </td>
+                    <td data-label="Status">
+                      <span className={styles.tableStatus}>
+                        {label(visit.status)}
+                      </span>
+                    </td>
+                    <td data-label="Open">
+                      {onOpenServiceVisits ? (
+                        <button type="button" onClick={onOpenServiceVisits}>
+                          <Route size={14} />
+                          Service visits
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => router.push("/staff/dashboard?section=Service+Visits")}
+                        >
+                          <Route size={14} />
+                          Service visits
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {!data.visits.length && (
+            <div className={styles.empty}>
+              No broker has been marked visited and serviced today.
+            </div>
+          )}
+        </div>
       </section>
 
       {selected && (

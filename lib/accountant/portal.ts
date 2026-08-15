@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getCloseDaySettlement, getFinancialDayPreview } from "@/lib/accountant/close-day";
 
 export type AccountantContext = {
   session: any;
@@ -124,6 +125,12 @@ export async function requireAccountant(): Promise<AccountantContext> {
       profileImageUrl: true,
       assignedRegion: true,
       nidaNumber: true,
+      dateOfBirth: true,
+      gender: true,
+      nationality: true,
+      physicalAddress: true,
+      usernameChangedAt: true,
+      passwordChangedAt: true,
       lastLoginAt: true,
       createdAt: true,
       updatedAt: true,
@@ -744,7 +751,7 @@ export async function buildPortalData(context: AccountantContext, range?: DateRa
     safeQuery("accountingPeriod.findMany", () => prisma.accountingPeriod.findMany({ where: { companyId }, include: { lockedBy: { select: { id: true, name: true, email: true } } }, orderBy: { startsAt: "desc" }, take: 60 }), []),
     safeQuery("auditLog.findMany", () => prisma.auditLog.findMany({ where: { companyId }, include: { user: { select: { id: true, name: true, email: true } } }, orderBy: { createdAt: "desc" }, take: 300 }), []),
     safeQuery("staffFundingReceipt.findMany", () => prisma.staffFundingReceipt.findMany({ where: { companyId }, include: { staff: { select: { id: true, name: true, email: true, role: true, profileImageUrl: true, assignedRegion: true } }, accountant: { select: { id: true, name: true, email: true } }, networkLine: true }, orderBy: { issuedAt: "desc" }, take: 1500 }), []),
-    safeQuery("staffProofSubmission.findMany", () => prisma.staffProofSubmission.findMany({ where: { companyId }, include: { staff: { select: { id: true, name: true, email: true, role: true, profileImageUrl: true } }, verifiedBy: { select: { id: true, name: true, email: true } } }, orderBy: { createdAt: "desc" }, take: 1000 }), []),
+    safeQuery("staffProofSubmission.findMany", () => prisma.staffProofSubmission.findMany({ where: { companyId }, include: { staff: { select: { id: true, name: true, email: true, role: true, profileImageUrl: true } }, verifiedBy: { select: { id: true, name: true, email: true } }, file: { select: { id: true, storagePath: true, storedName: true, originalName: true, mimeType: true, sizeBytes: true } } }, orderBy: { createdAt: "desc" }, take: 1000 }), []),
     safeQuery("verificationPacket.findMany", () => prisma.verificationPacket.findMany({ where: { companyId }, orderBy: { createdAt: "desc" }, take: 1000 }), []),
     safeQuery("attendanceDevice.findMany", () => prisma.attendanceDevice.findMany({ where: { companyId }, orderBy: { createdAt: "desc" } }), []),
     safeQuery("attendanceDeviceEnrollment.findMany", () => prisma.attendanceDeviceEnrollment.findMany({ where: { companyId }, orderBy: { createdAt: "desc" } }), []),
@@ -818,7 +825,54 @@ export async function buildPortalData(context: AccountantContext, range?: DateRa
     })
     .reverse();
 
-  const currentDay = financialDays.find((row: any) => text(row.status) === "OPEN") || null;
+  const currentDayRecord = financialDays.find((row: any) => text(row.status) === "OPEN") || null;
+  const [closeDaySettlement, currentDayPreview] = currentDayRecord
+    ? await Promise.all([
+        getCloseDaySettlement(companyId, currentDayRecord.date),
+        getFinancialDayPreview(companyId, currentDayRecord.date, currentDayRecord.openingBalance),
+      ])
+    : [
+        {
+          canClose: false,
+          date: "",
+          bankBlockers: 0,
+          staffFundingBlockers: 0,
+          legacyFloatBlockers: 0,
+          pendingReturnReviews: 0,
+          issuedAmount: 0,
+          verifiedReturnedAmount: 0,
+          outstandingAmount: 0,
+          blockers: [],
+        },
+        { cashIn: 0, cashOut: 0, closingBalance: 0 },
+      ];
+  const currentDay = currentDayRecord
+    ? {
+        ...currentDayRecord,
+        cashIn: currentDayPreview.cashIn,
+        cashOut: currentDayPreview.cashOut,
+        closingBalance: currentDayPreview.closingBalance,
+      }
+    : null;
+
+  const lastClosedDay =
+    financialDays.find((row: any) => text(row.status).toUpperCase() === "CLOSED") || null;
+
+  const financialDayControl = {
+    state: currentDay ? "ACTIVE" : "REST",
+    canPost: Boolean(currentDay),
+    currentDayId: currentDay?.id ?? null,
+    currentDate: currentDay ? dateKey(currentDay.date) : null,
+    lastClosedDayId: lastClosedDay?.id ?? null,
+    lastClosedDate: lastClosedDay ? dateKey(lastClosedDay.date) : null,
+    lastClosingBalance: number(lastClosedDay?.closingBalance),
+    suggestedOpeningBalance: currentDay
+      ? number(currentDay.openingBalance)
+      : number(lastClosedDay?.closingBalance),
+    message: currentDay
+      ? `Financial operations are ACTIVE for ${dateKey(currentDay.date)}.`
+      : "Financial operations are at REST. Open a financial day to start financial work.",
+  };
   const inRange = (value: unknown) => {
     const time = new Date(String(value)).getTime();
     return Number.isFinite(time) && time >= selectedRange.start.getTime() && time <= selectedRange.end.getTime();
@@ -875,6 +929,21 @@ export async function buildPortalData(context: AccountantContext, range?: DateRa
     credit: row.credit,
     user: row.user || row.postedBy || context.accountant,
   }));
+  const closeDayBlockerStatuses = new Set([
+    "AMOUNT_MISMATCH",
+    "MISSING_RECEIPT",
+    "DUPLICATE_DEPOSIT",
+    "MISSING_BANK_RECORD",
+  ]);
+  // A mismatch blocks closing until it is either re-matched or explicitly
+  // cleared after investigation.  Previously CLEAR_FINANCIAL_HOLD set
+  // holdActive=false but the old mismatch status kept blocking the day forever.
+  const isCloseDayBlocker = (row: any) => {
+    const mismatch = closeDayBlockerStatuses.has(text(row.status).toUpperCase());
+    const cleared = Boolean(row.holdClearedAt) && !Boolean(row.holdActive);
+    return Boolean(row.holdActive) || (mismatch && !cleared);
+  };
+  const closeDayBlockers = closeDaySettlement.blockers;
   const financialHolds = deposits.filter((row: any) => Boolean(row.holdActive));
 
   const performance = staff.map((user: any) => {
@@ -918,7 +987,8 @@ export async function buildPortalData(context: AccountantContext, range?: DateRa
     pendingExpenses: expenses.filter((row: any) => text(row.status) === "PENDING").length,
     pendingFloats: floats.filter((row: any) => ["PENDING", "ISSUED", "CONFIRMED", "RETURNED"].includes(text(row.status))).length,
     outstandingFloat,
-    unresolvedMismatches: deposits.filter((row: any) => text(row.status) !== "VERIFIED" || row.holdActive).length,
+    unresolvedMismatches: closeDaySettlement.bankBlockers,
+    closeDayBlockers: closeDaySettlement.blockers.length,
     unreadNotifications: notifications.filter((row: any) => !row.isRead).length,
   };
 
@@ -943,6 +1013,7 @@ export async function buildPortalData(context: AccountantContext, range?: DateRa
     settings,
     stats,
     currentDay,
+    financialDayControl,
     financialDays,
     users,
     staff,
@@ -973,6 +1044,8 @@ export async function buildPortalData(context: AccountantContext, range?: DateRa
     statements,
     recentTransactions,
     financialHolds,
+    closeDayBlockers,
+    closeDaySettlement,
     proofs,
     packets: packets.map((row: any) => ({ ...row, adminMessage: row.message })),
     devices,

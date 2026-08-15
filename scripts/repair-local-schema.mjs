@@ -142,6 +142,8 @@ try {
 
   await addColumn("broker_service_visits", "locationName", "VARCHAR(255) NULL");
   await addColumn("broker_service_visits", "proofUrl", "VARCHAR(500) NULL");
+  await addColumn("broker_service_visits", "proofDueAt", "DATETIME(3) NULL");
+  await addColumn("broker_service_visits", "proofUploadedAt", "DATETIME(3) NULL");
   await addColumn("broker_service_visits", "notes", "TEXT NULL");
 
   await addColumn("staff_funding_receipts", "receiptUrl", "VARCHAR(600) NULL");
