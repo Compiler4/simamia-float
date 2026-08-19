@@ -1,59 +1,56 @@
 import bcrypt from "bcryptjs";
-import { type NextRequest, NextResponse } from "next/server";
+import {
+  type NextRequest,
+  NextResponse,
+} from "next/server";
 
-import { createAuthSession, getDashboardPath } from "@/lib/auth";
+import {
+  createAuthSession,
+  getDashboardPath,
+} from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-type LoginBody = Record<string, unknown>;
+/**
+ * ============================================================
+ * TYPES
+ * ============================================================
+ */
 
-function isRecord(value: unknown): value is LoginBody {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
+type LoginBody = {
+  email?: unknown;
+  identifier?: unknown;
+  login?: unknown;
 
-function cleanText(value: unknown): string {
-  if (value === null || value === undefined) {
+  password?: unknown;
+  userPassword?: unknown;
+  pass?: unknown;
+
+  rememberMe?: unknown;
+};
+
+/**
+ * ============================================================
+ * HELPERS
+ * ============================================================
+ */
+
+function text(value: unknown): string {
+  if (
+    value === null ||
+    value === undefined
+  ) {
     return "";
   }
 
   return String(value).trim();
 }
 
-function booleanValue(value: unknown): boolean {
-  if (typeof value === "boolean") {
-    return value;
-  }
-
-  return ["true", "1", "yes", "on"].includes(
-    cleanText(value).toLowerCase(),
-  );
-}
-
-function jsonError(
-  message: string,
-  status: number,
-  details?: Record<string, unknown>,
-): Response {
-  return NextResponse.json(
-    {
-      success: false,
-      ok: false,
-      message,
-      ...(process.env.NODE_ENV === "development" && details
-        ? { details }
-        : {}),
-    },
-    {
-      status,
-      headers: {
-        "Cache-Control": "no-store, max-age=0",
-      },
-    },
-  );
-}
-
-function messageFromError(error: unknown): string {
+function errorText(
+  error: unknown,
+): string {
   if (error instanceof Error) {
     return error.message;
   }
@@ -61,235 +58,882 @@ function messageFromError(error: unknown): string {
   return String(error);
 }
 
-function isDatabaseConfigurationError(error: unknown): boolean {
-  const message = messageFromError(error);
+function toBoolean(
+  value: unknown,
+): boolean {
+  if (typeof value === "boolean") {
+    return value;
+  }
 
-  return (
-    message.includes("DATABASE_URL") ||
-    message.includes("DATABASE_HOST") ||
-    message.includes("Missing database setting") ||
-    message.includes("DriverAdapterError") ||
-    message.includes("pool timeout") ||
-    message.includes("ECONNREFUSED") ||
-    message.includes("P2010") ||
-    message.includes("connect ECONNREFUSED 127.0.0.1") ||
-    message.includes("connect ECONNREFUSED localhost")
+  return [
+    "1",
+    "true",
+    "yes",
+    "on",
+  ].includes(
+    text(value).toLowerCase(),
   );
 }
 
-async function readBody(request: NextRequest): Promise<LoginBody> {
+function jsonError(
+  message: string,
+  status: number,
+  reason?: string,
+): NextResponse {
+  return NextResponse.json(
+    {
+      success: false,
+      ok: false,
+      message,
+
+      ...(process.env.NODE_ENV ===
+        "development" &&
+      reason
+        ? {
+            reason,
+          }
+        : {}),
+    },
+    {
+      status,
+
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate",
+      },
+    },
+  );
+}
+
+/**
+ * Do NOT make this:
+ *
+ * value is string
+ *
+ * passwordHash is already converted to string,
+ * so a type predicate can cause TypeScript to narrow
+ * invalid branches to never.
+ */
+function isValidBcryptHash(
+  value: string,
+): boolean {
+  return (
+    value.length === 60 &&
+    /^\$2[aby]\$\d{2}\$/.test(value)
+  );
+}
+
+/**
+ * ============================================================
+ * REQUEST BODY
+ * ============================================================
+ */
+
+async function readLoginBody(
+  request: NextRequest,
+): Promise<LoginBody> {
   const contentType =
-    request.headers.get("content-type")?.toLowerCase() ?? "";
+    request.headers
+      .get("content-type")
+      ?.toLowerCase() ?? "";
 
-  if (contentType.includes("application/json")) {
-    const parsed = (await request.json()) as unknown;
-
-    if (!isRecord(parsed)) {
-      throw new Error("The login JSON body must be an object.");
-    }
-
-    return parsed;
-  }
-
+  /**
+   * JSON login request.
+   */
   if (
-    contentType.includes("multipart/form-data") ||
-    contentType.includes("application/x-www-form-urlencoded")
+    contentType.includes(
+      "application/json",
+    )
   ) {
-    const formData = await request.formData();
-    const body: LoginBody = {};
+    const body =
+      (await request.json()) as unknown;
 
-    for (const [key, value] of formData.entries()) {
-      if (typeof value === "string") {
-        body[key] = value;
-      }
+    if (
+      typeof body === "object" &&
+      body !== null &&
+      !Array.isArray(body)
+    ) {
+      return body as LoginBody;
     }
 
-    return body;
+    return {};
   }
 
-  const rawBody = await request.text();
+  /**
+   * HTML form / FormData.
+   */
+  if (
+    contentType.includes(
+      "multipart/form-data",
+    ) ||
+    contentType.includes(
+      "application/x-www-form-urlencoded",
+    )
+  ) {
+    const form =
+      await request.formData();
 
-  if (!rawBody.trim()) {
+    return {
+      email:
+        form.get("email") ??
+        form.get("identifier") ??
+        form.get("login"),
+
+      password:
+        form.get("password") ??
+        form.get("userPassword") ??
+        form.get("pass"),
+
+      rememberMe:
+        form.get("rememberMe"),
+    };
+  }
+
+  /**
+   * Fallback.
+   */
+  const raw =
+    await request.text();
+
+  if (!raw.trim()) {
     return {};
   }
 
   try {
-    const parsed = JSON.parse(rawBody) as unknown;
+    const parsed =
+      JSON.parse(raw) as unknown;
 
-    if (isRecord(parsed)) {
-      return parsed;
+    if (
+      typeof parsed === "object" &&
+      parsed !== null &&
+      !Array.isArray(parsed)
+    ) {
+      return parsed as LoginBody;
     }
   } catch {
-    return Object.fromEntries(new URLSearchParams(rawBody).entries());
+    const params =
+      new URLSearchParams(raw);
+
+    return {
+      email:
+        params.get("email") ??
+        params.get("identifier") ??
+        params.get("login"),
+
+      password:
+        params.get("password") ??
+        params.get("userPassword") ??
+        params.get("pass"),
+
+      rememberMe:
+        params.get("rememberMe"),
+    };
   }
 
   return {};
 }
 
-export async function POST(request: NextRequest): Promise<Response> {
+/**
+ * ============================================================
+ * REDIRECT
+ * ============================================================
+ */
+
+/**
+ * Always use the role stored in the database.
+ *
+ * getDashboardPath() remains your single source of truth
+ * for role -> dashboard routing.
+ */
+function resolveDashboard(
+  role: unknown,
+): string {
+  const normalized =
+    text(role).toUpperCase();
+
+  /**
+   * Support an older SYSTEM_ADMIN name
+   * if one exists in your database.
+   */
+  if (
+    normalized ===
+    "SYSTEM_ADMIN"
+  ) {
+    return getDashboardPath(
+      "SUPER_ADMIN",
+    );
+  }
+
+  return getDashboardPath(
+    normalized,
+  );
+}
+
+/**
+ * Detect a native HTML form request.
+ *
+ * For a native form POST we can return a real HTTP redirect.
+ *
+ * For a JavaScript fetch() request we return JSON containing
+ * redirectTo because fetch redirects do not automatically
+ * replace the browser's top-level page.
+ */
+function shouldHttpRedirect(
+  request: NextRequest,
+): boolean {
+  const accept =
+    request.headers
+      .get("accept")
+      ?.toLowerCase() ?? "";
+
+  const contentType =
+    request.headers
+      .get("content-type")
+      ?.toLowerCase() ?? "";
+
+  const isJson =
+    contentType.includes(
+      "application/json",
+    );
+
+  return (
+    !isJson &&
+    accept.includes("text/html")
+  );
+}
+
+/**
+ * ============================================================
+ * POST /api/auth/login
+ * ============================================================
+ */
+
+export async function POST(
+  request: NextRequest,
+): Promise<Response> {
+  /**
+   * ----------------------------------------------------------
+   * 1. READ LOGIN REQUEST
+   * ----------------------------------------------------------
+   */
+
+  let body: LoginBody;
+
   try {
-    const { prisma } = await import("@/lib/prisma");
-    let body: LoginBody;
-
-    try {
-      body = await readBody(request);
-    } catch (error) {
-      return jsonError(
-        error instanceof Error
-          ? error.message
-          : "The login request is invalid.",
-        400,
+    body =
+      await readLoginBody(
+        request,
       );
-    }
+  } catch (error) {
+    console.error(
+      "LOGIN_REQUEST_READ_ERROR",
+      error,
+    );
 
-    const email = cleanText(
-      body.email ?? body.identifier ?? body.login,
+    return jsonError(
+      "The login request could not be read.",
+      400,
+      "INVALID_LOGIN_REQUEST",
+    );
+  }
+
+  const email =
+    text(
+      body.email ??
+        body.identifier ??
+        body.login,
     ).toLowerCase();
 
-    const passwordValue =
-      body.password ?? body.userPassword ?? body.pass;
+  /**
+   * IMPORTANT:
+   *
+   * Do not trim passwords.
+   */
+  const passwordValue =
+    body.password ??
+    body.userPassword ??
+    body.pass;
 
-    const password =
-      passwordValue === null || passwordValue === undefined
-        ? ""
-        : String(passwordValue);
+  const password =
+    passwordValue === null ||
+    passwordValue === undefined
+      ? ""
+      : String(passwordValue);
 
-    const rememberMe = booleanValue(body.rememberMe);
+  const rememberMe =
+    toBoolean(
+      body.rememberMe,
+    );
 
-    if (!email || !password) {
-      return jsonError(
-        "Enter your registered email and password.",
-        422,
-        {
-          receivedFields: Object.keys(body),
-          hasEmail: Boolean(email),
-          hasPassword: Boolean(password),
+  /**
+   * ----------------------------------------------------------
+   * 2. VALIDATE
+   * ----------------------------------------------------------
+   */
+
+  if (!email) {
+    return jsonError(
+      "Enter your registered email address.",
+      422,
+      "EMAIL_REQUIRED",
+    );
+  }
+
+  if (!password) {
+    return jsonError(
+      "Enter your password.",
+      422,
+      "PASSWORD_REQUIRED",
+    );
+  }
+
+  if (
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+      email,
+    )
+  ) {
+    return jsonError(
+      "Enter a valid email address.",
+      422,
+      "INVALID_EMAIL",
+    );
+  }
+
+  try {
+    /**
+     * --------------------------------------------------------
+     * 3. LOAD PRISMA
+     * --------------------------------------------------------
+     */
+
+    const { prisma } =
+      await import(
+        "@/lib/prisma"
+      );
+
+    /**
+     * --------------------------------------------------------
+     * 4. FETCH USER
+     * --------------------------------------------------------
+     */
+
+    const user =
+      await prisma.user.findFirst({
+        where: {
+          email,
         },
-      );
-    }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return jsonError(
-        "Use your registered email address, not a username.",
-        422,
-      );
-    }
+        select: {
+          id: true,
 
-    const user = await prisma.user.findFirst({
-      where: {
-        email,
-      },
-      select: {
-        id: true,
-        name: true,
-        username: true,
-        email: true,
-        role: true,
-        status: true,
-        companyId: true,
-        passwordHash: true,
-        profileImageUrl: true,
-        company: {
-          select: {
-            id: true,
-            name: true,
-            status: true,
+          name: true,
+
+          username: true,
+
+          email: true,
+
+          passwordHash: true,
+
+          role: true,
+
+          status: true,
+
+          companyId: true,
+
+          profileImageUrl:
+            true,
+
+          company: {
+            select: {
+              id: true,
+              name: true,
+              status: true,
+            },
           },
         },
-      },
-    });
+      });
+
+    /**
+     * --------------------------------------------------------
+     * 5. USER EXISTS
+     * --------------------------------------------------------
+     */
 
     if (!user) {
-      return jsonError("Invalid email or password.", 401);
+      console.warn(
+        "LOGIN_USER_NOT_FOUND",
+        {
+          email,
+        },
+      );
+
+      return jsonError(
+        "Invalid email or password.",
+        401,
+        "USER_NOT_FOUND",
+      );
     }
 
-    if (String(user.status).trim().toUpperCase() !== "ACTIVE") {
-      return jsonError("This user account is not active.", 403);
+    /**
+     * --------------------------------------------------------
+     * 6. USER STATUS
+     * --------------------------------------------------------
+     */
+
+    const userStatus =
+      text(
+        user.status,
+      ).toUpperCase();
+
+    if (
+      userStatus !== "ACTIVE"
+    ) {
+      console.warn(
+        "LOGIN_USER_INACTIVE",
+        {
+          userId:
+            String(user.id),
+
+          status:
+            userStatus,
+        },
+      );
+
+      return jsonError(
+        "This account is not active.",
+        403,
+        "USER_NOT_ACTIVE",
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 7. COMPANY STATUS
+     * --------------------------------------------------------
+     *
+     * SUPER_ADMIN can have companyId = null.
+     */
+
+    if (user.company) {
+      const companyStatus =
+        text(
+          user.company.status,
+        ).toUpperCase();
+
+      if (
+        companyStatus !==
+        "ACTIVE"
+      ) {
+        console.warn(
+          "LOGIN_COMPANY_INACTIVE",
+          {
+            userId:
+              String(user.id),
+
+            companyId:
+              String(
+                user.company.id,
+              ),
+
+            status:
+              companyStatus,
+          },
+        );
+
+        return jsonError(
+          "Your company account is not active.",
+          403,
+          "COMPANY_NOT_ACTIVE",
+        );
+      }
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 8. PASSWORD HASH
+     * --------------------------------------------------------
+     */
+
+    const passwordHash =
+      text(
+        user.passwordHash,
+      );
+
+    if (
+      !isValidBcryptHash(
+        passwordHash,
+      )
+    ) {
+      console.error(
+        "LOGIN_INVALID_PASSWORD_HASH",
+        {
+          userId:
+            String(user.id),
+
+          email:
+            user.email,
+
+          hashLength:
+            passwordHash.length,
+        },
+      );
+
+      return jsonError(
+        "The account password needs to be reset.",
+        500,
+        "INVALID_PASSWORD_HASH",
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 9. VERIFY PASSWORD
+     * --------------------------------------------------------
+     */
+
+    let passwordMatches =
+      false;
+
+    try {
+      passwordMatches =
+        await bcrypt.compare(
+          password,
+          passwordHash,
+        );
+    } catch (error) {
+      console.error(
+        "LOGIN_PASSWORD_COMPARE_ERROR",
+        {
+          userId:
+            String(user.id),
+
+          error:
+            errorText(
+              error,
+            ),
+        },
+      );
+
+      return jsonError(
+        "The password could not be verified.",
+        500,
+        "PASSWORD_COMPARE_ERROR",
+      );
     }
 
     if (
-      user.company &&
-      String(user.company.status).trim().toUpperCase() !== "ACTIVE"
+      !passwordMatches
     ) {
-      return jsonError("The company account is not active.", 403);
-    }
+      console.warn(
+        "LOGIN_PASSWORD_MISMATCH",
+        {
+          userId:
+            String(user.id),
 
-    const passwordHash = String(user.passwordHash ?? "");
-
-    if (!/^\$2[aby]\$\d{2}\$/.test(passwordHash)) {
-      console.error("LOGIN_INVALID_PASSWORD_HASH:", {
-        userId: user.id,
-      });
+          email:
+            user.email,
+        },
+      );
 
       return jsonError(
-        "The stored account password is invalid. Reset this user's password.",
-        500,
+        "Invalid email or password.",
+        401,
+        "PASSWORD_MISMATCH",
       );
     }
 
-    const passwordMatches = await bcrypt
-      .compare(password, passwordHash)
-      .catch((error) => {
-        console.error("BCRYPT_COMPARE_ERROR:", error);
-        return false;
-      });
+    /**
+     * --------------------------------------------------------
+     * 10. GET DASHBOARD FROM DATABASE ROLE
+     * --------------------------------------------------------
+     */
 
-    if (!passwordMatches) {
-      return jsonError("Invalid email or password.", 401);
+    let dashboard:
+      string;
+
+    try {
+      dashboard =
+        resolveDashboard(
+          user.role,
+        );
+    } catch (error) {
+      console.error(
+        "LOGIN_DASHBOARD_RESOLUTION_ERROR",
+        {
+          userId:
+            String(user.id),
+
+          role:
+            String(user.role),
+
+          error:
+            errorText(
+              error,
+            ),
+        },
+      );
+
+      return jsonError(
+        "No dashboard is configured for this account role.",
+        403,
+        "DASHBOARD_NOT_CONFIGURED",
+      );
     }
 
-    await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        lastLoginAt: new Date(),
-      },
-    });
+    if (
+      !dashboard ||
+      !dashboard.startsWith("/")
+    ) {
+      console.error(
+        "LOGIN_INVALID_DASHBOARD_PATH",
+        {
+          role:
+            String(user.role),
 
-    await createAuthSession(String(user.id), rememberMe);
+          dashboard,
+        },
+      );
+
+      return jsonError(
+        "The dashboard destination is invalid.",
+        500,
+        "INVALID_DASHBOARD_PATH",
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 11. CREATE SESSION
+     * --------------------------------------------------------
+     */
+
+    try {
+      await createAuthSession(
+        String(user.id),
+        rememberMe,
+      );
+    } catch (error) {
+      console.error(
+        "LOGIN_SESSION_ERROR",
+        {
+          userId:
+            String(user.id),
+
+          error:
+            errorText(
+              error,
+            ),
+        },
+      );
+
+      return jsonError(
+        "Your credentials are correct, but the login session could not be created.",
+        500,
+        "SESSION_CREATION_FAILED",
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 12. UPDATE LAST LOGIN
+     * --------------------------------------------------------
+     *
+     * This should not block a successful authentication.
+     */
+
+    try {
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+
+        data: {
+          lastLoginAt:
+            new Date(),
+        },
+      });
+    } catch (error) {
+      console.warn(
+        "LOGIN_LAST_LOGIN_UPDATE_WARNING",
+        {
+          userId:
+            String(user.id),
+
+          error:
+            errorText(
+              error,
+            ),
+        },
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 13. LOG SUCCESS
+     * --------------------------------------------------------
+     */
+
+    console.log(
+      "LOGIN_SUCCESS",
+      {
+        userId:
+          String(user.id),
+
+        email:
+          user.email,
+
+        role:
+          String(user.role),
+
+        dashboard,
+      },
+    );
+
+    /**
+     * --------------------------------------------------------
+     * 14A. NATIVE FORM -> REAL HTTP REDIRECT
+     * --------------------------------------------------------
+     */
+
+    if (
+      shouldHttpRedirect(
+        request,
+      )
+    ) {
+      const target =
+        new URL(
+          dashboard,
+          request.url,
+        );
+
+      return NextResponse.redirect(
+        target,
+        303,
+      );
+    }
+
+    /**
+     * --------------------------------------------------------
+     * 14B. FETCH/AJAX -> JSON
+     * --------------------------------------------------------
+     *
+     * Existing React login pages normally read redirectTo
+     * and call router.replace(redirectTo).
+     */
 
     return NextResponse.json(
       {
         success: true,
         ok: true,
-        message: "Login successful.",
-        redirectTo: getDashboardPath(user.role),
+
+        message:
+          "Login successful.",
+
+        redirectTo:
+          dashboard,
+
         rememberMe,
+
         user: {
-          id: String(user.id),
-          name: String(user.name),
-          username: String(user.username),
-          email: String(user.email),
-          role: String(user.role),
+          id:
+            String(user.id),
+
+          name:
+            text(
+              user.name,
+            ),
+
+          username:
+            text(
+              user.username,
+            ),
+
+          email:
+            text(
+              user.email,
+            ),
+
+          role:
+            text(
+              user.role,
+            ),
+
           companyId:
-            user.companyId == null ? null : String(user.companyId),
-          companyName: user.company?.name ?? null,
-          profileImageUrl: user.profileImageUrl ?? null,
+            user.companyId ===
+            null
+              ? null
+              : String(
+                  user.companyId,
+                ),
+
+          companyName:
+            user.company
+              ?.name ??
+            null,
+
+          profileImageUrl:
+            user.profileImageUrl ??
+            null,
         },
       },
       {
         status: 200,
+
         headers: {
-          "Cache-Control": "no-store, max-age=0",
+          "Cache-Control":
+            "no-store, no-cache, must-revalidate",
         },
       },
     );
   } catch (error) {
-    console.error("AUTH_LOGIN_ERROR:", error);
+    /**
+     * --------------------------------------------------------
+     * 15. DATABASE / UNEXPECTED ERROR
+     * --------------------------------------------------------
+     */
 
-    if (isDatabaseConfigurationError(error)) {
+    console.error(
+      "LOGIN_FATAL_ERROR",
+      error,
+    );
+
+    const message =
+      errorText(
+        error,
+      ).toLowerCase();
+
+    const databaseProblem =
+      message.includes(
+        "econnrefused",
+      ) ||
+      message.includes(
+        "can't reach database",
+      ) ||
+      message.includes(
+        "connection refused",
+      ) ||
+      message.includes(
+        "p1000",
+      ) ||
+      message.includes(
+        "p1001",
+      ) ||
+      message.includes(
+        "p1017",
+      );
+
+    if (databaseProblem) {
       return jsonError(
-        "The server database is not connected. Add the real reachable MySQL/MariaDB DATABASE_URL in the hosting environment, redeploy, then try again.",
+        "SIMAMIA cannot connect to the database. Make sure XAMPP MySQL is running.",
         503,
-        {
-          error: messageFromError(error),
-        },
+        "DATABASE_UNAVAILABLE",
       );
     }
 
-    return jsonError("Login could not be completed.", 500, {
-      error: messageFromError(error),
-    });
+    return jsonError(
+      "Login could not be completed.",
+      500,
+      "LOGIN_FAILED",
+    );
   }
 }
