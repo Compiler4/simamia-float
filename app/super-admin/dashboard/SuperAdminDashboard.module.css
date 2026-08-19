@@ -97,52 +97,182 @@
     display: none;
 }
 
+.navSectionLabel {
+    padding: 0 10px;
+    color: rgba(255, 255, 255, 0.52);
+    font-size: 10px;
+    font-weight: 950;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
 .nav {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 7px;
 }
 
-.nav button {
-    min-height: 48px;
-    border: 0;
-    display: flex;
+.navItem {
+    position: relative;
+    min-height: 58px;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) 20px;
     align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
+    gap: 10px;
+    padding: 9px 11px;
+    border: 1px solid transparent;
     border-radius: 18px;
     background: transparent;
-    color: rgba(255, 255, 255, 0.74);
-    font-size: 14px;
-    font-weight: 850;
+    color: rgba(255, 255, 255, 0.76);
+    text-decoration: none;
     text-align: left;
     cursor: pointer;
-    transition: 0.25s ease;
+    transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
+    isolation: isolate;
 }
 
-.nav button:hover,
+.navItem::before {
+    content: "";
+    position: absolute;
+    inset: 5px auto 5px 0;
+    width: 3px;
+    border-radius: 999px;
+    background: transparent;
+    transition: background 180ms ease, box-shadow 180ms ease;
+}
+
+.navItem:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: white;
+    transform: translateX(3px);
+}
+
 .activeNav {
-    background: rgba(255, 255, 255, 0.18) !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.12)) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
     color: white !important;
-    transform: translateX(5px);
-    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
+    transform: translateX(3px);
+    box-shadow: 0 15px 34px rgba(13, 8, 30, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.activeNav::before {
+    background: #ffffff;
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.72);
 }
 
 .navIcon {
-    width: 26px;
-    height: 26px;
+    width: 34px;
+    height: 34px;
     display: grid;
     place-items: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
     font-size: 18px;
+    line-height: 1;
+    font-weight: 950;
     flex-shrink: 0;
 }
 
-.navText {
-    white-space: nowrap;
+.activeNav .navIcon {
+    background: #ffffff;
+    color: #4c1d95;
+    box-shadow: 0 8px 20px rgba(17, 16, 24, 0.18);
 }
 
-.sidebarCollapsed .navText {
+.navCopy {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+}
+
+.navText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 920;
+}
+
+.navHint {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 10px;
+    font-weight: 720;
+}
+
+.activeNav .navHint {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.navArrow {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 22px;
+    transition: transform 180ms ease, color 180ms ease;
+}
+
+.navItem:hover .navArrow,
+.activeNav .navArrow {
+    color: white;
+    transform: translateX(2px);
+}
+
+.sidebarStatus {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 18px;
+    background: rgba(7, 5, 18, 0.2);
+}
+
+.sidebarStatus strong,
+.sidebarStatus small {
+    display: block;
+}
+
+.sidebarStatus strong {
+    color: white;
+    font-size: 11px;
+}
+
+.sidebarStatus small {
+    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 9px;
+}
+
+.statusPulse {
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+    border-radius: 999px;
+    background: #4ade80;
+    box-shadow: 0 0 0 5px rgba(74, 222, 128, 0.13), 0 0 18px rgba(74, 222, 128, 0.55);
+}
+
+.sidebarCollapsed .navSectionLabel,
+.sidebarCollapsed .navCopy,
+.sidebarCollapsed .navArrow,
+.sidebarCollapsed .sidebarStatus div {
     display: none;
+}
+
+.sidebarCollapsed .navItem {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding-inline: 8px;
+}
+
+.sidebarCollapsed .sidebarStatus {
+    grid-template-columns: 1fr;
+    justify-items: center;
 }
 
 .content {
@@ -192,7 +322,8 @@
     overflow-x: auto;
 }
 
-.topNav button {
+.topNav button,
+.topNav a {
     border: 0;
     min-height: 42px;
     display: inline-flex;
@@ -205,10 +336,12 @@
     font-weight: 850;
     cursor: pointer;
     white-space: nowrap;
+    text-decoration: none;
     transition: 0.25s ease;
 }
 
 .topNav button:hover,
+.topNav a:hover,
 .activeTopNav {
     background: #f1ecff !important;
     color: #6d35ff !important;
@@ -1318,6 +1451,119 @@
     font-weight: 800;
 }
 
+.moduleCommandBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    border: 1px solid rgba(109, 53, 255, 0.13);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 12px 36px rgba(31, 22, 61, 0.07);
+}
+
+.moduleCommandBar > div:first-child {
+    display: grid;
+    gap: 3px;
+}
+
+.moduleCommandBar > div:first-child span {
+    color: #8a8495;
+    font-size: 10px;
+    font-weight: 950;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.moduleCommandBar > div:first-child strong {
+    color: #201832;
+    font-size: 18px;
+    letter-spacing: -0.03em;
+}
+
+.moduleCommandMeta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.moduleCommandMeta > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #655f70;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.moduleCommandMeta button,
+.inlineWarning button {
+    min-height: 40px;
+    border: 0;
+    border-radius: 13px;
+    padding: 0 14px;
+    background: #24143f;
+    color: white;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.moduleCommandMeta button:hover,
+.inlineWarning button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(36, 20, 63, 0.18);
+}
+
+.moduleCommandMeta button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.inlineWarning {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    border: 1px solid #f6d88a;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #fff9e8, #fffdf7);
+    box-shadow: 0 12px 28px rgba(146, 64, 14, 0.08);
+}
+
+.inlineWarning strong {
+    color: #7c4a03;
+}
+
+.inlineWarning p {
+    margin: 5px 0 0;
+    color: #906313;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.moduleStage {
+    animation: moduleEnter 260ms cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes moduleEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.995);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 .loadingCard,
 .errorCard {
     min-height: calc(100vh - 115px);
@@ -1438,9 +1684,22 @@
         display: block;
     }
     .sidebarCollapsed .brandText,
+    .sidebarCollapsed .navCopy,
     .sidebarCollapsed .navText,
-    .sidebarCollapsed .sidebarToggle strong {
+    .sidebarCollapsed .navHint,
+    .sidebarCollapsed .navArrow,
+    .sidebarCollapsed .sidebarToggle strong,
+    .sidebarCollapsed .sidebarStatus div {
         display: block;
+    }
+    .sidebarCollapsed .navItem {
+        grid-template-columns: 34px minmax(0, 1fr) 20px;
+        justify-items: stretch;
+        padding: 9px 11px;
+    }
+    .sidebarCollapsed .sidebarStatus {
+        grid-template-columns: 12px minmax(0, 1fr);
+        justify-items: stretch;
     }
     .content {
         height: auto;
@@ -1456,6 +1715,14 @@
     }
     .topbarActions {
         flex-wrap: wrap;
+    }
+    .moduleCommandBar,
+    .inlineWarning {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .moduleCommandMeta {
+        justify-content: space-between;
     }
     .profileBox {
         flex: 1;

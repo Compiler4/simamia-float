@@ -1,304 +1,222 @@
-import { type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
+import { requireAccountant } from "@/lib/accountant-v3/guard";
+import { jsonError } from "@/lib/accountant-v3/http";
+import { buildAccountantControlCenterData } from "@/lib/accountant-v3/report-data";
 import { createBrandedTablePdf, resolveCompanyReportProfile } from "@/lib/reports/branded-pdf";
 
-import {
-  buildPortalData,
-  errorResponse,
-  number,
-  parseRange,
-  requireAccountant,
-  text,
-} from "@/lib/accountant/portal";
-
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
-function csvCell(value: unknown): string {
-  const source = value instanceof Date ? value.toISOString() : text(value);
-  return `"${source.replaceAll('"', '""')}"`;
+function money(value: unknown) {
+  return `TZS ${Number(value ?? 0).toLocaleString("en-GB", {
+    maximumFractionDigits: 2,
+  })}`;
 }
 
-function makeCsv(rows: any[]): string {
-  const headers = [
-    "User ID",
-    "Name",
-    "Email",
-    "Role",
-    "Income",
-    "Approved Expenses",
-    "Net Contribution",
-    "Verified Deposits",
-    "Float Issued",
-    "Cash Issued",
-    "Transactions",
-    "Present Sessions",
-    "Absent Sessions",
-    "Attendance Rate",
-    "Performance Score",
-    "Rating",
-  ];
+function csvCell(value: unknown) {
+  const text = value === null || value === undefined ? "" : String(value);
+  return `"${text.replaceAll('"', '""')}"`;
+}
+
+function reportRows(data: any) {
   return [
-    headers.map(csvCell).join(","),
-    ...rows.map((row) =>
-      [
-        row.userId,
-        row.name,
-        row.email,
-        row.role,
-        row.income,
-        row.approvedExpenses,
-        number(row.income) - number(row.approvedExpenses),
-        row.verifiedDeposits,
-        row.floatIssued,
-        row.cashIssued,
-        row.transactions,
-        row.attendancePresent,
-        row.attendanceAbsent,
-        row.attendanceRate,
-        row.performanceScore,
-        row.rating,
-      ]
-        .map(csvCell)
-        .join(","),
-    ),
-  ].join("\r\n");
-}
-
-function xmlEscape(value: unknown): string {
-  return text(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
-}
-
-function makeExcelXml(rows: any[]): string {
-  const matrix = [
-    [
-      "User ID",
-      "Name",
-      "Email",
-      "Role",
-      "Income",
-      "Approved Expenses",
-      "Net Contribution",
-      "Verified Deposits",
-      "Float Issued",
-      "Cash Issued",
-      "Transactions",
-      "Present",
-      "Absent",
-      "Attendance Rate",
-      "Performance Score",
-      "Rating",
-    ],
-    ...rows.map((row) => [
-      row.userId,
-      row.name,
-      row.email,
-      row.role,
-      row.income,
-      row.approvedExpenses,
-      number(row.income) - number(row.approvedExpenses),
-      row.verifiedDeposits,
-      row.floatIssued,
-      row.cashIssued,
-      row.transactions,
-      row.attendancePresent,
-      row.attendanceAbsent,
-      row.attendanceRate,
-      row.performanceScore,
+    ["SIMAMIA FLOAT ERP — ACCOUNTANT REPORT"],
+    ["Period", data.period.label],
+    ["Generated", new Date(data.generatedAt).toLocaleString("en-GB")],
+    [],
+    ["FINANCIAL SUMMARY"],
+    ["Total income", money(data.summary.totalIncome)],
+    ["Service income", money(data.summary.serviceIncome)],
+    ["Cash issued/received by staff (working capital)", money(data.summary.staffCashReceived)],
+    ["Approved expenses", money(data.summary.approvedExpenseAmount)],
+    ["Net income", money(data.summary.netIncome)],
+    ["System + manual staff float", money(data.summary.allocatedFloat)],
+    ["Cash issued to staff", money(data.summary.allocatedCash)],
+    ["Combined staff funds", money(data.summary.combinedStaffFunds)],
+    [],
+    ["ATTENDANCE SUMMARY"],
+    ["Attendance sessions", data.summary.attendanceSessions],
+    ["Present sessions", data.summary.presentSessions],
+    ["Absent sessions", data.summary.absentSessions],
+    ["Most present", data.mostPresent?.staffName ?? "N/A"],
+    ["Most absent", data.mostAbsent?.staffName ?? "N/A"],
+    [],
+    ["EXPENSE APPROVALS"],
+    ["Staff", "Category", "Amount", "Admin", "Accountant", "Final status"],
+    ...data.expenses.map((row: any) => [
+      row.staffName,
+      row.category ?? row.type ?? "Expense",
+      money(row.amount),
+      row.adminDecision,
+      row.accountantDecision,
+      row.finalStatus,
+    ]),
+    [],
+    ["STAFF ATTENDANCE PERFORMANCE"],
+    ["Staff", "Present", "Absent", "Late", "Morning", "Evening", "Rate"],
+    ...data.attendanceAnalytics.map((row: any) => [
+      row.staffName,
+      row.present,
+      row.absent,
+      row.late,
+      row.morning,
+      row.evening,
+      `${row.attendanceRate}%`,
+    ]),
+    [],
+    ["STAFF FUNDS"],
+    ["Staff", "System float", "Manual float", "Cash issued", "Returned", "Net available"],
+    ...data.moneySummary.map((row: any) => [
+      row.staffName,
+      money(row.systemFloatAllocated),
+      money(row.manualFloatAllocated),
+      money(Number(row.cashAllocated || 0) + Number(row.cashReceived || 0)),
+      money(row.returned),
+      money(row.netAvailable),
+    ]),
+    [],
+    ["PERFORMANCE"],
+    ["Staff", "Attendance", "Services", "Float transactions", "Score", "Rating"],
+    ...data.performance.map((row: any) => [
+      row.staffName,
+      `${row.attendanceRate}%`,
+      row.serviceCount,
+      row.floatTransactions,
+      row.score,
       row.rating,
     ]),
   ];
-  const xmlRows = matrix
-    .map(
-      (row) =>
-        `<Row>${row
-          .map((cell) => {
-            const numeric = typeof cell === "number" || (/^-?\d+(\.\d+)?$/.test(text(cell)) && text(cell) !== "");
-            return `<Cell><Data ss:Type="${numeric ? "Number" : "String"}">${xmlEscape(cell)}</Data></Cell>`;
-          })
-          .join("")}</Row>`,
-    )
-    .join("");
-  return `<?xml version="1.0"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
- <Worksheet ss:Name="Accountant Report"><Table>${xmlRows}</Table></Worksheet>
-</Workbook>`;
 }
 
-function pdfEscape(value: string): string {
-  return value.replaceAll("\\", "\\\\").replaceAll("(", "\\(").replaceAll(")", "\\)");
-}
+async function createPdf(data: any) {
+  const company = await resolveCompanyReportProfile(String(data.accountant?.companyId || ""));
+  const detailRows: Array<{
+    section: string;
+    staff: string;
+    detail: string;
+    metric: string;
+    amount: string;
+    status: string;
+  }> = [];
 
-function makePdf(lines: string[]): Buffer {
-  const usable = lines.slice(0, 48);
-  const stream = ["BT", "/F1 10 Tf", "42 800 Td"];
-  usable.forEach((line, index) => {
-    if (index > 0) stream.push("0 -15 Td");
-    stream.push(`(${pdfEscape(line.slice(0, 108))}) Tj`);
-  });
-  stream.push("ET");
-  const content = stream.join("\n");
-  const objects = [
-    "<< /Type /Catalog /Pages 2 0 R >>",
-    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>",
-    `<< /Length ${Buffer.byteLength(content)} >>\nstream\n${content}\nendstream`,
-    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-  ];
-  let output = "%PDF-1.4\n";
-  const offsets = [0];
-  objects.forEach((object, index) => {
-    offsets[index + 1] = Buffer.byteLength(output);
-    output += `${index + 1} 0 obj\n${object}\nendobj\n`;
-  });
-  const xref = Buffer.byteLength(output);
-  output += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
-  for (let index = 1; index <= objects.length; index += 1) {
-    output += `${String(offsets[index]).padStart(10, "0")} 00000 n \n`;
+  for (const row of data.expenses || []) {
+    detailRows.push({
+      section: "Expense",
+      staff: row.staffName || "Unknown staff",
+      detail: row.category || row.type || "Expense request",
+      metric: `Admin: ${row.adminDecision || "PENDING"} • Accountant: ${row.accountantDecision || "PENDING"}`,
+      amount: money(row.amount),
+      status: row.finalStatus || "PENDING",
+    });
   }
-  output += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-  return Buffer.from(output, "binary");
+
+  for (const row of data.attendanceAnalytics || []) {
+    detailRows.push({
+      section: "Attendance",
+      staff: row.staffName || "Unknown staff",
+      detail: `Present ${row.present || 0} • Absent ${row.absent || 0} • Late ${row.late || 0}`,
+      metric: `Morning ${row.morning || 0} • Evening ${row.evening || 0}`,
+      amount: `${row.attendanceRate || 0}%`,
+      status: Number(row.attendanceRate || 0) >= 80 ? "ON TRACK" : "REVIEW",
+    });
+  }
+
+  for (const row of data.moneySummary || []) {
+    detailRows.push({
+      section: "Staff funds",
+      staff: row.staffName || "Unknown staff",
+      detail: `System float ${money(row.systemFloatAllocated)} • Manual float ${money(row.manualFloatAllocated)}`,
+      metric: `Cash ${money(Number(row.cashAllocated || 0) + Number(row.cashReceived || 0))} • Returned ${money(row.returned)}`,
+      amount: money(row.netAvailable),
+      status: "NET AVAILABLE",
+    });
+  }
+
+  for (const row of data.performance || []) {
+    detailRows.push({
+      section: "Performance",
+      staff: row.staffName || "Unknown staff",
+      detail: `Attendance ${row.attendanceRate || 0}% • Services ${row.serviceCount || 0}`,
+      metric: `Float transactions ${row.floatTransactions || 0}`,
+      amount: String(row.score ?? 0),
+      status: row.rating || "N/A",
+    });
+  }
+
+  return createBrandedTablePdf({
+    company,
+    title: "Accountant Control Centre Report",
+    subtitle: "Financial approvals, attendance, staff funding and performance in one controlled report.",
+    period: data.period?.label || `${data.period?.startKey || ""} - ${data.period?.endKey || ""}`,
+    generatedBy: data.accountant?.name || "Accountant",
+    reportCode: "ACCOUNTANT CONTROL REPORT",
+    orientation: "landscape",
+    summary: [
+      { label: "Total income", value: money(data.summary?.totalIncome) },
+      { label: "Approved expenses", value: money(data.summary?.approvedExpenseAmount) },
+      { label: "Net income", value: money(data.summary?.netIncome) },
+      { label: "Combined staff funds", value: money(data.summary?.combinedStaffFunds) },
+    ],
+    columns: [
+      { label: "Section", key: "section", weight: 0.75 },
+      { label: "Staff user", key: "staff", weight: 1.2 },
+      { label: "Details", key: "detail", weight: 2.0 },
+      { label: "Control metric", key: "metric", weight: 1.8 },
+      { label: "Amount / score", key: "amount", weight: 1.0, align: "right" },
+      { label: "Status", key: "status", weight: 0.9, align: "center" },
+    ],
+    rows: detailRows,
+  });
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const context = await requireAccountant();
-    const range = parseRange(request.nextUrl.searchParams);
-    const portal = await buildPortalData(context, range);
-    const rows = portal.performance.map((row: any) => ({
-      userId: row.userId,
-      name: row.name,
-      email: row.email,
-      role: row.role,
-      profileImageUrl: row.profileImageUrl,
-      income: number(row.income),
-      approvedExpenses: number(row.approvedExpenses),
-      verifiedDeposits: number(row.verifiedDeposits),
-      floatIssued: number(row.floatIssued),
-      cashIssued: number(row.cashIssued),
-      transactions: number(row.transactions),
-      attendancePresent: number(row.attendancePresent),
-      attendanceAbsent: number(row.attendanceAbsent),
-      attendanceRate: number(row.attendanceRate),
-      performanceScore: number(row.performanceScore),
-      rating: row.rating,
-    }));
-
-    const report = {
-      success: true,
-      generatedAt: new Date().toISOString(),
-      company: portal.company,
-      accountant: portal.accountant,
-      summary: {
-        period: range.label,
-        totalIncome: portal.reportSummary.totalIncome,
-        totalExpenses: portal.reportSummary.totalExpenses,
-        netIncome: portal.reportSummary.netIncome,
-        totalDeposits: portal.reportSummary.totalDeposits,
-        totalFloat: portal.reportSummary.totalFloat,
-        totalCash: portal.reportSummary.totalCash,
-        mostPresent: portal.mostPresent,
-        mostAbsent: portal.mostAbsent,
-      },
-      rows,
-    };
-
-    const format = text(request.nextUrl.searchParams.get("format") || "preview").toLowerCase();
-    if (format === "preview" || format === "json") {
-      return Response.json(report, {
-        headers: { "Cache-Control": "no-store, max-age=0" },
-      });
-    }
+    const user = await requireAccountant();
+    const data = await buildAccountantControlCenterData(user, request.nextUrl.searchParams);
+    const format = String(request.nextUrl.searchParams.get("format") ?? "pdf").toLowerCase();
+    const baseName = `simamia-accountant-${data.period.startKey}-to-${data.period.endKey}`;
+    const rows = reportRows(data);
 
     if (format === "csv") {
-      return new Response(makeCsv(rows), {
+      const csv = rows.map((row) => row.map(csvCell).join(",")).join("\r\n");
+      return new NextResponse(csv, {
         headers: {
           "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition": `attachment; filename="accountant-report-${range.startKey}-${range.endKey}.csv"`,
-          "Cache-Control": "no-store",
+          "Content-Disposition": `attachment; filename="${baseName}.csv"`,
         },
       });
     }
 
-    if (format === "xlsx" || format === "xls") {
-      return new Response(makeExcelXml(rows), {
+    if (format === "xlsx" || format === "excel") {
+      const XLSX = await import("xlsx");
+      const workbook = XLSX.utils.book_new();
+      const overview = XLSX.utils.aoa_to_sheet(rows);
+      XLSX.utils.book_append_sheet(workbook, overview, "Accountant Report");
+      const expenseSheet = XLSX.utils.json_to_sheet(data.expenses);
+      XLSX.utils.book_append_sheet(workbook, expenseSheet, "Expenses");
+      const attendanceSheet = XLSX.utils.json_to_sheet(data.attendanceAnalytics);
+      XLSX.utils.book_append_sheet(workbook, attendanceSheet, "Attendance");
+      const moneySheet = XLSX.utils.json_to_sheet(data.moneySummary);
+      XLSX.utils.book_append_sheet(workbook, moneySheet, "Staff Funds");
+      const performanceSheet = XLSX.utils.json_to_sheet(data.performance);
+      XLSX.utils.book_append_sheet(workbook, performanceSheet, "Performance");
+      const bytes = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+      return new NextResponse(new Uint8Array(bytes), {
         headers: {
-          "Content-Type": "application/vnd.ms-excel; charset=utf-8",
-          "Content-Disposition": `attachment; filename="accountant-report-${range.startKey}-${range.endKey}.xls"`,
-          "Cache-Control": "no-store",
+          "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "Content-Disposition": `attachment; filename="${baseName}.xlsx"`,
         },
       });
     }
 
-    if (format === "pdf") {
-      const reportType = text(request.nextUrl.searchParams.get("reportType") || "FINANCIAL").toUpperCase();
-      const company = await resolveCompanyReportProfile(context.companyId, portal.company);
-      const performanceMode = reportType === "PERFORMANCE";
-      const pdf = await createBrandedTablePdf({
-        company,
-        title: performanceMode ? "Performance Report" : "Financial Report",
-        subtitle: performanceMode
-          ? "STAFF attendance, transaction and contribution performance"
-          : "Income, approved expenses, deposits and STAFF funding",
-        period: range.label,
-        generatedBy: `${portal.accountant.name} (${portal.accountant.email})`,
-        reportCode: performanceMode ? "PERFORMANCE REPORT" : "FINANCIAL REPORT",
-        orientation: "landscape",
-        summary: [
-          { label: "Total income", value: `TZS ${number(portal.reportSummary.totalIncome).toLocaleString("en-GB")}` },
-          { label: "Approved expenses", value: `TZS ${number(portal.reportSummary.totalExpenses).toLocaleString("en-GB")}` },
-          { label: "Net income", value: `TZS ${number(portal.reportSummary.netIncome).toLocaleString("en-GB")}` },
-          { label: "Verified deposits", value: `TZS ${number(portal.reportSummary.totalDeposits).toLocaleString("en-GB")}` },
-        ],
-        columns: performanceMode
-          ? [
-              { label: "STAFF User", weight: 1.8, value: (row: any) => `${row.name}\n${row.email}` },
-              { label: "Present", weight: 0.7, align: "center", key: "attendancePresent" },
-              { label: "Absent", weight: 0.7, align: "center", key: "attendanceAbsent" },
-              { label: "Attendance", weight: 0.9, align: "center", value: (row: any) => `${row.attendanceRate}%` },
-              { label: "Score", weight: 0.75, align: "center", key: "performanceScore" },
-              { label: "Rating", weight: 1.05, key: "rating" },
-              { label: "Transactions", weight: 0.9, align: "center", key: "transactions" },
-              { label: "Income", weight: 1.15, align: "right", value: (row: any) => `TZS ${number(row.income).toLocaleString("en-GB")}` },
-              { label: "Deposits", weight: 1.15, align: "right", value: (row: any) => `TZS ${number(row.verifiedDeposits).toLocaleString("en-GB")}` },
-            ]
-          : [
-              { label: "STAFF User", weight: 1.8, value: (row: any) => `${row.name}\n${row.email}` },
-              { label: "Income", weight: 1.15, align: "right", value: (row: any) => `TZS ${number(row.income).toLocaleString("en-GB")}` },
-              { label: "Expenses", weight: 1.15, align: "right", value: (row: any) => `TZS ${number(row.approvedExpenses).toLocaleString("en-GB")}` },
-              { label: "Net", weight: 1.15, align: "right", value: (row: any) => `TZS ${(number(row.income) - number(row.approvedExpenses)).toLocaleString("en-GB")}` },
-              { label: "Deposits", weight: 1.15, align: "right", value: (row: any) => `TZS ${number(row.verifiedDeposits).toLocaleString("en-GB")}` },
-              { label: "Float", weight: 1.1, align: "right", value: (row: any) => `TZS ${number(row.floatIssued).toLocaleString("en-GB")}` },
-              { label: "Cash", weight: 1.1, align: "right", value: (row: any) => `TZS ${number(row.cashIssued).toLocaleString("en-GB")}` },
-              { label: "Transactions", weight: 0.8, align: "center", key: "transactions" },
-            ],
-        rows,
-        footerNote: `${company.name} - SIMAMIA FLOAT accountant report`,
-      });
-      const body = pdf.buffer.slice(pdf.byteOffset, pdf.byteOffset + pdf.byteLength) as ArrayBuffer;
-      return new Response(body, {
-        headers: {
-          "Content-Type": "application/pdf",
-          "Content-Disposition": `attachment; filename="${performanceMode ? "performance" : "financial"}-report-${range.startKey}-${range.endKey}.pdf"`,
-          "Cache-Control": "no-store",
-        },
-      });
-    }
-
-    return Response.json(
-      { success: false, message: `Unsupported report format: ${format}.` },
-      { status: 422 },
-    );
+    const pdf = await createPdf(data);
+    return new NextResponse(new Uint8Array(pdf), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${baseName}.pdf"`,
+      },
+    });
   } catch (error) {
-    return errorResponse(error);
+    return jsonError(error, "The accountant report could not be exported.");
   }
 }

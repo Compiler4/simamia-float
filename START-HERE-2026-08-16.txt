@@ -1,0 +1,22 @@
+SIMAMIA FLOAT - COMPLETE PORTAL REPAIR
+======================================
+
+This project copy intentionally does not contain .env.
+Copy your existing working .env into this project root before starting.
+
+From PowerShell:
+
+  cd "C:\Users\Micha\simamia float"
+  npm install
+  npx prisma generate
+  npm run db:fix:accountant-funding
+  npm run check:routes
+  npm run check:portals
+  npm run typecheck
+  Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+  npm run dev
+
+Important:
+- Do NOT run prisma migrate reset or db push --force-reset on a database with real data.
+- Company Admin expense creation is allowed only while a Financial Day is OPEN.
+- Closing a Financial Day remains blocked until staff float/cash returns and bank controls are balanced.

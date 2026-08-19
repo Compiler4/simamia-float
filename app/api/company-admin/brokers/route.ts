@@ -1,247 +1,515 @@
+import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
+import { prisma } from "@/lib/prisma";
 import {
-  HttpError,
+  createAudit,
   requireCompanyAdmin,
   routeError,
   text,
+  HttpError,
 } from "@/lib/company-admin-server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-
-type BrokerFields = Record<string, unknown> & {
-  agentAccounts?: Array<Record<string, unknown>>;
-};
+const allowedStatuses = new Set(["ACTIVE", "INACTIVE", "SUSPENDED"]);
+const allowedNetworks = new Set([
+  "VODACOM",
+  "YAS_MIX",
+  "AIRTEL",
+  "HALOTEL",
+  "OTHER",
+]);
+const allowedGenders = new Set(["MALE", "FEMALE", "OTHER"]);
 
 function clean(value: unknown): string {
-  return text(value).replace(/\s+/g, " ").trim();
+  return text(value).trim();
 }
 
-function normalizeDate(value: string): string {
-  const raw = clean(value);
-  if (!raw) return "";
+function optional(value: unknown): string | null {
+  return clean(value) || null;
+}
 
-  const iso = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
-  if (iso) {
-    return `${iso[1]}-${iso[2].padStart(2, "0")}-${iso[3].padStart(2, "0")}`;
+function serialize(item: any) {
+  if (!item) return item;
+
+  return {
+    ...item,
+    latitude: item.latitude == null ? null : Number(item.latitude),
+    longitude: item.longitude == null ? null : Number(item.longitude),
+    agentAccounts: Array.isArray(item.agentAccounts) ? item.agentAccounts : [],
+  };
+}
+
+function assertJsonRequest(request: NextRequest) {
+  const contentType = request.headers.get("content-type")?.toLowerCase() || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new HttpError(
+      "Broker registration must be sent as application/json. File uploads must use /api/company-admin/brokers/autofill or /api/company-admin/uploads.",
+      415,
+    );
   }
-
-  const dayFirst = raw.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
-  if (dayFirst) {
-    return `${dayFirst[3]}-${dayFirst[2].padStart(2, "0")}-${dayFirst[1].padStart(2, "0")}`;
-  }
-
-  const parsed = new Date(raw);
-  return Number.isNaN(parsed.getTime()) ? "" : parsed.toISOString().slice(0, 10);
 }
 
-function normalizeNetwork(value: string): string {
-  const raw = value.toUpperCase();
-  if (raw.includes("VODACOM")) return "VODACOM";
-  if (raw.includes("YAS") || raw.includes("MIX")) return "YAS_MIX";
-  if (raw.includes("AIRTEL")) return "AIRTEL";
-  if (raw.includes("HALOTEL")) return "HALOTEL";
-  return raw.includes("OTHER") ? "OTHER" : "";
+function validEmail(value: string): boolean {
+  return !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-function lineValue(lines: string[], labels: string[]): string {
-  const labelPattern = labels.map((label) => label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
-  const pattern = new RegExp(`^(?:${labelPattern})\\s*(?:[:#*\\-]|\\s{2,})\\s*(.+)$`, "i");
+function normalizeAccounts(
+  rows: unknown,
+  companyId: string,
+  brokerCustomerId = "",
+) {
+  if (!Array.isArray(rows)) return [];
 
-  for (const line of lines) {
-    const match = line.match(pattern);
-    if (match?.[1]) return clean(match[1]);
-  }
+  const accounts = rows
+    .filter((row: any) =>
+      [
+        row?.network,
+        row?.simPhoneNumber,
+        row?.agentNumber,
+        row?.accountName,
+      ].some((value) => clean(value)),
+    )
+    .map((row: any, index: number) => {
+      const network = clean(row.network).toUpperCase() || "OTHER";
+      const simPhoneNumber = clean(row.simPhoneNumber);
+      const agentNumber = clean(row.agentNumber);
+      const status = clean(row.status).toUpperCase() || "ACTIVE";
 
-  const loose = new RegExp(`(?:${labelPattern})\\s*(?:[:#*\\-])\\s*([^\\n\\r]+)`, "i");
-  const match = lines.join("\n").match(loose);
-  return match?.[1] ? clean(match[1]) : "";
-}
+      if (!allowedNetworks.has(network)) {
+        throw new HttpError(
+          `Invalid network for agent account ${index + 1}.`,
+          422,
+        );
+      }
 
-function genderValue(value: string): string {
-  const raw = value.toUpperCase();
-  if (raw.startsWith("F")) return "FEMALE";
-  if (raw.startsWith("M")) return "MALE";
-  return raw ? "OTHER" : "";
-}
+      if (!simPhoneNumber || !agentNumber) {
+        throw new HttpError(
+          `Complete network, SIM phone and agent number for account ${index + 1}, or leave the row blank.`,
+          422,
+        );
+      }
 
-function statusValue(value: string): string {
-  const raw = value.toUpperCase();
-  if (raw.includes("SUSP")) return "SUSPENDED";
-  if (raw.includes("INACTIVE")) return "INACTIVE";
-  return raw ? "ACTIVE" : "";
-}
+      if (!allowedStatuses.has(status)) {
+        throw new HttpError(
+          `Invalid status for agent account ${index + 1}.`,
+          422,
+        );
+      }
 
-function compactFields(fields: BrokerFields): BrokerFields {
-  return Object.fromEntries(
-    Object.entries(fields).filter(([, value]) =>
-      Array.isArray(value) ? value.length > 0 : clean(value),
-    ),
-  );
-}
-
-function parseAgentAccounts(lines: string[]) {
-  const accounts: Array<Record<string, unknown>> = [];
-
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index];
-    const network = normalizeNetwork(line);
-    if (!network) continue;
-
-    const block = lines.slice(index, index + 7).join("\n");
-    const simPhoneNumber =
-      lineValue(block.split("\n"), ["SIM phone number", "SIM", "SIM number", "Mobile network phone"]) ||
-      (block.match(/(?:\+?255|0)\d{8,9}/)?.[0] ?? "");
-    const agentNumber = lineValue(block.split("\n"), ["Agent number", "Agent no", "Account number"]);
-    const accountName = lineValue(block.split("\n"), ["Account name", "Agent name", "Name on account"]);
-
-    if (simPhoneNumber || agentNumber || accountName) {
-      accounts.push({
+      return {
+        companyId,
+        ...(brokerCustomerId ? { brokerCustomerId } : {}),
         network,
         simPhoneNumber,
         agentNumber,
-        accountName,
-        isPrimary: accounts.length === 0,
-        status: "ACTIVE",
-      });
+        accountName: optional(row.accountName),
+        isPrimary: Boolean(row.isPrimary),
+        status,
+      };
+    });
+
+  if (accounts.length) {
+    const requestedPrimary = accounts.findIndex((row: any) => row.isPrimary);
+    const primaryIndex = requestedPrimary >= 0 ? requestedPrimary : 0;
+
+    accounts.forEach((row: any, index: number) => {
+      row.isPrimary = index === primaryIndex;
+    });
+  }
+
+  const submitted = new Set<string>();
+
+  for (const account of accounts) {
+    const key = `${account.network}:${account.agentNumber}`.toLowerCase();
+
+    if (submitted.has(key)) {
+      throw new HttpError(
+        `${account.network} agent number ${account.agentNumber} appears more than once.`,
+        409,
+      );
     }
+
+    submitted.add(key);
   }
 
   return accounts;
 }
 
-function parseText(raw: string): BrokerFields {
-  try {
-    const parsed = JSON.parse(raw) as BrokerFields;
-    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-      return compactFields({
-        ...parsed,
-        dateOfBirth: normalizeDate(clean(parsed.dateOfBirth)),
-        registrationDate: normalizeDate(clean(parsed.registrationDate)),
-        attendedDate: normalizeDate(clean(parsed.attendedDate)),
-      });
-    }
-  } catch {
-    // Non-JSON documents continue through label extraction.
+async function generateBrokerCode(db: any, companyId: string) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const candidate = `BRK-${Date.now().toString(36).toUpperCase()}-${Math
+      .floor(Math.random() * 9999)
+      .toString()
+      .padStart(4, "0")}`;
+
+    const duplicate = await db.brokerCustomer.findFirst({
+      where: { companyId, code: candidate },
+      select: { id: true },
+    });
+
+    if (!duplicate) return candidate;
   }
 
-  const lines = raw
-    .replace(/\r/g, "\n")
-    .split("\n")
-    .map(clean)
-    .filter(Boolean);
-
-  const fields: BrokerFields = {
-    title: lineValue(lines, ["Title"]),
-    firstName: lineValue(lines, ["First name", "Firstname", "Given name"]),
-    surname: lineValue(lines, ["Surname", "Last name", "Family name"]),
-    businessName: lineValue(lines, ["Registered business name", "Business name", "Company name"]),
-    tinNumber: lineValue(lines, ["TIN number", "TIN", "Tax identification number"]),
-    officialAgentNo: lineValue(lines, ["Official agent number", "Official agent no"]),
-    phone: lineValue(lines, ["Primary mobile number", "Primary phone", "Phone number", "Phone"]),
-    alternatePhone: lineValue(lines, ["Alternative mobile number", "Alternate phone", "Alternative phone"]),
-    email: lineValue(lines, ["Email address", "Email"]),
-    nationality: lineValue(lines, ["Nationality"]),
-    dateOfBirth: normalizeDate(lineValue(lines, ["Date of birth", "Birth date", "DOB"])),
-    gender: genderValue(lineValue(lines, ["Gender", "Sex"])),
-    postalAddress: lineValue(lines, ["Postal address", "P.O Box", "PO Box"]),
-    location: lineValue(lines, ["Physical business address", "Business address", "Location"]),
-    city: lineValue(lines, ["City", "Town"]),
-    region: lineValue(lines, ["Region"]),
-    district: lineValue(lines, ["District"]),
-    ward: lineValue(lines, ["Ward"]),
-    country: lineValue(lines, ["Country"]),
-    identityType: lineValue(lines, ["Identity type", "ID type"]),
-    identityNumber: lineValue(lines, ["Identity number", "ID number", "NIDA number", "Passport number"]),
-    identityIssuedBy: lineValue(lines, ["Identity issued by", "Issued by"]),
-    identityOther: lineValue(lines, ["Other identity description", "Other identity"]),
-    registrationDate: normalizeDate(lineValue(lines, ["Registration date", "Registered date"])),
-    attendedBy: lineValue(lines, ["Attended by", "Attender"]),
-    attendedDate: normalizeDate(lineValue(lines, ["Attended date", "Attendance date"])),
-    attendedLocation: lineValue(lines, ["Attended location", "Attendance location"]),
-    status: statusValue(lineValue(lines, ["Status"])),
-    notes: lineValue(lines, ["Notes", "Remark", "Remarks"]),
-    agentAccounts: parseAgentAccounts(lines),
-  };
-
-  if (!clean(fields.location)) {
-    fields.location = lineValue(lines, ["Address"]);
-  }
-
-  return compactFields(fields);
+  return `BRK-${randomUUID().slice(0, 8).toUpperCase()}`;
 }
 
-async function extractText(file: File, bytes: Buffer): Promise<string> {
-  const name = file.name.toLowerCase();
-  const mime = file.type.toLowerCase();
+export async function GET(request: NextRequest) {
+  try {
+    const user = await requireCompanyAdmin();
+    const companyId = clean(user.companyId);
 
-  if (
-    mime.includes("text") ||
-    mime.includes("json") ||
-    mime.includes("csv") ||
-    name.endsWith(".txt") ||
-    name.endsWith(".json") ||
-    name.endsWith(".csv")
-  ) {
-    return bytes.toString("utf8");
+    if (!companyId) {
+      throw new HttpError("Your account is not connected to a company.", 403);
+    }
+
+    const db = prisma as any;
+    const search = clean(request.nextUrl.searchParams.get("search"));
+    const status = clean(request.nextUrl.searchParams.get("status")).toUpperCase();
+    const network = clean(request.nextUrl.searchParams.get("network")).toUpperCase();
+
+    const where: Record<string, any> = { companyId };
+
+    if (status && status !== "ALL") {
+      if (!allowedStatuses.has(status)) {
+        throw new HttpError("Invalid broker status filter.", 422);
+      }
+      where.status = status;
+    }
+
+    if (network && network !== "ALL") {
+      if (!allowedNetworks.has(network)) {
+        throw new HttpError("Invalid network filter.", 422);
+      }
+
+      where.agentAccounts = {
+        some: { network },
+      };
+    }
+
+    if (search) {
+      where.OR = [
+        { code: { contains: search } },
+        { name: { contains: search } },
+        { firstName: { contains: search } },
+        { surname: { contains: search } },
+        { businessName: { contains: search } },
+        { phone: { contains: search } },
+        { alternatePhone: { contains: search } },
+        { email: { contains: search } },
+        { identityNumber: { contains: search } },
+        { location: { contains: search } },
+        {
+          agentAccounts: {
+            some: {
+              OR: [
+                { agentNumber: { contains: search } },
+                { simPhoneNumber: { contains: search } },
+              ],
+            },
+          },
+        },
+      ];
+    }
+
+    const brokers = await db.brokerCustomer.findMany({
+      where,
+      include: { agentAccounts: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const locations = Array.from(
+      new Set(
+        brokers
+          .flatMap((broker: any) => [
+            clean(broker.location),
+            clean(broker.ward),
+            clean(broker.district),
+            clean(broker.region),
+            clean(broker.city),
+          ])
+          .filter(Boolean),
+      ),
+    );
+
+    return NextResponse.json(
+      {
+        success: true,
+        brokers: brokers.map(serialize),
+        locations,
+        total: brokers.length,
+        summary: {
+          active: brokers.filter((item: any) => item.status === "ACTIVE").length,
+          inactive: brokers.filter((item: any) => item.status === "INACTIVE").length,
+          suspended: brokers.filter((item: any) => item.status === "SUSPENDED").length,
+          imported: 0,
+        },
+      },
+      {
+        status: 200,
+        headers: { "Cache-Control": "no-store" },
+      },
+    );
+  } catch (error) {
+    return routeError(error);
   }
-
-  if (name.endsWith(".docx")) {
-    const mammoth = require("mammoth") as typeof import("mammoth");
-    const result = await mammoth.extractRawText({ buffer: bytes });
-    return result.value || "";
-  }
-
-  if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
-    const XLSX = require("xlsx") as typeof import("xlsx");
-    const workbook = XLSX.read(bytes, { type: "buffer" });
-    return workbook.SheetNames.map((sheetName) => {
-      const sheet = workbook.Sheets[sheetName];
-      return XLSX.utils.sheet_to_csv(sheet);
-    }).join("\n");
-  }
-
-  if (name.endsWith(".pdf") || mime.includes("pdf")) {
-    const pdfParse = require("pdf-parse") as (input: Buffer) => Promise<{ text?: string }>;
-    const result = await pdfParse(bytes);
-    return result.text || "";
-  }
-
-  return "";
 }
 
 export async function POST(request: NextRequest) {
   try {
-    await requireCompanyAdmin();
+    const user = await requireCompanyAdmin();
+    const companyId = clean(user.companyId);
 
-    const form = await request.formData();
-    const file = form.get("file");
-    if (!(file instanceof File)) {
-      throw new HttpError("Choose a broker registration document.", 422);
+    if (!companyId) {
+      throw new HttpError("Your account is not connected to a company.", 403);
     }
 
-    if (!file.size || file.size > MAX_FILE_SIZE) {
-      throw new HttpError("The broker document must be between 1 byte and 10 MB.", 413);
+    // IMPORTANT: the normal broker registration form sends JSON.
+    // Do not call request.formData() in this route.
+    assertJsonRequest(request);
+
+    let body: Record<string, any>;
+
+    try {
+      body = await request.json();
+    } catch {
+      throw new HttpError("Broker registration contains invalid JSON.", 400);
     }
 
-    const bytes = Buffer.from(await file.arrayBuffer());
-    const extracted = await extractText(file, bytes);
-    if (!clean(extracted)) {
+    const db = prisma as any;
+
+    const title = clean(body.title).toUpperCase() || "MR";
+    const firstName = clean(body.firstName);
+    const surname = clean(body.surname);
+    const name = `${firstName} ${surname}`.trim();
+    const businessName = clean(body.businessName);
+    const tinNumber = clean(body.tinNumber);
+    const officialAgentNo = clean(body.officialAgentNo);
+    const phone = clean(body.phone);
+    const alternatePhone = clean(body.alternatePhone);
+    const email = clean(body.email).toLowerCase();
+    const nationality = clean(body.nationality);
+    const gender = clean(body.gender).toUpperCase();
+    const postalAddress = clean(body.postalAddress);
+    const location = clean(body.location);
+    const city = clean(body.city);
+    const region = clean(body.region);
+    const district = clean(body.district);
+    const ward = clean(body.ward);
+    const country = clean(body.country);
+    const identityType = clean(body.identityType).toUpperCase();
+    const identityNumber = clean(body.identityNumber);
+    const identityIssuedBy = clean(body.identityIssuedBy);
+    const status = clean(body.status).toUpperCase() || "ACTIVE";
+
+    const required = [
+      ["title", title],
+      ["firstName", firstName],
+      ["surname", surname],
+      ["businessName", businessName],
+      ["tinNumber", tinNumber],
+      ["officialAgentNo", officialAgentNo],
+      ["phone", phone],
+      ["alternatePhone", alternatePhone],
+      ["email", email],
+      ["nationality", nationality],
+      ["gender", gender],
+      ["postalAddress", postalAddress],
+      ["location", location],
+      ["city", city],
+      ["region", region],
+      ["district", district],
+      ["ward", ward],
+      ["country", country],
+      ["identityType", identityType],
+      ["identityNumber", identityNumber],
+      ["identityIssuedBy", identityIssuedBy],
+    ] as const;
+
+    const missing = required.filter(([, value]) => !value).map(([field]) => field);
+
+    if (missing.length) {
       throw new HttpError(
-        "No readable text was found. Use a text-based PDF, Word, Excel, CSV, JSON or TXT document.",
+        `Complete all required broker fields: ${missing.join(", ")}.`,
         422,
       );
     }
 
-    const fields = parseText(extracted);
-    return NextResponse.json({
-      success: true,
-      fields,
-      message: `Auto-fill found ${Object.keys(fields).length} broker field group(s) in ${file.name}.`,
+    if (!validEmail(email)) {
+      throw new HttpError("Enter a valid broker email address.", 422);
+    }
+
+    if (!allowedGenders.has(gender)) {
+      throw new HttpError("Gender must be MALE, FEMALE or OTHER.", 422);
+    }
+
+    if (!allowedStatuses.has(status)) {
+      throw new HttpError("Invalid broker status.", 422);
+    }
+
+    const dateOfBirth = body.dateOfBirth
+      ? new Date(clean(body.dateOfBirth))
+      : null;
+    const registrationDate = body.registrationDate
+      ? new Date(clean(body.registrationDate))
+      : new Date();
+    const attendedDate = body.attendedDate
+      ? new Date(clean(body.attendedDate))
+      : null;
+
+    if (!dateOfBirth || Number.isNaN(dateOfBirth.getTime()) || dateOfBirth >= new Date()) {
+      throw new HttpError("Enter a valid date of birth in the past.", 422);
+    }
+
+    if (Number.isNaN(registrationDate.getTime())) {
+      throw new HttpError("Registration date is invalid.", 422);
+    }
+
+    if (attendedDate && Number.isNaN(attendedDate.getTime())) {
+      throw new HttpError("Attended date is invalid.", 422);
+    }
+
+    let code = clean(body.code).toUpperCase();
+
+    if (!code) {
+      code = await generateBrokerCode(db, companyId);
+    }
+
+    const duplicateCode = await db.brokerCustomer.findFirst({
+      where: { companyId, code },
+      select: { id: true },
     });
+
+    if (duplicateCode) {
+      throw new HttpError(`Broker code ${code} is already registered.`, 409);
+    }
+
+    const duplicateIdentity = await db.brokerCustomer.findFirst({
+      where: {
+        companyId,
+        identityType,
+        identityNumber,
+        status: { not: "SUSPENDED" },
+      },
+      select: { id: true },
+    });
+
+    if (duplicateIdentity) {
+      throw new HttpError(
+        `${identityType} number ${identityNumber} is already registered.`,
+        409,
+      );
+    }
+
+    const rawAccounts = normalizeAccounts(body.agentAccounts, companyId);
+
+    const broker = await db.$transaction(async (tx: any) => {
+      for (const account of rawAccounts) {
+        const duplicate = await tx.brokerAgentAccount.findFirst({
+          where: {
+            companyId,
+            network: account.network,
+            agentNumber: account.agentNumber,
+          },
+          select: { id: true },
+        });
+
+        if (duplicate) {
+          throw new HttpError(
+            `${account.network} agent number ${account.agentNumber} is already registered.`,
+            409,
+          );
+        }
+      }
+
+      const created = await tx.brokerCustomer.create({
+        data: {
+          companyId,
+          code,
+          name,
+          title,
+          firstName,
+          surname,
+          businessName,
+          tinNumber,
+          officialAgentNo,
+          phone,
+          alternatePhone,
+          email,
+          nationality,
+          dateOfBirth,
+          gender,
+          postalAddress,
+          location,
+          address: optional(body.address) || location,
+          city,
+          region,
+          district,
+          ward,
+          country,
+          identityType,
+          identityNumber,
+          identityIssuedBy,
+          identityOther: optional(body.identityOther),
+          profileImageUrl: optional(body.profileImageUrl),
+          signatureUrl: optional(body.signatureUrl),
+          registrationDate,
+          attendedBy: optional(body.attendedBy),
+          attendedSignatureUrl: optional(body.attendedSignatureUrl),
+          attendedDate,
+          attendedLocation: optional(body.attendedLocation),
+          status,
+          notes: optional(body.notes),
+
+          // latitude and longitude are intentionally NOT accepted here.
+          // Broker location sharing/GPS workflows may populate them elsewhere.
+        },
+      });
+
+      if (rawAccounts.length) {
+        await tx.brokerAgentAccount.createMany({
+          data: rawAccounts.map((account: any) => ({
+            ...account,
+            brokerCustomerId: created.id,
+          })),
+        });
+      }
+
+      return tx.brokerCustomer.findUnique({
+        where: { id: created.id },
+        include: { agentAccounts: true },
+      });
+    });
+
+    try {
+      await createAudit({
+        companyId,
+        actorId: user.id,
+        actorName: user.name,
+        actorRole: user.role,
+        action: "CREATE_BROKER",
+        module: "BROKERS",
+        details: `Registered ${name} (${code}).`,
+      });
+    } catch (auditError) {
+      console.error("[CREATE_BROKER_AUDIT_ERROR]", auditError);
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Broker registered successfully.",
+        broker: serialize(broker),
+      },
+      {
+        status: 201,
+        headers: { "Cache-Control": "no-store" },
+      },
+    );
   } catch (error) {
     return routeError(error);
   }

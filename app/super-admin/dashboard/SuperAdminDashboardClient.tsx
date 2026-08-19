@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
   type Dispatch,
+  type MouseEvent,
   type ReactNode,
   type SetStateAction,
 } from "react";
@@ -149,6 +150,39 @@ type SidebarPage =
   | "Reset Passwords"
   | "View Audit Logs";
 
+const PAGE_SLUGS: Record<SidebarPage, string> = {
+  Dashboard: "dashboard",
+  "Create Companies": "create-companies",
+  "Manage Companies": "manage-companies",
+  "Manage Company Admins": "company-admins",
+  "Manage Subscriptions": "subscriptions",
+  "Access Every Company": "company-access",
+  "View Global Reports": "global-reports",
+  "Manage Permissions": "permissions",
+  "Manage System Settings": "system-settings",
+  "Reset Passwords": "reset-passwords",
+  "View Audit Logs": "audit-logs",
+};
+
+const PAGE_BY_SLUG = Object.entries(PAGE_SLUGS).reduce(
+  (map, [page, slug]) => {
+    map[slug] = page as SidebarPage;
+    return map;
+  },
+  {} as Record<string, SidebarPage>,
+);
+
+function moduleHref(page: SidebarPage): string {
+  if (page === "Dashboard") return "/super-admin/dashboard";
+  return `/super-admin/dashboard?module=${encodeURIComponent(PAGE_SLUGS[page])}`;
+}
+
+function moduleFromLocation(): SidebarPage {
+  if (typeof window === "undefined") return "Dashboard";
+  const slug = new URLSearchParams(window.location.search).get("module") ?? "dashboard";
+  return PAGE_BY_SLUG[slug] ?? "Dashboard";
+}
+
 type CompanyForm = {
   name: string;
   code: string;
@@ -213,6 +247,32 @@ const emptyCompanyAdminForm: CompanyAdminForm = {
   phone: "",
   password: "",
   status: "ACTIVE",
+};
+
+const EMPTY_DASHBOARD_DATA: DashboardData = {
+  stats: {
+    totalCompanies: 0,
+    activeCompanies: 0,
+    suspendedCompanies: 0,
+    disabledCompanies: 0,
+    totalUsers: 0,
+    totalCompanyAdmins: 0,
+    activeCompanyAdmins: 0,
+    totalSubscriptions: 0,
+    activeSubscriptions: 0,
+    totalAuditLogs: 0,
+    totalNotifications: 0,
+    unreadNotifications: 0,
+    totalMessages: 0,
+    unreadMessages: 0,
+    revenueTotal: 0,
+  },
+  companies: [],
+  subscriptions: [],
+  auditLogs: [],
+  notifications: [],
+  messages: [],
+  users: [],
 };
 
 function createPermissionState() {
@@ -330,17 +390,17 @@ export default function SuperAdminDashboardClient({ user }: Props) {
 
   const sidebarItems = useMemo(
     () => [
-      { label: "Dashboard" as const, icon: "🏠" },
-      { label: "Create Companies" as const, icon: "➕" },
-      { label: "Manage Companies" as const, icon: "🏢" },
-      { label: "Manage Company Admins" as const, icon: "👨‍💼" },
-      { label: "Manage Subscriptions" as const, icon: "💳" },
-      { label: "Access Every Company" as const, icon: "🌐" },
-      { label: "View Global Reports" as const, icon: "📊" },
-      { label: "Manage Permissions" as const, icon: "🛡️" },
-      { label: "Manage System Settings" as const, icon: "⚙️" },
-      { label: "Reset Passwords" as const, icon: "🔑" },
-      { label: "View Audit Logs" as const, icon: "🧾" },
+      { label: "Dashboard" as const, icon: "⌂", hint: "Global command center" },
+      { label: "Create Companies" as const, icon: "+", hint: "Onboard a company" },
+      { label: "Manage Companies" as const, icon: "▦", hint: "Control tenant status" },
+      { label: "Manage Company Admins" as const, icon: "♟", hint: "Admin accounts" },
+      { label: "Manage Subscriptions" as const, icon: "◇", hint: "Plans and billing" },
+      { label: "Access Every Company" as const, icon: "◎", hint: "Cross-company view" },
+      { label: "View Global Reports" as const, icon: "▤", hint: "Platform analytics" },
+      { label: "Manage Permissions" as const, icon: "◆", hint: "Role access matrix" },
+      { label: "Manage System Settings" as const, icon: "⚙", hint: "Platform controls" },
+      { label: "Reset Passwords" as const, icon: "⌘", hint: "Account recovery" },
+      { label: "View Audit Logs" as const, icon: "≡", hint: "Security activity" },
     ],
     [],
   );
@@ -409,7 +469,19 @@ export default function SuperAdminDashboardClient({ user }: Props) {
     if (savedImage) setProfileImage(savedImage);
     if (savedCollapse === "yes") setSidebarCollapsed(true);
 
+    setActivePage(moduleFromLocation());
+
+    const handleHistoryNavigation = () => {
+      setActivePage(moduleFromLocation());
+      setMobileSidebarOpen(false);
+    };
+
+    window.addEventListener("popstate", handleHistoryNavigation);
     loadDashboard();
+
+    return () => {
+      window.removeEventListener("popstate", handleHistoryNavigation);
+    };
   }, []);
 
   function toggleSidebar() {
@@ -429,6 +501,41 @@ export default function SuperAdminDashboardClient({ user }: Props) {
     setShowMessages(false);
     setShowNotifications(false);
     setMobileSidebarOpen(false);
+
+    if (typeof window !== "undefined") {
+      const nextUrl = moduleHref(page);
+      const currentUrl = `${window.location.pathname}${window.location.search}`;
+
+      if (currentUrl !== nextUrl) {
+        window.history.pushState({ superAdminModule: PAGE_SLUGS[page] }, "", nextUrl);
+      }
+
+      window.requestAnimationFrame(() => {
+        document.querySelector<HTMLElement>("[data-super-admin-content]")?.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      });
+    }
+  }
+
+  function handleModuleLink(
+    event: MouseEvent<HTMLAnchorElement>,
+    page: SidebarPage,
+  ) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    openPage(page);
   }
 
   async function handleProfileUpload(event: ChangeEvent<HTMLInputElement>) {
@@ -958,23 +1065,44 @@ export default function SuperAdminDashboardClient({ user }: Props) {
           <strong>{sidebarCollapsed ? "" : "Collapse Menu"}</strong>
         </button>
 
-        <nav className={styles.nav}>
-          {sidebarItems.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              onClick={() => openPage(item.label)}
-              className={activePage === item.label ? styles.activeNav : ""}
-              title={item.label}
-            >
-              <span className={styles.navIcon}>{item.icon}</span>
-              <span className={styles.navText}>{item.label}</span>
-            </button>
-          ))}
+        <div className={styles.navSectionLabel}>Platform modules</div>
+
+        <nav className={styles.nav} aria-label="Super Admin modules">
+          {sidebarItems.map((item) => {
+            const active = activePage === item.label;
+
+            return (
+              <a
+                key={item.label}
+                href={moduleHref(item.label)}
+                onClick={(event) => handleModuleLink(event, item.label)}
+                className={`${styles.navItem} ${active ? styles.activeNav : ""}`}
+                title={sidebarCollapsed ? `${item.label} — ${item.hint}` : item.label}
+                aria-current={active ? "page" : undefined}
+              >
+                <span className={styles.navIcon} aria-hidden="true">
+                  {item.icon}
+                </span>
+                <span className={styles.navCopy}>
+                  <strong className={styles.navText}>{item.label}</strong>
+                  <small className={styles.navHint}>{item.hint}</small>
+                </span>
+                <span className={styles.navArrow} aria-hidden="true">›</span>
+              </a>
+            );
+          })}
         </nav>
+
+        <div className={styles.sidebarStatus}>
+          <span className={styles.statusPulse} />
+          <div>
+            <strong>Super Admin online</strong>
+            <small>Role-protected control plane</small>
+          </div>
+        </div>
       </aside>
 
-      <section className={styles.content}>
+      <section className={styles.content} data-super-admin-content>
         <header className={styles.topbar}>
           <button
             type="button"
@@ -984,28 +1112,30 @@ export default function SuperAdminDashboardClient({ user }: Props) {
             ☰
           </button>
 
-          <div className={styles.topNav}>
-            <button
-              className={activePage === "Dashboard" ? styles.activeTopNav : ""}
-              onClick={() => openPage("Dashboard")}
-            >
-              🏠 Dashboard
-            </button>
-            <button onClick={() => openPage("Manage Companies")}>
-              🏢 Companies
-            </button>
-            <button onClick={() => openPage("Manage Company Admins")}>
-              👨‍💼 Company Admins
-            </button>
-            <button onClick={() => openPage("Manage Subscriptions")}>
-              💳 Subscriptions
-            </button>
-            <button onClick={() => openPage("Manage Permissions")}>
-              🛡️ Permissions
-            </button>
-            <button onClick={() => openPage("View Audit Logs")}>
-              🧾 Audit Logs
-            </button>
+          <div className={styles.topNav} aria-label="Quick module navigation">
+            {[
+              ["Dashboard", "⌂ Dashboard"],
+              ["Manage Companies", "▦ Companies"],
+              ["Manage Company Admins", "♟ Company Admins"],
+              ["Manage Subscriptions", "◇ Subscriptions"],
+              ["Manage Permissions", "◆ Permissions"],
+              ["View Audit Logs", "≡ Audit Logs"],
+            ].map(([page, label]) => {
+              const module = page as SidebarPage;
+              const active = activePage === module;
+
+              return (
+                <a
+                  key={module}
+                  href={moduleHref(module)}
+                  onClick={(event) => handleModuleLink(event, module)}
+                  className={active ? styles.activeTopNav : ""}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {label}
+                </a>
+              );
+            })}
           </div>
 
           <div className={styles.topbarActions}>
@@ -1122,55 +1252,77 @@ export default function SuperAdminDashboardClient({ user }: Props) {
         {loading ? (
           <section className={styles.loadingCard}>
             <div className={styles.loader}></div>
-            <h2>Loading dashboard data...</h2>
-          </section>
-        ) : errorMessage ? (
-          <section className={styles.errorCard}>
-            <h2>Dashboard API Error</h2>
-            <p>{errorMessage}</p>
-            <button onClick={loadDashboard}>Try Again</button>
+            <h2>Preparing Super Admin modules...</h2>
+            <p>Loading companies, users, subscriptions and control-plane data.</p>
           </section>
         ) : (
-          <DashboardContent
-            activePage={activePage}
-            data={data}
-            actionLoading={actionLoading}
-            companyForm={companyForm}
-            setCompanyForm={setCompanyForm}
-            editingCompanyId={editingCompanyId}
-            clearCompanyForm={clearCompanyForm}
-            saveCompany={saveCompany}
-            startEditCompany={startEditCompany}
-            updateCompanyStatus={updateCompanyStatus}
-            removeCompany={removeCompany}
-            companyAdminForm={companyAdminForm}
-            setCompanyAdminForm={setCompanyAdminForm}
-            editingCompanyAdminId={editingCompanyAdminId}
-            clearCompanyAdminForm={clearCompanyAdminForm}
-            saveCompanyAdmin={saveCompanyAdmin}
-            startEditCompanyAdmin={startEditCompanyAdmin}
-            updateCompanyAdminStatus={updateCompanyAdminStatus}
-            removeCompanyAdmin={removeCompanyAdmin}
-            subscriptionForm={subscriptionForm}
-            setSubscriptionForm={setSubscriptionForm}
-            editingSubscriptionId={editingSubscriptionId}
-            clearSubscriptionForm={clearSubscriptionForm}
-            saveSubscription={saveSubscription}
-            startEditSubscription={startEditSubscription}
-            extendSubscription={extendSubscription}
-            removeSubscription={removeSubscription}
-            selectedCompanyId={selectedCompanyId}
-            setSelectedCompanyId={setSelectedCompanyId}
-            permissions={permissions}
-            setPermissions={setPermissions}
-            settings={settings}
-            setSettings={setSettings}
-            resetPassword={resetPassword}
-            messageForm={messageForm}
-            setMessageForm={setMessageForm}
-            sendMessage={sendMessage}
-            setActivePage={openPage}
-          />
+          <>
+            <section className={styles.moduleCommandBar}>
+              <div>
+                <span>Current module</span>
+                <strong>{activePage}</strong>
+              </div>
+              <div className={styles.moduleCommandMeta}>
+                <span><i className={styles.statusPulse} /> Navigation ready</span>
+                <button type="button" onClick={loadDashboard} disabled={loading}>
+                  ↻ Refresh data
+                </button>
+              </div>
+            </section>
+
+            {errorMessage && (
+              <section className={styles.inlineWarning} role="alert">
+                <div>
+                  <strong>Some live dashboard data could not be loaded.</strong>
+                  <p>{errorMessage}</p>
+                </div>
+                <button type="button" onClick={loadDashboard}>Retry connection</button>
+              </section>
+            )}
+
+            <div className={styles.moduleStage} key={activePage}>
+              <DashboardContent
+                activePage={activePage}
+                data={data ?? EMPTY_DASHBOARD_DATA}
+                actionLoading={actionLoading}
+                companyForm={companyForm}
+                setCompanyForm={setCompanyForm}
+                editingCompanyId={editingCompanyId}
+                clearCompanyForm={clearCompanyForm}
+                saveCompany={saveCompany}
+                startEditCompany={startEditCompany}
+                updateCompanyStatus={updateCompanyStatus}
+                removeCompany={removeCompany}
+                companyAdminForm={companyAdminForm}
+                setCompanyAdminForm={setCompanyAdminForm}
+                editingCompanyAdminId={editingCompanyAdminId}
+                clearCompanyAdminForm={clearCompanyAdminForm}
+                saveCompanyAdmin={saveCompanyAdmin}
+                startEditCompanyAdmin={startEditCompanyAdmin}
+                updateCompanyAdminStatus={updateCompanyAdminStatus}
+                removeCompanyAdmin={removeCompanyAdmin}
+                subscriptionForm={subscriptionForm}
+                setSubscriptionForm={setSubscriptionForm}
+                editingSubscriptionId={editingSubscriptionId}
+                clearSubscriptionForm={clearSubscriptionForm}
+                saveSubscription={saveSubscription}
+                startEditSubscription={startEditSubscription}
+                extendSubscription={extendSubscription}
+                removeSubscription={removeSubscription}
+                selectedCompanyId={selectedCompanyId}
+                setSelectedCompanyId={setSelectedCompanyId}
+                permissions={permissions}
+                setPermissions={setPermissions}
+                settings={settings}
+                setSettings={setSettings}
+                resetPassword={resetPassword}
+                messageForm={messageForm}
+                setMessageForm={setMessageForm}
+                sendMessage={sendMessage}
+                setActivePage={openPage}
+              />
+            </div>
+          </>
         )}
       </section>
     </main>

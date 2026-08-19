@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, normalizeRole } from "@/lib/auth";
 
 export type RequiredStaffSession = {
   id: string;
@@ -12,7 +12,7 @@ export async function requireStaffSession(): Promise<RequiredStaffSession> {
   const user = (await getCurrentUser()) as any;
 
   if (!user) throw new Error("UNAUTHENTICATED");
-  if (String(user.role || "").toUpperCase() !== "STAFF") {
+  if (normalizeRole(user.role) !== "STAFF") {
     throw new Error("FORBIDDEN");
   }
   if (!user.companyId) {

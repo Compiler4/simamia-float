@@ -341,18 +341,34 @@ export async function GET() {
         source: customer.locationSource,
       }));
 
-    const history = primaryStaffDevice
-      ? (primaryStaffDevice.pings || [])
-          .filter((ping: any) => usableCoordinatePair(ping.latitude, ping.longitude))
-          .map((ping: any) => ({
-            id: `history-${ping.id}`,
-            markerType: "HISTORY",
-            latitude: Number(ping.latitude),
-            longitude: Number(ping.longitude),
-            capturedAt: ping.capturedAt,
-            label: "Staff route",
-          }))
-      : [];
+    // Combine pings from every GPS device owned by this logged-in staff user.
+    // A staff member may change phone/browser during the day; limiting history
+    // to only the latest device made parts of the real route disappear.
+    const history = (staffDevices as any[])
+      .flatMap((device: any) =>
+        (device.pings || []).map((ping: any) => ({
+          ...ping,
+          deviceId: device.id,
+          deviceName: device.name,
+        })),
+      )
+      .filter((ping: any) => usableCoordinatePair(ping.latitude, ping.longitude))
+      .sort(
+        (left: any, right: any) =>
+          new Date(left.capturedAt).getTime() - new Date(right.capturedAt).getTime(),
+      )
+      .map((ping: any) => ({
+        id: `history-${ping.id}`,
+        markerType: "HISTORY",
+        latitude: Number(ping.latitude),
+        longitude: Number(ping.longitude),
+        capturedAt: ping.capturedAt,
+        speedKph: ping.speedKph,
+        accuracy: ping.accuracy,
+        label: "Staff route",
+        subtitle: `${ping.deviceName || "Staff GPS device"}${ping.speedKph != null ? ` · ${Math.round(Number(ping.speedKph))} km/h` : ""}`,
+        source: "STAFF_GPS_HISTORY",
+      }));
 
     return NextResponse.json(
       serialise({

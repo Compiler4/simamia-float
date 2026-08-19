@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, getDashboardPath, normalizeRole } from "@/lib/auth";
 import SuperAdminDashboardClient from "./SuperAdminDashboardClient";
 
 export const dynamic = "force-dynamic";
@@ -11,8 +11,8 @@ export default async function SuperAdminDashboardPage() {
     redirect("/login");
   }
 
-  if (user.role !== "SUPER_ADMIN") {
-    redirect("/dashboard");
+  if (normalizeRole(user.role) !== "SUPER_ADMIN") {
+    redirect(getDashboardPath(user.role));
   }
 
   return <SuperAdminDashboardClient user={user} />;

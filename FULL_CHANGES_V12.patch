@@ -1,0 +1,1210 @@
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/api/staff/live-locations/route.ts /mnt/data/simamia_staff_fix_v12_work/app/api/staff/live-locations/route.ts
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/api/staff/live-locations/route.ts	2026-08-18 16:16:43.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/api/staff/live-locations/route.ts	2026-08-19 09:29:34.388865767 +0000
+@@ -341,18 +341,34 @@
+         source: customer.locationSource,
+       }));
+ 
+-    const history = primaryStaffDevice
+-      ? (primaryStaffDevice.pings || [])
+-          .filter((ping: any) => usableCoordinatePair(ping.latitude, ping.longitude))
+-          .map((ping: any) => ({
+-            id: `history-${ping.id}`,
+-            markerType: "HISTORY",
+-            latitude: Number(ping.latitude),
+-            longitude: Number(ping.longitude),
+-            capturedAt: ping.capturedAt,
+-            label: "Staff route",
+-          }))
+-      : [];
++    // Combine pings from every GPS device owned by this logged-in staff user.
++    // A staff member may change phone/browser during the day; limiting history
++    // to only the latest device made parts of the real route disappear.
++    const history = (staffDevices as any[])
++      .flatMap((device: any) =>
++        (device.pings || []).map((ping: any) => ({
++          ...ping,
++          deviceId: device.id,
++          deviceName: device.name,
++        })),
++      )
++      .filter((ping: any) => usableCoordinatePair(ping.latitude, ping.longitude))
++      .sort(
++        (left: any, right: any) =>
++          new Date(left.capturedAt).getTime() - new Date(right.capturedAt).getTime(),
++      )
++      .map((ping: any) => ({
++        id: `history-${ping.id}`,
++        markerType: "HISTORY",
++        latitude: Number(ping.latitude),
++        longitude: Number(ping.longitude),
++        capturedAt: ping.capturedAt,
++        speedKph: ping.speedKph,
++        accuracy: ping.accuracy,
++        label: "Staff route",
++        subtitle: `${ping.deviceName || "Staff GPS device"}${ping.speedKph != null ? ` · ${Math.round(Number(ping.speedKph))} km/h` : ""}`,
++        source: "STAFF_GPS_HISTORY",
++      }));
+ 
+     return NextResponse.json(
+       serialise({
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/api/staff/location-history/route.ts /mnt/data/simamia_staff_fix_v12_work/app/api/staff/location-history/route.ts
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/api/staff/location-history/route.ts	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/api/staff/location-history/route.ts	2026-08-19 09:28:27.892358416 +0000
+@@ -0,0 +1,340 @@
++import { NextRequest, NextResponse } from "next/server";
++
++import { prisma } from "@/lib/prisma";
++import { requireStaffSession } from "@/lib/staff/require-staff";
++
++export const runtime = "nodejs";
++export const dynamic = "force-dynamic";
++export const revalidate = 0;
++
++const DAR_OFFSET = "+03:00";
++
++type CalendarParts = { year: number; month: number; day: number };
++
++type PeriodRange = {
++  name: string;
++  label: string;
++  start: Date;
++  end: Date;
++};
++
++function clean(value: unknown): string {
++  return value === null || value === undefined ? "" : String(value).trim();
++}
++
++function parseCalendarDate(value: string): CalendarParts | null {
++  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
++  if (!match) return null;
++  const year = Number(match[1]);
++  const month = Number(match[2]);
++  const day = Number(match[3]);
++  const test = new Date(Date.UTC(year, month - 1, day));
++  if (
++    test.getUTCFullYear() !== year ||
++    test.getUTCMonth() !== month - 1 ||
++    test.getUTCDate() !== day
++  ) return null;
++  return { year, month, day };
++}
++
++function calendarText(parts: CalendarParts): string {
++  return `${parts.year}-${String(parts.month).padStart(2, "0")}-${String(parts.day).padStart(2, "0")}`;
++}
++
++function shiftCalendar(parts: CalendarParts, days: number): CalendarParts {
++  const date = new Date(Date.UTC(parts.year, parts.month - 1, parts.day + days));
++  return {
++    year: date.getUTCFullYear(),
++    month: date.getUTCMonth() + 1,
++    day: date.getUTCDate(),
++  };
++}
++
++function localStart(parts: CalendarParts): Date {
++  return new Date(`${calendarText(parts)}T00:00:00.000${DAR_OFFSET}`);
++}
++
++function localEnd(parts: CalendarParts): Date {
++  return new Date(`${calendarText(parts)}T23:59:59.999${DAR_OFFSET}`);
++}
++
++function todayDar(): string {
++  return new Intl.DateTimeFormat("en-CA", {
++    year: "numeric",
++    month: "2-digit",
++    day: "2-digit",
++    timeZone: "Africa/Dar_es_Salaam",
++  }).format(new Date());
++}
++
++function labelDate(parts: CalendarParts): string {
++  return new Intl.DateTimeFormat("en-TZ", {
++    day: "2-digit",
++    month: "short",
++    year: "numeric",
++    timeZone: "Africa/Dar_es_Salaam",
++  }).format(localStart(parts));
++}
++
++function resolveRange(request: NextRequest): PeriodRange {
++  const period = clean(request.nextUrl.searchParams.get("period") || "DAY").toUpperCase();
++  const anchorText = clean(request.nextUrl.searchParams.get("anchor") || todayDar());
++  const anchor = parseCalendarDate(anchorText) ?? parseCalendarDate(todayDar())!;
++
++  if (period === "CUSTOM") {
++    const from = parseCalendarDate(clean(request.nextUrl.searchParams.get("from"))) ?? anchor;
++    const to = parseCalendarDate(clean(request.nextUrl.searchParams.get("to"))) ?? anchor;
++    const first = localStart(from) <= localStart(to) ? from : to;
++    const last = localStart(from) <= localStart(to) ? to : from;
++    return {
++      name: "CUSTOM",
++      label: `${labelDate(first)} – ${labelDate(last)}`,
++      start: localStart(first),
++      end: localEnd(last),
++    };
++  }
++
++  if (period === "WEEK") {
++    const abstract = new Date(Date.UTC(anchor.year, anchor.month - 1, anchor.day));
++    const weekday = abstract.getUTCDay(); // 0 Sunday ... 6 Saturday
++    const mondayOffset = weekday === 0 ? -6 : 1 - weekday;
++    const startParts = shiftCalendar(anchor, mondayOffset);
++    const endParts = shiftCalendar(startParts, 6);
++    return {
++      name: "WEEK",
++      label: `${labelDate(startParts)} – ${labelDate(endParts)}`,
++      start: localStart(startParts),
++      end: localEnd(endParts),
++    };
++  }
++
++  if (period === "MONTH") {
++    const startParts = { year: anchor.year, month: anchor.month, day: 1 };
++    const nextMonth = new Date(Date.UTC(anchor.year, anchor.month, 1));
++    const endParts = shiftCalendar(
++      { year: nextMonth.getUTCFullYear(), month: nextMonth.getUTCMonth() + 1, day: 1 },
++      -1,
++    );
++    return {
++      name: "MONTH",
++      label: new Intl.DateTimeFormat("en-TZ", {
++        month: "long",
++        year: "numeric",
++        timeZone: "Africa/Dar_es_Salaam",
++      }).format(localStart(startParts)),
++      start: localStart(startParts),
++      end: localEnd(endParts),
++    };
++  }
++
++  if (period === "YEAR") {
++    const startParts = { year: anchor.year, month: 1, day: 1 };
++    const endParts = { year: anchor.year, month: 12, day: 31 };
++    return {
++      name: "YEAR",
++      label: String(anchor.year),
++      start: localStart(startParts),
++      end: localEnd(endParts),
++    };
++  }
++
++  return {
++    name: "DAY",
++    label: labelDate(anchor),
++    start: localStart(anchor),
++    end: localEnd(anchor),
++  };
++}
++
++function usable(latitude: unknown, longitude: unknown): boolean {
++  const lat = Number(latitude);
++  const lng = Number(longitude);
++  return (
++    Number.isFinite(lat) &&
++    Number.isFinite(lng) &&
++    Math.abs(lat) <= 90 &&
++    Math.abs(lng) <= 180 &&
++    !(lat === 0 && lng === 0)
++  );
++}
++
++function distanceMetres(a: { latitude: number; longitude: number }, b: { latitude: number; longitude: number }): number {
++  const earth = 6_371_000;
++  const rad = (value: number) => (value * Math.PI) / 180;
++  const lat1 = rad(a.latitude);
++  const lat2 = rad(b.latitude);
++  const deltaLat = rad(b.latitude - a.latitude);
++  const deltaLng = rad(b.longitude - a.longitude);
++  const h =
++    Math.sin(deltaLat / 2) ** 2 +
++    Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) ** 2;
++  return earth * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
++}
++
++function serialise<T>(value: T): T {
++  return JSON.parse(
++    JSON.stringify(value, (_key, item) => {
++      if (item && typeof item === "object" && typeof item.toNumber === "function") {
++        return item.toNumber();
++      }
++      return item;
++    }),
++  ) as T;
++}
++
++export async function GET(request: NextRequest) {
++  try {
++    const session = await requireStaffSession();
++    const range = resolveRange(request);
++    const db = prisma as any;
++
++    const devices = await db.companyGpsDevice.findMany({
++      where: {
++        companyId: String(session.companyId),
++        ownerUserId: String(session.id),
++      },
++      select: {
++        id: true,
++        name: true,
++        status: true,
++        lastSeenAt: true,
++        lastLatitude: true,
++        lastLongitude: true,
++        gpsAccuracy: true,
++        speedKph: true,
++        pings: {
++          where: { capturedAt: { gte: range.start, lte: range.end } },
++          orderBy: { capturedAt: "asc" },
++          take: 10000,
++          select: {
++            id: true,
++            latitude: true,
++            longitude: true,
++            accuracy: true,
++            speedKph: true,
++            batteryLevel: true,
++            capturedAt: true,
++          },
++        },
++      },
++      orderBy: { lastSeenAt: "desc" },
++    });
++
++    const history = devices
++      .flatMap((device: any) =>
++        (Array.isArray(device.pings) ? device.pings : []).map((ping: any) => ({
++          ...ping,
++          deviceId: device.id,
++          deviceName: device.name,
++        })),
++      )
++      .filter((ping: any) => usable(ping.latitude, ping.longitude))
++      .sort(
++        (a: any, b: any) =>
++          new Date(a.capturedAt).getTime() - new Date(b.capturedAt).getTime(),
++      );
++
++    let distance = 0;
++    for (let index = 1; index < history.length; index += 1) {
++      distance += distanceMetres(
++        { latitude: Number(history[index - 1].latitude), longitude: Number(history[index - 1].longitude) },
++        { latitude: Number(history[index].latitude), longitude: Number(history[index].longitude) },
++      );
++    }
++
++    const speedSamples = history
++      .map((ping: any) => Number(ping.speedKph ?? 0))
++      .filter((value: number) => Number.isFinite(value) && value >= 0);
++
++    const latestDevice = devices.find((device: any) => usable(device.lastLatitude, device.lastLongitude));
++    const latestPing = history.at(-1) ?? null;
++    const current = latestDevice
++      ? {
++          id: `current-${latestDevice.id}`,
++          deviceId: latestDevice.id,
++          deviceName: latestDevice.name,
++          latitude: Number(latestDevice.lastLatitude),
++          longitude: Number(latestDevice.lastLongitude),
++          accuracy: latestDevice.gpsAccuracy,
++          speedKph: latestDevice.speedKph,
++          capturedAt: latestDevice.lastSeenAt,
++        }
++      : latestPing;
++
++    return NextResponse.json(
++      serialise({
++        success: true,
++        period: {
++          name: range.name,
++          label: range.label,
++          start: range.start,
++          end: range.end,
++        },
++        staff: {
++          id: String(session.id),
++          name: session.name,
++          email: session.email,
++          companyId: String(session.companyId),
++        },
++        devices: devices.map((device: any) => ({
++          id: device.id,
++          name: device.name,
++          status: device.status,
++          lastSeenAt: device.lastSeenAt,
++          lastLatitude: device.lastLatitude,
++          lastLongitude: device.lastLongitude,
++          gpsAccuracy: device.gpsAccuracy,
++          speedKph: device.speedKph,
++        })),
++        current,
++        history,
++        summary: {
++          gpsPoints: history.length,
++          distanceMetres: distance,
++          distanceKm: Number((distance / 1000).toFixed(3)),
++          averageSpeedKph: speedSamples.length
++            ? Number((speedSamples.reduce((sum: number, value: number) => sum + value, 0) / speedSamples.length).toFixed(1))
++            : 0,
++          maxSpeedKph: speedSamples.length ? Math.max(...speedSamples) : 0,
++          firstCapturedAt: history[0]?.capturedAt ?? null,
++          lastCapturedAt: history.at(-1)?.capturedAt ?? latestDevice?.lastSeenAt ?? null,
++        },
++      }),
++      {
++        headers: {
++          "Cache-Control": "private, no-store",
++        },
++      },
++    );
++  } catch (error) {
++    const message = error instanceof Error ? error.message : String(error);
++    const code =
++      typeof error === "object" && error !== null && "code" in error
++        ? String((error as { code?: unknown }).code ?? "")
++        : "";
++    const status =
++      message === "UNAUTHENTICATED"
++        ? 401
++        : message === "FORBIDDEN" || message === "STAFF_COMPANY_REQUIRED"
++          ? 403
++          : 500;
++
++    console.error("[STAFF_LOCATION_HISTORY]", error);
++
++    return NextResponse.json(
++      {
++        success: false,
++        message:
++          status === 401
++            ? "Please sign in again."
++            : status === 403
++              ? "Staff access is required."
++              : code === "P2021" || code === "P2022"
++                ? "The GPS history database is not synchronized."
++                : "Real Staff GPS travel history could not be loaded.",
++        details: process.env.NODE_ENV === "development" ? message : undefined,
++      },
++      { status },
++    );
++  }
++}
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/api/staff/preview/route.ts /mnt/data/simamia_staff_fix_v12_work/app/api/staff/preview/route.ts
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/api/staff/preview/route.ts	2026-08-18 16:42:24.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/api/staff/preview/route.ts	2026-08-19 09:31:16.397778841 +0000
+@@ -50,6 +50,57 @@
+   return Array.from(new Set(values.map(clean).filter(Boolean)));
+ }
+ 
++function normaliseScope(value: unknown): string {
++  const scope = clean(value).toLowerCase();
++  if (["bank", "bank_deposit", "bank-deposit"].includes(scope)) return "deposit";
++  if (["collection", "float", "funding"].includes(scope)) return "transaction";
++  if (["payment", "payment_proof", "payment-proof"].includes(scope)) return "proof";
++  if (["document", "staff_file", "staff-file"].includes(scope)) return "file";
++  return scope;
++}
++
++function normaliseKind(value: unknown): string {
++  return clean(value).toUpperCase().replaceAll("-", "_").replaceAll(" ", "_");
++}
++
++function sameReference(left: unknown, right: unknown): boolean {
++  const a = clean(left).toLowerCase();
++  const b = clean(right).toLowerCase();
++  return Boolean(a && b && a === b);
++}
++
++function sameSource(left: unknown, right: unknown): boolean {
++  const normalise = (value: unknown) => {
++    const raw = clean(value);
++    if (!raw) return "";
++    try {
++      const decoded = decodeURIComponent(raw);
++      return decoded.split("#")[0].replaceAll("\\", "/").replace(/\/+$/, "");
++    } catch {
++      return raw.split("#")[0].replaceAll("\\", "/").replace(/\/+$/, "");
++    }
++  };
++  const a = normalise(left);
++  const b = normalise(right);
++  return Boolean(a && b && (a === b || a.endsWith(b) || b.endsWith(a)));
++}
++
++function scopeCompatible(candidate: Candidate, requestedScope: string, requestedKind: string): boolean {
++  if (requestedScope && normaliseScope(candidate.scope) !== normaliseScope(requestedScope)) return false;
++  if (!requestedKind) return true;
++
++  const candidateTitle = normaliseKind(`${candidate.title} ${candidate.details}`);
++  const kind = normaliseKind(requestedKind);
++
++  if (kind === "BANK_DEPOSIT") return candidate.scope === "deposit";
++  if (kind === "EXPENSE") return candidate.scope === "expense";
++  if (["COLLECTION", "BROKER_COLLECTION", "FLOAT", "FLOAT_TRANSACTION", "STAFF_RETURN_TO_ACCOUNTANT"].includes(kind)) {
++    return candidate.scope === "transaction";
++  }
++  if (["PROOF", "PAYMENT_PROOF", "SMS_SCREENSHOT"].includes(kind)) return candidate.scope === "proof";
++  return candidateTitle.includes(kind) || !["BANK_DEPOSIT", "EXPENSE", "COLLECTION", "BROKER_COLLECTION", "FLOAT", "FLOAT_TRANSACTION", "STAFF_RETURN_TO_ACCOUNTANT", "PROOF", "PAYMENT_PROOF", "SMS_SCREENSHOT"].includes(kind);
++}
++
+ function escapeHtml(value: unknown): string {
+   return clean(value)
+     .replaceAll("&", "&amp;")
+@@ -252,15 +303,16 @@
+   });
+ }
+ 
+-async function findOwnCandidates(companyId: string, staffId: string): Promise<Candidate[]> {
++async function findOwnCandidates(companyId: string, staffId: string, recordId = ""): Promise<Candidate[]> {
+   const db = prisma as any;
++  const idWhere = recordId ? { id: recordId } : {};
+   const candidates: Candidate[] = [];
+   const tasks: Array<Promise<void>> = [];
+ 
+   if (db.staffFundingReceipt?.findMany) {
+     tasks.push(
+       db.staffFundingReceipt.findMany({
+-        where: { companyId, staffId }, orderBy: { issuedAt: "desc" }, take: 1000,
++        where: { companyId, staffId, ...idWhere }, orderBy: { issuedAt: "desc" }, take: recordId ? 1 : 1000,
+       }).then((rows: any[]) => {
+         for (const row of safeArray(rows)) {
+           const amount = numeric(row.floatAmount) + numeric(row.cashAmount);
+@@ -280,9 +332,9 @@
+   if (db.bankDeposit?.findMany) {
+     tasks.push(
+       db.bankDeposit.findMany({
+-        where: { companyId, staffId },
++        where: { companyId, staffId, ...idWhere },
+         orderBy: { depositDate: "desc" },
+-        take: 1000,
++        take: recordId ? 1 : 1000,
+       }).then((rows: any[]) => {
+         for (const row of safeArray(rows)) {
+           const amount = numeric(row.amount);
+@@ -302,9 +354,9 @@
+   if (db.floatTransaction?.findMany) {
+     tasks.push(
+       db.floatTransaction.findMany({
+-        where: { companyId, OR: [{ fromUserId: staffId }, { toUserId: staffId }] },
++        where: { companyId, ...idWhere, OR: [{ fromUserId: staffId }, { toUserId: staffId }] },
+         orderBy: { createdAt: "desc" },
+-        take: 1000,
++        take: recordId ? 1 : 1000,
+       }).then((rows: any[]) => {
+         for (const row of safeArray(rows)) {
+           const amount = numeric(row.returnedAmount ?? row.amount);
+@@ -329,7 +381,7 @@
+   if (db.staffCollection?.findMany) {
+     tasks.push(
+       db.staffCollection.findMany({
+-        where: { companyId, staffId }, orderBy: { collectionDate: "desc" }, take: 1000,
++        where: { companyId, staffId, ...idWhere }, orderBy: { collectionDate: "desc" }, take: recordId ? 1 : 1000,
+       }).then((rows: any[]) => {
+         for (const row of safeArray(rows)) {
+           const amount = numeric(row.amount);
+@@ -349,7 +401,7 @@
+   if (db.expense?.findMany) {
+     tasks.push(
+       db.expense.findMany({
+-        where: { companyId, employeeId: staffId }, orderBy: { expenseDate: "desc" }, take: 1000,
++        where: { companyId, employeeId: staffId, ...idWhere }, orderBy: { expenseDate: "desc" }, take: recordId ? 1 : 1000,
+       }).then((rows: any[]) => {
+         for (const row of safeArray(rows)) {
+           const amount = numeric(row.amount);
+@@ -370,7 +422,7 @@
+   if (db.staffProofSubmission?.findMany) {
+     tasks.push(
+       db.staffProofSubmission.findMany({
+-        where: { companyId, staffId }, orderBy: { createdAt: "desc" }, take: 1000,
++        where: { companyId, staffId, ...idWhere }, orderBy: { createdAt: "desc" }, take: recordId ? 1 : 1000,
+       }).then((rows: any[]) => {
+         for (const row of safeArray(rows)) {
+           const amount = numeric(row.amount);
+@@ -395,7 +447,7 @@
+   if (db.staffFile?.findMany) {
+     tasks.push(
+       db.staffFile.findMany({
+-        where: { companyId, ownerUserId: staffId }, orderBy: { createdAt: "desc" }, take: 1000,
++        where: { companyId, ownerUserId: staffId, ...idWhere }, orderBy: { createdAt: "desc" }, take: recordId ? 1 : 1000,
+       }).then((rows: any[]) => {
+         for (const row of safeArray(rows)) {
+           const id = String(row.id);
+@@ -541,34 +593,68 @@
+     const session = await requireStaff();
+     const companyId = String(session.companyId);
+     const staffId = String(session.id);
+-    const scope = clean(request.nextUrl.searchParams.get("scope")).toLowerCase();
++    const scope = normaliseScope(request.nextUrl.searchParams.get("scope"));
+     const id = clean(request.nextUrl.searchParams.get("id"));
++    const reference = clean(request.nextUrl.searchParams.get("reference"));
++    const kind = normaliseKind(request.nextUrl.searchParams.get("kind"));
+     const requestedSource = clean(request.nextUrl.searchParams.get("source"));
+     const raw = request.nextUrl.searchParams.get("raw") === "1";
+ 
+-    const candidates = await findOwnCandidates(companyId, staffId);
+-    const candidate =
+-      (id
+-        ? candidates.find((item) =>
+-            item.id === id &&
+-            (!scope || item.scope === scope) &&
+-            (!requestedSource || item.urls.includes(requestedSource)),
+-          )
+-        : null) ||
+-      (requestedSource ? candidates.find((item) => item.urls.includes(requestedSource)) : null);
++    // Every item in this array is already filtered by BOTH companyId and the
++    // logged-in staffId. Candidate resolution below is therefore allowed to be
++    // tolerant of UI aliases (receiptUrl/proofUrl/reference) without weakening
++    // ownership security.
++    const exactOwned = id ? await findOwnCandidates(companyId, staffId, id) : [];
++    const candidates = exactOwned.length
++      ? exactOwned
++      : await findOwnCandidates(companyId, staffId);
++    const scoped = candidates.filter((item) => scopeCompatible(item, scope, kind));
++
++    let candidate: Candidate | null = null;
++
++    // 1. The database row id is the strongest key. Do NOT additionally require
++    // the client-side source URL to match: aggregated My Transactions rows can
++    // expose receiptUrl while the underlying model exposes proofUrl (or vice
++    // versa). That exact-source requirement caused the false 403 error.
++    if (id) {
++      candidate = scoped.find((item) => item.id === id) ?? null;
++    }
++
++    // 2. Aggregated rows may carry a generated id but preserve the real
++    // transaction reference. This remains safe because `scoped` contains only
++    // records owned by this staff user inside this company.
++    if (!candidate && reference) {
++      candidate = scoped.find((item) => sameReference(item.reference, reference)) ?? null;
++    }
++
++    // 3. Uploaded-file paths are the last compatibility key for legacy rows.
++    if (!candidate && requestedSource) {
++      candidate = scoped.find((item) => item.urls.some((url) => sameSource(url, requestedSource))) ?? null;
++    }
++
++    // If the UI sent an obsolete scope alias, retry by owned id/reference/source
++    // only. This cannot reveal another user's data because `candidates` itself is
++    // already ownership-filtered at the database layer.
++    if (!candidate && id) candidate = candidates.find((item) => item.id === id) ?? null;
++    if (!candidate && reference) candidate = candidates.find((item) => sameReference(item.reference, reference)) ?? null;
++    if (!candidate && requestedSource) {
++      candidate = candidates.find((item) => item.urls.some((url) => sameSource(url, requestedSource))) ?? null;
++    }
+ 
+     if (!candidate) {
+       return NextResponse.json(
+         {
+           success: false,
+-          message: "This preview does not belong to the currently logged-in Staff Officer or the transaction no longer exists.",
++          message: "The selected transaction could not be found in this Staff Officer's records. Refresh My Transactions and try Preview again.",
+         },
+-        { status: 403 },
++        { status: 404 },
+       );
+     }
+ 
+-    const source = requestedSource && candidate.urls.includes(requestedSource)
+-      ? requestedSource
++    // A client-provided source is used only when it matches one of the owned
++    // candidate's URLs. Otherwise preview the source from the verified record.
++    const source = requestedSource && candidate.urls.some((url) => sameSource(url, requestedSource))
++      ? candidate.urls.find((url) => sameSource(url, requestedSource)) || candidate.urls[0] || ""
+       : candidate.urls[0] || "";
+ 
+     if (raw) {
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffAdvancedOperations.module.css /mnt/data/simamia_staff_fix_v12_work/app/staff/dashboard/StaffAdvancedOperations.module.css
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffAdvancedOperations.module.css	2026-08-18 16:39:55.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/staff/dashboard/StaffAdvancedOperations.module.css	2026-08-19 09:29:24.705961830 +0000
+@@ -2886,3 +2886,115 @@
+     justify-self: center;
+   }
+ }
++
++/* V12 real GPS / travel history presentation */
++.locationWarning {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  padding: 12px 14px;
++  border: 1px solid rgba(190, 124, 17, .24);
++  border-radius: 16px;
++  color: #74470b;
++  background: linear-gradient(135deg, #fff8e8, #fffdf8);
++  box-shadow: 0 12px 30px rgba(116, 71, 11, .08);
++  font-size: 12px;
++  font-weight: 700;
++}
++
++.realMapHeader {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 18px;
++  padding: 15px 17px;
++  border: 1px solid rgba(8, 121, 92, .13);
++  border-radius: 20px;
++  background:
++    radial-gradient(circle at 92% 20%, rgba(39, 174, 131, .12), transparent 32%),
++    linear-gradient(145deg, #ffffff, #f0f8f5);
++  box-shadow: 0 15px 38px rgba(30, 91, 72, .08);
++}
++
++.realMapHeader > div:first-child {
++  min-width: 0;
++}
++
++.realMapHeader span,
++.realMapHeader strong,
++.realMapHeader small {
++  display: block;
++}
++
++.realMapHeader > div:first-child > span {
++  display: flex;
++  align-items: center;
++  gap: 7px;
++  color: #08795c;
++  font-size: 10px;
++  font-weight: 900;
++  letter-spacing: .09em;
++}
++
++.realMapHeader strong {
++  margin-top: 5px;
++  color: #17372d;
++  font-size: 17px;
++}
++
++.realMapHeader small {
++  margin-top: 4px;
++  color: #61786f;
++  font-size: 11px;
++  font-weight: 700;
++}
++
++.mapLegendPills {
++  display: flex;
++  flex-wrap: wrap;
++  justify-content: flex-end;
++  gap: 8px;
++}
++
++.mapLegendPills span {
++  display: inline-flex;
++  align-items: center;
++  gap: 7px;
++  padding: 8px 10px;
++  border: 1px solid rgba(20, 70, 55, .09);
++  border-radius: 999px;
++  color: #34594d;
++  background: rgba(255,255,255,.88);
++  box-shadow: 0 6px 18px rgba(30, 79, 64, .06);
++  font-size: 10px;
++  font-weight: 800;
++}
++
++.legendStaffDot,
++.legendRouteDot {
++  width: 9px;
++  height: 9px;
++  display: inline-block;
++  border-radius: 50%;
++}
++
++.legendStaffDot {
++  background: #08795c;
++  box-shadow: 0 0 0 4px rgba(8,121,92,.13);
++}
++
++.legendRouteDot {
++  border: 2px solid #08795c;
++  background: #fff;
++}
++
++@media (max-width: 760px) {
++  .realMapHeader {
++    align-items: flex-start;
++    flex-direction: column;
++  }
++
++  .mapLegendPills {
++    justify-content: flex-start;
++  }
++}
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffAdvancedOperations.tsx /mnt/data/simamia_staff_fix_v12_work/app/staff/dashboard/StaffAdvancedOperations.tsx
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffAdvancedOperations.tsx	2026-08-18 16:42:47.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/staff/dashboard/StaffAdvancedOperations.tsx	2026-08-19 09:29:02.413755215 +0000
+@@ -43,6 +43,8 @@
+ type PreviewOptions = {
+   scope?: "deposit" | "proof" | "expense" | "transaction" | "file";
+   id?: string;
++  reference?: string;
++  kind?: string;
+   title?: string;
+   subtitle?: string;
+ };
+@@ -374,6 +376,8 @@
+       const query = new URLSearchParams();
+       if (options.scope) query.set("scope", options.scope);
+       if (options.id) query.set("id", options.id);
++      if (options.reference) query.set("reference", options.reference);
++      if (options.kind) query.set("kind", options.kind);
+       if (cleanSource) query.set("source", cleanSource);
+       url = `/api/staff/preview?${query.toString()}`;
+     }
+@@ -675,7 +679,7 @@
+             }}
+           />
+         )}
+-        {view === "travel" && <TravelHistoryView data={data} />}
++        {view === "travel" && <TravelHistoryView data={data} period={period} anchor={anchor} from={from} to={to} />}
+         {view === "alerts" && <AlertsView data={data} />}
+         {view === "notifications" && (
+           <NotificationsView data={data} operation={operation} />
+@@ -1235,6 +1239,8 @@
+                       onClick={() => preview(String(source ?? ""), {
+                         scope: isBank ? "deposit" : "transaction",
+                         id: String(row.id),
++                        reference: String(row.referenceNo ?? ""),
++                        kind: isBank ? "BANK_DEPOSIT" : String(row.transactionType ?? "STAFF_RETURN_TO_ACCOUNTANT"),
+                         title: isBank ? "Bank deposit preview" : "Accountant return preview",
+                         subtitle: `${reference} · ${money(amount)}`,
+                       })}
+@@ -1292,6 +1298,8 @@
+                     <button type="button" className={styles.previewButton} onClick={() => preview(String(source ?? ""), {
+                       scope: "deposit",
+                       id: String(row.id),
++                      reference: String(row.referenceNo ?? ""),
++                      kind: "BANK_DEPOSIT",
+                       title: "Bank verification preview",
+                       subtitle: `${row.referenceNo || row.id} · ${money(row.amount)}`,
+                     })}>
+@@ -1648,6 +1656,8 @@
+                   {(row.proofUrl || row.id) && <button type="button" className={styles.previewButton} onClick={() => preview(String(row.proofUrl ?? ""), {
+                       scope: "proof",
+                       id: String(row.id),
++                      reference: String(row.referenceNo ?? ""),
++                      kind: String(row.kind ?? row.direction ?? "PAYMENT_PROOF"),
+                       title: "Payment proof preview",
+                       subtitle: `${row.referenceNo || row.id} · ${money(row.amount)}`,
+                     })
+@@ -1851,6 +1861,8 @@
+                 {(row.receiptUrl || row.id) && <button type="button" className={styles.previewButton} onClick={() => preview(String(row.receiptUrl ?? ""), {
+                     scope: "expense",
+                     id: String(row.id),
++                    reference: String(row.referenceNo ?? row.id ?? ""),
++                    kind: "EXPENSE",
+                     title: "Expense receipt preview",
+                     subtitle: `${row.otherCategory || label(row.category)} · ${money(row.amount)}`,
+                   })
+@@ -2271,18 +2283,32 @@
+                 <td>{money(row.floatAmount)}</td>
+                 <td>{money(row.cashAmount)}</td>
+                 <td><strong>{money(row.amount)}</strong></td>
+-                <td>{row.id ? <button type="button" className={styles.previewButton} onClick={() => preview(String(row.proofUrl ?? ""), {
++                <td>{row.id ? <button type="button" className={styles.previewButton} onClick={() => {
++                    const kind = String(row.kind ?? row.type ?? "").toUpperCase();
++                    const source = String(
++                      row.proofUrl ??
++                      row.receiptUrl ??
++                      row.bankReceiptUrl ??
++                      row.depositSlipUrl ??
++                      row.documentUrl ??
++                      "",
++                    );
++                    preview(source, {
+                       scope:
+-                        String(row.kind ?? "").toUpperCase() === "BANK_DEPOSIT"
++                        kind === "BANK_DEPOSIT"
+                           ? "deposit"
+-                          : String(row.kind ?? "").toUpperCase() === "EXPENSE"
++                          : kind === "EXPENSE"
+                             ? "expense"
+-                            : "transaction",
++                            : kind.includes("PROOF")
++                              ? "proof"
++                              : "transaction",
+                       id: String(row.id),
++                      reference: String(row.reference ?? row.referenceNo ?? ""),
++                      kind,
+                       title: "Transaction proof preview",
+                       subtitle: `${row.reference || row.id} · ${money(row.amount)}`,
+-                    })
+-                  }><Icon name="visibility" /> Preview</button> : "—"}</td>
++                    });
++                  }}><Icon name="visibility" /> Preview</button> : "—"}</td>
+                 <td><Status value={row.status} /></td>
+               </tr>
+             ))}
+@@ -2681,7 +2707,78 @@
+   );
+ }
+ 
+-function TravelHistoryView({ data }: { data: Data }) {
++function TravelHistoryView({
++  data,
++  period,
++  anchor,
++  from,
++  to,
++}: {
++  data: Data;
++  period: string;
++  anchor: string;
++  from: string;
++  to: string;
++}) {
++  type RealHistory = {
++    success: true;
++    period: { name: string; label: string; start: string; end: string };
++    current?: any;
++    history: any[];
++    summary: {
++      gpsPoints: number;
++      distanceMetres: number;
++      distanceKm: number;
++      averageSpeedKph: number;
++      maxSpeedKph: number;
++      firstCapturedAt?: string | null;
++      lastCapturedAt?: string | null;
++    };
++  };
++
++  const [realHistory, setRealHistory] = useState<RealHistory | null>(null);
++  const [historyLoading, setHistoryLoading] = useState(true);
++  const [historyError, setHistoryError] = useState("");
++
++  useEffect(() => {
++    let cancelled = false;
++
++    async function loadRealHistory() {
++      setHistoryLoading(true);
++      setHistoryError("");
++      try {
++        const query = new URLSearchParams({ period, anchor });
++        if (period === "CUSTOM") {
++          query.set("from", from);
++          query.set("to", to);
++        }
++        const response = await fetch(`/api/staff/location-history?${query.toString()}`, {
++          method: "GET",
++          credentials: "include",
++          cache: "no-store",
++        });
++        const result = await readResponse<RealHistory>(response);
++        if (!cancelled) setRealHistory(result);
++      } catch (requestError) {
++        if (!cancelled) {
++          setRealHistory(null);
++          setHistoryError(
++            requestError instanceof Error
++              ? requestError.message
++              : "Real GPS travel history could not be loaded.",
++          );
++        }
++      } finally {
++        if (!cancelled) setHistoryLoading(false);
++      }
++    }
++
++    void loadRealHistory();
++    return () => {
++      cancelled = true;
++    };
++  }, [period, anchor, from, to]);
++
+   function routeDistance(
+     first: { latitude: number; longitude: number },
+     second: { latitude: number; longitude: number },
+@@ -2704,11 +2801,24 @@
+     return `${(metres / 1000).toFixed(metres >= 10_000 ? 1 : 2)} km`;
+   }
+ 
+-  const history = data.pings
++  // Prefer the dedicated authenticated GPS-history endpoint. It queries every
++  // GPS device owned by the logged-in Staff Officer for the selected period.
++  // Workspace pings remain only as a compatibility fallback for older schemas.
++  const sourcePings = safeArray<any>(realHistory?.history).length
++    ? safeArray<any>(realHistory?.history)
++    : safeArray<any>(data.pings);
++
++  const history = sourcePings
+     .filter(
+       (ping) =>
+         Number.isFinite(Number(ping.latitude)) &&
+-        Number.isFinite(Number(ping.longitude)),
++        Number.isFinite(Number(ping.longitude)) &&
++        !(Number(ping.latitude) === 0 && Number(ping.longitude) === 0),
++    )
++    .sort(
++      (left, right) =>
++        new Date(String(left.capturedAt ?? 0)).getTime() -
++        new Date(String(right.capturedAt ?? 0)).getTime(),
+     )
+     .map((ping, sourceIndex) => ({
+       id: String(
+@@ -2720,64 +2830,114 @@
+       label: data.staff?.name || "Staff route",
+       subtitle: `${Math.round(Number(ping.speedKph || 0))} km/h`,
+       capturedAt: ping.capturedAt,
++      speedKph: Number(ping.speedKph || 0),
++      accuracy: Number(ping.accuracy ?? ping.gpsAccuracy ?? 0),
++      deviceName: String(ping.deviceName ?? "Staff GPS device"),
+       type: "history" as const,
+     }));
+ 
+   let runningDistance = 0;
+   const enrichedHistory = history.map((point, index) => {
+     const previous = index > 0 ? history[index - 1] : null;
+-    const segmentMetres = previous
+-      ? routeDistance(previous, point)
+-      : 0;
++    const segmentMetres = previous ? routeDistance(previous, point) : 0;
+     runningDistance += segmentMetres;
+     const totalMetres = runningDistance;
+ 
+     return {
+       ...point,
+-      label: `Stop ${index + 1}`,
+-      subtitle: `${date(point.capturedAt, true)} - segment ${routeDistanceLabel(segmentMetres)} - total ${routeDistanceLabel(totalMetres)}`,
++      label: `GPS point ${index + 1}`,
++      subtitle: `${date(point.capturedAt, true)} · ${point.deviceName} · ${Math.round(point.speedKph)} km/h · segment ${routeDistanceLabel(segmentMetres)} · total ${routeDistanceLabel(totalMetres)}`,
+       segmentMetres,
+       totalMetres,
+     };
+   });
+ 
+-  const latest = enrichedHistory.length ? [enrichedHistory[enrichedHistory.length - 1]] : [];
+-  const totalMetres = enrichedHistory.at(-1)?.totalMetres ?? 0;
++  const current = realHistory?.current;
++  const currentPoint =
++    current &&
++    Number.isFinite(Number(current.latitude)) &&
++    Number.isFinite(Number(current.longitude)) &&
++    !(Number(current.latitude) === 0 && Number(current.longitude) === 0)
++      ? [{
++          id: String(current.id ?? "staff-current-location"),
++          latitude: Number(current.latitude),
++          longitude: Number(current.longitude),
++          label: data.staff?.name || "Current Staff location",
++          subtitle: `Latest real GPS · ${date(current.capturedAt, true)} · accuracy ${Math.round(Number(current.accuracy || 0))} m`,
++          capturedAt: current.capturedAt,
++          type: "staff" as const,
++        }]
++      : enrichedHistory.length
++        ? [{ ...enrichedHistory[enrichedHistory.length - 1], type: "staff" as const, label: data.staff?.name || "Latest Staff location" }]
++        : [];
++
++  const totalMetres =
++    Number(realHistory?.summary?.distanceMetres ?? 0) ||
++    enrichedHistory.at(-1)?.totalMetres ||
++    0;
+   const averageSpeed =
+-    history.length > 1
+-      ? history.reduce((sum, point) => {
+-          const match = data.pings.find((ping) => String(ping.capturedAt) === String(point.capturedAt));
+-          return sum + Number(match?.speedKph || 0);
+-        }, 0) / history.length
+-      : 0;
++    Number(realHistory?.summary?.averageSpeedKph ?? 0) ||
++    (history.length
++      ? history.reduce((sum, point) => sum + Number(point.speedKph || 0), 0) / history.length
++      : 0);
++  const maxSpeed =
++    Number(realHistory?.summary?.maxSpeedKph ?? 0) ||
++    (history.length ? Math.max(...history.map((point) => Number(point.speedKph || 0))) : 0);
++  const periodLabel = realHistory?.period?.label || data.period.label;
+ 
+   return (
+     <Section
+       title="Travel history"
+-      subtitle="The dotted route appears only here and follows the selected day, week, month or year."
++      subtitle="Real GPS pings from this logged-in Staff Officer's devices, filtered by the selected day, week, month, year or custom period."
+       icon="route"
+     >
++      {historyError && (
++        <div className={styles.locationWarning}>
++          <Icon name="warning" />
++          <span>{historyError} Workspace GPS records are shown as a compatibility fallback.</span>
++        </div>
++      )}
++
+       <div className={styles.travelSummary}>
+-        <Metric label="Distance covered" value={routeDistanceLabel(totalMetres || Number(data.stats.distanceKm || 0) * 1000)} icon="route" />
+-        <Metric label="GPS points" value={history.length} icon="radar" />
++        <Metric label="Distance covered" value={historyLoading ? "Loading…" : routeDistanceLabel(totalMetres)} icon="route" />
++        <Metric label="Real GPS points" value={historyLoading ? "…" : history.length} icon="radar" />
+         <Metric label="Average speed" value={`${Math.round(averageSpeed)} km/h`} icon="speed" />
+-        <Metric label="Period" value={data.period.label} icon="calendar_month" />
++        <Metric label="Maximum speed" value={`${Math.round(maxSpeed)} km/h`} icon="speed" />
+       </div>
++
++      <div className={styles.realMapHeader}>
++        <div>
++          <span><Icon name="my_location" /> REAL DEVICE LOCATION</span>
++          <strong>{periodLabel}</strong>
++          <small>
++            {currentPoint.length
++              ? `${currentPoint[0].latitude.toFixed(6)}, ${currentPoint[0].longitude.toFixed(6)}`
++              : "Waiting for a valid GPS location"}
++          </small>
++        </div>
++        <div className={styles.mapLegendPills}>
++          <span><i className={styles.legendStaffDot} /> Current staff</span>
++          <span><i className={styles.legendRouteDot} /> Recorded route</span>
++        </div>
++      </div>
++
+       <div className={styles.mapCard}>
+-        <LiveMap points={latest} history={enrichedHistory} height={560} />
++        <LiveMap points={currentPoint} history={enrichedHistory} height={590} />
+       </div>
++
+       <div className={styles.travelRouteStrip}>
+         <span>
+           <Icon name="timeline" />
+-          Dotted GPS route with numbered stops
++          Real GPS route with numbered movement points
+         </span>
+-        <strong>{routeDistanceLabel(totalMetres || Number(data.stats.distanceKm || 0) * 1000)} covered</strong>
++        <strong>{routeDistanceLabel(totalMetres)} covered</strong>
+       </div>
++
+       <div className={styles.travelRecords}>
+         {enrichedHistory
+           .slice()
+           .reverse()
+-          .slice(0, 80)
++          .slice(0, 120)
+           .map((point, index) => (
+             <article key={`${point.id}:${index}`}>
+               <Icon name="location_on" />
+@@ -2785,13 +2945,15 @@
+                 <strong>
+                   {point.latitude.toFixed(6)}, {point.longitude.toFixed(6)}
+                 </strong>
+-                <small>{date(point.capturedAt, true)}</small>
++                <small>{date(point.capturedAt, true)} · {point.deviceName}</small>
+               </span>
+               <b>{routeDistanceLabel(point.segmentMetres)}</b>
+               <em>{routeDistanceLabel(point.totalMetres)} total</em>
+             </article>
+           ))}
+-        {!history.length && <Empty text="No GPS travel points were recorded for this period." />}
++        {!historyLoading && !history.length && (
++          <Empty text="No real GPS points were recorded for this selected period. Allow Location permission and keep Staff GPS enabled while working." />
++        )}
+       </div>
+     </Section>
+   );
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboardClient.tsx /mnt/data/simamia_staff_fix_v12_work/app/staff/dashboard/StaffDashboardClient.tsx
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboardClient.tsx	2026-08-18 17:16:01.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/staff/dashboard/StaffDashboardClient.tsx	2026-08-19 09:32:04.313573129 +0000
+@@ -255,6 +255,18 @@
+ }
+ function today() { return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Africa/Dar_es_Salaam" }).format(new Date()); }
+ function label(value: unknown) { return String(value || "").replaceAll("_", " ").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()); }
++function staffPreviewHref(row: any, forcedScope?: string): string {
++  const kind = String(row?.kind ?? row?.type ?? row?.transactionType ?? "").toUpperCase();
++  const scope = forcedScope || (kind === "BANK_DEPOSIT" ? "deposit" : kind === "EXPENSE" ? "expense" : kind.includes("PROOF") ? "proof" : "transaction");
++  const source = String(row?.proofUrl ?? row?.receiptUrl ?? row?.bankReceiptUrl ?? row?.depositSlipUrl ?? row?.documentUrl ?? "").trim();
++  const query = new URLSearchParams();
++  if (scope) query.set("scope", scope);
++  if (row?.id) query.set("id", String(row.id));
++  if (row?.reference ?? row?.referenceNo) query.set("reference", String(row.reference ?? row.referenceNo));
++  if (kind) query.set("kind", kind);
++  if (source) query.set("source", source);
++  return `/api/staff/preview?${query.toString()}`;
++}
+ 
+ function brokerDisplayName(broker: BrokerDirectoryItem | any): string {
+   return String(
+@@ -1022,11 +1034,11 @@
+ 
+ function BankDepositPage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"bank")});notify("Bank receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("DEPOSIT_TO_BANK",form))setForm({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});}return <Section title="Deposit Money to Bank" subtitle="The system compares amount, reference, date and bank account with the bank record." icon="bank">{data.financialHold&&<div className={styles.inlineWarning}><Icon name="alert"/><span>Another deposit is blocked until the existing mismatch is resolved.</span></div>}<div className={styles.split}><FormCard title="New bank deposit" onSubmit={submit}><div className={styles.formRow}><Field label="Amount"><input disabled={!!data.financialHold} type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Deposit date"><input disabled={!!data.financialHold} type="date" required value={form.depositDate} onChange={(e)=>setForm({...form,depositDate:e.target.value})}/></Field></div><Field label="Bank account"><input disabled={!!data.financialHold} required value={form.bankAccount} onChange={(e)=>setForm({...form,bankAccount:e.target.value})} placeholder="Bank and account number"/></Field><Field label="Bank reference"><input disabled={!!data.financialHold} required value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up}/><Submit busy={busy||up||!!data.financialHold} text="Submit bank deposit" icon="bank"/></FormCard><Card title="Automatic verification statuses" subtitle="Verified, amount mismatch, missing receipt, duplicate or missing bank record"><BankCards rows={data.deposits}/></Card></div></Section>}
+ 
+-function ProofPage({data,busy,action,upload,notify}:CommonProps){const editable=data.deposits.filter((r)=>r.status!=="VERIFIED");async function file(id:string,f?:File){if(!f)return;try{const url=await upload(f,"bank");await action("UPLOAD_PROOF_OF_PAYMENT",{depositId:id,receiptUrl:url});}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}}return <Section title="Upload Proof of Payment" subtitle="Verified deposits are immutable. Pending or mismatched deposits can receive new proof." icon="upload"><Card title="Receipt controls" subtitle="Large images and PDFs are compressed before private storage"><div className={styles.proofGrid}>{editable.map((r)=><article key={r.id}><Icon name="document" size={25}/><div><strong>{r.referenceNo}</strong><span>{r.bankAccount} • {date(r.depositDate)}</span></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.bankReceiptUrl&&<a href={r.bankReceiptUrl} target="_blank">View current receipt</a>}<label><Icon name="upload"/>Upload replacement<input type="file" accept="image/*,application/pdf" disabled={busy} onChange={(e)=>void file(r.id,e.target.files?.[0])}/></label></article>)}{!editable.length&&<Empty text="All bank deposits are verified and locked."/>}</div></Card></Section>}
++function ProofPage({data,busy,action,upload,notify}:CommonProps){const editable=data.deposits.filter((r)=>r.status!=="VERIFIED");async function file(id:string,f?:File){if(!f)return;try{const url=await upload(f,"bank");await action("UPLOAD_PROOF_OF_PAYMENT",{depositId:id,receiptUrl:url});}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}}return <Section title="Upload Proof of Payment" subtitle="Verified deposits are immutable. Pending or mismatched deposits can receive new proof." icon="upload"><Card title="Receipt controls" subtitle="Large images and PDFs are compressed before private storage"><div className={styles.proofGrid}>{editable.map((r)=><article key={r.id}><Icon name="document" size={25}/><div><strong>{r.referenceNo}</strong><span>{r.bankAccount} • {date(r.depositDate)}</span></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.id&&<a href={staffPreviewHref({...r,kind:"BANK_DEPOSIT"},"deposit")} target="_blank" rel="noreferrer">Preview current receipt</a>}<label><Icon name="upload"/>Upload replacement<input type="file" accept="image/*,application/pdf" disabled={busy} onChange={(e)=>void file(r.id,e.target.files?.[0])}/></label></article>)}{!editable.length&&<Empty text="All bank deposits are verified and locked."/>}</div></Card></Section>}
+ 
+ function BankStatusPage({data}:{data:DashboardData}){return <Section title="Bank Deposit Verification" subtitle="Read-only comparison results for your submitted deposits." icon="verify"><div className={styles.metricGrid}><Metric title="Verified" value={String(data.deposits.filter((r)=>r.status==="VERIFIED").length)} change="Matched bank records" icon="check" tone="green"/><Metric title="Financial Holds" value={String(data.deposits.filter((r)=>r.holdActive).length)} change="Blocks another deposit" icon="alert" tone="red"/><Metric title="Pending" value={String(data.deposits.filter((r)=>r.status==="PENDING").length)} change="Awaiting bank record" icon="history" tone="gold"/><Metric title="Total Deposited" value={money(data.deposits.reduce((s,r)=>s+Number(r.amount||0),0))} change="All submitted deposits" icon="bank" tone="blue"/></div><Card title="Receipt-to-bank comparison" subtitle="Amount, reference number, deposit date and bank account"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Reference</th><th>Entered Amount</th><th>Statement Amount</th><th>Bank Account</th><th>Checks</th><th>Status</th></tr></thead><tbody>{data.deposits.map((r)=><tr key={r.id}><td>{date(r.depositDate,true)}</td><td>{r.referenceNo}</td><td>{money(r.amount)}</td><td>{r.statementAmount==null?"Awaiting bank":money(r.statementAmount)}</td><td>{r.bankAccount}</td><td><Comparison value={r.comparison}/></td><td><Status value={r.status}/>{r.mismatchReason&&<small>{r.mismatchReason}</small>}</td></tr>)}</tbody></table></div></Card></Section>}
+ 
+-function ExpensePage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"expense")});notify("Expense receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("SUBMIT_EXPENSE",form))setForm({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});}return <Section title="Expense Management" subtitle="Every employee may submit an expense request. Approved or rejected requests cannot be edited." icon="expense"><div className={styles.expenseLayout}><FormCard title="New expense request" onSubmit={submit}><Field label="Category"><select value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}>{["FUEL","TRANSPORT","AIRTIME","ACCOMMODATION","REPAIRS","STATIONERY","MEALS","OFFICE_EXPENSES","EMERGENCY_EXPENSES"].map((v)=><option key={v}>{label(v)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Expense date"><input type="date" required value={form.expenseDate} onChange={(e)=>setForm({...form,expenseDate:e.target.value})}/></Field></div><Field label="Description"><textarea required value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Submit expense" icon="expense"/></FormCard><Card title="My expense requests" subtitle="Approval workflow and review notes"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th></tr></thead><tbody>{data.expenses.map((r)=><tr key={r.id}><td>{date(r.expenseDate)}</td><td>{label(r.category)}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/>{r.reviewNote&&<small>{r.reviewNote}</small>}</td><td>{r.reviewedBy?.name||"Awaiting review"}</td></tr>)}</tbody></table></div></Card></div></Section>}
++function ExpensePage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"expense")});notify("Expense receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("SUBMIT_EXPENSE",form))setForm({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});}return <Section title="Expense Management" subtitle="Every employee may submit an expense request. Approved or rejected requests cannot be edited." icon="expense"><div className={styles.expenseLayout}><FormCard title="New expense request" onSubmit={submit}><Field label="Category"><select value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}>{["FUEL","TRANSPORT","AIRTIME","ACCOMMODATION","REPAIRS","STATIONERY","MEALS","OFFICE_EXPENSES","EMERGENCY_EXPENSES"].map((v)=><option key={v}>{label(v)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Expense date"><input type="date" required value={form.expenseDate} onChange={(e)=>setForm({...form,expenseDate:e.target.value})}/></Field></div><Field label="Description"><textarea required value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Submit expense" icon="expense"/></FormCard><Card title="My expense requests" subtitle="Approval workflow and review notes"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th></tr></thead><tbody>{data.expenses.map((r)=><tr key={r.id}><td>{date(r.expenseDate)}</td><td>{label(r.category)}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.id?<a href={staffPreviewHref({...r,kind:"EXPENSE"},"expense")} target="_blank" rel="noreferrer">Preview</a>:"—"}</td><td><Status value={r.status}/>{r.reviewNote&&<small>{r.reviewNote}</small>}</td><td>{r.reviewedBy?.name||"Awaiting review"}</td></tr>)}</tbody></table></div></Card></div></Section>}
+ 
+ function ServiceVisitPage({data,busy,action}:CommonProps){const latest=data.devices?.[0];const[form,setForm]=useState({brokerId:"",customerId:"",serviceType:"Float supply visit",amount:"",notes:"",latitude:latest?.lastLatitude||"",longitude:latest?.lastLongitude||"",locationName:data.staff?.assignedRegion||""});async function submit(e:FormEvent){e.preventDefault();if(await action("RECORD_SERVICE_VISIT",form))setForm({...form,brokerId:"",customerId:"",amount:"",notes:""});}return <Section title="Broker and Customer Visits" subtitle="Record who was served, the location and how many times service was provided." icon="visit"><div className={styles.split}><FormCard title="Record service visit" onSubmit={submit}><Field label="Broker (optional)"><select value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">No broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{brokerDisplayName(b)} — {brokerDisplayMeta(b)}</option>)}</select></Field><Field label="Customer (optional)"><select value={form.customerId} onChange={(e)=>setForm({...form,customerId:e.target.value})}><option value="">No customer</option>{data.customers.map((c)=><option key={c.id} value={c.id}>{c.name} — {customerDisplayMeta(c)}</option>)}</select></Field><Field label="Service type"><input required value={form.serviceType} onChange={(e)=>setForm({...form,serviceType:e.target.value})}/></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="0" value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Location name"><input value={form.locationName} onChange={(e)=>setForm({...form,locationName:e.target.value})}/></Field></div><div className={styles.formRow}><Field label="Latitude"><input value={form.latitude} onChange={(e)=>setForm({...form,latitude:e.target.value})}/></Field><Field label="Longitude"><input value={form.longitude} onChange={(e)=>setForm({...form,longitude:e.target.value})}/></Field></div><Field label="Notes"><textarea value={form.notes} onChange={(e)=>setForm({...form,notes:e.target.value})}/></Field><Submit busy={busy} text="Record visit" icon="visit"/></FormCard><Card title="Customers and brokers served" subtitle="Period totals and latest locations"><div className={styles.visits}><h4>Brokers</h4><BrokerTable rows={data.brokerStats}/><h4>Customers</h4>{data.customerStats.map((r)=><article key={r.customer.id}><div><strong>{r.customer.name}</strong><span>{r.customer.region||r.customer.address||"No location"}</span></div><b>{r.visits} visits</b><em>{money(r.amount)}</em></article>)}</div></Card></div></Section>}
+ 
+@@ -1203,7 +1215,7 @@
+ function PerformanceBars({rows}:{rows:any[]}){const safe=rows.slice().reverse().slice(-12);return <div className={styles.bars}>{safe.map((r)=><article key={`${r.year}-${r.month}`}><div><span style={{height:`${Math.max(3,Number(r.score||0))}%`}}/></div><b>{r.score}</b><small>{String(r.month).padStart(2,"0")}/{String(r.year).slice(-2)}</small></article>)}{!safe.length&&<Empty text="Performance history will appear after monthly calculations."/>}</div>}
+ function BrokerTable({rows}:{rows:any[]}){return <div className={styles.brokerRows}>{rows.map((r)=>{const broker=r.brokerCustomer||r.broker||{};return <article key={broker.id||r.brokerCustomerId||r.brokerId||r.id}><Avatar person={broker}/><div><strong>{brokerDisplayName(broker)}</strong><span>{brokerDisplayMeta(broker)}</span><small>{r.location?`${Number(r.location.latitude).toFixed(4)}, ${Number(r.location.longitude).toFixed(4)}`:broker.location||broker.region||broker.address||"No registered location"}</small></div><b>{r.timesServed||r.visits||0} times</b><em>{money(r.totalFloat||r.amount||0)}</em></article>})}{!rows.length&&<Empty text="No broker service activity in this period."/>}</div>}
+ function MiniTransactions({rows}:{rows:any[]}){return <div className={styles.miniTransactions}>{rows.map((r)=><article key={r.id}><Avatar person={r.person}/><div><strong>{r.description||r.reference}</strong><span>{r.person?.name||"System"} {r.person?.email?`• ${r.person.email}`:""}</span><small>{date(r.date,true)} • {r.reference}</small></div><b>{money(r.amount)}</b><Status value={r.status}/></article>)}{!rows.length&&<Empty text="No transaction records found."/>}</div>}
+-function TransactionTable({rows}:{rows:any[]}){return <div className={styles.tableScroll}><table><thead><tr><th>#</th><th>Date</th><th>User</th><th>Type</th><th>Reference</th><th>Description</th><th>Amount</th><th>Proof</th><th>Status</th><th>Control</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r.id}><td>{i+1}</td><td>{date(r.date,true)}</td><td><div className={styles.personCell}><Avatar person={r.person}/><span><strong>{r.person?.name||"System"}</strong><small>{r.person?.email||"—"}</small></span></div></td><td>{label(r.kind||r.type)}</td><td>{r.reference}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/></td><td>{r.locked?<span className={styles.locked}>Locked</span>:"Pending"}</td></tr>)}</tbody></table></div>}
++function TransactionTable({rows}:{rows:any[]}){return <div className={styles.tableScroll}><table><thead><tr><th>#</th><th>Date</th><th>User</th><th>Type</th><th>Reference</th><th>Description</th><th>Amount</th><th>Proof</th><th>Status</th><th>Control</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r.id}><td>{i+1}</td><td>{date(r.date,true)}</td><td><div className={styles.personCell}><Avatar person={r.person}/><span><strong>{r.person?.name||"System"}</strong><small>{r.person?.email||"—"}</small></span></div></td><td>{label(r.kind||r.type)}</td><td>{r.reference}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.id?<a href={staffPreviewHref(r)} target="_blank" rel="noreferrer">Preview</a>:"—"}</td><td><Status value={r.status}/></td><td>{r.locked?<span className={styles.locked}>Locked</span>:"Pending"}</td></tr>)}</tbody></table></div>}
+ function BankCards({rows}:{rows:any[]}){return <div className={styles.bankCards}>{rows.slice(0,12).map((r)=><article key={r.id}><div><strong>{r.referenceNo}</strong><span>{r.bankAccount}</span><small>{date(r.depositDate,true)}</small></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.mismatchReason&&<p>{r.mismatchReason}</p>}</article>)}{!rows.length&&<Empty text="No bank deposits submitted."/>}</div>}
+ function Comparison({value}:{value:any}){if(!value)return <span className={styles.waiting}>Waiting</span>;return <div className={styles.checks}>{[["Amount",value.amountMatch],["Reference",value.referenceMatch],["Date",value.dateMatch],["Account",value.accountMatch],["Receipt",value.receiptPresent]].map(([a,b])=><span key={String(a)} className={b?styles.ok:styles.bad}>{b?"✓":"✕"} {a}</span>)}</div>}
+ function NotificationPopup({
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/live-locations/LiveMap.tsx /mnt/data/simamia_staff_fix_v12_work/app/staff/live-locations/LiveMap.tsx
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/live-locations/LiveMap.tsx	2026-08-18 16:40:45.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/staff/live-locations/LiveMap.tsx	2026-08-19 09:29:25.115808699 +0000
+@@ -418,12 +418,42 @@
+         zoomAnimation: false,
+       });
+ 
+-      leaflet
+-        .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
++      // A Google-Maps-like street presentation without requiring a Google API
++      // key. Users can switch between a clean street map, classic OSM and real
++      // satellite imagery. All layers remain interactive Leaflet maps.
++      const streetLayer = leaflet.tileLayer(
++        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
++        {
++          maxZoom: 20,
++          subdomains: "abcd",
++          attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
++        },
++      );
++      const osmLayer = leaflet.tileLayer(
++        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
++        {
+           maxZoom: 19,
+           attribution: "&copy; OpenStreetMap contributors",
+-        })
+-        .addTo(localMap);
++        },
++      );
++      const satelliteLayer = leaflet.tileLayer(
++        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
++        {
++          maxZoom: 19,
++          attribution: "Tiles &copy; Esri",
++        },
++      );
++
++      streetLayer.addTo(localMap);
++      leaflet.control.layers(
++        {
++          "Street map": streetLayer,
++          "OpenStreetMap": osmLayer,
++          "Satellite": satelliteLayer,
++        },
++        undefined,
++        { position: "topright", collapsed: true },
++      ).addTo(localMap);
+ 
+       const pointLayer = leaflet.layerGroup().addTo(localMap);
+       const routeLayer = leaflet.layerGroup().addTo(localMap);
+diff -ruN /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/live-locations/StaffLiveLocationsClient.tsx /mnt/data/simamia_staff_fix_v12_work/app/staff/live-locations/StaffLiveLocationsClient.tsx
+--- /mnt/data/work_v11/simamia_staff_hydration_fix_v11/app/staff/live-locations/StaffLiveLocationsClient.tsx	2026-08-18 16:14:24.000000000 +0000
++++ /mnt/data/simamia_staff_fix_v12_work/app/staff/live-locations/StaffLiveLocationsClient.tsx	2026-08-19 09:32:21.707364383 +0000
+@@ -1222,7 +1222,7 @@
+               Operational live map
+             </h3>
+             <p>
+-              Green S: this logged-in Staff Officer only · LIVE agent pointers come from the agent phone · green ✓: serviced · gold V: visited · purple A: valid assigned agent coordinate · blue B: broker customer · orange C: customer
++              Real interactive street map with Street, OpenStreetMap and Satellite layers · Green S: this logged-in Staff Officer only · LIVE agent pointers come from the agent phone · green ✓: serviced · gold V: visited · purple A: valid assigned agent coordinate · blue B: broker customer · orange C: customer
+             </p>
+           </div>
+           <strong>

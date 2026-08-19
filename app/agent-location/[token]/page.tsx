@@ -16,9 +16,7 @@ export default async function AgentLocationSharePage({
 }: AgentLocationSharePageProps) {
   const { token } = await params;
 
-  const cleanToken = decodeURIComponent(
-    String(token ?? ""),
-  ).trim();
+  const cleanToken = String(token ?? "").trim();
 
   if (!cleanToken) {
     notFound();

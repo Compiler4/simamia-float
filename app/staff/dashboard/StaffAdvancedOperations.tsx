@@ -17,6 +17,7 @@ type ViewName =
   | "funding"
   | "float"
   | "settlement"
+  | "verification"
   | "proofs"
   | "documents"
   | "expenses"
@@ -32,10 +33,34 @@ type ViewName =
 
 type Props = {
   initialView?: ViewName;
+  initialSettlementMode?: "ACCOUNTANT" | "BANK";
+  period?: string;
+  anchor?: string;
+  onPeriodChange?: (value: string) => void;
+  onAnchorChange?: (value: string) => void;
 };
+
+type PreviewOptions = {
+  scope?: "deposit" | "proof" | "expense" | "transaction" | "file";
+  id?: string;
+  reference?: string;
+  kind?: string;
+  title?: string;
+  subtitle?: string;
+};
+
+type PreviewTarget = {
+  url: string;
+  title: string;
+  subtitle: string;
+};
+
+type PreviewHandler = (source: string, options?: PreviewOptions) => void;
 
 type Data = {
   success: true;
+  degraded?: boolean;
+  warnings?: string[];
   period: {
     name: string;
     label: string;
@@ -65,6 +90,88 @@ type Data = {
   weeklyFolders: any[];
   stats: Record<string, number>;
 };
+
+
+function safeArray<T = any>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
+
+function safeRecord(value: unknown): Record<string, number> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  const output: Record<string, number> = {};
+
+  for (const [key, raw] of Object.entries(value as Record<string, unknown>)) {
+    const numeric = Number(raw ?? 0);
+    output[key] = Number.isFinite(numeric) ? numeric : 0;
+  }
+
+  return output;
+}
+
+function normalizeWorkspaceData(value: unknown): Data {
+  const raw =
+    value && typeof value === "object" && !Array.isArray(value)
+      ? (value as Record<string, any>)
+      : {};
+
+  const rawPeriod =
+    raw.period && typeof raw.period === "object" && !Array.isArray(raw.period)
+      ? raw.period
+      : {};
+
+  /*
+   * SERVICE_VISITS is intentionally excluded from the global degraded-workspace
+   * banner. This dataset has its own isolated /api/staff/service-visits endpoint
+   * and ServiceView already falls back to data.services when the dedicated
+   * service-visit model/table is unavailable.
+   *
+   * This prevents an optional schema-compatibility dataset from making the
+   * entire Staff workspace look unhealthy while preserving every other warning.
+   */
+  const rawWarnings = safeArray<string>(raw.warnings).map((item) =>
+    String(item ?? "").trim(),
+  );
+
+  const warnings = rawWarnings.filter((warning) => {
+    const dataset = warning.split(":", 1)[0]?.trim().toUpperCase();
+    return dataset !== "SERVICE_VISITS";
+  });
+
+  return {
+    success: true,
+    degraded: warnings.length > 0,
+    warnings,
+    period: {
+      name: String(rawPeriod.name ?? "DAY"),
+      label: String(rawPeriod.label ?? "Selected period"),
+      start: String(rawPeriod.start ?? ""),
+      end: String(rawPeriod.end ?? ""),
+    },
+    staff: raw.staff ?? {},
+    accountants: safeArray<any>(raw.accountants),
+    funding: safeArray<any>(raw.funding),
+    fundingByDay: safeArray<any>(raw.fundingByDay),
+    brokers: safeArray<any>(raw.brokers),
+    allAssignedBrokers: safeArray<any>(raw.allAssignedBrokers),
+    unservedBrokers: safeArray<any>(raw.unservedBrokers),
+    floats: safeArray<any>(raw.floats),
+    collections: safeArray<any>(raw.collections),
+    deposits: safeArray<any>(raw.deposits),
+    expenses: safeArray<any>(raw.expenses),
+    proofs: safeArray<any>(raw.proofs),
+    services: safeArray<any>(raw.services),
+    attendance: safeArray<any>(raw.attendance),
+    devices: safeArray<any>(raw.devices),
+    pings: safeArray<any>(raw.pings),
+    alerts: safeArray<any>(raw.alerts),
+    notifications: safeArray<any>(raw.notifications),
+    performance: safeArray<any>(raw.performance),
+    transactions: safeArray<any>(raw.transactions),
+    weeklyFolders: safeArray<any>(raw.weeklyFolders),
+    stats: safeRecord(raw.stats),
+  };
+}
 
 
 function Icon({ name }: { name: string }) {
@@ -113,16 +220,61 @@ function label(value: unknown): string {
 }
 
 async function readResponse<T>(response: Response): Promise<T> {
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
   const text = await response.text();
   let body: any = {};
+
+  if (!contentType.includes("application/json")) {
+    if (response.redirected && response.url.includes("/login")) {
+      if (typeof window !== "undefined") {
+        window.location.assign("/login?reason=session-expired");
+      }
+      throw new Error("Your session has expired. Sign in again.");
+    }
+
+    if (contentType.includes("application/pdf")) {
+      throw new Error(
+        "The Staff workspace API is serving a PDF response. The workspace must use /api/staff/workspace; reports belong only under /api/staff/operations/report.",
+      );
+    }
+
+    const preview = text.replace(/\s+/g, " ").slice(0, 140);
+    throw new Error(
+      `The Staff operations API returned ${contentType || "a non-JSON response"} (${response.status})${
+        preview ? `: ${preview}` : ""
+      }.`,
+    );
+  }
+
   try {
     body = text ? JSON.parse(text) : {};
   } catch {
-    throw new Error(`The server returned invalid JSON (${response.status}).`);
+    const preview = text.replace(/\s+/g, " ").trim().slice(0, 180);
+    throw new Error(
+      `The Staff workspace API returned malformed JSON (${response.status})${preview ? `: ${preview}` : ""}.`,
+    );
   }
+
+  if (response.status === 401) {
+    if (typeof window !== "undefined") {
+      window.location.assign("/login?reason=session-expired");
+    }
+    throw new Error("Your session has expired. Sign in again.");
+  }
+
+  if (response.status === 403) {
+    if (typeof window !== "undefined") {
+      window.location.assign("/dashboard");
+    }
+    throw new Error(body.message || "This account cannot use the Staff portal.");
+  }
+
   if (!response.ok || body.success === false) {
-    throw new Error(body.message || body.details || `Request failed (${response.status}).`);
+    const base = body.message || `Request failed (${response.status}).`;
+    const details = body.details ? ` ${body.details}` : "";
+    throw new Error(`${base}${details}`.trim());
   }
+
   return body as T;
 }
 
@@ -141,11 +293,20 @@ async function upload(file: File, kind: string): Promise<string> {
 
 export default function StaffAdvancedOperations({
   initialView = "funding",
+  initialSettlementMode = "BANK",
+  period: controlledPeriod,
+  anchor: controlledAnchor,
+  onPeriodChange,
+  onAnchorChange,
 }: Props) {
   const [view, setView] = useState<ViewName>(initialView);
   const [data, setData] = useState<Data | null>(null);
-  const [period, setPeriod] = useState("DAY");
-  const [anchor, setAnchor] = useState(today());
+  const [localPeriod, setLocalPeriod] = useState("DAY");
+  const [localAnchor, setLocalAnchor] = useState(today());
+  const period = controlledPeriod ?? localPeriod;
+  const anchor = controlledAnchor ?? localAnchor;
+  const setPeriod = onPeriodChange ?? setLocalPeriod;
+  const setAnchor = onAnchorChange ?? setLocalAnchor;
   const [from, setFrom] = useState(today());
   const [to, setTo] = useState(today());
   const [search, setSearch] = useState("");
@@ -153,7 +314,7 @@ export default function StaffAdvancedOperations({
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewTarget, setPreviewTarget] = useState<PreviewTarget | null>(null);
   const [openWeek, setOpenWeek] = useState("");
 
   useEffect(() => {
@@ -197,6 +358,39 @@ export default function StaffAdvancedOperations({
     return () => window.clearTimeout(timer);
   }, [message]);
 
+  function openPreview(source: string, options: PreviewOptions = {}) {
+    const cleanSource = String(source ?? "").trim();
+
+    if (!cleanSource && !options.id) {
+      setMessage("There is no document attached to this record yet.");
+      return;
+    }
+
+    // Report routes already authenticate and stream generated files. Keep them direct.
+    const reportUrl = cleanSource.startsWith("/api/staff/operations/report")
+      ? cleanSource
+      : "";
+
+    let url = reportUrl;
+    if (!url) {
+      const query = new URLSearchParams();
+      if (options.scope) query.set("scope", options.scope);
+      if (options.id) query.set("id", options.id);
+      if (options.reference) query.set("reference", options.reference);
+      if (options.kind) query.set("kind", options.kind);
+      if (cleanSource) query.set("source", cleanSource);
+      url = `/api/staff/preview?${query.toString()}`;
+    }
+
+    setPreviewTarget({
+      url,
+      title: options.title || "Secure preview",
+      subtitle:
+        options.subtitle ||
+        "This preview is permission-checked against the currently logged-in staff account.",
+    });
+  }
+
   async function load(showLoading = true) {
     if (showLoading) setLoading(true);
     setError("");
@@ -211,13 +405,13 @@ export default function StaffAdvancedOperations({
         query.set("from", from);
         query.set("to", to);
       }
-      const response = await fetch(`/api/staff/operations?${query}`, {
+      const response = await fetch(`/api/staff/workspace?${query}`, {
         method: "GET",
         credentials: "include",
         cache: "no-store",
       });
       const result = await readResponse<Data>(response);
-      setData(result);
+      setData(normalizeWorkspaceData(result));
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -232,7 +426,7 @@ export default function StaffAdvancedOperations({
   async function operation(action: string, payload: Record<string, unknown>) {
     setBusy(true);
     try {
-      const response = await fetch("/api/staff/operations", {
+      const response = await fetch("/api/staff/workspace", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -282,8 +476,9 @@ export default function StaffAdvancedOperations({
   const searchBrokers = useMemo(() => {
     if (!data) return [];
     const terms = search.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    if (!terms.length) return data.brokers;
-    return data.brokers.filter((broker) => {
+    const brokers = safeArray<any>(data.brokers);
+    if (!terms.length) return brokers;
+    return brokers.filter((broker) => {
       const source = [
         broker.code,
         broker.name,
@@ -333,6 +528,24 @@ export default function StaffAdvancedOperations({
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..700,0..1,-50..200"
       />
 
+      {data.degraded && Array.isArray(data.warnings) && data.warnings.length > 0 ? (
+        <div className={styles.schemaWarning} role="status">
+          <Icon name="database" />
+          <div>
+            <strong>Staff workspace needs one final data check</strong>
+            <p>
+              The portal stayed open, but these datasets still need attention: {(data.warnings as string[])
+                .map((warning: string) => String(warning).split(":", 1)[0])
+                .filter(Boolean)
+                .join(", ") || "unknown dataset"}. Retry after correcting the listed database/API dataset.
+            </p>
+          </div>
+          <button type="button" onClick={() => void load(false)} disabled={loading || busy}>
+            <Icon name="refresh" />
+            Retry data
+          </button>
+        </div>
+      ) : null}
 
       {view === "gps" ? (
         <div className={styles.dailyLiveBar}>
@@ -341,70 +554,31 @@ export default function StaffAdvancedOperations({
             <strong>Today only</strong>
             <small>{date(anchor)}</small>
           </span>
-          <p>Live Location resets automatically when a new calendar day begins.</p>
+          <p>Live Location resets automatically when a new calendar day begins and uses the latest real browser GPS point.</p>
           <button type="button" onClick={() => void load(false)} disabled={loading}>
             <Icon name="refresh" />
             Refresh live location
           </button>
         </div>
       ) : (
-      <div className={styles.controls}>
-        <label>
-          <Icon name="calendar_month" />
-          <select value={period} onChange={(event) => setPeriod(event.target.value)}>
-            <option value="DAY">Day</option>
-            <option value="WEEK">Week</option>
-            <option value="MONTH">Month</option>
-            <option value="YEAR">Year</option>
-            <option value="CUSTOM">Custom range</option>
-          </select>
-        </label>
-        {period === "CUSTOM" ? (
-          <>
-            <label>
-              <Icon name="date_range" />
-              <input
-                aria-label="Custom start date"
-                type="date"
-                value={from}
-                max={to || undefined}
-                onChange={(event) => setFrom(event.target.value)}
-              />
-            </label>
-            <label>
-              <Icon name="event_available" />
-              <input
-                aria-label="Custom end date"
-                type="date"
-                value={to}
-                min={from || undefined}
-                onChange={(event) => setTo(event.target.value)}
-              />
-            </label>
-          </>
-        ) : (
-          <label>
-            <Icon name="event" />
+        <div className={styles.controls}>
+          <div className={styles.currentPeriodBadge}>
+            <Icon name="date_range" />
+            <span><small>Current filtered period</small><strong>{data.period?.label || label(period)}</strong></span>
+          </div>
+          <label className={styles.search}>
+            <Icon name="search" />
             <input
-              type="date"
-              value={anchor}
-              onChange={(event) => setAnchor(event.target.value)}
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search the current filtered data by broker, reference, phone or area..."
             />
           </label>
-        )}
-        <label className={styles.search}>
-          <Icon name="search" />
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Type the first 1-2 letters, a word, broker, phone or area..."
-          />
-        </label>
-        <button type="button" onClick={() => void load()} disabled={loading}>
-          <Icon name="refresh" />
-          Refresh
-        </button>
-      </div>
+          <button type="button" onClick={() => void load()} disabled={loading}>
+            <Icon name="refresh" />
+            Refresh module
+          </button>
+        </div>
       )}
 
 
@@ -430,8 +604,12 @@ export default function StaffAdvancedOperations({
             busy={busy}
             action={legacyAction}
             notify={setMessage}
-            preview={setPreviewUrl}
+            preview={openPreview}
+            initialMode={initialSettlementMode}
           />
+        )}
+        {view === "verification" && (
+          <BankVerificationView data={data} preview={openPreview} />
         )}
         {view === "proofs" && (
           <ProofView
@@ -439,15 +617,15 @@ export default function StaffAdvancedOperations({
             busy={busy}
             operation={operation}
             notify={setMessage}
-            preview={setPreviewUrl}
+            preview={openPreview}
           />
         )}
         {view === "documents" && (
           <DocumentsView
-            folders={data.weeklyFolders}
+            folders={safeArray<any>(data.weeklyFolders)}
             openWeek={openWeek}
             setOpenWeek={setOpenWeek}
-            preview={setPreviewUrl}
+            preview={openPreview}
           />
         )}
         {view === "expenses" && (
@@ -456,7 +634,7 @@ export default function StaffAdvancedOperations({
             busy={busy}
             operation={operation}
             notify={setMessage}
-            preview={setPreviewUrl}
+            preview={openPreview}
           />
         )}
         {view === "services" && (
@@ -469,7 +647,7 @@ export default function StaffAdvancedOperations({
           />
         )}
         {view === "transactions" && (
-          <TransactionsView rows={data.transactions} preview={setPreviewUrl} />
+          <TransactionsView rows={safeArray<any>(data.transactions)} preview={openPreview} />
         )}
         {view === "performance" && <PerformanceView data={data} />}
         {view === "reports" && (
@@ -478,10 +656,15 @@ export default function StaffAdvancedOperations({
             anchor={anchor}
             from={from}
             to={to}
-            preview={setPreviewUrl}
+            preview={openPreview}
           />
         )}
-        {view === "attendance" && <AttendanceView rows={data.attendance} />}
+        {view === "attendance" && (
+          <AttendanceView
+            rows={safeArray<any>(data.attendance)}
+            periodLabel={data.period?.label || "Selected period"}
+          />
+        )}
         {view === "gps" && (
           <GpsView
             data={data}
@@ -496,32 +679,32 @@ export default function StaffAdvancedOperations({
             }}
           />
         )}
-        {view === "travel" && <TravelHistoryView data={data} />}
+        {view === "travel" && <TravelHistoryView data={data} period={period} anchor={anchor} from={from} to={to} />}
         {view === "alerts" && <AlertsView data={data} />}
         {view === "notifications" && (
           <NotificationsView data={data} operation={operation} />
         )}
       </div>
 
-      {previewUrl && (
+      {previewTarget && (
         <div className={styles.modal} role="dialog" aria-modal="true">
           <button
             type="button"
             className={styles.modalBackdrop}
             aria-label="Close preview"
-            onClick={() => setPreviewUrl("")}
+            onClick={() => setPreviewTarget(null)}
           />
           <section>
             <header>
               <div>
-                <strong>Secure preview</strong>
-                <small>Review the document or report before printing or exporting. Editing and deleting are disabled.</small>
+                <strong>{previewTarget.title}</strong>
+                <small>{previewTarget.subtitle}</small>
               </div>
-              <button type="button" onClick={() => setPreviewUrl("")}>
+              <button type="button" onClick={() => setPreviewTarget(null)}>
                 <Icon name="close" />
               </button>
             </header>
-            <iframe src={previewUrl} title="Private staff document preview" />
+            <iframe src={previewTarget.url} title={previewTarget.title} />
           </section>
         </div>
       )}
@@ -912,14 +1095,16 @@ function SettlementView({
   action,
   notify,
   preview,
+  initialMode,
 }: {
   data: Data;
   busy: boolean;
   action: (action: string, payload: Record<string, unknown>) => Promise<boolean>;
   notify: (message: string) => void;
-  preview: (url: string) => void;
+  preview: PreviewHandler;
+  initialMode: "ACCOUNTANT" | "BANK";
 }) {
-  const [mode, setMode] = useState<"ACCOUNTANT" | "BANK">("BANK");
+  const [mode, setMode] = useState<"ACCOUNTANT" | "BANK">(initialMode);
   const [form, setForm] = useState({
     accountantId: "",
     amount: "",
@@ -930,12 +1115,20 @@ function SettlementView({
   });
   const [uploading, setUploading] = useState(false);
 
+  useEffect(() => setMode(initialMode), [initialMode]);
+
+  const accountantReturns = safeArray<any>(data.floats).filter((row) => {
+    const type = String(row.transactionType ?? row.type ?? "").toUpperCase();
+    const returnedTo = String(row.toUser?.role ?? row.toRole ?? "").toUpperCase();
+    return type.includes("RETURN") || type.includes("ACCOUNTANT") || returnedTo === "ACCOUNTANT";
+  });
+
   async function proof(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
     setUploading(true);
     try {
-      const url = await upload(file, "BANK");
+      const url = await upload(file, mode === "BANK" ? "BANK" : "RETURN");
       setForm((current) => ({ ...current, receiptUrl: url }));
       notify("Settlement receipt uploaded.");
     } catch (uploadError) {
@@ -947,38 +1140,33 @@ function SettlementView({
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    const ok =
-      mode === "BANK"
-        ? await action("DEPOSIT_TO_BANK", {
-            amount: form.amount,
-            referenceNo: form.referenceNo,
-            bankAccount: form.bankAccount,
-            depositDate: form.date,
-            receiptUrl: form.receiptUrl,
-          })
-        : await action("RETURN_MONEY", {
-            accountantId: form.accountantId,
-            amount: form.amount,
-            referenceNo: form.referenceNo,
-            returnDate: form.date,
-            receiptUrl: form.receiptUrl,
-          });
+    const ok = mode === "BANK"
+      ? await action("DEPOSIT_TO_BANK", {
+          amount: form.amount,
+          referenceNo: form.referenceNo,
+          bankAccount: form.bankAccount,
+          depositDate: form.date,
+          receiptUrl: form.receiptUrl,
+        })
+      : await action("RETURN_MONEY", {
+          accountantId: form.accountantId,
+          amount: form.amount,
+          referenceNo: form.referenceNo,
+          returnDate: form.date,
+          receiptUrl: form.receiptUrl,
+        });
+
     if (ok) {
-      setForm({
-        accountantId: "",
-        amount: "",
-        referenceNo: "",
-        bankAccount: "",
-        date: today(),
-        receiptUrl: "",
-      });
+      setForm({ accountantId: "", amount: "", referenceNo: "", bankAccount: "", date: today(), receiptUrl: "" });
     }
   }
 
+  const rows = mode === "BANK" ? safeArray<any>(data.deposits) : accountantReturns;
+
   return (
     <Section
-      title="Deposit to accountant and bank"
-      subtitle="Submit settlements and preview only your own private receipts. Verified records remain locked."
+      title={mode === "BANK" ? "Deposit to bank" : "Deposit to accountant"}
+      subtitle="Submit the settlement and securely preview only records owned by the currently logged-in staff member."
       icon="account_balance"
     >
       <div className={styles.modeButtons}>
@@ -989,90 +1177,81 @@ function SettlementView({
           Deposit to bank
         </button>
       </div>
+
       <div className={styles.twoColumns}>
         <form className={styles.formCard} onSubmit={submit}>
           <h3>{mode === "BANK" ? "New bank deposit" : "Return money to accountant"}</h3>
           <div className={styles.formGrid}>
             <Field label="Amount">
-              <input
-                type="number"
-                min="1"
-                required
-                value={form.amount}
-                onChange={(event) => setForm({ ...form, amount: event.target.value })}
-              />
+              <input type="number" min="1" required value={form.amount} onChange={(event) => setForm({ ...form, amount: event.target.value })} />
             </Field>
             <Field label="Date">
-              <input
-                type="date"
-                required
-                value={form.date}
-                onChange={(event) => setForm({ ...form, date: event.target.value })}
-              />
+              <input type="date" required value={form.date} onChange={(event) => setForm({ ...form, date: event.target.value })} />
             </Field>
           </div>
           {mode === "BANK" ? (
             <Field label="Bank name and account number">
-              <input
-                required
-                value={form.bankAccount}
-                onChange={(event) => setForm({ ...form, bankAccount: event.target.value })}
-              />
+              <input required value={form.bankAccount} onChange={(event) => setForm({ ...form, bankAccount: event.target.value })} />
             </Field>
           ) : (
             <Field label="Accountant">
-              <select
-                required
-                value={form.accountantId}
-                onChange={(event) => setForm({ ...form, accountantId: event.target.value })}
-              >
+              <select required value={form.accountantId} onChange={(event) => setForm({ ...form, accountantId: event.target.value })}>
                 <option value="">Select accountant</option>
-                {data.accountants.map((accountant) => (
-                  <option value={accountant.id} key={accountant.id}>
-                    {accountant.name} · {accountant.email}
-                  </option>
+                {safeArray<any>(data.accountants).map((accountant) => (
+                  <option value={accountant.id} key={accountant.id}>{accountant.name} · {accountant.email}</option>
                 ))}
               </select>
             </Field>
           )}
           <Field label="Reference number">
-            <input
-              required
-              value={form.referenceNo}
-              onChange={(event) => setForm({ ...form, referenceNo: event.target.value })}
-            />
+            <input required value={form.referenceNo} onChange={(event) => setForm({ ...form, referenceNo: event.target.value })} />
           </Field>
-          <UploadField
-            url={form.receiptUrl}
-            uploading={uploading}
-            onChange={proof}
-            text="Upload deposit slip or receipt"
-          />
+          <UploadField url={form.receiptUrl} uploading={uploading} onChange={proof} text="Upload deposit slip or receipt" />
           <button type="submit" className={styles.primaryButton} disabled={busy || uploading}>
-            <Icon name="save" />
-            Submit settlement
+            <Icon name="save" /> Submit settlement
           </button>
         </form>
 
-        <Card title="My submitted deposits" subtitle="Preview only. Staff cannot edit or delete these files.">
+        <Card
+          title={mode === "BANK" ? "My submitted bank deposits" : "My returns to accountant"}
+          subtitle="Preview opens as a staff-authenticated transaction document and includes the original attachment when it is available."
+        >
           <div className={styles.documentList}>
-            {data.deposits.map((row) => (
-              <article key={row.id}>
-                <Icon name="description" />
-                <div>
-                  <strong>{row.referenceNo || row.id}</strong>
-                  <small>{row.bankAccount} · {date(row.depositDate, true)}</small>
-                </div>
-                <b>{money(row.amount)}</b>
-                <Status value={row.status} />
-                {(row.bankReceiptUrl || row.depositSlipUrl) && (
-                  <button type="button" onClick={() => preview(row.bankReceiptUrl || row.depositSlipUrl)}>
-                    Preview
-                  </button>
-                )}
-              </article>
-            ))}
-            {!data.deposits.length && <Empty text="No bank deposits in this period." />}
+            {rows.map((row) => {
+              const isBank = mode === "BANK";
+              const source = isBank ? row.bankReceiptUrl || row.depositSlipUrl : row.receiptUrl;
+              const reference = row.referenceNo || row.reference || row.id;
+              const amount = row.returnedAmount ?? row.amount;
+              const when = isBank ? row.depositDate : row.returnedAt ?? row.confirmedAt ?? row.createdAt;
+              const detail = isBank ? row.bankAccount : row.toUser?.name ?? row.accountant?.name ?? "Accountant";
+              return (
+                <article key={row.id}>
+                  <Icon name={isBank ? "account_balance" : "person_check"} />
+                  <div>
+                    <strong>{reference}</strong>
+                    <small>{detail || "—"} · {date(when, true)}</small>
+                  </div>
+                  <b>{money(amount)}</b>
+                  <Status value={row.status} />
+                  {(source || row.id) && (
+                    <button
+                      type="button" className={styles.previewButton}
+                      onClick={() => preview(String(source ?? ""), {
+                        scope: isBank ? "deposit" : "transaction",
+                        id: String(row.id),
+                        reference: String(row.referenceNo ?? ""),
+                        kind: isBank ? "BANK_DEPOSIT" : String(row.transactionType ?? "STAFF_RETURN_TO_ACCOUNTANT"),
+                        title: isBank ? "Bank deposit preview" : "Accountant return preview",
+                        subtitle: `${reference} · ${money(amount)}`,
+                      })}
+                    >
+                      <Icon name="visibility" /> Preview
+                    </button>
+                  )}
+                </article>
+              );
+            })}
+            {!rows.length && <Empty text={mode === "BANK" ? "No bank deposits in this period." : "No accountant returns in this period."} />}
           </div>
         </Card>
       </div>
@@ -1080,6 +1259,63 @@ function SettlementView({
   );
 }
 
+function BankVerificationView({ data, preview }: { data: Data; preview: PreviewHandler }) {
+  const rows = safeArray<any>(data.deposits);
+  const verified = rows.filter((row) => String(row.status).toUpperCase() === "VERIFIED").length;
+  const pending = rows.filter((row) => !["VERIFIED", "REJECTED"].includes(String(row.status).toUpperCase())).length;
+  const rejected = rows.filter((row) => String(row.status).toUpperCase() === "REJECTED").length;
+  const total = rows.reduce((sum, row) => sum + Number(row.amount ?? 0), 0);
+
+  return (
+    <Section
+      title="Bank verification"
+      subtitle="Read-only verification status for your own bank deposits, with secure receipt preview and real database values."
+      icon="verified_user"
+    >
+      <div className={styles.verificationSummary}>
+        <Metric label="Deposited" value={money(total)} icon="payments" />
+        <Metric label="Verified" value={verified} icon="verified" />
+        <Metric label="Pending" value={pending} icon="hourglass_top" />
+        <Metric label="Rejected" value={rejected} icon="error" />
+      </div>
+      <div className={styles.tableWrap}>
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Reference</th><th>Bank account</th><th>Amount</th><th>Status</th><th>Review note</th><th>Receipt</th></tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              const source = row.bankReceiptUrl || row.depositSlipUrl;
+              return (
+                <tr key={row.id}>
+                  <td>{date(row.depositDate, true)}</td>
+                  <td>{row.referenceNo || row.id}</td>
+                  <td>{row.bankAccount || "—"}</td>
+                  <td><strong>{money(row.amount)}</strong></td>
+                  <td><Status value={row.status} /></td>
+                  <td>{row.verificationNote || row.reviewNote || row.notes || "—"}</td>
+                  <td>
+                    <button type="button" className={styles.previewButton} onClick={() => preview(String(source ?? ""), {
+                      scope: "deposit",
+                      id: String(row.id),
+                      reference: String(row.referenceNo ?? ""),
+                      kind: "BANK_DEPOSIT",
+                      title: "Bank verification preview",
+                      subtitle: `${row.referenceNo || row.id} · ${money(row.amount)}`,
+                    })}>
+                      <Icon name="visibility" /> Preview
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {!rows.length && <Empty text="No bank deposits are available for this filtered period." />}
+      </div>
+    </Section>
+  );
+}
 
 type ParsedSmsTransaction = {
   referenceNo: string;
@@ -1187,7 +1423,7 @@ function ProofView({
   busy: boolean;
   operation: (action: string, payload: Record<string, unknown>) => Promise<boolean>;
   notify: (message: string) => void;
-  preview: (url: string) => void;
+  preview: PreviewHandler;
 }) {
   const [form, setForm] = useState({
     brokerCustomerId: "",
@@ -1417,7 +1653,15 @@ function ProofView({
                 <b>{money(row.amount)}</b>
                 <footer>
                   <span>{label(row.direction)}</span>
-                  {row.proofUrl && <button type="button" onClick={() => preview(row.proofUrl)}>Preview</button>}
+                  {(row.proofUrl || row.id) && <button type="button" className={styles.previewButton} onClick={() => preview(String(row.proofUrl ?? ""), {
+                      scope: "proof",
+                      id: String(row.id),
+                      reference: String(row.referenceNo ?? ""),
+                      kind: String(row.kind ?? row.direction ?? "PAYMENT_PROOF"),
+                      title: "Payment proof preview",
+                      subtitle: `${row.referenceNo || row.id} · ${money(row.amount)}`,
+                    })
+                  }><Icon name="visibility" /> Preview</button>}
                 </footer>
                 {row.verificationNote && <em>{row.verificationNote}</em>}
               </article>
@@ -1439,7 +1683,7 @@ function DocumentsView({
   folders: any[];
   openWeek: string;
   setOpenWeek: (week: string) => void;
-  preview: (url: string) => void;
+  preview: PreviewHandler;
 }) {
   return (
     <Section
@@ -1481,7 +1725,7 @@ function DocumentsView({
                       </span>
                       <b>{money(item.amount)}</b>
                       <Status value={item.status} />
-                      {item.url && <button type="button" onClick={() => preview(item.url)}>Preview</button>}
+                      {item.url && <button type="button" className={styles.previewButton} onClick={() => preview(item.url)}><Icon name="visibility" /> Preview</button>}
                     </div>
                   ))}
                 </div>
@@ -1506,7 +1750,7 @@ function ExpenseView({
   busy: boolean;
   operation: (action: string, payload: Record<string, unknown>) => Promise<boolean>;
   notify: (message: string) => void;
-  preview: (url: string) => void;
+  preview: PreviewHandler;
 }) {
   const [form, setForm] = useState({
     category: "FUEL",
@@ -1614,7 +1858,15 @@ function ExpenseView({
                 </div>
                 <b>{money(row.amount)}</b>
                 <Status value={row.status} />
-                {row.receiptUrl && <button type="button" onClick={() => preview(row.receiptUrl)}>Preview</button>}
+                {(row.receiptUrl || row.id) && <button type="button" className={styles.previewButton} onClick={() => preview(String(row.receiptUrl ?? ""), {
+                    scope: "expense",
+                    id: String(row.id),
+                    reference: String(row.referenceNo ?? row.id ?? ""),
+                    kind: "EXPENSE",
+                    title: "Expense receipt preview",
+                    subtitle: `${row.otherCategory || label(row.category)} · ${money(row.amount)}`,
+                  })
+                }><Icon name="visibility" /> Preview</button>}
               </article>
             ))}
             {!data.expenses.length && <Empty text="No expense requests in this period." />}
@@ -1654,6 +1906,7 @@ function ServiceView({
   const [locating, setLocating] = useState(false);
   const [visitRows, setVisitRows] = useState<any[]>([]);
   const [visitSyncing, setVisitSyncing] = useState(false);
+  const [visitSyncWarning, setVisitSyncWarning] = useState("");
   const [editingVisit, setEditingVisit] = useState<any | null>(null);
   const [editForm, setEditForm] = useState({
     serviceType: "BROKER_VISIT_SERVICE",
@@ -1676,11 +1929,21 @@ function ServiceView({
         credentials: "include",
         cache: "no-store",
       });
-      const result = await readResponse<{ success: true; visits: any[] }>(response);
-      setVisitRows(Array.isArray(result.visits) ? result.visits : []);
+      const result = await readResponse<{ success: true; visits: any[]; source?: string }>(response);
+      setVisitRows(safeArray<any>(result.visits));
+      setVisitSyncWarning("");
     } catch (visitError) {
       console.warn("SERVICE_VISIT_SYNC_FAILED:", visitError);
-      setVisitRows(Array.isArray(data.services) ? data.services : []);
+
+      /*
+       * Service visits are an isolated optional dataset.
+       * The staff workspace remains fully usable using the already-loaded
+       * service activity rows when the dedicated visit table/model is absent.
+       */
+      setVisitRows(safeArray<any>(data.services));
+      setVisitSyncWarning(
+        "Dedicated visit history is unavailable; showing synchronized service activity instead.",
+      );
     } finally {
       setVisitSyncing(false);
     }
@@ -1907,6 +2170,15 @@ function ServiceView({
               <Icon name="refresh" /> Refresh visits
             </button>
           </div>
+          {visitSyncWarning ? (
+            <div className={styles.schemaWarning} role="status">
+              <Icon name="database" />
+              <div>
+                <strong>Service history compatibility mode</strong>
+                <p>{visitSyncWarning}</p>
+              </div>
+            </div>
+          ) : null}
           <div className={styles.serviceList}>
             {visitRows.map((row) => (
               <article key={row.id}>
@@ -1976,7 +2248,7 @@ function TransactionsView({
   preview,
 }: {
   rows: any[];
-  preview: (url: string) => void;
+  preview: PreviewHandler;
 }) {
   return (
     <Section
@@ -2011,7 +2283,32 @@ function TransactionsView({
                 <td>{money(row.floatAmount)}</td>
                 <td>{money(row.cashAmount)}</td>
                 <td><strong>{money(row.amount)}</strong></td>
-                <td>{row.proofUrl ? <button type="button" onClick={() => preview(row.proofUrl)}>Preview</button> : "—"}</td>
+                <td>{row.id ? <button type="button" className={styles.previewButton} onClick={() => {
+                    const kind = String(row.kind ?? row.type ?? "").toUpperCase();
+                    const source = String(
+                      row.proofUrl ??
+                      row.receiptUrl ??
+                      row.bankReceiptUrl ??
+                      row.depositSlipUrl ??
+                      row.documentUrl ??
+                      "",
+                    );
+                    preview(source, {
+                      scope:
+                        kind === "BANK_DEPOSIT"
+                          ? "deposit"
+                          : kind === "EXPENSE"
+                            ? "expense"
+                            : kind.includes("PROOF")
+                              ? "proof"
+                              : "transaction",
+                      id: String(row.id),
+                      reference: String(row.reference ?? row.referenceNo ?? ""),
+                      kind,
+                      title: "Transaction proof preview",
+                      subtitle: `${row.reference || row.id} · ${money(row.amount)}`,
+                    });
+                  }}><Icon name="visibility" /> Preview</button> : "—"}</td>
                 <td><Status value={row.status} /></td>
               </tr>
             ))}
@@ -2089,7 +2386,7 @@ function ReportsView({
   anchor: string;
   from: string;
   to: string;
-  preview: (url: string) => void;
+  preview: PreviewHandler;
 }) {
   const query = new URLSearchParams({ period, anchor });
   if (period === "CUSTOM") {
@@ -2116,7 +2413,7 @@ function ReportsView({
             </small>
           </span>
         </div>
-        <button type="button" onClick={() => preview(pdf)}>
+        <button type="button" className={styles.previewButton} onClick={() => preview(pdf)}>
           <Icon name="visibility" />
           Preview report
         </button>
@@ -2148,7 +2445,7 @@ function ReportsView({
           <strong>Print report</strong>
           <small>Preview the PDF, then use the browser print control.</small>
           <div className={styles.reportCardActions}>
-            <button type="button" onClick={() => preview(pdf)}>
+            <button type="button" className={styles.previewButton} onClick={() => preview(pdf)}>
               <Icon name="visibility" />
               Preview
             </button>
@@ -2200,28 +2497,94 @@ function ReportCard({
   );
 }
 
-function AttendanceView({ rows }: { rows: any[] }) {
+function AttendanceView({ rows, periodLabel }: { rows: any[]; periodLabel: string }) {
+  const total = rows.length;
+  const present = rows.filter((row) => ["PRESENT", "LATE"].includes(String(row.status ?? "").toUpperCase())).length;
+  const onTime = rows.filter((row) => String(row.status ?? "").toUpperCase() === "PRESENT").length;
+  const late = rows.filter((row) => String(row.status ?? "").toUpperCase() === "LATE").length;
+  const absent = rows.filter((row) => String(row.status ?? "").toUpperCase() === "ABSENT").length;
+  const morning = rows.filter((row) => Boolean(row.checkInAt)).length;
+  const evening = rows.filter((row) => Boolean(row.checkOutAt)).length;
+  const completeDays = rows.filter((row) => Boolean(row.checkInAt) && Boolean(row.checkOutAt)).length;
+  const rate = total ? Math.round((present / total) * 100) : 0;
+  const journeyRate = total ? Math.round((completeDays / total) * 100) : 0;
+  const arrivalRate = total ? Math.round((morning / total) * 100) : 0;
+  const departureRate = total ? Math.round((evening / total) * 100) : 0;
+
   return (
     <Section
       title="My attendance journey"
-      subtitle="Read-only accountant-verified attendance. ✓ and ✕ are shown only after the accountant conducts and verifies the register."
+      subtitle={`Verified attendance progress for ${periodLabel}. Every number below comes from the logged-in staff member's filtered attendance records.`}
       icon="event_available"
     >
+      <div className={styles.attendanceHero}>
+        <div
+          className={styles.attendanceScoreRing}
+          style={{ background: `conic-gradient(#0a8f69 ${Math.max(0, Math.min(100, rate))}%, #e2ece8 0)` }}
+          aria-label={`Attendance score ${rate}%`}
+        >
+          <span><strong>{rate}%</strong><small>attendance</small></span>
+        </div>
+        <div className={styles.attendanceHeroCopy}>
+          <small>Filtered attendance health</small>
+          <h3>{rate >= 90 ? "Excellent consistency" : rate >= 75 ? "Good attendance progress" : rate >= 50 ? "Attendance needs attention" : "Low attendance in this period"}</h3>
+          <p>{periodLabel} · {present} attended day(s), {absent} absent day(s), {completeDays} complete check-in/check-out journey day(s).</p>
+          <div className={styles.attendanceHeroPills}>
+            <span><Icon name="task_alt" /> {onTime} on time</span>
+            <span><Icon name="schedule" /> {late} late</span>
+            <span><Icon name="event_busy" /> {absent} absent</span>
+          </div>
+        </div>
+        <div className={styles.attendanceHeroStats}>
+          <span><small>Morning capture</small><strong>{arrivalRate}%</strong></span>
+          <span><small>Evening capture</small><strong>{departureRate}%</strong></span>
+          <span><small>Full-day journey</small><strong>{journeyRate}%</strong></span>
+        </div>
+      </div>
+
+      <div className={styles.attendanceSummary}>
+        <Metric label="Attendance rate" value={`${rate}%`} icon="monitoring" />
+        <Metric label="Present / late" value={`${present}/${total}`} icon="task_alt" />
+        <Metric label="Absent" value={absent} icon="person_off" />
+        <Metric label="Full-day checks" value={`${completeDays}/${total}`} icon="done_all" />
+      </div>
+
+      <div className={styles.attendanceProgressCard}>
+        <header>
+          <div><small>REAL PROGRESS</small><strong>Attendance completion</strong></div>
+          <span>{periodLabel}</span>
+        </header>
+        <div><span><b>Attendance</b><em>{rate}%</em></span><progress max="100" value={rate} /></div>
+        <div><span><b>Morning arrivals</b><em>{morning}/{total}</em></span><progress max="100" value={arrivalRate} /></div>
+        <div><span><b>Evening departures</b><em>{evening}/{total}</em></span><progress max="100" value={departureRate} /></div>
+        <div><span><b>Complete daily journey</b><em>{journeyRate}%</em></span><progress max="100" value={journeyRate} /></div>
+      </div>
+
       <div className={styles.attendanceGrid}>
-        {rows.map((row) => (
-          <article key={row.id}>
-            <header>
-              <strong>{date(row.date)}</strong>
-              <Status value={row.status} />
-            </header>
-            <div>
-              <AttendanceBox title="Morning arrival" present={Boolean(row.checkInAt)} time={row.checkInAt} />
-              <AttendanceBox title="Evening departure" present={Boolean(row.checkOutAt)} time={row.checkOutAt} />
-            </div>
-            <small>{row.notes || "Verified by the accountant."}</small>
-          </article>
-        ))}
-        {!rows.length && <Empty text="No attendance records in this period." />}
+        {rows.map((row) => {
+          const rowStatus = String(row.status ?? "UNKNOWN").toUpperCase();
+          return (
+            <article key={row.id} className={styles.attendanceDayCard}>
+              <header>
+                <div>
+                  <small>Attendance day</small>
+                  <strong>{date(row.date)}</strong>
+                </div>
+                <Status value={row.status} />
+              </header>
+              <div className={styles.attendanceTimeline}>
+                <AttendanceBox title="Morning arrival" present={Boolean(row.checkInAt)} time={row.checkInAt} icon="login" />
+                <span className={styles.attendanceConnector} aria-hidden="true" />
+                <AttendanceBox title="Evening departure" present={Boolean(row.checkOutAt)} time={row.checkOutAt} icon="logout" />
+              </div>
+              <footer>
+                <span><Icon name="badge" /> {label(rowStatus)}</span>
+                <small>{row.notes || "Verified attendance record from this selected period."}</small>
+              </footer>
+            </article>
+          );
+        })}
+        {!rows.length && <Empty text="No attendance records in this filtered period." />}
       </div>
     </Section>
   );
@@ -2231,14 +2594,16 @@ function AttendanceBox({
   title,
   present,
   time,
+  icon,
 }: {
   title: string;
   present: boolean;
   time: unknown;
+  icon: string;
 }) {
   return (
     <span className={present ? styles.presentBox : styles.absentBox}>
-      <b>{present ? "✓" : "✕"}</b>
+      <b><Icon name={present ? icon : "close"} /></b>
       <em>{title}</em>
       <small>{present ? date(time, true) : "Not recorded"}</small>
     </span>
@@ -2342,7 +2707,78 @@ function GpsView({
   );
 }
 
-function TravelHistoryView({ data }: { data: Data }) {
+function TravelHistoryView({
+  data,
+  period,
+  anchor,
+  from,
+  to,
+}: {
+  data: Data;
+  period: string;
+  anchor: string;
+  from: string;
+  to: string;
+}) {
+  type RealHistory = {
+    success: true;
+    period: { name: string; label: string; start: string; end: string };
+    current?: any;
+    history: any[];
+    summary: {
+      gpsPoints: number;
+      distanceMetres: number;
+      distanceKm: number;
+      averageSpeedKph: number;
+      maxSpeedKph: number;
+      firstCapturedAt?: string | null;
+      lastCapturedAt?: string | null;
+    };
+  };
+
+  const [realHistory, setRealHistory] = useState<RealHistory | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [historyError, setHistoryError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadRealHistory() {
+      setHistoryLoading(true);
+      setHistoryError("");
+      try {
+        const query = new URLSearchParams({ period, anchor });
+        if (period === "CUSTOM") {
+          query.set("from", from);
+          query.set("to", to);
+        }
+        const response = await fetch(`/api/staff/location-history?${query.toString()}`, {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+        });
+        const result = await readResponse<RealHistory>(response);
+        if (!cancelled) setRealHistory(result);
+      } catch (requestError) {
+        if (!cancelled) {
+          setRealHistory(null);
+          setHistoryError(
+            requestError instanceof Error
+              ? requestError.message
+              : "Real GPS travel history could not be loaded.",
+          );
+        }
+      } finally {
+        if (!cancelled) setHistoryLoading(false);
+      }
+    }
+
+    void loadRealHistory();
+    return () => {
+      cancelled = true;
+    };
+  }, [period, anchor, from, to]);
+
   function routeDistance(
     first: { latitude: number; longitude: number },
     second: { latitude: number; longitude: number },
@@ -2365,11 +2801,24 @@ function TravelHistoryView({ data }: { data: Data }) {
     return `${(metres / 1000).toFixed(metres >= 10_000 ? 1 : 2)} km`;
   }
 
-  const history = data.pings
+  // Prefer the dedicated authenticated GPS-history endpoint. It queries every
+  // GPS device owned by the logged-in Staff Officer for the selected period.
+  // Workspace pings remain only as a compatibility fallback for older schemas.
+  const sourcePings = safeArray<any>(realHistory?.history).length
+    ? safeArray<any>(realHistory?.history)
+    : safeArray<any>(data.pings);
+
+  const history = sourcePings
     .filter(
       (ping) =>
         Number.isFinite(Number(ping.latitude)) &&
-        Number.isFinite(Number(ping.longitude)),
+        Number.isFinite(Number(ping.longitude)) &&
+        !(Number(ping.latitude) === 0 && Number(ping.longitude) === 0),
+    )
+    .sort(
+      (left, right) =>
+        new Date(String(left.capturedAt ?? 0)).getTime() -
+        new Date(String(right.capturedAt ?? 0)).getTime(),
     )
     .map((ping, sourceIndex) => ({
       id: String(
@@ -2381,64 +2830,114 @@ function TravelHistoryView({ data }: { data: Data }) {
       label: data.staff?.name || "Staff route",
       subtitle: `${Math.round(Number(ping.speedKph || 0))} km/h`,
       capturedAt: ping.capturedAt,
+      speedKph: Number(ping.speedKph || 0),
+      accuracy: Number(ping.accuracy ?? ping.gpsAccuracy ?? 0),
+      deviceName: String(ping.deviceName ?? "Staff GPS device"),
       type: "history" as const,
     }));
 
   let runningDistance = 0;
   const enrichedHistory = history.map((point, index) => {
     const previous = index > 0 ? history[index - 1] : null;
-    const segmentMetres = previous
-      ? routeDistance(previous, point)
-      : 0;
+    const segmentMetres = previous ? routeDistance(previous, point) : 0;
     runningDistance += segmentMetres;
     const totalMetres = runningDistance;
 
     return {
       ...point,
-      label: `Stop ${index + 1}`,
-      subtitle: `${date(point.capturedAt, true)} - segment ${routeDistanceLabel(segmentMetres)} - total ${routeDistanceLabel(totalMetres)}`,
+      label: `GPS point ${index + 1}`,
+      subtitle: `${date(point.capturedAt, true)} · ${point.deviceName} · ${Math.round(point.speedKph)} km/h · segment ${routeDistanceLabel(segmentMetres)} · total ${routeDistanceLabel(totalMetres)}`,
       segmentMetres,
       totalMetres,
     };
   });
 
-  const latest = enrichedHistory.length ? [enrichedHistory[enrichedHistory.length - 1]] : [];
-  const totalMetres = enrichedHistory.at(-1)?.totalMetres ?? 0;
+  const current = realHistory?.current;
+  const currentPoint =
+    current &&
+    Number.isFinite(Number(current.latitude)) &&
+    Number.isFinite(Number(current.longitude)) &&
+    !(Number(current.latitude) === 0 && Number(current.longitude) === 0)
+      ? [{
+          id: String(current.id ?? "staff-current-location"),
+          latitude: Number(current.latitude),
+          longitude: Number(current.longitude),
+          label: data.staff?.name || "Current Staff location",
+          subtitle: `Latest real GPS · ${date(current.capturedAt, true)} · accuracy ${Math.round(Number(current.accuracy || 0))} m`,
+          capturedAt: current.capturedAt,
+          type: "staff" as const,
+        }]
+      : enrichedHistory.length
+        ? [{ ...enrichedHistory[enrichedHistory.length - 1], type: "staff" as const, label: data.staff?.name || "Latest Staff location" }]
+        : [];
+
+  const totalMetres =
+    Number(realHistory?.summary?.distanceMetres ?? 0) ||
+    enrichedHistory.at(-1)?.totalMetres ||
+    0;
   const averageSpeed =
-    history.length > 1
-      ? history.reduce((sum, point) => {
-          const match = data.pings.find((ping) => String(ping.capturedAt) === String(point.capturedAt));
-          return sum + Number(match?.speedKph || 0);
-        }, 0) / history.length
-      : 0;
+    Number(realHistory?.summary?.averageSpeedKph ?? 0) ||
+    (history.length
+      ? history.reduce((sum, point) => sum + Number(point.speedKph || 0), 0) / history.length
+      : 0);
+  const maxSpeed =
+    Number(realHistory?.summary?.maxSpeedKph ?? 0) ||
+    (history.length ? Math.max(...history.map((point) => Number(point.speedKph || 0))) : 0);
+  const periodLabel = realHistory?.period?.label || data.period.label;
 
   return (
     <Section
       title="Travel history"
-      subtitle="The dotted route appears only here and follows the selected day, week, month or year."
+      subtitle="Real GPS pings from this logged-in Staff Officer's devices, filtered by the selected day, week, month, year or custom period."
       icon="route"
     >
+      {historyError && (
+        <div className={styles.locationWarning}>
+          <Icon name="warning" />
+          <span>{historyError} Workspace GPS records are shown as a compatibility fallback.</span>
+        </div>
+      )}
+
       <div className={styles.travelSummary}>
-        <Metric label="Distance covered" value={routeDistanceLabel(totalMetres || Number(data.stats.distanceKm || 0) * 1000)} icon="route" />
-        <Metric label="GPS points" value={history.length} icon="radar" />
+        <Metric label="Distance covered" value={historyLoading ? "Loading…" : routeDistanceLabel(totalMetres)} icon="route" />
+        <Metric label="Real GPS points" value={historyLoading ? "…" : history.length} icon="radar" />
         <Metric label="Average speed" value={`${Math.round(averageSpeed)} km/h`} icon="speed" />
-        <Metric label="Period" value={data.period.label} icon="calendar_month" />
+        <Metric label="Maximum speed" value={`${Math.round(maxSpeed)} km/h`} icon="speed" />
       </div>
+
+      <div className={styles.realMapHeader}>
+        <div>
+          <span><Icon name="my_location" /> REAL DEVICE LOCATION</span>
+          <strong>{periodLabel}</strong>
+          <small>
+            {currentPoint.length
+              ? `${currentPoint[0].latitude.toFixed(6)}, ${currentPoint[0].longitude.toFixed(6)}`
+              : "Waiting for a valid GPS location"}
+          </small>
+        </div>
+        <div className={styles.mapLegendPills}>
+          <span><i className={styles.legendStaffDot} /> Current staff</span>
+          <span><i className={styles.legendRouteDot} /> Recorded route</span>
+        </div>
+      </div>
+
       <div className={styles.mapCard}>
-        <LiveMap points={latest} history={enrichedHistory} height={560} />
+        <LiveMap points={currentPoint} history={enrichedHistory} height={590} />
       </div>
+
       <div className={styles.travelRouteStrip}>
         <span>
           <Icon name="timeline" />
-          Dotted GPS route with numbered stops
+          Real GPS route with numbered movement points
         </span>
-        <strong>{routeDistanceLabel(totalMetres || Number(data.stats.distanceKm || 0) * 1000)} covered</strong>
+        <strong>{routeDistanceLabel(totalMetres)} covered</strong>
       </div>
+
       <div className={styles.travelRecords}>
         {enrichedHistory
           .slice()
           .reverse()
-          .slice(0, 80)
+          .slice(0, 120)
           .map((point, index) => (
             <article key={`${point.id}:${index}`}>
               <Icon name="location_on" />
@@ -2446,13 +2945,15 @@ function TravelHistoryView({ data }: { data: Data }) {
                 <strong>
                   {point.latitude.toFixed(6)}, {point.longitude.toFixed(6)}
                 </strong>
-                <small>{date(point.capturedAt, true)}</small>
+                <small>{date(point.capturedAt, true)} · {point.deviceName}</small>
               </span>
               <b>{routeDistanceLabel(point.segmentMetres)}</b>
               <em>{routeDistanceLabel(point.totalMetres)} total</em>
             </article>
           ))}
-        {!history.length && <Empty text="No GPS travel points were recorded for this period." />}
+        {!historyLoading && !history.length && (
+          <Empty text="No real GPS points were recorded for this selected period. Allow Location permission and keep Staff GPS enabled while working." />
+        )}
       </div>
     </Section>
   );

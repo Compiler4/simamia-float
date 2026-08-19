@@ -100,6 +100,8 @@ function candidatePaths(rawPath: string, companyId: string, databasePaths: strin
     // public folders before company-scoped uploads were introduced.
     candidates.add(path.join(PUBLIC_UPLOAD_ROOT, "verification", filename));
     candidates.add(path.join(PUBLIC_UPLOAD_ROOT, "proofs", filename));
+    candidates.add(path.join(PUBLIC_UPLOAD_ROOT, "expenses", filename));
+    candidates.add(path.join(PUBLIC_UPLOAD_ROOT, "receipts", filename));
   }
 
   return Array.from(candidates).filter((candidate) => {

@@ -255,29 +255,41 @@ export async function assignedBrokerCustomers(companyId: string, staffId: string
     select: { assignedRegion: true },
   });
 
-  const explicit = await db.staffBrokerCustomerAssignment.findMany({
-    where: {
-      companyId,
-      staffId,
-      status: "ACTIVE",
-    },
-    include: {
-      brokerCustomer: {
-        include: {
-          agentAccounts: {
-            where: { status: "ACTIVE" },
-            orderBy: [{ isPrimary: "desc" }, { network: "asc" }],
+  let explicit: any[] = [];
+
+  try {
+    explicit = await db.staffBrokerCustomerAssignment.findMany({
+      where: {
+        companyId,
+        staffId,
+        status: "ACTIVE",
+      },
+      include: {
+        brokerCustomer: {
+          include: {
+            agentAccounts: {
+              where: { status: "ACTIVE" },
+              orderBy: [{ isPrimary: "desc" }, { network: "asc" }],
+            },
           },
         },
       },
-    },
-    orderBy: [{ assignedArea: "asc" }, { startedAt: "desc" }],
-  });
+      orderBy: [{ assignedArea: "asc" }, { startedAt: "desc" }],
+    });
+  } catch (error) {
+    console.warn(
+      "STAFF_BROKER_ASSIGNMENT_LOOKUP_FALLBACK:",
+      error instanceof Error ? error.message : String(error),
+    );
+  }
 
   if (explicit.length) {
     return explicit
       .map((row: any) => ({
         ...row.brokerCustomer,
+        agentAccounts: Array.isArray(row.brokerCustomer?.agentAccounts)
+          ? row.brokerCustomer.agentAccounts
+          : [],
         assignedArea: row.assignedArea,
         assignmentId: row.id,
       }))
@@ -287,26 +299,42 @@ export async function assignedBrokerCustomers(companyId: string, staffId: string
   const area = cleanText(staff?.assignedRegion);
   if (!area) return [];
 
-  return db.brokerCustomer.findMany({
-    where: {
-      companyId,
-      status: "ACTIVE",
-      OR: [
-        { region: { contains: area } },
-        { district: { contains: area } },
-        { ward: { contains: area } },
-        { location: { contains: area } },
-        { address: { contains: area } },
-      ],
-    },
-    include: {
-      agentAccounts: {
-        where: { status: "ACTIVE" },
-        orderBy: [{ isPrimary: "desc" }, { network: "asc" }],
+  const where = {
+    companyId,
+    status: "ACTIVE",
+    OR: [
+      { region: { contains: area } },
+      { district: { contains: area } },
+      { ward: { contains: area } },
+      { location: { contains: area } },
+      { address: { contains: area } },
+    ],
+  };
+
+  try {
+    return await db.brokerCustomer.findMany({
+      where,
+      include: {
+        agentAccounts: {
+          where: { status: "ACTIVE" },
+          orderBy: [{ isPrimary: "desc" }, { network: "asc" }],
+        },
       },
-    },
-    orderBy: [{ location: "asc" }, { name: "asc" }],
-  });
+      orderBy: [{ location: "asc" }, { name: "asc" }],
+    });
+  } catch (error) {
+    console.warn(
+      "STAFF_BROKER_AGENT_ACCOUNT_LOOKUP_FALLBACK:",
+      error instanceof Error ? error.message : String(error),
+    );
+
+    const rows = await db.brokerCustomer.findMany({
+      where,
+      orderBy: [{ location: "asc" }, { name: "asc" }],
+    });
+
+    return rows.map((row: any) => ({ ...row, agentAccounts: [] }));
+  }
 }
 
 export async function requireAssignedBroker(
@@ -372,6 +400,7 @@ export function responseError(error: unknown): { status: number; message: string
     "Authentication is required.": [401, "Authentication is required."],
     FORBIDDEN: [403, "Staff access is required."],
     COMPANY_REQUIRED: [403, "Your account is not assigned to a company."],
+    STAFF_COMPANY_REQUIRED: [403, "Your staff account is not assigned to a company."],
     INVALID_AMOUNT: [422, "Enter an amount greater than zero."],
     INVALID_FLOATAMOUNT: [422, "Enter a valid float amount."],
     INVALID_CASHAMOUNT: [422, "Enter a valid cash amount."],

@@ -1,0 +1,320 @@
+diff -ruN /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/StaffDashboard.module.css /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboard.module.css
+--- /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/StaffDashboard.module.css	2026-08-18 17:00:40.310308933 +0000
++++ /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboard.module.css	2026-08-18 17:16:01.824189016 +0000
+@@ -2605,3 +2605,90 @@
+     text-align: center;
+   }
+ }
++
++/* V11: deterministic client-only dashboard boot screen. The real staff
++   workspace is loaded with next/dynamic({ ssr: false }) to eliminate SSR
++   hydration mismatches around GPS/browser-only functionality. */
++.clientBootShell {
++  min-height: 100vh;
++  display: grid;
++  place-items: center;
++  padding: 32px;
++  background:
++    radial-gradient(circle at 20% 20%, rgba(24, 145, 92, 0.16), transparent 34%),
++    radial-gradient(circle at 82% 72%, rgba(21, 95, 170, 0.12), transparent 38%),
++    #f4f8f6;
++}
++
++.clientBootCard {
++  width: min(560px, 100%);
++  display: grid;
++  grid-template-columns: auto 1fr auto;
++  align-items: center;
++  gap: 20px;
++  padding: 24px 26px;
++  border: 1px solid rgba(14, 92, 62, 0.12);
++  border-radius: 24px;
++  background: rgba(255, 255, 255, 0.94);
++  box-shadow: 0 24px 70px rgba(16, 68, 49, 0.14);
++  backdrop-filter: blur(18px);
++}
++
++.clientBootMark {
++  width: 58px;
++  height: 58px;
++  display: grid;
++  place-items: center;
++  border-radius: 17px;
++  background: linear-gradient(145deg, #0d7b4c, #149b67);
++  color: #fff;
++  font-size: 20px;
++  font-weight: 900;
++  letter-spacing: 0.04em;
++  box-shadow: 0 12px 28px rgba(13, 123, 76, 0.22);
++}
++
++.clientBootCard small {
++  display: block;
++  margin-bottom: 5px;
++  color: #0d7b4c;
++  font-size: 10px;
++  font-weight: 800;
++  letter-spacing: 0.14em;
++}
++
++.clientBootCard h1 {
++  margin: 0;
++  color: #12372a;
++  font-size: 22px;
++  line-height: 1.15;
++}
++
++.clientBootCard p {
++  margin: 6px 0 0;
++  color: #6b7f76;
++  font-size: 13px;
++}
++
++.clientBootSpinner {
++  width: 24px;
++  height: 24px;
++  border: 3px solid rgba(13, 123, 76, 0.16);
++  border-top-color: #0d7b4c;
++  border-radius: 999px;
++  animation: staffClientBootSpin 0.8s linear infinite;
++}
++
++@keyframes staffClientBootSpin {
++  to { transform: rotate(360deg); }
++}
++
++@media (max-width: 640px) {
++  .clientBootShell { padding: 18px; }
++  .clientBootCard {
++    grid-template-columns: auto 1fr;
++    padding: 20px;
++    border-radius: 20px;
++  }
++  .clientBootSpinner { grid-column: 1 / -1; justify-self: center; }
++}
+diff -ruN /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/StaffDashboardClient.tsx /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboardClient.tsx
+--- /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/StaffDashboardClient.tsx	2026-08-18 17:00:40.310018832 +0000
++++ /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboardClient.tsx	2026-08-18 17:16:01.085985021 +0000
+@@ -524,9 +524,6 @@
+ 
+ export default function StaffDashboardClient({ user, initialDate }: Props) {
+   const router = useRouter();
+-  // IMPORTANT: false is rendered by both SSR and the browser's very first render.
+-  // The interactive dashboard is shown only after hydration has completed.
+-  const [hydrated, setHydrated] = useState(false);
+   const [page, setPage] = useState<PageKey>("Dashboard");
+   const [data, setData] = useState<DashboardData | null>(null);
+   const [loading, setLoading] = useState(true);
+@@ -550,33 +547,29 @@
+   const unread = unreadSummary.total;
+ 
+   useEffect(() => {
+-    setHydrated(true);
+-  }, []);
+-
+-  useEffect(() => {
+-    if (!hydrated) return;
+     void load(true);
+     void loadUnread();
+-  }, [hydrated]);
++  }, []);
+ 
+   useEffect(() => {
+-    if (!hydrated) return;
+-
+     const timer = window.setInterval(() => {
+       void loadUnread();
+     }, 15_000);
+ 
+     return () => window.clearInterval(timer);
+-  }, [hydrated]);
++  }, []);
++
+   useEffect(() => {
+-    if (!hydrated) return;
+-    if (page === "Reports" || page === "Own Performance" || page === "My Transactions") void load(false);
+-  }, [hydrated, period, anchor, page]);
++    if (page === "Reports" || page === "Own Performance" || page === "My Transactions") {
++      void load(false);
++    }
++  }, [period, anchor, page]);
++
+   useEffect(() => {
+-    if (!hydrated || !toast) return;
++    if (!toast) return;
+     const id = window.setTimeout(() => setToast(""), 4200);
+     return () => window.clearTimeout(id);
+-  }, [hydrated, toast]);
++  }, [toast]);
+ 
+   async function loadUnread() {
+     try {
+@@ -792,13 +785,6 @@
+   }
+   async function logout() { await fetch("/api/auth/logout", { method: "POST" }); router.push("/login"); router.refresh(); }
+ 
+-  // Render exactly the same deterministic shell on the server and during the
+-  // browser's first render. This prevents structural mismatches when Turbopack
+-  // has a stale client chunk or when browser-only APIs become available.
+-  if (!hydrated) {
+-    return <StaffDashboardHydrationShell user={user} />;
+-  }
+-
+   return (
+     <main className={`${styles.shell} ${collapsed ? styles.collapsed : ""}`}>
+       <button className={`${styles.backdrop} ${mobileOpen ? styles.backdropVisible : ""}`} onClick={() => setMobileOpen(false)} aria-label="Close menu" />
+@@ -875,74 +861,6 @@
+       </section>
+     </main>
+   );
+-}
+-
+-function StaffDashboardHydrationShell({ user }: { user: Props["user"] }) {
+-  const groups = Array.from(new Set(nav.map((item) => item.group)));
+-
+-  return (
+-    <main className={styles.shell} aria-busy="true" data-hydration-shell="staff-dashboard">
+-      <aside className={styles.sidebar}>
+-        <div className={styles.logo}>
+-          <span><Icon name="wallet" size={24}/></span>
+-          <div><strong>Simamia Float</strong><small>Staff Officer Portal</small></div>
+-          <em>LIVE</em>
+-        </div>
+-
+-        <button className={styles.collapse} type="button" disabled>
+-          <Icon name="menu"/><span>Collapse menu</span>
+-        </button>
+-
+-        <nav aria-label="Staff navigation loading">
+-          {groups.map((group) => (
+-            <section key={group}>
+-              <small>{group}</small>
+-              {nav.filter((item) => item.group === group).map((item) => (
+-                <button
+-                  key={item.page}
+-                  type="button"
+-                  className={item.page === "Dashboard" ? styles.activeNav : ""}
+-                  disabled
+-                  title={item.page}
+-                >
+-                  <i><Icon name={item.icon}/></i>
+-                  <span>{item.page}</span>
+-                </button>
+-              ))}
+-            </section>
+-          ))}
+-        </nav>
+-
+-        <button className={styles.logout} type="button" disabled>
+-          <Icon name="logout"/><span>Logout</span>
+-        </button>
+-      </aside>
+-
+-      <section className={styles.workspace}>
+-        <header className={styles.topbar}>
+-          <button className={styles.mobileMenu} type="button" disabled><Icon name="menu"/></button>
+-          <div className={styles.heading}><small>Float operations</small><h1>Dashboard</h1></div>
+-          <div className={styles.search}><Icon name="search" size={17}/><input aria-label="Search" value="" readOnly placeholder="Search transactions, brokers, sections..." /></div>
+-          <button className={styles.roundButton} type="button" disabled title="Refresh"><Icon name="refresh"/></button>
+-          <button className={styles.roundButton} type="button" disabled title="Notifications"><Icon name="bell"/></button>
+-          <button className={styles.profileChip} type="button" disabled>
+-            <Avatar person={user}/>
+-            <span><strong>{user.name}</strong><small>{user.email}</small></span>
+-            <Icon name="arrow" size={15}/>
+-          </button>
+-        </header>
+-
+-        <section className={styles.hydrationStage} aria-label="Loading staff dashboard">
+-          <div className={styles.hydrationPulse}/>
+-          <div>
+-            <small>Secure staff workspace</small>
+-            <strong>Preparing your dashboard…</strong>
+-            <span>Synchronizing your authenticated staff modules.</span>
+-          </div>
+-        </section>
+-      </section>
+-    </main>
+-  );
+ }
+ 
+ function PageContent(props: {
+diff -ruN /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/StaffDashboardEntry.tsx /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboardEntry.tsx
+--- /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/StaffDashboardEntry.tsx	1970-01-01 00:00:00.000000000 +0000
++++ /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/StaffDashboardEntry.tsx	2026-08-18 17:16:01.247613163 +0000
+@@ -0,0 +1,55 @@
++"use client";
++
++import dynamic from "next/dynamic";
++
++import styles from "./StaffDashboard.module.css";
++
++type StaffDashboardEntryProps = {
++  user: {
++    id: string;
++    name: string;
++    username: string;
++    email: string;
++    role: string;
++    roleLabel: string;
++    companyId: string | null;
++  };
++  initialDate: string;
++};
++
++/**
++ * The staff workspace contains browser-only features (GPS, canvas image
++ * compression, localStorage, navigator and Leaflet). Rendering that large
++ * interactive tree on the server gives React two chances to disagree about
++ * the first DOM tree during development/HMR.
++ *
++ * Keep this tiny boundary as the only server-prerendered client component and
++ * mount the real dashboard exclusively in the browser.
++ */
++const StaffDashboardClient = dynamic(
++  () => import("./StaffDashboardClient"),
++  {
++    ssr: false,
++    loading: () => <StaffDashboardBootScreen />,
++  },
++);
++
++function StaffDashboardBootScreen() {
++  return (
++    <main className={styles.clientBootShell} aria-busy="true">
++      <section className={styles.clientBootCard}>
++        <span className={styles.clientBootMark}>SI</span>
++        <div>
++          <small>SECURE STAFF WORKSPACE</small>
++          <h1>Simamia Float</h1>
++          <p>Loading your staff dashboard and live operations…</p>
++        </div>
++        <i className={styles.clientBootSpinner} aria-hidden="true" />
++      </section>
++    </main>
++  );
++}
++
++export default function StaffDashboardEntry(props: StaffDashboardEntryProps) {
++  return <StaffDashboardClient {...props} />;
++}
+diff -ruN /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/page.tsx /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/page.tsx
+--- /mnt/data/simamia_staff_hydration_fix_v10/app/staff/dashboard/page.tsx	2026-08-18 17:00:40.310184418 +0000
++++ /mnt/data/simamia_staff_hydration_fix_v11/app/staff/dashboard/page.tsx	2026-08-18 17:16:01.673837120 +0000
+@@ -7,7 +7,7 @@
+   normalizeRole,
+ } from "@/lib/auth";
+ 
+-import StaffDashboardClient from "./StaffDashboardClient";
++import StaffDashboardEntry from "./StaffDashboardEntry";
+ 
+ export const dynamic = "force-dynamic";
+ export const revalidate = 0;
+@@ -42,7 +42,7 @@
+   }
+ 
+   return (
+-    <StaffDashboardClient
++    <StaffDashboardEntry
+       initialDate={tanzaniaCalendarDate()}
+       user={{
+         id: String(user.id),

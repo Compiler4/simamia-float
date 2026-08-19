@@ -288,8 +288,20 @@ export async function GET() {
       })(),
     }));
 
-    const bankVerifications = bankRaw.map((item: any) => ({
+    const importedStatementByAccount = new Map<string, any>();
+    for (const statement of importedStatementsRaw) {
+      const key = text(statement.accountNumber).replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+      if (key && !importedStatementByAccount.has(key)) importedStatementByAccount.set(key, statement);
+    }
+
+    const bankVerifications = bankRaw.map((item: any) => {
+      const statement = importedStatementByAccount.get(
+        text(item.bankAccount).replace(/[^A-Za-z0-9]/g, "").toUpperCase(),
+      );
+      return ({
       ...item,
+      bankName: text(statement?.bankName) || "UNSPECIFIED BANK",
+      accountName: text(statement?.accountName) || "",
       amount: toNumber(item.amount),
       messages: Array.isArray(item.messages) ? item.messages : [],
       documents: documentsByBank.get(item.id) || [],
@@ -312,7 +324,8 @@ export async function GET() {
           return [];
         }
       })(),
-    }));
+    });
+    });
 
     const gpsDevices = gpsDevicesRaw.map((item: any) => ({
       ...item,

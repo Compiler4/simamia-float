@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 
 import LiveMap from "../live-locations/LiveMap";
 import StaffAdvancedOperations from "./StaffAdvancedOperations";
+import StaffLocationTracker from "./StaffLocationTracker";
 import StaffLiveLocationsClient from "../live-locations/StaffLiveLocationsClient";
 import styles from "./StaffDashboard.module.css";
 
@@ -26,6 +27,11 @@ type Props = {
     roleLabel: string;
     companyId: string | null;
   };
+  /**
+   * Supplied by the Server Component so the first client render never computes
+   * a different calendar day from the server while React is hydrating.
+   */
+  initialDate: string;
 };
 
 
@@ -249,6 +255,18 @@ function date(value: unknown, time = false) {
 }
 function today() { return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Africa/Dar_es_Salaam" }).format(new Date()); }
 function label(value: unknown) { return String(value || "").replaceAll("_", " ").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()); }
+function staffPreviewHref(row: any, forcedScope?: string): string {
+  const kind = String(row?.kind ?? row?.type ?? row?.transactionType ?? "").toUpperCase();
+  const scope = forcedScope || (kind === "BANK_DEPOSIT" ? "deposit" : kind === "EXPENSE" ? "expense" : kind.includes("PROOF") ? "proof" : "transaction");
+  const source = String(row?.proofUrl ?? row?.receiptUrl ?? row?.bankReceiptUrl ?? row?.depositSlipUrl ?? row?.documentUrl ?? "").trim();
+  const query = new URLSearchParams();
+  if (scope) query.set("scope", scope);
+  if (row?.id) query.set("id", String(row.id));
+  if (row?.reference ?? row?.referenceNo) query.set("reference", String(row.reference ?? row.referenceNo));
+  if (kind) query.set("kind", kind);
+  if (source) query.set("source", source);
+  return `/api/staff/preview?${query.toString()}`;
+}
 
 function brokerDisplayName(broker: BrokerDirectoryItem | any): string {
   return String(
@@ -453,16 +471,37 @@ async function requestJson<T = any>(
     ...options,
   });
 
+  if (response.status === 401) {
+    if (typeof window !== "undefined") {
+      window.location.assign("/login");
+    }
+    throw new Error("Your session has expired. Sign in again.");
+  }
+
+  if (response.status === 403) {
+    if (typeof window !== "undefined") {
+      window.location.assign("/dashboard");
+    }
+    throw new Error("This account does not have access to the Staff portal.");
+  }
+
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
   const text = await response.text();
   let result: any = {};
 
-  try {
-    result = text
-      ? JSON.parse(text)
-      : {};
-  } catch {
+  if (!contentType.includes("application/json")) {
+    const preview = text.replace(/\s+/g, " ").trim().slice(0, 180);
     throw new Error(
-      `Server returned invalid JSON (${response.status}).`,
+      `Staff API ${response.url || url} returned ${contentType || "non-JSON content"} (${response.status})${preview ? `: ${preview}` : ""}.`,
+    );
+  }
+
+  try {
+    result = text ? JSON.parse(text) : {};
+  } catch {
+    const preview = text.replace(/\s+/g, " ").trim().slice(0, 180);
+    throw new Error(
+      `Staff API ${response.url || url} returned malformed JSON (${response.status})${preview ? `: ${preview}` : ""}.`,
     );
   }
 
@@ -495,7 +534,7 @@ async function requestJson<T = any>(
   return result as T;
 }
 
-export default function StaffDashboardClient({ user }: Props) {
+export default function StaffDashboardClient({ user, initialDate }: Props) {
   const router = useRouter();
   const [page, setPage] = useState<PageKey>("Dashboard");
   const [data, setData] = useState<DashboardData | null>(null);
@@ -508,7 +547,7 @@ export default function StaffDashboardClient({ user }: Props) {
   const [noticeOpen, setNoticeOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [period, setPeriod] = useState("DAY");
-  const [anchor, setAnchor] = useState(today());
+  const [anchor, setAnchor] = useState(initialDate);
   const [unreadSummary, setUnreadSummary] = useState<UnreadSummary>({
     success: true,
     total: 0,
@@ -531,9 +570,13 @@ export default function StaffDashboardClient({ user }: Props) {
 
     return () => window.clearInterval(timer);
   }, []);
+
   useEffect(() => {
-    if (page === "Reports" || page === "Own Performance" || page === "My Transactions") void load(false);
-  }, [period, anchor]);
+    if (page === "Reports" || page === "Own Performance" || page === "My Transactions") {
+      void load(false);
+    }
+  }, [period, anchor, page]);
+
   useEffect(() => {
     if (!toast) return;
     const id = window.setTimeout(() => setToast(""), 4200);
@@ -621,7 +664,7 @@ export default function StaffDashboardClient({ user }: Props) {
           "/api/staff/directory",
         ),
         requestJson<{ attendance: any[] }>(
-          `/api/staff/operations?period=${period}&anchor=${anchor}`,
+          `/api/staff/workspace?period=${period}&anchor=${anchor}`,
         ).catch(() => ({ attendance: [] })),
       ]);
 
@@ -791,6 +834,39 @@ export default function StaffDashboardClient({ user }: Props) {
           )}
         </header>
 
+        <StaffLocationTracker />
+
+        {page !== "Live Locations" && (
+          <section className={styles.mainPeriodFilter} aria-label="Filter staff dashboard data by period">
+          <div className={styles.mainPeriodFilterIntro}>
+            <span><Icon name="filter" size={20}/></span>
+            <div>
+              <small>Dashboard data period</small>
+              <strong>Filter every staff module from the main content</strong>
+              <p>Attendance, transactions, deposits, expenses, proofs and performance use this selected period.</p>
+            </div>
+          </div>
+          <div className={styles.mainPeriodFilterFields}>
+            <label>
+              <span>Period</span>
+              <select aria-label="Dashboard period" value={period} onChange={(event) => setPeriod(event.target.value)}>
+                <option value="DAY">Day</option>
+                <option value="WEEK">Week</option>
+                <option value="MONTH">Month</option>
+                <option value="YEAR">Year</option>
+              </select>
+            </label>
+            <label>
+              <span>Reference date</span>
+              <input aria-label="Dashboard reference date" type="date" value={anchor} onChange={(event) => setAnchor(event.target.value)} />
+            </label>
+            <button type="button" onClick={() => void load(false)} disabled={loading || busy}>
+              <Icon name="search" size={18}/><span>{loading ? "Filtering..." : "Filter data"}</span>
+            </button>
+          </div>
+          </section>
+        )}
+
         {toast && <div className={styles.toast}>{toast}</div>}
         {loading ? <Loading/> : error ? <ErrorState text={error} retry={() => void load(true)}/> : data ?
           <div className={styles.reveal} key={page}><PageContent user={user} page={page} data={data} busy={busy} action={action} upload={upload} open={open} notify={setToast} period={period} setPeriod={setPeriod} anchor={anchor} setAnchor={setAnchor} reload={() => load(false)} /></div> : null}
@@ -808,19 +884,25 @@ function PageContent(props: {
   period: string; setPeriod: (value: string) => void; anchor: string; setAnchor: (value: string) => void; reload: () => Promise<void>;
 }) {
   const common = { data: props.data, busy: props.busy, action: props.action, upload: props.upload, notify: props.notify };
+  const filtered = {
+    period: props.period,
+    anchor: props.anchor,
+    onPeriodChange: props.setPeriod,
+    onAnchorChange: props.setAnchor,
+  };
   switch (props.page) {
-    case "Receive & Confirm Float": return <StaffAdvancedOperations initialView="funding"/>;
-    case "Float Operations": return <StaffAdvancedOperations initialView="float"/>;
-    case "Deposit to Accountant": return <StaffAdvancedOperations initialView="settlement"/>;
-    case "Deposit to Bank": return <StaffAdvancedOperations initialView="settlement"/>;
-    case "Upload Proof of Payment": return <StaffAdvancedOperations initialView="proofs"/>;
-    case "Bank Verification": return <StaffAdvancedOperations initialView="documents"/>;
-    case "Expense Management": return <StaffAdvancedOperations initialView="expenses"/>;
-    case "Service Visits": return <StaffAdvancedOperations initialView="services"/>;
-    case "My Transactions": return <StaffAdvancedOperations initialView="transactions"/>;
-    case "Own Performance": return <StaffAdvancedOperations initialView="performance"/>;
-    case "Reports": return <StaffAdvancedOperations initialView="reports"/>;
-    case "Attendance": return <StaffAdvancedOperations initialView="attendance"/>;
+    case "Receive & Confirm Float": return <StaffAdvancedOperations initialView="funding" {...filtered}/>;
+    case "Float Operations": return <StaffAdvancedOperations initialView="float" {...filtered}/>;
+    case "Deposit to Accountant": return <StaffAdvancedOperations initialView="settlement" initialSettlementMode="ACCOUNTANT" {...filtered}/>;
+    case "Deposit to Bank": return <StaffAdvancedOperations initialView="settlement" initialSettlementMode="BANK" {...filtered}/>;
+    case "Upload Proof of Payment": return <StaffAdvancedOperations initialView="proofs" {...filtered}/>;
+    case "Bank Verification": return <StaffAdvancedOperations initialView="verification" {...filtered}/>;
+    case "Expense Management": return <StaffAdvancedOperations initialView="expenses" {...filtered}/>;
+    case "Service Visits": return <StaffAdvancedOperations initialView="services" {...filtered}/>;
+    case "My Transactions": return <StaffAdvancedOperations initialView="transactions" {...filtered}/>;
+    case "Own Performance": return <StaffAdvancedOperations initialView="performance" {...filtered}/>;
+    case "Reports": return <StaffAdvancedOperations initialView="reports" {...filtered}/>;
+    case "Attendance": return <StaffAdvancedOperations initialView="attendance" {...filtered}/>;
     case "Live Locations": return (
       <StaffLiveLocationsClient
         embedded
@@ -833,9 +915,9 @@ function PageContent(props: {
         }}
       />
     );
-    case "Travel History": return <StaffAdvancedOperations initialView="travel"/>;
-    case "GPS Alerts": return <StaffAdvancedOperations initialView="alerts"/>;
-    case "Notifications": return <StaffAdvancedOperations initialView="notifications"/>;
+    case "Travel History": return <StaffAdvancedOperations initialView="travel" {...filtered}/>;
+    case "GPS Alerts": return <StaffAdvancedOperations initialView="alerts" {...filtered}/>;
+    case "Notifications": return <StaffAdvancedOperations initialView="notifications" {...filtered}/>;
     case "Profile": return <ProfilePage {...common}/>;
     default: return <DashboardHome data={props.data} open={props.open}/>;
   }
@@ -952,11 +1034,11 @@ function ReturnMoneyPage({ data, busy, action, upload, notify }: CommonProps) {
 
 function BankDepositPage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"bank")});notify("Bank receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("DEPOSIT_TO_BANK",form))setForm({amount:"",referenceNo:"",bankAccount:"",depositDate:today(),receiptUrl:""});}return <Section title="Deposit Money to Bank" subtitle="The system compares amount, reference, date and bank account with the bank record." icon="bank">{data.financialHold&&<div className={styles.inlineWarning}><Icon name="alert"/><span>Another deposit is blocked until the existing mismatch is resolved.</span></div>}<div className={styles.split}><FormCard title="New bank deposit" onSubmit={submit}><div className={styles.formRow}><Field label="Amount"><input disabled={!!data.financialHold} type="number" min="1" max={data.stats.availableBalance} required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Deposit date"><input disabled={!!data.financialHold} type="date" required value={form.depositDate} onChange={(e)=>setForm({...form,depositDate:e.target.value})}/></Field></div><Field label="Bank account"><input disabled={!!data.financialHold} required value={form.bankAccount} onChange={(e)=>setForm({...form,bankAccount:e.target.value})} placeholder="Bank and account number"/></Field><Field label="Bank reference"><input disabled={!!data.financialHold} required value={form.referenceNo} onChange={(e)=>setForm({...form,referenceNo:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up}/><Submit busy={busy||up||!!data.financialHold} text="Submit bank deposit" icon="bank"/></FormCard><Card title="Automatic verification statuses" subtitle="Verified, amount mismatch, missing receipt, duplicate or missing bank record"><BankCards rows={data.deposits}/></Card></div></Section>}
 
-function ProofPage({data,busy,action,upload,notify}:CommonProps){const editable=data.deposits.filter((r)=>r.status!=="VERIFIED");async function file(id:string,f?:File){if(!f)return;try{const url=await upload(f,"bank");await action("UPLOAD_PROOF_OF_PAYMENT",{depositId:id,receiptUrl:url});}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}}return <Section title="Upload Proof of Payment" subtitle="Verified deposits are immutable. Pending or mismatched deposits can receive new proof." icon="upload"><Card title="Receipt controls" subtitle="Large images and PDFs are compressed before private storage"><div className={styles.proofGrid}>{editable.map((r)=><article key={r.id}><Icon name="document" size={25}/><div><strong>{r.referenceNo}</strong><span>{r.bankAccount} • {date(r.depositDate)}</span></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.bankReceiptUrl&&<a href={r.bankReceiptUrl} target="_blank">View current receipt</a>}<label><Icon name="upload"/>Upload replacement<input type="file" accept="image/*,application/pdf" disabled={busy} onChange={(e)=>void file(r.id,e.target.files?.[0])}/></label></article>)}{!editable.length&&<Empty text="All bank deposits are verified and locked."/>}</div></Card></Section>}
+function ProofPage({data,busy,action,upload,notify}:CommonProps){const editable=data.deposits.filter((r)=>r.status!=="VERIFIED");async function file(id:string,f?:File){if(!f)return;try{const url=await upload(f,"bank");await action("UPLOAD_PROOF_OF_PAYMENT",{depositId:id,receiptUrl:url});}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}}return <Section title="Upload Proof of Payment" subtitle="Verified deposits are immutable. Pending or mismatched deposits can receive new proof." icon="upload"><Card title="Receipt controls" subtitle="Large images and PDFs are compressed before private storage"><div className={styles.proofGrid}>{editable.map((r)=><article key={r.id}><Icon name="document" size={25}/><div><strong>{r.referenceNo}</strong><span>{r.bankAccount} • {date(r.depositDate)}</span></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.id&&<a href={staffPreviewHref({...r,kind:"BANK_DEPOSIT"},"deposit")} target="_blank" rel="noreferrer">Preview current receipt</a>}<label><Icon name="upload"/>Upload replacement<input type="file" accept="image/*,application/pdf" disabled={busy} onChange={(e)=>void file(r.id,e.target.files?.[0])}/></label></article>)}{!editable.length&&<Empty text="All bank deposits are verified and locked."/>}</div></Card></Section>}
 
 function BankStatusPage({data}:{data:DashboardData}){return <Section title="Bank Deposit Verification" subtitle="Read-only comparison results for your submitted deposits." icon="verify"><div className={styles.metricGrid}><Metric title="Verified" value={String(data.deposits.filter((r)=>r.status==="VERIFIED").length)} change="Matched bank records" icon="check" tone="green"/><Metric title="Financial Holds" value={String(data.deposits.filter((r)=>r.holdActive).length)} change="Blocks another deposit" icon="alert" tone="red"/><Metric title="Pending" value={String(data.deposits.filter((r)=>r.status==="PENDING").length)} change="Awaiting bank record" icon="history" tone="gold"/><Metric title="Total Deposited" value={money(data.deposits.reduce((s,r)=>s+Number(r.amount||0),0))} change="All submitted deposits" icon="bank" tone="blue"/></div><Card title="Receipt-to-bank comparison" subtitle="Amount, reference number, deposit date and bank account"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Reference</th><th>Entered Amount</th><th>Statement Amount</th><th>Bank Account</th><th>Checks</th><th>Status</th></tr></thead><tbody>{data.deposits.map((r)=><tr key={r.id}><td>{date(r.depositDate,true)}</td><td>{r.referenceNo}</td><td>{money(r.amount)}</td><td>{r.statementAmount==null?"Awaiting bank":money(r.statementAmount)}</td><td>{r.bankAccount}</td><td><Comparison value={r.comparison}/></td><td><Status value={r.status}/>{r.mismatchReason&&<small>{r.mismatchReason}</small>}</td></tr>)}</tbody></table></div></Card></Section>}
 
-function ExpensePage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"expense")});notify("Expense receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("SUBMIT_EXPENSE",form))setForm({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});}return <Section title="Expense Management" subtitle="Every employee may submit an expense request. Approved or rejected requests cannot be edited." icon="expense"><div className={styles.expenseLayout}><FormCard title="New expense request" onSubmit={submit}><Field label="Category"><select value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}>{["FUEL","TRANSPORT","AIRTIME","ACCOMMODATION","REPAIRS","STATIONERY","MEALS","OFFICE_EXPENSES","EMERGENCY_EXPENSES"].map((v)=><option key={v}>{label(v)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Expense date"><input type="date" required value={form.expenseDate} onChange={(e)=>setForm({...form,expenseDate:e.target.value})}/></Field></div><Field label="Description"><textarea required value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Submit expense" icon="expense"/></FormCard><Card title="My expense requests" subtitle="Approval workflow and review notes"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th></tr></thead><tbody>{data.expenses.map((r)=><tr key={r.id}><td>{date(r.expenseDate)}</td><td>{label(r.category)}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/>{r.reviewNote&&<small>{r.reviewNote}</small>}</td><td>{r.reviewedBy?.name||"Awaiting review"}</td></tr>)}</tbody></table></div></Card></div></Section>}
+function ExpensePage({data,busy,action,upload,notify}:CommonProps){const[form,setForm]=useState({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});const[up,setUp]=useState(false);async function file(e:ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUp(true);try{setForm({...form,receiptUrl:await upload(f,"expense")});notify("Expense receipt uploaded.");}catch(x){notify(x instanceof Error?x.message:"Upload failed.");}finally{setUp(false);}}async function submit(e:FormEvent){e.preventDefault();if(await action("SUBMIT_EXPENSE",form))setForm({category:"FUEL",amount:"",expenseDate:today(),description:"",receiptUrl:""});}return <Section title="Expense Management" subtitle="Every employee may submit an expense request. Approved or rejected requests cannot be edited." icon="expense"><div className={styles.expenseLayout}><FormCard title="New expense request" onSubmit={submit}><Field label="Category"><select value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}>{["FUEL","TRANSPORT","AIRTIME","ACCOMMODATION","REPAIRS","STATIONERY","MEALS","OFFICE_EXPENSES","EMERGENCY_EXPENSES"].map((v)=><option key={v}>{label(v)}</option>)}</select></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="1" required value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Expense date"><input type="date" required value={form.expenseDate} onChange={(e)=>setForm({...form,expenseDate:e.target.value})}/></Field></div><Field label="Description"><textarea required value={form.description} onChange={(e)=>setForm({...form,description:e.target.value})}/></Field><Upload url={form.receiptUrl} onChange={file} uploading={up} optional/><Submit busy={busy||up} text="Submit expense" icon="expense"/></FormCard><Card title="My expense requests" subtitle="Approval workflow and review notes"><div className={styles.compareTable}><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Receipt</th><th>Status</th><th>Reviewer</th></tr></thead><tbody>{data.expenses.map((r)=><tr key={r.id}><td>{date(r.expenseDate)}</td><td>{label(r.category)}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.id?<a href={staffPreviewHref({...r,kind:"EXPENSE"},"expense")} target="_blank" rel="noreferrer">Preview</a>:"—"}</td><td><Status value={r.status}/>{r.reviewNote&&<small>{r.reviewNote}</small>}</td><td>{r.reviewedBy?.name||"Awaiting review"}</td></tr>)}</tbody></table></div></Card></div></Section>}
 
 function ServiceVisitPage({data,busy,action}:CommonProps){const latest=data.devices?.[0];const[form,setForm]=useState({brokerId:"",customerId:"",serviceType:"Float supply visit",amount:"",notes:"",latitude:latest?.lastLatitude||"",longitude:latest?.lastLongitude||"",locationName:data.staff?.assignedRegion||""});async function submit(e:FormEvent){e.preventDefault();if(await action("RECORD_SERVICE_VISIT",form))setForm({...form,brokerId:"",customerId:"",amount:"",notes:""});}return <Section title="Broker and Customer Visits" subtitle="Record who was served, the location and how many times service was provided." icon="visit"><div className={styles.split}><FormCard title="Record service visit" onSubmit={submit}><Field label="Broker (optional)"><select value={form.brokerId} onChange={(e)=>setForm({...form,brokerId:e.target.value})}><option value="">No broker</option>{data.brokers.map((b)=><option key={b.id} value={b.id}>{brokerDisplayName(b)} — {brokerDisplayMeta(b)}</option>)}</select></Field><Field label="Customer (optional)"><select value={form.customerId} onChange={(e)=>setForm({...form,customerId:e.target.value})}><option value="">No customer</option>{data.customers.map((c)=><option key={c.id} value={c.id}>{c.name} — {customerDisplayMeta(c)}</option>)}</select></Field><Field label="Service type"><input required value={form.serviceType} onChange={(e)=>setForm({...form,serviceType:e.target.value})}/></Field><div className={styles.formRow}><Field label="Amount"><input type="number" min="0" value={form.amount} onChange={(e)=>setForm({...form,amount:e.target.value})}/></Field><Field label="Location name"><input value={form.locationName} onChange={(e)=>setForm({...form,locationName:e.target.value})}/></Field></div><div className={styles.formRow}><Field label="Latitude"><input value={form.latitude} onChange={(e)=>setForm({...form,latitude:e.target.value})}/></Field><Field label="Longitude"><input value={form.longitude} onChange={(e)=>setForm({...form,longitude:e.target.value})}/></Field></div><Field label="Notes"><textarea value={form.notes} onChange={(e)=>setForm({...form,notes:e.target.value})}/></Field><Submit busy={busy} text="Record visit" icon="visit"/></FormCard><Card title="Customers and brokers served" subtitle="Period totals and latest locations"><div className={styles.visits}><h4>Brokers</h4><BrokerTable rows={data.brokerStats}/><h4>Customers</h4>{data.customerStats.map((r)=><article key={r.customer.id}><div><strong>{r.customer.name}</strong><span>{r.customer.region||r.customer.address||"No location"}</span></div><b>{r.visits} visits</b><em>{money(r.amount)}</em></article>)}</div></Card></div></Section>}
 
@@ -1133,7 +1215,7 @@ function Donut({percent,value}:{percent:number;value:string}){const p=Math.max(0
 function PerformanceBars({rows}:{rows:any[]}){const safe=rows.slice().reverse().slice(-12);return <div className={styles.bars}>{safe.map((r)=><article key={`${r.year}-${r.month}`}><div><span style={{height:`${Math.max(3,Number(r.score||0))}%`}}/></div><b>{r.score}</b><small>{String(r.month).padStart(2,"0")}/{String(r.year).slice(-2)}</small></article>)}{!safe.length&&<Empty text="Performance history will appear after monthly calculations."/>}</div>}
 function BrokerTable({rows}:{rows:any[]}){return <div className={styles.brokerRows}>{rows.map((r)=>{const broker=r.brokerCustomer||r.broker||{};return <article key={broker.id||r.brokerCustomerId||r.brokerId||r.id}><Avatar person={broker}/><div><strong>{brokerDisplayName(broker)}</strong><span>{brokerDisplayMeta(broker)}</span><small>{r.location?`${Number(r.location.latitude).toFixed(4)}, ${Number(r.location.longitude).toFixed(4)}`:broker.location||broker.region||broker.address||"No registered location"}</small></div><b>{r.timesServed||r.visits||0} times</b><em>{money(r.totalFloat||r.amount||0)}</em></article>})}{!rows.length&&<Empty text="No broker service activity in this period."/>}</div>}
 function MiniTransactions({rows}:{rows:any[]}){return <div className={styles.miniTransactions}>{rows.map((r)=><article key={r.id}><Avatar person={r.person}/><div><strong>{r.description||r.reference}</strong><span>{r.person?.name||"System"} {r.person?.email?`• ${r.person.email}`:""}</span><small>{date(r.date,true)} • {r.reference}</small></div><b>{money(r.amount)}</b><Status value={r.status}/></article>)}{!rows.length&&<Empty text="No transaction records found."/>}</div>}
-function TransactionTable({rows}:{rows:any[]}){return <div className={styles.tableScroll}><table><thead><tr><th>#</th><th>Date</th><th>User</th><th>Type</th><th>Reference</th><th>Description</th><th>Amount</th><th>Proof</th><th>Status</th><th>Control</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r.id}><td>{i+1}</td><td>{date(r.date,true)}</td><td><div className={styles.personCell}><Avatar person={r.person}/><span><strong>{r.person?.name||"System"}</strong><small>{r.person?.email||"—"}</small></span></div></td><td>{label(r.kind||r.type)}</td><td>{r.reference}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.receiptUrl?<a href={r.receiptUrl} target="_blank">View</a>:"—"}</td><td><Status value={r.status}/></td><td>{r.locked?<span className={styles.locked}>Locked</span>:"Pending"}</td></tr>)}</tbody></table></div>}
+function TransactionTable({rows}:{rows:any[]}){return <div className={styles.tableScroll}><table><thead><tr><th>#</th><th>Date</th><th>User</th><th>Type</th><th>Reference</th><th>Description</th><th>Amount</th><th>Proof</th><th>Status</th><th>Control</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r.id}><td>{i+1}</td><td>{date(r.date,true)}</td><td><div className={styles.personCell}><Avatar person={r.person}/><span><strong>{r.person?.name||"System"}</strong><small>{r.person?.email||"—"}</small></span></div></td><td>{label(r.kind||r.type)}</td><td>{r.reference}</td><td>{r.description}</td><td>{money(r.amount)}</td><td>{r.id?<a href={staffPreviewHref(r)} target="_blank" rel="noreferrer">Preview</a>:"—"}</td><td><Status value={r.status}/></td><td>{r.locked?<span className={styles.locked}>Locked</span>:"Pending"}</td></tr>)}</tbody></table></div>}
 function BankCards({rows}:{rows:any[]}){return <div className={styles.bankCards}>{rows.slice(0,12).map((r)=><article key={r.id}><div><strong>{r.referenceNo}</strong><span>{r.bankAccount}</span><small>{date(r.depositDate,true)}</small></div><b>{money(r.amount)}</b><Status value={r.status}/>{r.mismatchReason&&<p>{r.mismatchReason}</p>}</article>)}{!rows.length&&<Empty text="No bank deposits submitted."/>}</div>}
 function Comparison({value}:{value:any}){if(!value)return <span className={styles.waiting}>Waiting</span>;return <div className={styles.checks}>{[["Amount",value.amountMatch],["Reference",value.referenceMatch],["Date",value.dateMatch],["Account",value.accountMatch],["Receipt",value.receiptPresent]].map(([a,b])=><span key={String(a)} className={b?styles.ok:styles.bad}>{b?"✓":"✕"} {a}</span>)}</div>}
 function NotificationPopup({

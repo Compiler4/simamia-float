@@ -1,0 +1,23 @@
+SIMAMIA FLOAT - STAFF / SUPER ADMIN / SYSTEM DEVELOPER ROLE PORTAL REPAIR
+
+Verified role redirects:
+- STAFF -> /staff/dashboard
+- SUPER_ADMIN -> /super-admin/dashboard
+- SYSTEM_DEVELOPER -> /developer/dashboard
+
+After extracting:
+1. Copy your existing .env into the project root.
+2. npm install
+3. npx prisma generate
+4. npm run db:fix:accountant-funding
+5. npm run check:routes
+6. npm run check:portals
+7. npm run check:roles
+8. npm run typecheck
+9. Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+10. npm run dev
+
+Staff session behavior:
+- expired session -> /login
+- wrong role -> correct role dashboard through /dashboard
+- missing staff company -> clear login error route

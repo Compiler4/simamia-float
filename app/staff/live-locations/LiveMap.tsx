@@ -418,12 +418,42 @@ export default function LiveMap({
         zoomAnimation: false,
       });
 
-      leaflet
-        .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      // A Google-Maps-like street presentation without requiring a Google API
+      // key. Users can switch between a clean street map, classic OSM and real
+      // satellite imagery. All layers remain interactive Leaflet maps.
+      const streetLayer = leaflet.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          maxZoom: 20,
+          subdomains: "abcd",
+          attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+        },
+      );
+      const osmLayer = leaflet.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
           maxZoom: 19,
           attribution: "&copy; OpenStreetMap contributors",
-        })
-        .addTo(localMap);
+        },
+      );
+      const satelliteLayer = leaflet.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          maxZoom: 19,
+          attribution: "Tiles &copy; Esri",
+        },
+      );
+
+      streetLayer.addTo(localMap);
+      leaflet.control.layers(
+        {
+          "Street map": streetLayer,
+          "OpenStreetMap": osmLayer,
+          "Satellite": satelliteLayer,
+        },
+        undefined,
+        { position: "topright", collapsed: true },
+      ).addTo(localMap);
 
       const pointLayer = leaflet.layerGroup().addTo(localMap);
       const routeLayer = leaflet.layerGroup().addTo(localMap);
@@ -681,18 +711,89 @@ export default function LiveMap({
     }
   }, [mapGeneration, pointKey, historyKey, points, history]);
 
+  const activeStaffPoint = points.find((point) => point.markerType === "STAFF" && coordinateIsValid(point));
+  const coordinateText = activeStaffPoint
+    ? `${Number(activeStaffPoint.latitude).toFixed(5)}, ${Number(activeStaffPoint.longitude).toFixed(5)}`
+    : "Waiting for staff GPS";
+
   return (
     <div
-      ref={containerRef}
       style={{
+        position: "relative",
         width: "100%",
-        height,
         minHeight: 320,
-        borderRadius: 24,
         overflow: "hidden",
+        borderRadius: 24,
         background: "#dfe9e5",
+        boxShadow: "inset 0 0 0 1px rgba(18,75,59,.08)",
       }}
-      aria-label="Staff and assigned agent live location map"
-    />
+    >
+      <div
+        ref={containerRef}
+        style={{
+          width: "100%",
+          height,
+          minHeight: 320,
+          background: "#dfe9e5",
+        }}
+        aria-label="Real OpenStreetMap showing the logged-in staff and assigned agent locations"
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: 12,
+          left: 12,
+          zIndex: 600,
+          maxWidth: "calc(100% - 24px)",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "8px 10px",
+          border: "1px solid rgba(255,255,255,.9)",
+          borderRadius: 12,
+          color: "#17352d",
+          background: "rgba(255,255,255,.92)",
+          boxShadow: "0 10px 26px rgba(24,73,59,.16)",
+          backdropFilter: "blur(12px)",
+          font: "800 9px/1.25 Inter,system-ui,sans-serif",
+          pointerEvents: "none",
+        }}
+      >
+        <span
+          style={{
+            width: 9,
+            height: 9,
+            flex: "0 0 auto",
+            borderRadius: "50%",
+            background: activeStaffPoint ? "#0a8f69" : "#d48a18",
+            boxShadow: activeStaffPoint ? "0 0 0 5px rgba(10,143,105,.13)" : "0 0 0 5px rgba(212,138,24,.13)",
+          }}
+        />
+        <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          OpenStreetMap · {coordinateText}
+        </span>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          right: 12,
+          bottom: 12,
+          zIndex: 600,
+          display: "flex",
+          gap: 6,
+          padding: "7px 9px",
+          border: "1px solid rgba(255,255,255,.9)",
+          borderRadius: 999,
+          color: "#315a4e",
+          background: "rgba(255,255,255,.91)",
+          boxShadow: "0 8px 22px rgba(24,73,59,.13)",
+          backdropFilter: "blur(12px)",
+          font: "850 8px/1 Inter,system-ui,sans-serif",
+          pointerEvents: "none",
+        }}
+      >
+        <span>{normalisePoints(points).length} live/registered pointer(s)</span>
+      </div>
+    </div>
   );
 }

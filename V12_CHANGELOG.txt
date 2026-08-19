@@ -1,0 +1,13 @@
+SIMAMIA STAFF V12
+=================
+
+1. Fixed My Transactions secure preview false ownership errors.
+2. Preview ownership is still enforced by companyId + logged-in staffId.
+3. UI source URL no longer has to exactly match the authoritative record URL.
+4. Added id/reference/kind/source compatibility resolution.
+5. Added secure preview links to legacy dashboard transaction/expense/proof tables.
+6. Added authenticated /api/staff/location-history endpoint.
+7. Travel History now loads real GPS pings for selected Day/Week/Month/Year/Custom period.
+8. GPS route combines all devices owned by the same logged-in Staff Officer.
+9. Live map now supports Street, OpenStreetMap and Satellite basemaps.
+10. V11 no-SSR hydration boundary remains in place.

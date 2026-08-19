@@ -94,6 +94,11 @@ type BrokerAgentAccountItem = {
   status?: string;
 };
 
+/**
+ * Broker records may still contain coordinates populated by the separate
+ * GPS/location-sharing workflow. They are intentionally NOT editable in
+ * BrokerCustomerForm.
+ */
 type BrokerCustomerItem = {
   id: string;
   companyId: string;
@@ -172,8 +177,6 @@ type BrokerCustomerForm = {
   attendedSignatureUrl: string;
   attendedDate: string;
   attendedLocation: string;
-  latitude: string;
-  longitude: string;
   status: BrokerCustomerStatus;
   notes: string;
   agentAccounts: BrokerAgentAccountItem[];
@@ -324,8 +327,6 @@ const emptyBrokerForm: BrokerCustomerForm = {
   attendedSignatureUrl: "",
   attendedDate: todayInput(),
   attendedLocation: "Dodoma",
-  latitude: "",
-  longitude: "",
   status: "ACTIVE",
   notes: "",
   agentAccounts: [
@@ -482,6 +483,663 @@ async function uploadDocument(file: File): Promise<string> {
   return (await uploadPortalDocument(file, "OTHER")).url;
 }
 
+
+function reviewDocumentUrl(value: unknown): string {
+  const url = safeText(value).trim();
+
+  if (!url) return "";
+
+  // Already usable URLs should pass through unchanged.
+  if (/^(https?:|blob:|data:)/i.test(url)) return url;
+  if (url.startsWith("/api/")) return url;
+
+  // Legacy uploads and Windows paths must be streamed through the
+  // authenticated upload-review endpoint instead of being opened directly.
+  if (url.startsWith("/uploads/") || /^[A-Za-z]:[\\/]/.test(url)) {
+    return `/api/accountant/uploads?path=${encodeURIComponent(url)}`;
+  }
+
+  return url;
+}
+
+function DocumentPreviewModal({
+  document,
+  onClose,
+}: {
+  document: any;
+  onClose: () => void;
+}) {
+  const sourcePath =
+    safeText(
+      document?.publicUrl ||
+        document?.url ||
+        document?.storagePath,
+    ).trim();
+
+  const baseUrl =
+    reviewDocumentUrl(
+      sourcePath,
+    );
+
+  const title =
+    safeText(
+      document?.originalName,
+    ) ||
+    "Document preview";
+
+  const mime =
+    safeText(
+      document?.mimeType,
+    ).toLowerCase();
+
+  const status =
+    safeText(
+      document?.proofStatus,
+    ) ||
+    "PENDING";
+
+  const sizeKb =
+    Math.max(
+      1,
+      Math.round(
+        Number(
+          document?.sizeBytes ||
+            0,
+        ) /
+          1024,
+      ),
+    );
+
+  const isExternal =
+    /^(https?:|blob:|data:)/i.test(
+      baseUrl,
+    );
+
+  const [
+    checkingFile,
+    setCheckingFile,
+  ] = useState(
+    Boolean(
+      baseUrl &&
+        !isExternal,
+    ),
+  );
+
+  const [
+    fileAvailable,
+    setFileAvailable,
+  ] = useState(
+    Boolean(
+      baseUrl &&
+        isExternal,
+    ),
+  );
+
+  const [
+    fileError,
+    setFileError,
+  ] = useState("");
+
+  const [
+    repairBusy,
+    setRepairBusy,
+  ] = useState(false);
+
+  const [
+    cacheVersion,
+    setCacheVersion,
+  ] = useState(
+    Date.now(),
+  );
+
+  const fileUrl =
+    baseUrl.startsWith(
+      "/api/",
+    )
+      ? `${baseUrl}${
+          baseUrl.includes("?")
+            ? "&"
+            : "?"
+        }v=${cacheVersion}`
+      : baseUrl;
+
+  const isImage =
+    mime.startsWith(
+      "image/",
+    ) ||
+    /\.(png|jpe?g|webp|gif)$/i.test(
+      sourcePath,
+    );
+
+  const isPdf =
+    mime ===
+      "application/pdf" ||
+    /\.pdf$/i.test(
+      sourcePath,
+    );
+
+  useEffect(() => {
+    let cancelled =
+      false;
+
+    async function checkFile() {
+      if (!baseUrl) {
+        setCheckingFile(
+          false,
+        );
+
+        setFileAvailable(
+          false,
+        );
+
+        setFileError(
+          "This database document record does not contain a file path.",
+        );
+
+        return;
+      }
+
+      /*
+       * External durable-storage URLs do not need
+       * our local HEAD endpoint.
+       */
+      if (isExternal) {
+        setCheckingFile(
+          false,
+        );
+
+        setFileAvailable(
+          true,
+        );
+
+        return;
+      }
+
+      setCheckingFile(
+        true,
+      );
+
+      setFileError(
+        "",
+      );
+
+      try {
+        const response =
+          await fetch(
+            baseUrl,
+            {
+              method:
+                "HEAD",
+
+              credentials:
+                "include",
+
+              cache:
+                "no-store",
+            },
+          );
+
+        if (cancelled) {
+          return;
+        }
+
+        if (
+          response.ok
+        ) {
+          setFileAvailable(
+            true,
+          );
+
+          setFileError(
+            "",
+          );
+        } else {
+          const encoded =
+            response.headers.get(
+              "x-document-error",
+            ) || "";
+
+          let message =
+            "";
+
+          try {
+            message =
+              encoded
+                ? decodeURIComponent(
+                    encoded,
+                  )
+                : "";
+          } catch {
+            message =
+              "";
+          }
+
+          setFileAvailable(
+            false,
+          );
+
+          setFileError(
+            message ||
+              "The database record exists, but the original file is missing from durable storage.",
+          );
+        }
+      } catch (
+        error
+      ) {
+        if (
+          cancelled
+        ) {
+          return;
+        }
+
+        setFileAvailable(
+          false,
+        );
+
+        setFileError(
+          error instanceof
+          Error
+            ? error.message
+            : "Could not check this document.",
+        );
+      } finally {
+        if (
+          !cancelled
+        ) {
+          setCheckingFile(
+            false,
+          );
+        }
+      }
+    }
+
+    void checkFile();
+
+    return () => {
+      cancelled =
+        true;
+    };
+  }, [
+    baseUrl,
+    cacheVersion,
+    isExternal,
+  ]);
+
+  async function restoreFile(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    const file =
+      event.target
+        .files?.[0];
+
+    event.target.value =
+      "";
+
+    if (
+      !file ||
+      !sourcePath
+    ) {
+      return;
+    }
+
+    if (
+      !sourcePath.startsWith(
+        "/uploads/",
+      )
+    ) {
+      setFileError(
+        "This record cannot be automatically restored because it does not use a legacy /uploads/... path.",
+      );
+
+      return;
+    }
+
+    if (
+      file.size >
+      10 *
+        1024 *
+        1024
+    ) {
+      setFileError(
+        "Replacement proof must be 10 MB or smaller.",
+      );
+
+      return;
+    }
+
+    setRepairBusy(
+      true,
+    );
+
+    setFileError(
+      "",
+    );
+
+    try {
+      const formData =
+        new FormData();
+
+      formData.append(
+        "file",
+        file,
+      );
+
+      formData.append(
+        "path",
+        sourcePath,
+      );
+
+      const response =
+        await fetch(
+          "/api/company-admin/files/repair",
+          {
+            method:
+              "POST",
+
+            credentials:
+              "include",
+
+            /*
+             * IMPORTANT:
+             * No Content-Type header here.
+             * Browser creates multipart boundary.
+             */
+            body:
+              formData,
+          },
+        );
+
+      const raw =
+        await response.text();
+
+      let result:
+        any = {};
+
+      try {
+        result =
+          raw
+            ? JSON.parse(
+                raw,
+              )
+            : {};
+      } catch {
+        result =
+          {};
+      }
+
+      if (
+        !response.ok ||
+        result.success ===
+          false
+      ) {
+        throw new Error(
+          safeText(
+            result.message,
+          ) ||
+            `Replacement upload failed (${response.status}).`,
+        );
+      }
+
+      /*
+       * Force HEAD and iframe to reload.
+       */
+      setCacheVersion(
+        Date.now(),
+      );
+
+      setFileAvailable(
+        true,
+      );
+
+      setFileError(
+        "",
+      );
+    } catch (
+      error
+    ) {
+      setFileAvailable(
+        false,
+      );
+
+      setFileError(
+        error instanceof
+        Error
+          ? error.message
+          : "Could not restore the proof file.",
+      );
+    } finally {
+      setRepairBusy(
+        false,
+      );
+    }
+  }
+
+  return (
+    <DetailModal
+      title={title}
+      onClose={onClose}
+      wide
+    >
+      <section
+        className={
+          styles.documentPreviewHero
+        }
+      >
+        <div>
+          <span>
+            <FileText
+              size={24}
+            />
+          </span>
+
+          <div>
+            <small>
+              Uploaded proof document
+            </small>
+
+            <strong>
+              {title}
+            </strong>
+
+            <em>
+              {mime ||
+                "Unknown file type"}{" "}
+              -{" "}
+              {sizeKb.toLocaleString()}{" "}
+              KB
+            </em>
+          </div>
+        </div>
+
+        <StatusBadge
+          status={
+            status
+          }
+        />
+      </section>
+
+      <section
+        className={
+          styles.documentPreviewMeta
+        }
+      >
+        <Detail
+          label="Type"
+          value={
+            mime ||
+            "Unknown"
+          }
+        />
+
+        <Detail
+          label="Proof status"
+          value={
+            status
+          }
+        />
+
+        <Detail
+          label="Uploaded"
+          value={formatDate(
+            document?.createdAt,
+            true,
+          )}
+        />
+
+        <Detail
+          label="Size"
+          value={`${sizeKb.toLocaleString()} KB`}
+        />
+      </section>
+
+      <div
+        className={
+          styles.documentViewer
+        }
+      >
+        {checkingFile ? (
+          <div
+            className={
+              styles.documentViewerEmpty
+            }
+          >
+            <RefreshCw
+              size={34}
+            />
+
+            <strong>
+              Checking proof file...
+            </strong>
+
+            <p>
+              Confirming that the
+              original document exists.
+            </p>
+          </div>
+        ) : !fileAvailable ? (
+          <div
+            className={
+              styles.documentViewerEmpty
+            }
+          >
+            <FileText
+              size={36}
+            />
+
+            <strong>
+              Original proof file is
+              missing
+            </strong>
+
+            <p>
+              {fileError}
+            </p>
+
+            {sourcePath.startsWith(
+              "/uploads/",
+            ) && (
+              <label
+                className={
+                  styles.fileInput
+                }
+              >
+                <UploadCloud
+                  size={18}
+                />
+
+                <span>
+                  {repairBusy
+                    ? "Restoring..."
+                    : "Restore original proof"}
+                </span>
+
+                <input
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg,.webp"
+                  disabled={
+                    repairBusy
+                  }
+                  onChange={
+                    restoreFile
+                  }
+                />
+              </label>
+            )}
+          </div>
+        ) : isImage ? (
+          <img
+            src={fileUrl}
+            alt={title}
+          />
+        ) : isPdf ? (
+          <iframe
+            src={fileUrl}
+            title="PDF preview"
+          />
+        ) : (
+          <iframe
+            src={fileUrl}
+            title="Document preview"
+          />
+        )}
+      </div>
+
+      {document?.extractedText && (
+        <section
+          className={
+            styles.extractedTextBox
+          }
+        >
+          <strong>
+            Extracted proof text
+          </strong>
+
+          <pre>
+            {safeText(
+              document.extractedText,
+            )}
+          </pre>
+        </section>
+      )}
+
+      <div
+        className={
+          styles.formActions
+        }
+      >
+        {fileAvailable &&
+        fileUrl ? (
+          <a
+            className={
+              styles.documentOpenLink
+            }
+            href={
+              fileUrl
+            }
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Eye
+              size={16}
+            />
+            Open original
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled
+          >
+            <FileText
+              size={16}
+            />
+            Original unavailable
+          </button>
+        )}
+      </div>
+    </DetailModal>
+  );
+}
+
 function formatMoney(value: unknown) {
   const amount = Number(value ?? 0);
   return new Intl.NumberFormat("en-TZ", {
@@ -599,10 +1257,6 @@ function normalizeBrokerForm(item: BrokerCustomerItem): BrokerCustomerForm {
     attendedSignatureUrl: safeText(item.attendedSignatureUrl),
     attendedDate: dateInputValue(item.attendedDate) || todayInput(),
     attendedLocation: safeText(item.attendedLocation),
-    latitude:
-      item.latitude === null || item.latitude === undefined ? "" : String(item.latitude),
-    longitude:
-      item.longitude === null || item.longitude === undefined ? "" : String(item.longitude),
     status: item.status || "ACTIVE",
     notes: safeText(item.notes),
     agentAccounts: safeArray<BrokerAgentAccountItem>(item.agentAccounts).length
@@ -1904,8 +2558,6 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             profileImageUrl,
             signatureUrl,
             attendedSignatureUrl,
-            latitude: form.latitude === "" ? null : Number(form.latitude),
-            longitude: form.longitude === "" ? null : Number(form.longitude),
           }),
         },
       );
@@ -1966,12 +2618,21 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
         <ColorMetric icon={UserCheck} label="All brokers" value={String(brokers.length)} theme="purple" />
         <ColorMetric icon={CheckCircle2} label="Active" value={String(brokers.filter((item) => item.status === "ACTIVE").length)} theme="green" />
         <ColorMetric icon={Smartphone} label="Agent accounts" value={String(brokers.reduce((sum, item) => sum + safeArray(item.agentAccounts).length, 0))} theme="orange" />
-        <ColorMetric icon={MapPin} label="With GPS location" value={String(brokers.filter((item) => item.latitude != null && item.longitude != null).length)} theme="red" />
+        <ColorMetric
+          icon={PowerOff}
+          label="Inactive / suspended"
+          value={String(brokers.filter((item) => item.status !== "ACTIVE").length)}
+          theme="red"
+        />
       </section>
 
       <div className={styles.brokerFullLayout}>
         <form className={styles.formCard} onSubmit={saveBroker}>
-          <SectionHeading icon={form.id ? Pencil : Plus} title={form.id ? "Edit broker / agent" : "Agent registration form"} text="Complete the core identity fields, then optionally add GPS, network accounts, signatures and attendance details." />
+          <SectionHeading
+            icon={form.id ? Pencil : Plus}
+            title={form.id ? "Edit broker / agent" : "Agent registration form"}
+            text="Complete the core identity fields, then add network accounts, signatures and attendance details. Broker GPS coordinates are handled by the separate location-sharing workflow."
+          />
 
           <section className={styles.autofillPanel}>
             <div>
@@ -2021,8 +2682,6 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             <Field label="District *"><input required value={form.district} onChange={(event) => setForm({ ...form, district: event.target.value })} /></Field>
             <Field label="Ward *"><input required value={form.ward} onChange={(event) => setForm({ ...form, ward: event.target.value })} /></Field>
             <Field label="Country *"><input required value={form.country} onChange={(event) => setForm({ ...form, country: event.target.value })} /></Field>
-            <Field label="Latitude"><input type="number" step="any" value={form.latitude} onChange={(event) => setForm({ ...form, latitude: event.target.value })} /></Field>
-            <Field label="Longitude"><input type="number" step="any" value={form.longitude} onChange={(event) => setForm({ ...form, longitude: event.target.value })} /></Field>
           </div>
 
           <h3 className={styles.formSectionTitle}>Identification</h3>
@@ -2131,7 +2790,6 @@ function BrokersPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
             <Detail label="Country" value={selectedBroker.country || "N/A"} />
             <Detail label="Identity" value={`${selectedBroker.identityType || "N/A"} — ${selectedBroker.identityNumber || "N/A"}`} />
             <Detail label="Issued by" value={selectedBroker.identityIssuedBy || "N/A"} />
-            <Detail label="Coordinates" value={selectedBroker.latitude == null ? "Not set" : `${selectedBroker.latitude}, ${selectedBroker.longitude}`} />
             <Detail label="Registration date" value={formatDate(selectedBroker.registrationDate)} />
             <Detail label="Attended by" value={selectedBroker.attendedBy || "N/A"} />
             <Detail label="Attended date / location" value={`${formatDate(selectedBroker.attendedDate)} — ${selectedBroker.attendedLocation || "N/A"}`} />
@@ -2591,7 +3249,7 @@ function ExpensesPage({
                   {item.receiptUrl ? (
                     <a
                       className={styles.documentLink}
-                      href={item.receiptUrl}
+                      href={reviewDocumentUrl(item.receiptUrl)}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -3314,7 +3972,14 @@ function GpsPage({ data, busy, setBusy, reload, notify }: CommonPageProps) {
           {staffMarkers.length || brokerMarkers.length ? (
             <iframe className={styles.mapFrame} srcDoc={mapHtml} title="Staff and broker GPS map" loading="lazy" sandbox="allow-scripts allow-same-origin" />
           ) : (
-            <div className={styles.mapEmpty}><MapPin size={44} /><strong>No coordinates available</strong><p>Connect staff devices and save broker latitude/longitude to display both pointer types.</p></div>
+            <div className={styles.mapEmpty}>
+              <MapPin size={44} />
+              <strong>No live locations available</strong>
+              <p>
+                Connect staff GPS devices or use the broker location-sharing workflow.
+                Broker coordinates are no longer entered manually in the registration form.
+              </p>
+            </div>
           )}
           <div className={styles.mapStats}>
             <MapStat icon={Users} label="Tracked staff" value={String(staffMarkers.length)} />
@@ -4688,55 +5353,6 @@ function DetailModal({ title, onClose, children, wide = false }: { title: string
   );
 }
 
-function DocumentPreviewModal({ document, onClose }: { document: any; onClose: () => void }) {
-  const mime = safeText(document?.mimeType).toLowerCase();
-  const url = safeText(document?.publicUrl || document?.url);
-  const title = safeText(document?.originalName) || "Document preview";
-  const status = safeText(document?.proofStatus) || "PENDING";
-  const sizeKb = Math.max(1, Math.round(Number(document?.sizeBytes || 0) / 1024));
-  const isImage = mime.startsWith("image/") || /\.(png|jpe?g|webp|gif)$/i.test(url);
-  const isPdf = mime === "application/pdf" || /\.pdf$/i.test(url);
-  return (
-    <DetailModal title={title} onClose={onClose} wide>
-      <section className={styles.documentPreviewHero}>
-        <div>
-          <span><FileText size={24} /></span>
-          <div>
-            <small>Uploaded proof document</small>
-            <strong>{title}</strong>
-            <em>{mime || "Unknown file type"} - {sizeKb.toLocaleString()} KB</em>
-          </div>
-        </div>
-        <StatusBadge status={status} />
-      </section>
-      <section className={styles.documentPreviewMeta}>
-        <Detail label="Type" value={mime || "Unknown"} />
-        <Detail label="Proof status" value={status} />
-        <Detail label="Uploaded" value={formatDate(document?.createdAt, true)} />
-        <Detail label="Size" value={`${sizeKb.toLocaleString()} KB`} />
-      </section>
-      <div className={styles.documentViewer}>
-        {!url ? (
-          <div className={styles.documentViewerEmpty}>
-            <FileText size={36} />
-            <strong>Original file link is missing</strong>
-            <p>The database record is available, but this upload does not have a readable public URL yet.</p>
-          </div>
-        ) : isImage ? (
-          <img src={url} alt={title} />
-        ) : isPdf ? (
-          <iframe src={url} title="PDF preview" />
-        ) : (
-          <iframe src={url} title="Document preview" />
-        )}
-      </div>
-      {document?.extractedText && <section className={styles.extractedTextBox}><strong>Extracted proof text</strong><pre>{safeText(document.extractedText)}</pre></section>}
-      <div className={styles.formActions}>
-        {url ? <a className={styles.documentOpenLink} href={url} target="_blank" rel="noreferrer"><Eye size={16} /> Open original</a> : <button type="button" disabled><FileText size={16} /> Original unavailable</button>}
-      </div>
-    </DetailModal>
-  );
-}
 
 function ApprovalDecisionView({ decision }: { decision?: any }) {
   if (!decision) return <div className={styles.approvalDecisionEmpty}><StatusBadge status="PENDING" /><small>No decision</small></div>;
@@ -5161,8 +5777,9 @@ function Detail({ label, value }: { label: string; value: string }) {
 }
 
 function DocumentButton({ label, url }: { label: string; url?: string }) {
-  return url ? (
-    <a href={url} target="_blank" rel="noreferrer">
+  const resolvedUrl = reviewDocumentUrl(url);
+  return resolvedUrl ? (
+    <a href={resolvedUrl} target="_blank" rel="noreferrer">
       <FileText size={17} />
       <span>
         <strong>{label}</strong>

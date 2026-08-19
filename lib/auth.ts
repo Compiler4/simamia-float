@@ -61,7 +61,10 @@ function signPayload(encodedPayload: string): string {
     .digest("base64url");
 }
 
-function safeSignatureEqual(first: string, second: string): boolean {
+function safeSignatureEqual(
+  first: string,
+  second: string,
+): boolean {
   const firstBuffer = Buffer.from(first, "utf8");
   const secondBuffer = Buffer.from(second, "utf8");
 
@@ -69,7 +72,10 @@ function safeSignatureEqual(first: string, second: string): boolean {
     return false;
   }
 
-  return crypto.timingSafeEqual(firstBuffer, secondBuffer);
+  return crypto.timingSafeEqual(
+    firstBuffer,
+    secondBuffer,
+  );
 }
 
 function createSessionToken(
@@ -79,7 +85,9 @@ function createSessionToken(
   const payload: SessionPayload = {
     version: 1,
     userId,
-    expiresAt: Date.now() + lifetimeSeconds * 1000,
+    expiresAt:
+      Date.now() +
+      lifetimeSeconds * 1000,
   };
 
   const encodedPayload = Buffer.from(
@@ -87,25 +95,49 @@ function createSessionToken(
     "utf8",
   ).toString("base64url");
 
-  return `${encodedPayload}.${signPayload(encodedPayload)}`;
+  return `${encodedPayload}.${signPayload(
+    encodedPayload,
+  )}`;
 }
 
-function readSessionToken(token: string): SessionPayload | null {
-  const [encodedPayload, suppliedSignature, ...extraParts] = token.split(".");
+function readSessionToken(
+  token: string,
+): SessionPayload | null {
+  const [
+    encodedPayload,
+    suppliedSignature,
+    ...extraParts
+  ] = token.split(".");
 
-  if (!encodedPayload || !suppliedSignature || extraParts.length > 0) {
+  if (
+    !encodedPayload ||
+    !suppliedSignature ||
+    extraParts.length > 0
+  ) {
     return null;
   }
 
-  const expectedSignature = signPayload(encodedPayload);
+  const expectedSignature =
+    signPayload(encodedPayload);
 
-  if (!safeSignatureEqual(suppliedSignature, expectedSignature)) {
+  if (
+    !safeSignatureEqual(
+      suppliedSignature,
+      expectedSignature,
+    )
+  ) {
     return null;
   }
 
   try {
-    const decoded = Buffer.from(encodedPayload, "base64url").toString("utf8");
-    const payload = JSON.parse(decoded) as Partial<SessionPayload>;
+    const decoded = Buffer.from(
+      encodedPayload,
+      "base64url",
+    ).toString("utf8");
+
+    const payload = JSON.parse(
+      decoded,
+    ) as Partial<SessionPayload>;
 
     if (
       payload.version !== 1 ||
@@ -128,7 +160,8 @@ export async function createAuthSession(
   userId: string,
   rememberMe = false,
 ): Promise<void> {
-  const cleanedUserId = String(userId).trim();
+  const cleanedUserId =
+    String(userId).trim();
 
   if (!cleanedUserId) {
     throw new Error(
@@ -136,78 +169,121 @@ export async function createAuthSession(
     );
   }
 
-  const lifetimeSeconds = rememberMe
-    ? REMEMBERED_SESSION_SECONDS
-    : NORMAL_SESSION_SECONDS;
+  const lifetimeSeconds =
+    rememberMe
+      ? REMEMBERED_SESSION_SECONDS
+      : NORMAL_SESSION_SECONDS;
 
-  const cookieStore = await cookies();
+  const cookieStore =
+    await cookies();
 
   cookieStore.set({
-    name: SESSION_COOKIE_NAME,
-    value: createSessionToken(cleanedUserId, lifetimeSeconds),
+    name:
+      SESSION_COOKIE_NAME,
+
+    value:
+      createSessionToken(
+        cleanedUserId,
+        lifetimeSeconds,
+      ),
+
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+
+    secure:
+      process.env.NODE_ENV ===
+      "production",
+
     sameSite: "lax",
     path: "/",
     priority: "high",
+
     ...(rememberMe
       ? {
-          maxAge: lifetimeSeconds,
-          expires: new Date(Date.now() + lifetimeSeconds * 1000),
+          maxAge:
+            lifetimeSeconds,
+
+          expires:
+            new Date(
+              Date.now() +
+                lifetimeSeconds * 1000,
+            ),
         }
       : {}),
   });
 }
 
 export async function deleteAuthSession(): Promise<void> {
-  const cookieStore = await cookies();
+  const cookieStore =
+    await cookies();
 
   cookieStore.set({
-    name: SESSION_COOKIE_NAME,
+    name:
+      SESSION_COOKIE_NAME,
+
     value: "",
+
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+
+    secure:
+      process.env.NODE_ENV ===
+      "production",
+
     sameSite: "lax",
     path: "/",
+
     maxAge: 0,
-    expires: new Date(0),
+
+    expires:
+      new Date(0),
   });
 }
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+    const cookieStore =
+      await cookies();
+
+    const token =
+      cookieStore.get(
+        SESSION_COOKIE_NAME,
+      )?.value;
 
     if (!token) {
       return null;
     }
 
-    const session = readSessionToken(token);
+    const session =
+      readSessionToken(token);
 
     if (!session) {
       return null;
     }
 
-    const user = await prisma.user.findFirst({
-      where: {
-        id: session.userId,
-        status: "ACTIVE",
-      },
-      include: {
-        company: {
-          select: {
-            name: true,
-            status: true,
+    const user =
+      await prisma.user.findFirst({
+        where: {
+          id:
+            session.userId,
+
+          status:
+            "ACTIVE",
+        },
+
+        include: {
+          company: {
+            select: {
+              name: true,
+              status: true,
+            },
+          },
+
+          branch: {
+            select: {
+              name: true,
+            },
           },
         },
-        branch: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
+      });
 
     if (!user) {
       return null;
@@ -215,38 +291,96 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 
     if (
       user.company &&
-      String(user.company.status).trim().toUpperCase() !== "ACTIVE"
+      String(
+        user.company.status,
+      )
+        .trim()
+        .toUpperCase() !==
+        "ACTIVE"
     ) {
       return null;
     }
 
     return {
-      id: String(user.id),
+      id:
+        String(user.id),
+
       companyId:
-        user.companyId == null ? null : String(user.companyId),
+        user.companyId == null
+          ? null
+          : String(
+              user.companyId,
+            ),
+
       branchId:
-        user.branchId == null ? null : String(user.branchId),
-      name: String(user.name),
-      username: String(user.username),
-      email: String(user.email),
-      phone: user.phone == null ? null : String(user.phone),
-      role: String(user.role),
-      status: String(user.status),
+        user.branchId == null
+          ? null
+          : String(
+              user.branchId,
+            ),
+
+      name:
+        String(user.name),
+
+      username:
+        String(
+          user.username,
+        ),
+
+      email:
+        String(user.email),
+
+      phone:
+        user.phone == null
+          ? null
+          : String(
+              user.phone,
+            ),
+
+      role:
+        String(user.role),
+
+      status:
+        String(user.status),
+
       profileImageUrl:
-        user.profileImageUrl == null
+        user.profileImageUrl ==
+        null
           ? null
-          : String(user.profileImageUrl),
+          : String(
+              user.profileImageUrl,
+            ),
+
       assignedRegion:
-        user.assignedRegion == null
+        user.assignedRegion ==
+        null
           ? null
-          : String(user.assignedRegion),
+          : String(
+              user.assignedRegion,
+            ),
+
       companyName:
-        user.company?.name == null ? null : String(user.company.name),
+        user.company?.name ==
+        null
+          ? null
+          : String(
+              user.company.name,
+            ),
+
       branchName:
-        user.branch?.name == null ? null : String(user.branch.name),
+        user.branch?.name ==
+        null
+          ? null
+          : String(
+              user.branch.name,
+            ),
     };
   } catch (error) {
-    console.error("GET_CURRENT_USER_ERROR:", error);
+    console.error(
+      "GET_CURRENT_USER_ERROR:",
+      error,
+    );
+
     return null;
   }
 }
@@ -255,56 +389,111 @@ export async function getCurrentAuth(): Promise<CurrentUser | null> {
   return getCurrentUser();
 }
 
-export function getRoleLabel(role: unknown): string {
-  switch (String(role ?? "").trim().toUpperCase()) {
+export function normalizeRole(
+  role: unknown,
+): string {
+  return String(
+    role ?? "",
+  )
+    .trim()
+    .toUpperCase();
+}
+
+export function getRoleLabel(
+  role: unknown,
+): string {
+  switch (
+    normalizeRole(role)
+  ) {
     case "SYSTEM_DEVELOPER":
       return "System Developer";
+
     case "SUPER_ADMIN":
       return "Super Admin";
+
     case "COMPANY_ADMIN":
       return "Company Admin";
+
     case "ACCOUNTANT":
       return "Accountant";
+
     case "STAFF":
       return "Float Officer";
+
     case "BROKER":
       return "Broker";
+
     case "GPS_MANAGER":
       return "GPS Manager";
+
     default:
       return "User";
   }
 }
 
-function extractRole(value: unknown): string {
-  if (typeof value === "object" && value !== null && "role" in value) {
-    return String((value as { role?: unknown }).role ?? "");
+function extractRole(
+  value: unknown,
+): string {
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "role" in value
+  ) {
+    return String(
+      (
+        value as {
+          role?: unknown;
+        }
+      ).role ?? "",
+    );
   }
 
-  return String(value ?? "");
+  return String(
+    value ?? "",
+  );
 }
 
-export function roleHome(roleOrUser: unknown): string {
-  switch (extractRole(roleOrUser).trim().toUpperCase()) {
+export function roleHome(
+  roleOrUser: unknown,
+): string {
+  const role =
+    normalizeRole(
+      extractRole(
+        roleOrUser,
+      ),
+    );
+
+  switch (role) {
     case "SYSTEM_DEVELOPER":
-      return "/developer";
+      return "/developer/dashboard";
+
     case "SUPER_ADMIN":
-      return "/super-admin";
+      return "/super-admin/dashboard";
+
     case "COMPANY_ADMIN":
       return "/admin/dashboard";
+
     case "ACCOUNTANT":
       return "/accountant/dashboard";
+
     case "STAFF":
       return "/staff/dashboard";
+
     case "BROKER":
       return "/broker/dashboard";
+
     case "GPS_MANAGER":
       return "/gps-manager/dashboard";
+
     default:
       return "/login";
   }
 }
 
-export function getDashboardPath(roleOrUser: unknown): string {
-  return roleHome(roleOrUser);
+export function getDashboardPath(
+  roleOrUser: unknown,
+): string {
+  return roleHome(
+    roleOrUser,
+  );
 }

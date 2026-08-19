@@ -76,6 +76,10 @@ function cleanFileName(value: string): string {
   return value.replace(/[^A-Za-z0-9._-]+/g, "-").replace(/-+/g, "-");
 }
 
+function accountKey(value: unknown): string {
+  return text(value).replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+}
+
 function ellipsis(value: unknown, max = 45): string {
   const output = text(value).replace(/\s+/g, " ").trim();
   return output.length <= max ? output : `${output.slice(0, max - 3)}...`;
@@ -429,19 +433,44 @@ export async function GET(request: NextRequest) {
     }
 
     const db = prisma as any;
-    const company = await db.company.findUnique({ where: { id: companyId } });
-    const records = await db.companyBankVerification.findMany({
-      where: {
-        companyId,
-        depositDate: { gte: from, lte: to },
-        ...(bankFilter ? { bankName: { contains: bankFilter } } : {}),
-        ...(accountFilter ? { bankAccount: { contains: accountFilter } } : {}),
-      },
-      orderBy: [{ bankName: "asc" }, { bankAccount: "asc" }, { depositDate: "asc" }],
-    });
+    const [company, rawRecords, importedStatements] = await Promise.all([
+      db.company.findUnique({ where: { id: companyId } }),
+      db.companyBankVerification.findMany({
+        where: {
+          companyId,
+          depositDate: { gte: from, lte: to },
+          ...(accountFilter ? { bankAccount: { contains: accountFilter } } : {}),
+        },
+        orderBy: [{ bankAccount: "asc" }, { depositDate: "asc" }],
+      }),
+      db.importedBankStatement.findMany({
+        where: { companyId },
+        orderBy: { importedAt: "desc" },
+        select: { bankName: true, accountName: true, accountNumber: true },
+      }),
+    ]);
+
+    const statementByAccount = new Map<string, any>();
+    for (const statement of importedStatements) {
+      const key = accountKey(statement.accountNumber);
+      if (key && !statementByAccount.has(key)) statementByAccount.set(key, statement);
+    }
+
+    const records = rawRecords
+      .map((record: any) => {
+        const statement = statementByAccount.get(accountKey(record.bankAccount));
+        return {
+          ...record,
+          bankName: text(statement?.bankName) || "UNSPECIFIED BANK",
+          accountName: text(statement?.accountName) || "",
+        };
+      })
+      .filter((record: any) =>
+        !bankFilter || text(record.bankName).toLowerCase().includes(bankFilter.toLowerCase()),
+      );
 
     if (!records.length) {
-      throw new HttpError("No bank proof records were found for the selected period.", 404);
+      throw new HttpError("No bank proof records were found for the selected period and filters.", 404);
     }
 
     const recordIds = records.map((record: any) => text(record.id));

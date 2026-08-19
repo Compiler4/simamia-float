@@ -1,91 +1,71 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
-import {
-  createAudit,
-  createNotification,
-  requireCompanyMember,
-  routeError,
-  text,
-  HttpError,
-} from "@/lib/company-admin-server";
+import { createAudit, createNotification, requireCompanyMember, routeError, text, HttpError } from "@/lib/company-admin-server";
 
-export async function POST(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> },
-) {
+const statuses = new Set(["PENDING", "VERIFIED", "AMOUNT_MISMATCH", "MISSING_RECEIPT", "DUPLICATE_DEPOSIT", "MISSING_BANK_RECORD", "REJECTED"]);
+
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const user = await requireCompanyMember([
-      "COMPANY_ADMIN",
-      "ACCOUNTANT",
-      "STAFF",
-    ]);
-    const companyId = user.companyId as string;
+    const user = await requireCompanyMember(["COMPANY_ADMIN", "ACCOUNTANT"]);
+    const companyId = String(user.companyId);
     const { id } = await context.params;
     const body = await request.json();
-    const message = text(body.message).trim();
     const db = prisma as any;
 
-    if (message.length < 3) {
-      throw new HttpError("Write a clear bank-review message first.", 422);
+    const current = await db.companyBankVerification.findFirst({ where: { id, companyId } });
+    if (!current) throw new HttpError("Bank verification record not found.", 404);
+
+    const data: Record<string, unknown> = {};
+    if (body.isSeenByAdmin !== undefined) data.isSeenByAdmin = Boolean(body.isSeenByAdmin);
+    if (body.reviewNote !== undefined) data.reviewNote = text(body.reviewNote).trim() || null;
+
+    if (body.status !== undefined) {
+      const status = text(body.status).trim().toUpperCase();
+      if (!statuses.has(status)) throw new HttpError("Invalid bank verification status.", 422);
+
+      if (status !== "PENDING" && text(body.reviewNote).trim().length < 5) {
+        throw new HttpError("Write a clear review reason before saving the bank decision.", 422);
+      }
+
+      if (status === "VERIFIED" && current.proofInspectionStatus === "INSUFFICIENT") {
+        if (user.role !== "COMPANY_ADMIN" || !Boolean(body.overrideInsufficientProof)) {
+          throw new HttpError("This proof is marked insufficient. Company Admin must explicitly override it with a review reason, or request clearer proof.", 409);
+        }
+        data.proofInspectionStatus = "MANUAL_REVIEW";
+      }
+
+      data.status = status;
+      data.verifiedById = status === "PENDING" ? null : user.id;
+      data.verifiedByName = status === "PENDING" ? null : user.name;
+      data.verifiedAt = status === "PENDING" ? null : new Date();
+      data.isSeenByAdmin = true;
     }
 
-    const verification = await db.companyBankVerification.findFirst({
-      where: {
-        id,
-        companyId,
-        ...(user.role === "STAFF" ? { uploadedById: user.id } : {}),
-      },
-    });
+    const verification = await db.companyBankVerification.update({ where: { id }, data });
 
-    if (!verification) {
-      throw new HttpError("Bank verification record not found.", 404);
-    }
-
-    const created = await db.companyBankMessage.create({
-      data: {
-        verificationId: id,
-        companyId,
-        senderId: user.id,
-        senderName: user.name,
-        senderRole: user.role,
-        message,
-      },
-    });
-
-    const isUploader = user.id === verification.uploadedById;
-    await createNotification({
-      companyId,
-      targetUserId: isUploader ? null : verification.uploadedById,
-      targetRole: isUploader ? "COMPANY_ADMIN" : null,
-      title: "New bank review message",
-      message: `${user.name}: ${message.slice(0, 160)}`,
-      type: "MESSAGE",
-      link: isUploader ? "/admin/dashboard?section=bank" : "/dashboard",
-    });
-
-    if (isUploader) {
+    if (body.status !== undefined) {
+      const status = text(body.status).trim().toUpperCase();
       await createNotification({
         companyId,
-        targetRole: "ACCOUNTANT",
-        title: "Uploader replied to bank review",
-        message: `${user.name}: ${message.slice(0, 160)}`,
-        type: "MESSAGE",
+        targetUserId: current.uploadedById,
+        title: `Bank record ${status.toLowerCase().replaceAll("_", " ")}`,
+        message: `${user.name} reviewed reference ${current.referenceNumber}. ${text(body.reviewNote).trim()}`.trim(),
+        type: status === "VERIFIED" ? "SUCCESS" : status === "PENDING" ? "INFO" : "WARNING",
         link: "/dashboard",
+      });
+      await createAudit({
+        companyId,
+        actorId: user.id,
+        actorName: user.name,
+        actorRole: user.role,
+        action: `BANK_${status}`,
+        module: "BANK",
+        details: `Reference ${current.referenceNumber}; ${text(body.reviewNote).trim()}`,
       });
     }
 
-    await createAudit({
-      companyId,
-      actorId: user.id,
-      actorName: user.name,
-      actorRole: user.role,
-      action: "SEND_BANK_REVIEW_MESSAGE",
-      module: "BANK",
-      details: `Reference ${verification.referenceNumber}: ${message.slice(0, 220)}`,
-    });
-
-    return NextResponse.json({ success: true, message: created });
+    return NextResponse.json({ success: true, verification });
   } catch (error) {
     return routeError(error);
   }

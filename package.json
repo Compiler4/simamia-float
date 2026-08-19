@@ -30,7 +30,12 @@
     "local:setup": "npm run local:repair-schema && npm run local:reset-passwords",
     "github:check": "prisma validate && node scripts/prisma-generate-safe.mjs && tsc --noEmit --incremental false && next build",
     "db:fix:accountant-funding": "tsx scripts/ensure-accountant-staff-funding-table.ts",
-    "check:routes": "node scripts/verify-app-routes.mjs"
+    "check:routes": "node scripts/verify-app-routes.mjs",
+    "check:portals": "node scripts/verify-portal-repair.mjs",
+    "check:roles": "node scripts/verify-role-portals.mjs",
+    "check:super-admin": "node scripts/verify-super-admin-navigation.mjs",
+    "db:fix:staff-operations": "tsx scripts/ensure-staff-operations-schema.ts",
+    "check:staff-operations": "node scripts/verify-staff-operations.mjs"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.9.0",

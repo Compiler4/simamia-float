@@ -1222,7 +1222,7 @@ export default function StaffLiveLocationsClient({
               Operational live map
             </h3>
             <p>
-              Green S: this logged-in Staff Officer only · LIVE agent pointers come from the agent phone · green ✓: serviced · gold V: visited · purple A: valid assigned agent coordinate · blue B: broker customer · orange C: customer
+              Real interactive street map with Street, OpenStreetMap and Satellite layers · Green S: this logged-in Staff Officer only · LIVE agent pointers come from the agent phone · green ✓: serviced · gold V: visited · purple A: valid assigned agent coordinate · blue B: broker customer · orange C: customer
             </p>
           </div>
           <strong>
@@ -1340,7 +1340,7 @@ export default function StaffLiveLocationsClient({
                       <Crosshair
                         size={15}
                       />
-                      Update GPS + mark visited
+                      Update GPS + mark serviced
                     </button>
 
                     <button
@@ -1485,7 +1485,7 @@ export default function StaffLiveLocationsClient({
             <small>VISITED DATABASE TABLE</small>
             <h3>Visited and serviced brokers today</h3>
             <p>
-              When a Staff Officer clicks Update GPS + mark visited, the broker point is saved, the broker is marked visited, and the broker_service_visits record below is updated for reports.
+              When a Staff Officer clicks Update GPS + mark serviced, the broker point is saved, the broker is marked visited, and the broker_service_visits record below is updated for reports.
             </p>
           </div>
           <strong>

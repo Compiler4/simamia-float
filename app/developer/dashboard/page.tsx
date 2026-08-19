@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser, getRoleLabel } from "@/lib/auth";
+import { getCurrentUser, getDashboardPath, getRoleLabel, normalizeRole } from "@/lib/auth";
 import LogoutButton from "./LogoutButton";
 import styles from "./DeveloperDashboard.module.css";
 
@@ -9,7 +9,7 @@ export default async function DeveloperDashboardPage() {
   const user = await getCurrentUser();
 
   if (!user) redirect("/login");
-  if (user.role !== "SYSTEM_DEVELOPER") redirect("/dashboard");
+  if (normalizeRole(user.role) !== "SYSTEM_DEVELOPER") redirect(getDashboardPath(user.role));
 
   const metrics = [
     {
