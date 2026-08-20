@@ -1,10 +1,4 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-
-import {
-  getCurrentUser,
-  getDashboardPath,
-} from "@/lib/auth";
 
 import LoginForm from "./LoginForm";
 
@@ -32,12 +26,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function LoginPage() {
-  const currentUser = await getCurrentUser();
-
-  if (currentUser) {
-    redirect(getDashboardPath(currentUser.role));
-  }
-
+/**
+ * Keep the login page independent from the database.
+ *
+ * Hostinger can therefore render /login even when MySQL is temporarily
+ * unavailable or environment variables are being refreshed. The database
+ * is contacted only by POST /api/auth/login after the user submits the form.
+ */
+export default function LoginPage() {
   return <LoginForm />;
 }

@@ -1,0 +1,22 @@
+SIMAMIA FLOAT - HOSTINGER FINAL CSS BUILD FIX
+Build marker: 3.0.1-hostinger.1
+
+This package intentionally DOES NOT use Tailwind CSS or a PostCSS plugin.
+The only previous Tailwind-based route (/forgot-password) was converted to
+ForgotPassword.module.css.
+
+Expected Hostinger build log before Next.js compilation:
+  BUILD_DEPENDENCIES_OK
+  PLAIN_CSS_MODE_OK
+
+If Hostinger still reports:
+  Cannot find module '@tailwindcss/postcss'
+then Hostinger is building an older uploaded package. Delete/replace the old
+deployment source and upload this ZIP again.
+
+Recommended Hostinger runtime:
+  Node.js 22.x
+  Build command: npm run build
+  Start command: npm run start
+
+Do not upload node_modules or .next.

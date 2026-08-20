@@ -32,13 +32,98 @@ export type CurrentUser = {
   branchName: string | null;
 };
 
-function getAuthSecret(): string {
-  const secret =
-    process.env.AUTH_SECRET?.trim() ||
-    process.env.SESSION_SECRET?.trim();
+export class AuthConfigurationError extends Error {
+  readonly code = "AUTH_SECRET_MISSING";
 
-  if (secret) {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthConfigurationError";
+  }
+}
+
+function cleanSecret(value: unknown): string {
+  const raw = String(value ?? "").trim();
+
+  if (
+    raw.length >= 2 &&
+    ((raw.startsWith('"') && raw.endsWith('"')) ||
+      (raw.startsWith("'") && raw.endsWith("'")))
+  ) {
+    return raw.slice(1, -1).trim();
+  }
+
+  return raw;
+}
+
+const AUTH_SECRET_KEYS = [
+  "AUTH_SECRET",
+  "SESSION_SECRET",
+  "NEXTAUTH_SECRET",
+  "JWT_SECRET",
+] as const;
+
+export function getAuthConfigurationStatus(): {
+  configured: boolean;
+  source: string | null;
+  length: number;
+  strongEnough: boolean;
+} {
+  let firstConfigured: { source: string; length: number } | null = null;
+
+  for (const key of AUTH_SECRET_KEYS) {
+    const value = cleanSecret(process.env[key]);
+    if (!value) continue;
+
+    if (!firstConfigured) {
+      firstConfigured = { source: key, length: value.length };
+    }
+
+    if (value.length >= 32) {
+      return {
+        configured: true,
+        source: key,
+        length: value.length,
+        strongEnough: true,
+      };
+    }
+  }
+
+  if (firstConfigured) {
+    return {
+      configured: true,
+      source: firstConfigured.source,
+      length: firstConfigured.length,
+      strongEnough: false,
+    };
+  }
+
+  return {
+    configured: false,
+    source: null,
+    length: 0,
+    strongEnough: false,
+  };
+}
+
+function getAuthSecret(): string {
+  const weakKeys: string[] = [];
+
+  for (const key of AUTH_SECRET_KEYS) {
+    const secret = cleanSecret(process.env[key]);
+    if (!secret) continue;
+
+    if (process.env.NODE_ENV === "production" && secret.length < 32) {
+      weakKeys.push(key);
+      continue;
+    }
+
     return secret;
+  }
+
+  if (process.env.NODE_ENV === "production" && weakKeys.length) {
+    throw new AuthConfigurationError(
+      `Authentication signing secrets are too short: ${weakKeys.join(", ")}. Use at least 32 characters.`,
+    );
   }
 
   if (process.env.NODE_ENV !== "production") {
@@ -49,8 +134,8 @@ function getAuthSecret(): string {
     return "simamia-local-development-secret-change-before-production";
   }
 
-  throw new Error(
-    "Missing AUTH_SECRET. Add a long random AUTH_SECRET value to the environment.",
+  throw new AuthConfigurationError(
+    "Missing authentication signing secret. Add AUTH_SECRET (recommended), SESSION_SECRET, NEXTAUTH_SECRET, or JWT_SECRET to the production environment.",
   );
 }
 
@@ -156,12 +241,25 @@ function readSessionToken(
   }
 }
 
-export async function createAuthSession(
+export type AuthSessionCookie = {
+  name: string;
+  value: string;
+  options: {
+    httpOnly: true;
+    secure: boolean;
+    sameSite: "lax";
+    path: "/";
+    priority: "high";
+    maxAge?: number;
+    expires?: Date;
+  };
+};
+
+export function createAuthSessionCookie(
   userId: string,
   rememberMe = false,
-): Promise<void> {
-  const cleanedUserId =
-    String(userId).trim();
+): AuthSessionCookie {
+  const cleanedUserId = String(userId).trim();
 
   if (!cleanedUserId) {
     throw new Error(
@@ -169,46 +267,40 @@ export async function createAuthSession(
     );
   }
 
-  const lifetimeSeconds =
-    rememberMe
-      ? REMEMBERED_SESSION_SECONDS
-      : NORMAL_SESSION_SECONDS;
+  const lifetimeSeconds = rememberMe
+    ? REMEMBERED_SESSION_SECONDS
+    : NORMAL_SESSION_SECONDS;
 
-  const cookieStore =
-    await cookies();
+  return {
+    name: SESSION_COOKIE_NAME,
+    value: createSessionToken(cleanedUserId, lifetimeSeconds),
+    options: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      priority: "high",
+      ...(rememberMe
+        ? {
+            maxAge: lifetimeSeconds,
+            expires: new Date(Date.now() + lifetimeSeconds * 1000),
+          }
+        : {}),
+    },
+  };
+}
+
+export async function createAuthSession(
+  userId: string,
+  rememberMe = false,
+): Promise<void> {
+  const sessionCookie = createAuthSessionCookie(userId, rememberMe);
+  const cookieStore = await cookies();
 
   cookieStore.set({
-    name:
-      SESSION_COOKIE_NAME,
-
-    value:
-      createSessionToken(
-        cleanedUserId,
-        lifetimeSeconds,
-      ),
-
-    httpOnly: true,
-
-    secure:
-      process.env.NODE_ENV ===
-      "production",
-
-    sameSite: "lax",
-    path: "/",
-    priority: "high",
-
-    ...(rememberMe
-      ? {
-          maxAge:
-            lifetimeSeconds,
-
-          expires:
-            new Date(
-              Date.now() +
-                lifetimeSeconds * 1000,
-            ),
-        }
-      : {}),
+    name: sessionCookie.name,
+    value: sessionCookie.value,
+    ...sessionCookie.options,
   });
 }
 
@@ -259,6 +351,10 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       return null;
     }
 
+    // Select only the authentication/core identity columns here. Older
+    // Hostinger/XAMPP imports may not yet contain newer optional profile
+    // columns; selecting the whole User model would make every authenticated
+    // page fail even though the credentials and core schema are valid.
     const user =
       await prisma.user.findFirst({
         where: {
@@ -269,14 +365,22 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
             "ACTIVE",
         },
 
-        include: {
+        select: {
+          id: true,
+          companyId: true,
+          branchId: true,
+          name: true,
+          username: true,
+          email: true,
+          phone: true,
+          role: true,
+          status: true,
           company: {
             select: {
               name: true,
               status: true,
             },
           },
-
           branch: {
             select: {
               name: true,
@@ -343,21 +447,12 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
       status:
         String(user.status),
 
-      profileImageUrl:
-        user.profileImageUrl ==
-        null
-          ? null
-          : String(
-              user.profileImageUrl,
-            ),
+      // Optional profile columns are deliberately not required for session
+      // validation. Role-specific profile APIs can load them after the
+      // compatibility repair has run.
+      profileImageUrl: null,
 
-      assignedRegion:
-        user.assignedRegion ==
-        null
-          ? null
-          : String(
-              user.assignedRegion,
-            ),
+      assignedRegion: null,
 
       companyName:
         user.company?.name ==

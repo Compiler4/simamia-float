@@ -142,6 +142,7 @@ type SidebarPage =
   | "Create Companies"
   | "Manage Companies"
   | "Manage Company Admins"
+  | "Manage Users"
   | "Manage Subscriptions"
   | "Access Every Company"
   | "View Global Reports"
@@ -155,6 +156,7 @@ const PAGE_SLUGS: Record<SidebarPage, string> = {
   "Create Companies": "create-companies",
   "Manage Companies": "manage-companies",
   "Manage Company Admins": "company-admins",
+  "Manage Users": "users",
   "Manage Subscriptions": "subscriptions",
   "Access Every Company": "company-access",
   "View Global Reports": "global-reports",
@@ -210,6 +212,16 @@ type CompanyAdminForm = {
   status: "ACTIVE" | "SUSPENDED" | "REMOVED";
 };
 
+type ManagedUserForm = {
+  companyId: string;
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: "COMPANY_ADMIN" | "ACCOUNTANT" | "STAFF" | "BROKER" | "GPS_MANAGER";
+};
+
 type SettingsState = {
   mfa: boolean;
   backups: boolean;
@@ -247,6 +259,16 @@ const emptyCompanyAdminForm: CompanyAdminForm = {
   phone: "",
   password: "",
   status: "ACTIVE",
+};
+
+const emptyManagedUserForm: ManagedUserForm = {
+  companyId: "",
+  name: "",
+  username: "",
+  email: "",
+  phone: "",
+  password: "",
+  role: "STAFF",
 };
 
 const EMPTY_DASHBOARD_DATA: DashboardData = {
@@ -371,6 +393,10 @@ export default function SuperAdminDashboardClient({ user }: Props) {
     emptyCompanyAdminForm,
   );
 
+  const [managedUserForm, setManagedUserForm] = useState<ManagedUserForm>(
+    emptyManagedUserForm,
+  );
+
   const [messageForm, setMessageForm] = useState({
     receiverId: "",
     subject: "",
@@ -394,6 +420,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
       { label: "Create Companies" as const, icon: "+", hint: "Onboard a company" },
       { label: "Manage Companies" as const, icon: "▦", hint: "Control tenant status" },
       { label: "Manage Company Admins" as const, icon: "♟", hint: "Admin accounts" },
+      { label: "Manage Users" as const, icon: "👥", hint: "Create role users" },
       { label: "Manage Subscriptions" as const, icon: "◇", hint: "Plans and billing" },
       { label: "Access Every Company" as const, icon: "◎", hint: "Cross-company view" },
       { label: "View Global Reports" as const, icon: "▤", hint: "Platform analytics" },
@@ -824,6 +851,68 @@ export default function SuperAdminDashboardClient({ user }: Props) {
     }
   }
 
+  async function createManagedUser() {
+    if (
+      !managedUserForm.companyId ||
+      !managedUserForm.name.trim() ||
+      !managedUserForm.username.trim() ||
+      !managedUserForm.email.trim() ||
+      managedUserForm.password.length < 8
+    ) {
+      alert("Company, name, username, email and a password of at least 8 characters are required.");
+      return;
+    }
+
+    setActionLoading(true);
+
+    try {
+      const response = await fetch("/api/super-admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(managedUserForm),
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        alert(result.message || "Failed to create user.");
+        return;
+      }
+
+      alert("User created successfully.");
+      setManagedUserForm(emptyManagedUserForm);
+      await loadDashboard();
+    } catch (error) {
+      console.error("SUPER_ADMIN_CREATE_USER_ERROR", error);
+      alert("Could not connect to the user management API.");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function updateManagedUserStatus(
+    userId: string,
+    status: "ACTIVE" | "SUSPENDED" | "REMOVED",
+  ) {
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/super-admin/users/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ status }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        alert(result.message || "Failed to update user status.");
+        return;
+      }
+      await loadDashboard();
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
   function startEditSubscription(subscription: SubscriptionItem) {
     setEditingSubscriptionId(subscription.id);
     setSubscriptionForm({
@@ -1117,6 +1206,7 @@ export default function SuperAdminDashboardClient({ user }: Props) {
               ["Dashboard", "⌂ Dashboard"],
               ["Manage Companies", "▦ Companies"],
               ["Manage Company Admins", "♟ Company Admins"],
+              ["Manage Users", "👥 Users"],
               ["Manage Subscriptions", "◇ Subscriptions"],
               ["Manage Permissions", "◆ Permissions"],
               ["View Audit Logs", "≡ Audit Logs"],
@@ -1301,6 +1391,10 @@ export default function SuperAdminDashboardClient({ user }: Props) {
                 startEditCompanyAdmin={startEditCompanyAdmin}
                 updateCompanyAdminStatus={updateCompanyAdminStatus}
                 removeCompanyAdmin={removeCompanyAdmin}
+                managedUserForm={managedUserForm}
+                setManagedUserForm={setManagedUserForm}
+                createManagedUser={createManagedUser}
+                updateManagedUserStatus={updateManagedUserStatus}
                 subscriptionForm={subscriptionForm}
                 setSubscriptionForm={setSubscriptionForm}
                 editingSubscriptionId={editingSubscriptionId}
@@ -1349,6 +1443,10 @@ function DashboardContent({
   startEditCompanyAdmin,
   updateCompanyAdminStatus,
   removeCompanyAdmin,
+  managedUserForm,
+  setManagedUserForm,
+  createManagedUser,
+  updateManagedUserStatus,
   subscriptionForm,
   setSubscriptionForm,
   editingSubscriptionId,
@@ -1394,6 +1492,13 @@ function DashboardContent({
     status: "ACTIVE" | "SUSPENDED" | "REMOVED",
   ) => void;
   removeCompanyAdmin: (adminId: string) => void;
+  managedUserForm: ManagedUserForm;
+  setManagedUserForm: Dispatch<SetStateAction<ManagedUserForm>>;
+  createManagedUser: () => void;
+  updateManagedUserStatus: (
+    userId: string,
+    status: "ACTIVE" | "SUSPENDED" | "REMOVED",
+  ) => void;
   subscriptionForm: SubscriptionForm;
   setSubscriptionForm: (value: SubscriptionForm) => void;
   editingSubscriptionId: string | null;
@@ -1470,6 +1575,19 @@ function DashboardContent({
         startEdit={startEditCompanyAdmin}
         updateStatus={updateCompanyAdminStatus}
         removeAdmin={removeCompanyAdmin}
+        actionLoading={actionLoading}
+      />
+    );
+  }
+
+  if (activePage === "Manage Users") {
+    return (
+      <ManageUsersPage
+        data={data}
+        form={managedUserForm}
+        setForm={setManagedUserForm}
+        createUser={createManagedUser}
+        updateStatus={updateManagedUserStatus}
         actionLoading={actionLoading}
       />
     );
@@ -2557,6 +2675,156 @@ function ManageCompanyAdminsPage({
                     </p>
                   </td>
                 </tr>
+              )}
+            </tbody>
+          </ResponsiveTable>
+        </article>
+      </div>
+    </PageShell>
+  );
+}
+
+function ManageUsersPage({
+  data,
+  form,
+  setForm,
+  createUser,
+  updateStatus,
+  actionLoading,
+}: {
+  data: DashboardData;
+  form: ManagedUserForm;
+  setForm: Dispatch<SetStateAction<ManagedUserForm>>;
+  createUser: () => void;
+  updateStatus: (
+    userId: string,
+    status: "ACTIVE" | "SUSPENDED" | "REMOVED",
+  ) => void;
+  actionLoading: boolean;
+}) {
+  const protectedRoles = new Set(["SUPER_ADMIN", "SYSTEM_DEVELOPER"]);
+  const companyUsers = data.users.filter((item) => !protectedRoles.has(String(item.role)));
+
+  return (
+    <PageShell
+      icon="👥"
+      title="Manage Users"
+      subtitle="Create Company Admin, Accountant, Staff, Broker and GPS Manager accounts and control their status."
+    >
+      <div className={styles.twoColumnGrid}>
+        <article className={styles.formPanel}>
+          <h2>Create system user</h2>
+          <p>Every new user is linked to a registered active company and receives a securely hashed login password.</p>
+
+          <div className={styles.formStack}>
+            <label>
+              Company
+              <select
+                value={form.companyId}
+                onChange={(event) =>
+                  setForm((current) => ({ ...current, companyId: event.target.value }))
+                }
+              >
+                <option value="">Select company</option>
+                {data.companies
+                  .filter((company) => company.status === "ACTIVE")
+                  .map((company) => (
+                    <option key={company.id} value={company.id}>
+                      {company.name} - {company.code}
+                    </option>
+                  ))}
+              </select>
+            </label>
+
+            <label>
+              Role
+              <select
+                value={form.role}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    role: event.target.value as ManagedUserForm["role"],
+                  }))
+                }
+              >
+                <option value="COMPANY_ADMIN">Company Admin</option>
+                <option value="ACCOUNTANT">Accountant</option>
+                <option value="STAFF">Staff</option>
+                <option value="BROKER">Broker</option>
+                <option value="GPS_MANAGER">GPS Manager</option>
+              </select>
+            </label>
+
+            <label>
+              Full Name
+              <input value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} />
+            </label>
+            <label>
+              Username
+              <input value={form.username} onChange={(event) => setForm((current) => ({ ...current, username: event.target.value.toLowerCase().replace(/\s+/g, "") }))} />
+            </label>
+            <label>
+              Email
+              <input type="email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value.toLowerCase() }))} />
+            </label>
+            <label>
+              Phone
+              <input value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} />
+            </label>
+            <label>
+              Temporary Password
+              <input type="password" value={form.password} onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))} autoComplete="new-password" />
+            </label>
+
+            <div className={styles.formActions}>
+              <button type="button" onClick={createUser} disabled={actionLoading}>
+                {actionLoading ? "Saving..." : "Create User"}
+              </button>
+              <button type="button" className={styles.lightButton} onClick={() => setForm(emptyManagedUserForm)} disabled={actionLoading}>
+                Clear
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article className={styles.tablePanel}>
+          <CardHeader title="Registered Users" subtitle="Company-linked users managed by Super Admin" />
+          <ResponsiveTable>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {companyUsers.length ? (
+                companyUsers.map((item) => (
+                  <tr key={item.id}>
+                    <td><Entity name={item.name} sub={item.email} /></td>
+                    <td>{item.companyName || "No Company"}</td>
+                    <td>{String(item.role).replaceAll("_", " ")}</td>
+                    <td><StatusBadge status={item.status} /></td>
+                    <td>{formatDate(item.createdAt)}</td>
+                    <td>
+                      <div className={styles.actionButtons}>
+                        {item.status === "ACTIVE" ? (
+                          <button className={styles.warningButton} onClick={() => updateStatus(item.id, "SUSPENDED")} disabled={actionLoading}>Suspend</button>
+                        ) : (
+                          <button className={styles.reactivateButton} onClick={() => updateStatus(item.id, "ACTIVE")} disabled={actionLoading}>Activate</button>
+                        )}
+                        {item.status !== "REMOVED" && (
+                          <button className={styles.dangerButton} onClick={() => updateStatus(item.id, "REMOVED")} disabled={actionLoading}>Remove</button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan={6} className={styles.tableEmptyCell}>No company users found.</td></tr>
               )}
             </tbody>
           </ResponsiveTable>

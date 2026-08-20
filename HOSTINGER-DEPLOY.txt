@@ -1,0 +1,47 @@
+SIMAMIA FLOAT - HOSTINGER DEPLOYMENT (roumely.com)
+==================================================
+
+This package is prepared for Hostinger Node.js deployment.
+
+REQUIRED DEPLOYMENT SETTINGS
+----------------------------
+1. Upload this ZIP as the Node.js web app. package.json is at ZIP root.
+2. Select Node.js 22.x.
+3. Build command: npm run build
+4. Start command: npm run start
+5. Domain/app URL: https://roumely.com
+
+DATABASE
+--------
+The included .env is configured for the Hostinger MySQL database:
+- Host: localhost
+- Port: 3306
+- Database: u768639399_simamia
+- User: u768639399_compiler
+
+The password contains @ characters. In DATABASE_URL those characters are URL-encoded as %40.
+The same credentials are also supplied as DATABASE_* values. The app can fall back to them if an old malformed DATABASE_URL remains in hPanel.
+
+IMPORTANT HPANEL STEP
+---------------------
+Open Website -> roumely.com -> Environment variables.
+If DATABASE_URL already exists there with an old value, REPLACE it with the DATABASE_URL from the included .env, or delete the old value and import this .env.
+Hostinger environment variables override file values, so leaving a stale DATABASE_URL in hPanel can otherwise keep using the wrong setting.
+
+After changing environment variables, Save and Redeploy.
+
+DATABASE CONTENT
+----------------
+The application connects directly to the online Hostinger MySQL database. Existing records in u768639399_simamia are fetched by Prisma at runtime.
+If phpMyAdmin already shows the expected SIMAMIA tables and data, do not re-import or reseed them.
+
+OPTIONAL DATABASE CHECK AFTER DEPLOYMENT
+----------------------------------------
+Visit: https://roumely.com/api/health/database
+This route reports whether the application can reach its configured database without exposing the password.
+
+NOT BUILD-BLOCKING
+------------------
+- npm audit vulnerability notices are warnings, not the cause of the failed build.
+- The Turbopack NFT tracing message is a warning, not the cause of the failed build.
+- The previous @prisma/streams-local EBADENGINE warning was caused by Hostinger using Node 20. This package now requests Node 22.x.

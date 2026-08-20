@@ -1,0 +1,39 @@
+SIMAMIA FLOAT 3.1.0 - HOSTINGER SUPER ADMIN / ADMIN FIX
+=========================================================
+
+Deployment settings
+-------------------
+Node.js: 22.x
+Build command: npm run build
+Start command: npm run start
+
+Important health checks after deploy
+-----------------------------------
+1. https://roumely.com/api/health/database
+2. https://roumely.com/api/health/session
+3. https://roumely.com/login
+4. https://roumely.com/super-admin/dashboard
+
+Super Admin repairs
+-------------------
+- /api/super-admin/companies now has GET + POST.
+- /api/super-admin/companies/[id] now has GET + PATCH + DELETE (safe disable).
+- /api/super-admin/company-admins now has GET + POST.
+- /api/super-admin/company-admins/[id] keeps PATCH + DELETE.
+- /api/super-admin/users has GET + POST for COMPANY_ADMIN, ACCOUNTANT, STAFF, BROKER, GPS_MANAGER.
+- /api/super-admin/users/[id] has PATCH + DELETE.
+- /api/super-admin/subscriptions now has GET + POST.
+- /api/super-admin/subscriptions/[id] has validated PATCH + DELETE.
+- Super Admin dashboard includes Manage Users module.
+- Create Company, Edit Company, Disable Company, Create Company Admin, Create User,
+  Reset Password, Create/Edit Subscription and status actions use real APIs.
+
+Company Admin route verification
+--------------------------------
+The build validates the primary Company Admin routes for users, branches, brokers,
+expenses, bank verification, GPS devices, settings, notifications and report export.
+
+Database/session
+----------------
+This package keeps the working Hostinger IPv4/socket database transport and the
+production authentication/session signing configuration from the previous fixes.

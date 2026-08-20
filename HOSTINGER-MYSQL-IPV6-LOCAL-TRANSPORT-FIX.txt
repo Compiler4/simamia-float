@@ -1,0 +1,37 @@
+SIMAMIA FLOAT - Hostinger MySQL local transport fix
+Version: 3.0.5-hostinger-local-transport.1
+
+Why the previous deployment failed
+----------------------------------
+Runtime logs showed:
+  Access denied for user 'u768639399_compiler'@'::1'
+
+That proves Node.js resolved localhost to IPv6 ::1. The application now:
+1. Tests /var/lib/mysql/mysql.sock when available.
+2. Tests /tmp/mysql.sock when available.
+3. Tests TCP 127.0.0.1:3306.
+4. Tests the configured host last.
+5. Passes the successful transport to Prisma and schema compatibility code.
+
+Recommended hPanel values
+-------------------------
+DATABASE_HOST=127.0.0.1
+DATABASE_PORT=3306
+DATABASE_USER=u768639399_compiler
+DATABASE_PASSWORD=<the exact CURRENT password for this database user>
+DATABASE_NAME=u768639399_simamia
+DATABASE_CONNECTION_LIMIT=5
+ALLOW_LOCAL_DATABASE_IN_PRODUCTION=1
+HOSTING_PROVIDER=hostinger
+HOSTINGER_SCHEMA_COMPAT=1
+
+DATABASE_URL is not required. Startup recreates it after a successful DB test.
+
+Success log
+-----------
+SIMAMIA_DATABASE_PREFLIGHT_OK
+
+The same log includes the active transport, for example:
+  transport: tcp:127.0.0.1:3306
+or
+  transport: unix:/var/lib/mysql/mysql.sock

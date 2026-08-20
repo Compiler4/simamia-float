@@ -1,0 +1,28 @@
+SIMAMIA FLOAT - HOSTINGER MYSQL FINAL CONNECTION FIX
+Version: 3.0.4-hostinger-db-unified.1
+
+The previous hPanel values were inconsistent:
+- DATABASE_URL password: Compiler@@123
+- DATABASE_PASSWORD:     Compiler@123!
+
+This release uses DATABASE_* as the single source of truth and ALWAYS rebuilds
+DATABASE_URL at startup from DATABASE_HOST/PORT/USER/PASSWORD/NAME.
+
+IMPORTANT HOSTINGER ACTION:
+The actual MySQL user password in Databases > Management must exactly match:
+  Compiler@123!
+
+If it does not, use Databases > Management > Options (...) > Change Password,
+set it to the same value, then redeploy/restart.
+
+Environment values:
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USER=u768639399_compiler
+DATABASE_PASSWORD=Compiler@123!
+DATABASE_NAME=u768639399_simamia
+DATABASE_CONNECTION_LIMIT=10
+DATABASE_URL=mysql://u768639399_compiler:Compiler%40123!@localhost:3306/u768639399_simamia
+
+Expected Runtime Log:
+SIMAMIA_DATABASE_PREFLIGHT_OK

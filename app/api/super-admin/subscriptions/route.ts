@@ -1,152 +1,183 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+
 import { getCurrentUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-export async function PATCH(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+function clean(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+function asBoolean(value: unknown, fallback = false): boolean {
+  if (typeof value === "boolean") return value;
+  const text = clean(value).toLowerCase();
+  if (!text) return fallback;
+  return ["1", "true", "yes", "on"].includes(text);
+}
+
+function asDate(value: unknown): Date | null {
+  const text = clean(value);
+  if (!text) return null;
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+async function requireSuperAdmin() {
+  const user = await getCurrentUser();
+  if (!user) {
+    return {
+      user: null,
+      response: NextResponse.json(
+        { success: false, message: "You are not logged in." },
+        { status: 401 },
+      ),
+    };
+  }
+  if (user.role !== "SUPER_ADMIN") {
+    return {
+      user,
+      response: NextResponse.json(
+        { success: false, message: "Only Super Admin can manage subscriptions." },
+        { status: 403 },
+      ),
+    };
+  }
+  return { user, response: null };
+}
+
+export async function GET() {
   try {
-    const user = await getCurrentUser();
-    const { id } = await context.params;
+    const auth = await requireSuperAdmin();
+    if (auth.response) return auth.response;
 
-    if (!user || user.role !== "SUPER_ADMIN") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Unauthorized.",
-        },
-        { status: 401 }
-      );
-    }
-
-    const body = await request.json();
-
-    const data: any = {};
-
-    if (body.companyId !== undefined) data.companyId = String(body.companyId);
-    if (body.plan !== undefined) data.plan = String(body.plan).trim();
-    if (body.amount !== undefined) data.amount = String(body.amount || "0");
-    if (body.startsAt !== undefined) data.startsAt = new Date(body.startsAt);
-    if (body.endsAt !== undefined) data.endsAt = new Date(body.endsAt);
-    if (body.isActive !== undefined) data.isActive = Boolean(body.isActive);
-
-    const subscription = await prisma.subscription.update({
-      where: {
-        id,
-      },
-      data,
+    const subscriptions = await prisma.subscription.findMany({
+      orderBy: { createdAt: "desc" },
       include: {
         company: {
-          select: {
-            id: true,
-            name: true,
-          },
+          select: { id: true, name: true, code: true, status: true },
         },
-      },
-    });
-
-    await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        companyId: subscription.company.id,
-        action: "SUBSCRIPTION_UPDATED",
-        module: "SUBSCRIPTION",
-        details: `${user.name} updated subscription for ${subscription.company.name}.`,
       },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Subscription updated successfully.",
-      subscription,
+      subscriptions: subscriptions.map((subscription) => ({
+        ...subscription,
+        amount: Number(subscription.amount),
+      })),
     });
   } catch (error) {
-    console.error("UPDATE_SUBSCRIPTION_ERROR:", error);
-
+    console.error("SUPER_ADMIN_SUBSCRIPTIONS_GET_ERROR", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to update subscription.",
-        error: error instanceof Error ? error.message : String(error),
-      },
-      { status: 500 }
+      { success: false, message: "Failed to load subscriptions." },
+      { status: 500 },
     );
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    const { id } = await context.params;
+    const auth = await requireSuperAdmin();
+    if (auth.response || !auth.user) return auth.response!;
 
-    if (!user || user.role !== "SUPER_ADMIN") {
+    const body = await request.json();
+    const companyId = clean(body.companyId);
+    const plan = clean(body.plan);
+    const amountText = clean(body.amount) || "0";
+    const amount = Number(amountText);
+    const startsAt = asDate(body.startsAt);
+    const endsAt = asDate(body.endsAt);
+    const isActive = asBoolean(body.isActive, true);
+
+    if (!companyId || !plan || !startsAt || !endsAt) {
       return NextResponse.json(
         {
           success: false,
-          message: "Unauthorized.",
+          message: "Company, plan, start date and end date are required.",
         },
-        { status: 401 }
+        { status: 422 },
       );
     }
 
-    const subscription = await prisma.subscription.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        company: {
-          select: {
-            id: true,
-            name: true,
+    if (!Number.isFinite(amount) || amount < 0) {
+      return NextResponse.json(
+        { success: false, message: "Subscription amount must be a valid non-negative number." },
+        { status: 422 },
+      );
+    }
+
+    if (endsAt <= startsAt) {
+      return NextResponse.json(
+        { success: false, message: "Subscription end date must be after the start date." },
+        { status: 422 },
+      );
+    }
+
+    const company = await prisma.company.findUnique({
+      where: { id: companyId },
+      select: { id: true, name: true, status: true },
+    });
+
+    if (!company) {
+      return NextResponse.json(
+        { success: false, message: "The selected company was not found." },
+        { status: 404 },
+      );
+    }
+
+    const subscription = await prisma.$transaction(async (tx) => {
+      if (isActive) {
+        await tx.subscription.updateMany({
+          where: { companyId, isActive: true },
+          data: { isActive: false },
+        });
+      }
+
+      const created = await tx.subscription.create({
+        data: {
+          companyId,
+          plan,
+          amount: amountText,
+          startsAt,
+          endsAt,
+          isActive,
+        },
+        include: {
+          company: {
+            select: { id: true, name: true, code: true, status: true },
           },
         },
-      },
-    });
+      });
 
-    if (!subscription) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Subscription not found.",
+      await tx.auditLog.create({
+        data: {
+          userId: auth.user!.id,
+          companyId,
+          action: "SUBSCRIPTION_CREATED",
+          module: "SUBSCRIPTION",
+          details: `${auth.user!.name} created ${plan} subscription for ${company.name}.`,
         },
-        { status: 404 }
-      );
-    }
+      });
 
-    await prisma.subscription.delete({
-      where: {
-        id,
-      },
+      return created;
     });
-
-    await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        companyId: subscription.company.id,
-        action: "SUBSCRIPTION_REMOVED",
-        module: "SUBSCRIPTION",
-        details: `${user.name} removed subscription for ${subscription.company.name}.`,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: "Subscription removed successfully.",
-    });
-  } catch (error) {
-    console.error("DELETE_SUBSCRIPTION_ERROR:", error);
 
     return NextResponse.json(
       {
-        success: false,
-        message: "Failed to remove subscription.",
-        error: error instanceof Error ? error.message : String(error),
+        success: true,
+        message: "Subscription created successfully.",
+        subscription: { ...subscription, amount: Number(subscription.amount) },
       },
-      { status: 500 }
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("SUPER_ADMIN_SUBSCRIPTION_CREATE_ERROR", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to create subscription." },
+      { status: 500 },
     );
   }
 }

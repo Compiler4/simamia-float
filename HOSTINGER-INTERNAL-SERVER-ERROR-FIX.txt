@@ -1,0 +1,54 @@
+SIMAMIA FLOAT - HOSTINGER INTERNAL SERVER ERROR FIX
+Domain: https://roumely.com
+
+WHAT WAS CHANGED
+1. /login no longer queries MySQL while rendering the page.
+   Only POST /api/auth/login connects to the database.
+2. The login API now returns safe, specific database/schema errors instead
+   of a generic Internal Server Error where possible.
+3. /api/health/database now correctly understands that localhost is valid
+   for a Hostinger MySQL database attached to the same Hostinger website.
+4. The Node start script binds Next.js to 0.0.0.0 and uses Hostinger's PORT.
+5. Production .env contains the Hostinger MySQL settings and app URL.
+
+HOSTINGER HPANEL ENVIRONMENT VARIABLES
+Make sure these keys exist in Websites > roumely.com > Environment variables.
+If old values already exist, replace them and redeploy/restart.
+
+NODE_ENV=production
+DATABASE_URL=mysql://u768639399_compiler:Compiler%40%40123@localhost:3306/u768639399_simamia
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USER=u768639399_compiler
+DATABASE_PASSWORD=Compiler@@123
+DATABASE_NAME=u768639399_simamia
+DATABASE_CONNECTION_LIMIT=5
+ALLOW_LOCAL_DATABASE_IN_PRODUCTION=1
+APP_URL=https://roumely.com
+NEXT_PUBLIC_APP_URL=https://roumely.com
+
+DEPLOYMENT SETTINGS
+Node.js: 22.x
+Build command: npm run build
+Start command: npm run start
+
+AFTER DEPLOYMENT
+1. Restart the Node.js application.
+2. Open https://roumely.com/login
+3. Open https://roumely.com/api/health/database
+
+Expected healthy response:
+  success: true
+  message: Hostinger MySQL connection is healthy.
+
+If health returns an errorCode:
+DATABASE_AUTH_FAILED      -> database username/password is wrong
+DATABASE_NOT_FOUND        -> database name is wrong
+DATABASE_UNREACHABLE      -> MySQL host/connection is unavailable
+DATABASE_SCHEMA_MISMATCH  -> tables/columns in phpMyAdmin do not match Prisma
+DATABASE_CONFIGURATION_INVALID -> one or more environment variables are malformed
+
+SECURITY
+After confirming deployment, change the MySQL password in Hostinger because the
+current password has been shared during troubleshooting. Update DATABASE_URL and
+DATABASE_PASSWORD after changing it.

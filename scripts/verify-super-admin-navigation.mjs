@@ -11,6 +11,7 @@ const requiredModules = [
   "Create Companies",
   "Manage Companies",
   "Manage Company Admins",
+  "Manage Users",
   "Manage Subscriptions",
   "Access Every Company",
   "View Global Reports",
@@ -19,6 +20,13 @@ const requiredModules = [
   "Reset Passwords",
   "View Audit Logs",
 ];
+
+const apiFiles = {
+  companies: fs.readFileSync("app/api/super-admin/companies/route.ts", "utf8"),
+  companyAdmins: fs.readFileSync("app/api/super-admin/company-admins/route.ts", "utf8"),
+  users: fs.readFileSync("app/api/super-admin/users/route.ts", "utf8"),
+  subscriptions: fs.readFileSync("app/api/super-admin/subscriptions/route.ts", "utf8"),
+};
 
 const missing = [];
 for (const moduleName of requiredModules) {
@@ -35,6 +43,14 @@ const requirements = [
   ["active navigation styling", css.includes(".activeNav")],
   ["clickable anchor navigation styling", css.includes(".navItem")],
   ["mobile navigation support", css.includes(".sidebarMobileOpen")],
+  ["company collection GET", apiFiles.companies.includes("export async function GET")],
+  ["company collection POST", apiFiles.companies.includes("export async function POST")],
+  ["company admin collection GET", apiFiles.companyAdmins.includes("export async function GET")],
+  ["company admin collection POST", apiFiles.companyAdmins.includes("export async function POST")],
+  ["platform user collection GET", apiFiles.users.includes("export async function GET")],
+  ["platform user collection POST", apiFiles.users.includes("export async function POST")],
+  ["subscription collection GET", apiFiles.subscriptions.includes("export async function GET")],
+  ["subscription collection POST", apiFiles.subscriptions.includes("export async function POST")],
 ];
 
 const failed = requirements.filter(([, ok]) => !ok).map(([name]) => name);

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import styles from "./ForgotPassword.module.css";
 
 type ResetResponse = {
   success?: boolean;
@@ -26,6 +27,7 @@ export default function ForgotPasswordForm() {
     }
 
     setLoading(true);
+
     try {
       const response = await fetch("/api/auth/forgot-password", {
         method: "POST",
@@ -34,6 +36,7 @@ export default function ForgotPasswordForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: cleanEmail }),
       });
+
       const result = (await response.json()) as ResetResponse;
 
       if (!response.ok || result.success === false) {
@@ -57,20 +60,15 @@ export default function ForgotPasswordForm() {
   }
 
   return (
-    <div className="px-6 py-8 sm:px-10 sm:py-10">
-      <form
-        onSubmit={submit}
-        className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5"
-      >
-        <h1 className="text-lg font-black text-[#0d5137]">
-          Request password reset
-        </h1>
-        <p className="mt-2 text-sm leading-6 text-[#547066]">
+    <div className={styles.formWrap}>
+      <form onSubmit={submit} className={styles.formCard}>
+        <h1 className={styles.formTitle}>Request password reset</h1>
+        <p className={styles.formText}>
           Enter your registered email. Your Company Admin will receive a secure
           reset request and can set a new password from Manage Users.
         </p>
 
-        <label className="mt-5 block text-xs font-black uppercase tracking-[0.08em] text-[#27564a]">
+        <label className={styles.label}>
           Registered email
           <input
             type="email"
@@ -78,34 +76,24 @@ export default function ForgotPasswordForm() {
             onChange={(event) => setEmail(event.target.value)}
             placeholder="name@company.com"
             autoComplete="email"
-            className="mt-2 h-12 w-full rounded-2xl border border-emerald-200 bg-white px-4 text-sm font-bold text-[#07140f] outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-900/10"
+            className={styles.input}
             required
           />
         </label>
 
-        {error ? (
-          <p className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">
-            {error}
-          </p>
-        ) : null}
-        {message ? (
-          <p className="mt-4 rounded-xl border border-emerald-200 bg-white p-3 text-sm font-bold text-[#0d5137]">
-            {message}
-          </p>
-        ) : null}
+        {error ? <p className={styles.error}>{error}</p> : null}
+        {message ? <p className={styles.success}>{message}</p> : null}
 
         <button
+          type="submit"
           disabled={loading}
-          className="mt-5 flex min-h-14 w-full items-center justify-center rounded-2xl bg-gradient-to-r from-[#05170f] via-[#0b3a25] to-[#1b8757] px-5 text-sm font-black text-white shadow-xl shadow-emerald-950/20 transition hover:-translate-y-0.5 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-emerald-900/20 disabled:cursor-not-allowed disabled:opacity-70"
+          className={styles.submitButton}
         >
           {loading ? "Sending request..." : "Send reset request"}
         </button>
       </form>
 
-      <Link
-        href="/login"
-        className="mt-6 flex min-h-14 w-full items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-black text-[#0d5137] shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
-      >
+      <Link href="/login" className={styles.backLink}>
         Return to sign in
       </Link>
     </div>

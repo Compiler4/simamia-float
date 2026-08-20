@@ -5,9 +5,14 @@ import {
 } from "next/server";
 
 import {
-  createAuthSession,
+  AuthConfigurationError,
+  createAuthSessionCookie,
   getDashboardPath,
 } from "@/lib/auth";
+import {
+  classifyDatabaseError,
+  databaseErrorDetails,
+} from "@/lib/database-error";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -440,9 +445,6 @@ export async function POST(
 
           companyId: true,
 
-          profileImageUrl:
-            true,
-
           company: {
             select: {
               id: true,
@@ -707,24 +709,35 @@ export async function POST(
      * --------------------------------------------------------
      */
 
+    let sessionCookie: ReturnType<typeof createAuthSessionCookie>;
+
     try {
-      await createAuthSession(
+      sessionCookie = createAuthSessionCookie(
         String(user.id),
         rememberMe,
       );
     } catch (error) {
+      const reason = errorText(error);
+
       console.error(
         "LOGIN_SESSION_ERROR",
         {
-          userId:
-            String(user.id),
-
-          error:
-            errorText(
-              error,
-            ),
+          userId: String(user.id),
+          code:
+            error instanceof AuthConfigurationError
+              ? error.code
+              : "SESSION_CREATION_FAILED",
+          error: reason,
         },
       );
+
+      if (error instanceof AuthConfigurationError) {
+        return jsonError(
+          "Login credentials are correct, but the server authentication secret is not configured. Add AUTH_SECRET in Hostinger Environment Variables and redeploy.",
+          503,
+          error.code,
+        );
+      }
 
       return jsonError(
         "Your credentials are correct, but the login session could not be created.",
@@ -806,10 +819,18 @@ export async function POST(
           request.url,
         );
 
-      return NextResponse.redirect(
+      const response = NextResponse.redirect(
         target,
         303,
       );
+
+      response.cookies.set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.options,
+      );
+
+      return response;
     }
 
     /**
@@ -821,7 +842,7 @@ export async function POST(
      * and call router.replace(redirectTo).
      */
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         ok: true,
@@ -871,9 +892,7 @@ export async function POST(
               ?.name ??
             null,
 
-          profileImageUrl:
-            user.profileImageUrl ??
-            null,
+          profileImageUrl: null,
         },
       },
       {
@@ -885,6 +904,14 @@ export async function POST(
         },
       },
     );
+
+    response.cookies.set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.options,
+    );
+
+    return response;
   } catch (error) {
     /**
      * --------------------------------------------------------
@@ -892,48 +919,75 @@ export async function POST(
      * --------------------------------------------------------
      */
 
+    const preflightCode = text(process.env.SIMAMIA_DATABASE_PREFLIGHT_CODE).toUpperCase();
+    const failureCode =
+      preflightCode === "DATABASE_AUTH_FAILED" ||
+      preflightCode === "DATABASE_NOT_FOUND" ||
+      preflightCode === "DATABASE_UNREACHABLE" ||
+      preflightCode === "DATABASE_CONFIGURATION_INVALID"
+        ? (preflightCode as ReturnType<typeof classifyDatabaseError>)
+        : classifyDatabaseError(error);
+
+    const diagnostic =
+      databaseErrorDetails(error);
+
     console.error(
       "LOGIN_FATAL_ERROR",
-      error,
+      {
+        failureCode,
+        diagnostic,
+      },
     );
 
-    const message =
-      errorText(
-        error,
-      ).toLowerCase();
+    switch (failureCode) {
+      case "DATABASE_AUTH_FAILED":
+        return jsonError(
+          "Hostinger MySQL rejected the active database identity. This deployment avoids IPv6 localhost (::1) by preferring a local Unix socket or IPv4 127.0.0.1. Check Runtime logs for SIMAMIA_DATABASE_PREFLIGHT_ALL_FAILED if this remains.",
+          503,
+          failureCode,
+        );
 
-    const databaseProblem =
-      message.includes(
-        "econnrefused",
-      ) ||
-      message.includes(
-        "can't reach database",
-      ) ||
-      message.includes(
-        "connection refused",
-      ) ||
-      message.includes(
-        "p1000",
-      ) ||
-      message.includes(
-        "p1001",
-      ) ||
-      message.includes(
-        "p1017",
-      );
+      case "DATABASE_NOT_FOUND":
+        return jsonError(
+          "The configured Hostinger MySQL database does not exist. Check DATABASE_NAME in hPanel.",
+          503,
+          failureCode,
+        );
 
-    if (databaseProblem) {
-      return jsonError(
-        "SIMAMIA cannot connect to the database. Make sure XAMPP MySQL is running.",
-        503,
-        "DATABASE_UNAVAILABLE",
-      );
+      case "DATABASE_UNREACHABLE":
+        return jsonError(
+          "SIMAMIA cannot currently reach Hostinger MySQL. Check the database host and Runtime logs, then restart the application.",
+          503,
+          failureCode,
+        );
+
+      case "DATABASE_SCHEMA_MISMATCH":
+        return jsonError(
+          "The online database is connected, but its SIMAMIA schema is older than this application. The Hostinger compatibility repair must run before login.",
+          503,
+          failureCode,
+        );
+
+      case "DATABASE_CONFIGURATION_INVALID":
+        return jsonError(
+          "The Hostinger database configuration is invalid. Check DATABASE_HOST, DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD and DATABASE_NAME in hPanel.",
+          503,
+          failureCode,
+        );
+
+      case "PRISMA_RUNTIME_MISMATCH":
+        return jsonError(
+          "The database runtime packages are inconsistent. Redeploy the corrected package with matching Prisma versions.",
+          503,
+          failureCode,
+        );
+
+      default:
+        return jsonError(
+          "Login reached the online database but the user query failed. Check Hostinger Runtime logs for LOGIN_FATAL_ERROR.",
+          500,
+          failureCode,
+        );
     }
-
-    return jsonError(
-      "Login could not be completed.",
-      500,
-      "LOGIN_FAILED",
-    );
   }
 }

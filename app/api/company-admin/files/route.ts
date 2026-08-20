@@ -52,7 +52,7 @@ function storageRoot(): string {
    * .next is disposable.
    */
   return path.resolve(
-    process.cwd(),
+    /* turbopackIgnore: true */ process.cwd(),
     "storage",
   );
 }
@@ -177,11 +177,11 @@ function candidateFiles(
   ) {
     const absolute =
       path.resolve(
-        safePath,
+        /* turbopackIgnore: true */ safePath,
       );
 
     const allowedRoots = [
-      process.cwd(),
+      /* turbopackIgnore: true */ process.cwd(),
       storageRoot(),
     ];
 
@@ -217,13 +217,13 @@ function candidateFiles(
       ),
 
       path.resolve(
-        process.cwd(),
+        /* turbopackIgnore: true */ process.cwd(),
         "storage",
         safePath,
       ),
 
       path.resolve(
-        process.cwd(),
+        /* turbopackIgnore: true */ process.cwd(),
         "public",
         safePath,
       ),

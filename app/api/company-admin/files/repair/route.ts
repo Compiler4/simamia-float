@@ -50,7 +50,7 @@ function storageRoot(): string {
   }
 
   return path.resolve(
-    process.cwd(),
+    /* turbopackIgnore: true */ process.cwd(),
     "storage",
   );
 }

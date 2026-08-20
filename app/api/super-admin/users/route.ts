@@ -8,6 +8,16 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const ALLOWED_ROLES = [
+  "COMPANY_ADMIN",
+  "ACCOUNTANT",
+  "STAFF",
+  "BROKER",
+  "GPS_MANAGER",
+] as const;
+
+type AllowedRole = (typeof ALLOWED_ROLES)[number];
+
 function clean(value: unknown): string {
   return String(value ?? "").trim();
 }
@@ -22,7 +32,6 @@ function normalizeUsername(value: unknown): string {
 
 async function requireSuperAdmin() {
   const user = await getCurrentUser();
-
   if (!user) {
     return {
       user: null,
@@ -32,30 +41,33 @@ async function requireSuperAdmin() {
       ),
     };
   }
-
   if (user.role !== "SUPER_ADMIN") {
     return {
       user,
       response: NextResponse.json(
-        {
-          success: false,
-          message: "Only Super Admin can manage company administrators.",
-        },
+        { success: false, message: "Only Super Admin can manage platform users." },
         { status: 403 },
       ),
     };
   }
-
   return { user, response: null };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const auth = await requireSuperAdmin();
     if (auth.response) return auth.response;
 
-    const companyAdmins = await prisma.user.findMany({
-      where: { role: "COMPANY_ADMIN" },
+    const companyId = clean(request.nextUrl.searchParams.get("companyId"));
+    const role = clean(request.nextUrl.searchParams.get("role")).toUpperCase();
+
+    const users = await prisma.user.findMany({
+      where: {
+        ...(companyId ? { companyId } : {}),
+        ...(role && ALLOWED_ROLES.includes(role as AllowedRole)
+          ? { role: role as AllowedRole }
+          : {}),
+      },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -69,17 +81,16 @@ export async function GET() {
         status: true,
         createdAt: true,
         updatedAt: true,
-        company: {
-          select: { id: true, name: true, code: true, status: true },
-        },
+        company: { select: { id: true, name: true, code: true, status: true } },
+        branch: { select: { id: true, name: true, code: true, status: true } },
       },
     });
 
-    return NextResponse.json({ success: true, companyAdmins });
+    return NextResponse.json({ success: true, users });
   } catch (error) {
-    console.error("SUPER_ADMIN_COMPANY_ADMINS_GET_ERROR", error);
+    console.error("SUPER_ADMIN_USERS_GET_ERROR", error);
     return NextResponse.json(
-      { success: false, message: "Failed to load company administrators." },
+      { success: false, message: "Failed to load users." },
       { status: 500 },
     );
   }
@@ -92,26 +103,31 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const companyId = clean(body.companyId);
+    const branchId = clean(body.branchId) || null;
     const name = clean(body.name);
     const username = normalizeUsername(body.username);
     const email = normalizeEmail(body.email);
     const phone = clean(body.phone) || null;
     const password = String(body.password ?? "");
-    const requestedStatus = clean(body.status).toUpperCase() || "ACTIVE";
+    const role = clean(body.role).toUpperCase() as AllowedRole;
 
-    if (!companyId || !name || !username || !email || !password) {
+    if (!companyId || !name || !username || !email || !password || !role) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Company, full name, username, email and password are required.",
-        },
+        { success: false, message: "Company, name, username, email, role and password are required." },
+        { status: 422 },
+      );
+    }
+
+    if (!ALLOWED_ROLES.includes(role)) {
+      return NextResponse.json(
+        { success: false, message: "Role must be Company Admin, Accountant, Staff, Broker or GPS Manager." },
         { status: 422 },
       );
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json(
-        { success: false, message: "Enter a valid administrator email address." },
+        { success: false, message: "Enter a valid user email address." },
         { status: 422 },
       );
     }
@@ -123,16 +139,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!["ACTIVE", "SUSPENDED"].includes(requestedStatus)) {
-      return NextResponse.json(
-        { success: false, message: "New administrator status must be ACTIVE or SUSPENDED." },
-        { status: 422 },
-      );
-    }
-
     const company = await prisma.company.findUnique({
       where: { id: companyId },
-      select: { id: true, name: true, code: true, status: true },
+      select: { id: true, name: true, status: true },
     });
 
     if (!company) {
@@ -142,11 +151,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (company.status === "DISABLED") {
+    if (company.status !== "ACTIVE") {
       return NextResponse.json(
-        { success: false, message: "Cannot create an administrator for a disabled company." },
+        { success: false, message: "Users can only be created for an active company." },
         { status: 409 },
       );
+    }
+
+    if (branchId) {
+      const branch = await prisma.branch.findFirst({
+        where: { id: branchId, companyId },
+        select: { id: true },
+      });
+      if (!branch) {
+        return NextResponse.json(
+          { success: false, message: "The selected branch does not belong to this company." },
+          { status: 422 },
+        );
+      }
     }
 
     const duplicate = await prisma.user.findFirst({
@@ -164,22 +186,23 @@ export async function POST(request: NextRequest) {
 
     const passwordHash = await bcrypt.hash(password, 12);
 
-    const companyAdmin = await prisma.$transaction(async (tx) => {
-      const created = await tx.user.create({
+    const created = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
         data: {
           companyId,
-          branchId: null,
+          branchId,
           name,
           username,
           email,
           phone,
           passwordHash,
-          role: "COMPANY_ADMIN",
-          status: requestedStatus as "ACTIVE" | "SUSPENDED",
+          role,
+          status: "ACTIVE",
         },
         select: {
           id: true,
           companyId: true,
+          branchId: true,
           name: true,
           username: true,
           email: true,
@@ -187,10 +210,8 @@ export async function POST(request: NextRequest) {
           role: true,
           status: true,
           createdAt: true,
-          updatedAt: true,
-          company: {
-            select: { id: true, name: true, code: true, status: true },
-          },
+          company: { select: { id: true, name: true, code: true } },
+          branch: { select: { id: true, name: true, code: true } },
         },
       });
 
@@ -198,27 +219,23 @@ export async function POST(request: NextRequest) {
         data: {
           userId: auth.user!.id,
           companyId,
-          action: "COMPANY_ADMIN_CREATED",
+          action: "USER_CREATED",
           module: "USER",
-          details: `${auth.user!.name} created company administrator ${created.name} for ${company.name}.`,
+          details: `${auth.user!.name} created ${role.replaceAll("_", " ")} user ${user.name} for ${company.name}.`,
         },
       });
 
-      return created;
+      return user;
     });
 
     return NextResponse.json(
-      {
-        success: true,
-        message: "Company administrator created successfully.",
-        companyAdmin,
-      },
+      { success: true, message: "User created successfully.", user: created },
       { status: 201 },
     );
   } catch (error) {
-    console.error("SUPER_ADMIN_COMPANY_ADMIN_CREATE_ERROR", error);
+    console.error("SUPER_ADMIN_USER_CREATE_ERROR", error);
     return NextResponse.json(
-      { success: false, message: "Failed to create company administrator." },
+      { success: false, message: "Failed to create user." },
       { status: 500 },
     );
   }

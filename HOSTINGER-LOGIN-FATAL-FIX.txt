@@ -1,0 +1,76 @@
+SIMAMIA FLOAT - HOSTINGER LOGIN_FATAL_ERROR FIX
+================================================
+
+This package fixes the deployed login failure that returned:
+"Login could not be completed. Check Hostinger Runtime logs for LOGIN_FATAL_ERROR."
+
+Corrections included
+--------------------
+1. Prisma versions are pinned together at 7.8.0:
+   - @prisma/client 7.8.0
+   - @prisma/adapter-mariadb 7.8.0
+   - prisma 7.8.0
+   This avoids a Prisma Client / driver-adapter runtime mismatch.
+
+2. Login reads only core User columns required for authentication.
+   Older imported databases therefore do not fail login just because newer
+   optional profile columns are absent.
+
+3. scripts/ensure-hostinger-schema.mjs runs before Next.js starts.
+   It adds only missing compatibility columns and extends CompanyStatus with
+   DISABLED. It does not delete existing rows.
+
+4. Database errors now inspect nested Prisma/MariaDB driver errors and return
+   a useful safe error category rather than always LOGIN_FATAL_ERROR.
+
+5. /broker/dashboard and /gps-manager/dashboard now exist, so those roles do
+   not authenticate successfully and then land on a 404.
+
+6. The stale app/agent-location/%5Btoken%5D route was removed.
+
+7. Company Admin collection routes were repaired:
+   - POST /api/company-admin/gps-devices now creates a GPS device/token.
+   - GET  /api/company-admin/gps-devices lists devices.
+   - POST /api/company-admin/bank-verifications creates a record.
+   - GET  /api/company-admin/bank-verifications lists records.
+   Their [id] PATCH routes remain responsible for record updates.
+
+Hostinger deployment settings
+-----------------------------
+Node.js:       22.x
+Build command: npm run build
+Start command: npm run start
+
+Required environment variables in hPanel
+----------------------------------------
+DATABASE_URL=mysql://u768639399_compiler:Compiler%40%40123@localhost:3306/u768639399_simamia
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USER=u768639399_compiler
+DATABASE_PASSWORD=Compiler@@123
+DATABASE_NAME=u768639399_simamia
+DATABASE_CONNECTION_LIMIT=5
+ALLOW_LOCAL_DATABASE_IN_PRODUCTION=1
+HOSTINGER_SCHEMA_COMPAT=1
+NODE_ENV=production
+APP_URL=https://roumely.com
+NEXT_PUBLIC_APP_URL=https://roumely.com
+
+IMPORTANT
+---------
+If hPanel already contains an older DATABASE_URL, update or delete the old
+value before redeploying. hPanel environment variables override values loaded
+from project .env files.
+
+After deployment test:
+1. https://roumely.com/api/health/database
+2. https://roumely.com/login
+3. Sign in with an existing user from the Hostinger MySQL database.
+
+Runtime startup should contain one of:
+HOSTINGER_SCHEMA_COMPAT_OK schema already compatible
+or
+HOSTINGER_SCHEMA_COMPAT_OK applied=...
+
+If login still fails, Runtime logs now show LOGIN_FATAL_ERROR with a
+failureCode and diagnostic, without exposing that diagnostic in the browser.
